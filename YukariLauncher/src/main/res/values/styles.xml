@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default light app theme -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@color/background_status_bar</item>
+        <item name="android:navigationBarColor">@color/background_app</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+
+        <!-- Accents -->
+        <item name="colorAccent">@color/favorite_color</item>
+        <item name="colorPrimary">@color/settings_category</item>
+        <item name="colorPrimaryDark">@color/settings_category</item>
+        <item name="colorOnPrimary">@color/black_or_white</item>
+
+        <item name="android:textSize">@dimen/_12ssp</item>
+    </style>
+
+    <!-- Purple variant -->
+    <style name="AppTheme.Purple" parent="AppTheme">
+        <item name="colorAccent">@color/favorite_color</item>
+        <item name="colorPrimary">@color/settings_category</item>
+        <item name="colorPrimaryDark">@color/settings_category</item>
+        <item name="colorOnPrimary">@color/black_or_white</item>
+    </style>
+
+    <!-- Dialogs -->
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+        <item name="colorAccent">@color/settings_category</item>
+    </style>
+
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+        <item name="colorAccent">@color/settings_category</item>
+    </style>
+
+    <!-- Rounded views -->
+    <style name="RoundedCornersImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4%</item>
+    </style>
+
+    <style name="RoundImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>
