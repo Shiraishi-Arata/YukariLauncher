@@ -129,7 +129,6 @@
     <string name="mod_check_dialog_title">Mod-Check-Bericht</string>
     <string name="mod_check_progress_message">Überprüfe Mods (%d / %d)</string>
     <string name="mod_check_touch_controller">Es wurde festgestellt, dass das Touch Controller Mod (%s) installiert ist, der Launcher ist bereit, den Steuerungsproxy zu aktivieren, um das Mod anzupassen.</string>
-    <string name="mod_check_sodium_or_embeddium">Installiertes Sodium- oder Embeddium-Mod (%s) erkannt. Der Launcher wird die Warnungen dieses Mods deaktivieren oder verhindern, dass er absichtlich auf Android-Geräten abstürzt. Bitte beachte jedoch, dass die Community des Mods ausdrücklich erklärt hat, dass sie keine Probleme im Zusammenhang mit Android-Geräten mehr akzeptieren wird. Daher, wenn du Probleme mit diesem Mod hast, melde sie nicht an die Mod-Community!</string>
     <string name="mod_check_physics">Das aktuell verwendete Physik-Mod (%s) ist nicht gepatcht (libPhysXJniBindings_64.so wird von der x86_64-Architektur auf arm64 ersetzt), es wird beim Start abstürzen.</string>
     <string name="mod_check_mcef">MCEF (%s) kann auf Android nicht ausgeführt werden. Es wird üblicherweise als Vorbedingung für WebDisplays/In-game Browser (Browser) verwendet.</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) kann nicht direkt im Einzelspielermodus ausgeführt werden. Du musst es auf einem Server ausführen (Termux kann verwendet werden), sonst stürzt das Spiel ab.</string>

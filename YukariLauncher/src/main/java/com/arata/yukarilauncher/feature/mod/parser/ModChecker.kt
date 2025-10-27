@@ -29,7 +29,6 @@ class ModChecker {
 
         constructor(parcel: Parcel) : this() {
             hasTouchController = parcel.readInt().toBoolean()
-            hasSodiumOrEmbeddium = parcel.readInt().toBoolean()
             hasPhysics = parcel.readInt().toBoolean()
             hasMCEF = parcel.readInt().toBoolean()
             hasValkyrienSkies = parcel.readInt().toBoolean()
@@ -43,7 +42,6 @@ class ModChecker {
 
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeInt(hasTouchController.getInt())
-            dest.writeInt(hasSodiumOrEmbeddium.getInt())
             dest.writeInt(hasPhysics.getInt())
             dest.writeInt(hasMCEF.getInt())
             dest.writeInt(hasValkyrienSkies.getInt())
@@ -85,15 +83,6 @@ class ModChecker {
                             modCheckSettings[AllModCheckSettings.TOUCH_CONTROLLER] = Pair(
                                 "1",
                                 context.getString(R.string.mod_check_touch_controller, mod.file.name)
-                            )
-                        }
-                    }
-                    "sodium", "embeddium" -> {
-                        if (!modResult.hasSodiumOrEmbeddium) {
-                            modResult.hasSodiumOrEmbeddium = true
-                            modCheckSettings[AllModCheckSettings.SODIUM_OR_EMBEDDIUM] = Pair(
-                                "2",
-                                context.getString(R.string.mod_check_sodium_or_embeddium, mod.file.name)
                             )
                         }
                     }

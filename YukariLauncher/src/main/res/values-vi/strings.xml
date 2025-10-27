@@ -129,7 +129,6 @@
     <string name="mod_check_dialog_title">Báo cáo kiểm tra mod</string>
     <string name="mod_check_progress_message">Đang kiểm tra mod (%d / %d)</string>
     <string name="mod_check_touch_controller">Phát hiện đã cài đặt mod Touch Controller (%s), launcher đã sẵn sàng kích hoạt proxy điều khiển để tương thích với mod.</string>
-    <string name="mod_check_sodium_or_embeddium">Đã phát hiện mod Sodium hoặc Embeddium được cài đặt (%s). Trình khởi chạy sẽ vô hiệu hóa cảnh báo của mod này hoặc ngăn chặn nó cố tình gây lỗi trên thiết bị Android. Tuy nhiên, xin lưu ý rằng cộng đồng của mod đã tuyên bố rõ ràng rằng họ sẽ không còn chấp nhận bất kỳ vấn đề nào liên quan đến thiết bị Android. Do đó, nếu bạn gặp bất kỳ vấn đề nào khi sử dụng mod này, đừng báo cáo chúng lên cộng đồng của mod!</string>
     <string name="mod_check_physics">Mod vật lý hiện đang sử dụng (%s) chưa được vá (thay libPhysXJniBindings_64.so từ kiến trúc x86_64 sang arm64), sẽ bị sập khi khởi chạy.</string>
     <string name="mod_check_mcef">MCEF (%s) không thể chạy trên Android. Nó thường được dùng làm phụ thuộc tiền xử cho WebDisplays/In-game Browser (trình duyệt).</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) không thể chạy trực tiếp ở chế độ chơi đơn. Bạn phải chạy nó trên máy chủ (có thể sử dụng Termux), otherwise trò chơi sẽ bị crash.</string>

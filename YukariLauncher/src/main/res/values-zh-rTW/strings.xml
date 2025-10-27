@@ -129,7 +129,6 @@
     <string name="mod_check_dialog_title">模組檢查報告</string>
     <string name="mod_check_progress_message">正在檢查模組中 (%d / %d)</string>
     <string name="mod_check_touch_controller">檢查到已安裝 Touch Controller 模組 (%s)，啟動器已準備好啟用控制代理，以適配該模組。</string>
-    <string name="mod_check_sodium_or_embeddium">檢測到已安裝 Sodium 或 Embeddium 模組 (%s)。啟動器將會停用該模組的警告，或防止其在 Android 設備上刻意導致崩潰。但請注意，該模組的社群已明確表態不再受理任何與 Android 設備相關的問題。因此，如果你在使用該模組時遇到任何問題，請勿向該模組的社群回報！</string>
     <string name="mod_check_physics">當前使用的物理模組 (%s) 未經修補 (將 libPhysXJniBindings_64.so 從 x86_64 架構替換到 arm64)，啟動後將會崩潰。</string>
     <string name="mod_check_mcef">MCEF (%s) 無法在 Android 上運行。它通常被用來作為 WebDisplays/In-game Browser（瀏覽器）的前置依賴。</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) 無法直接在單人模式下運行。你必須使用伺服器運行（可以使用 Termux），否則遊戲會崩潰.</string>

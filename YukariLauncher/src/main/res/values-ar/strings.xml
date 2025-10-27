@@ -129,7 +129,6 @@
     <string name="mod_check_dialog_title">تقرير فحص المودات</string>
     <string name="mod_check_progress_message">جاري فحص المودات (%d / %d)</string>
     <string name="mod_check_touch_controller">تم الكشف عن تثبيت مود Touch Controller (%s)، المشغل جاهز لتمكين وكيل التحكم لتكييف المود.</string>
-    <string name="mod_check_sodium_or_embeddium">تم اكتشاف تثبيت مود Sodium أو Embeddium (%s). سيقوم المشغل بتعطيل تحذيرات هذا المود أو منع تعطل اللعبة المتعمد على أجهزة أندرويد. ولكن يرجى ملاحظة أن مجتمع المود قد أعلن بوضوح أنه لن يقبل أي مشكلات تتعلق بأجهزة أندرويد. لذا، إذا واجهت أي مشاكل أثناء استخدام هذا المود، فلا تقم بالإبلاغ عنها إلى مجتمع المود!</string>
     <string name="mod_check_physics">المود الفيزيائي المستخدم حاليًا (%s) لم يتم ترقيعه (يستبدل libPhysXJniBindings_64.so من بنية x86_64 إلى arm64)، سوف يتعطل عند التشغيل.</string>
     <string name="mod_check_mcef">MCEF (%s) لا يمكن تشغيله على Android. عادةً ما يُستخدم كاعتماد تمهيدي لـ WebDisplays/In-game Browser (المتصفح).</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) لا يمكن تشغيله مباشرة في وضع اللاعب الفردي. يجب تشغيله على الخادم (يمكن استخدام Termux)، وإلا ستتعطل اللعبة.</string>
