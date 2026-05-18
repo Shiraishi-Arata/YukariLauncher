@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_menu_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp"
+    tools:ignore="ContentDescription">
+
+    <!-- Left menu - transparent background, only items have rounded corners -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/launcher_menu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/play_layout"
+        app:layout_constraintHorizontal_weight="6.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_8sdp">
+
+                <!-- Custom Controls -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="0dp">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/custom_control_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_12sdp"
+                        app:ripple_for_relative="true">
+
+                        <ImageView
+                            android:id="@+id/custom_control_icon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:src="@drawable/ic_menu_custom_controls"
+                            app:tint="@color/purple" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toEndOf="@id/custom_control_icon"
+                            android:text="@string/custom_control_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Open Main Directory -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="0dp">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/open_main_dir_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_12sdp"
+                        app:ripple_for_relative="true">
+
+                        <ImageView
+                            android:id="@+id/open_main_dir_icon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:src="@drawable/ic_folder"
+                            app:tint="@color/purple" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toEndOf="@id/open_main_dir_icon"
+                            android:text="@string/main_open_main_dir"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Install JAR -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="0dp">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/install_jar_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_12sdp"
+                        app:ripple_for_relative="true">
+
+                        <ImageView
+                            android:id="@+id/install_jar_icon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:src="@drawable/ic_java"
+                            app:tint="@color/purple" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toEndOf="@id/install_jar_icon"
+                            android:text="@string/main_install_jar_file"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Share Logs -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="0dp">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/share_logs_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_12sdp"
+                        app:ripple_for_relative="true">
+
+                        <ImageView
+                            android:id="@+id/share_logs_icon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:src="@drawable/ic_share"
+                            app:tint="@color/purple" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toEndOf="@id/share_logs_icon"
+                            android:text="@string/main_share_logs"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Host Server -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="0dp">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/host_server_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_12sdp"
+                        app:ripple_for_relative="true">
+
+                        <ImageView
+                            android:id="@+id/host_server_icon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:src="@drawable/ic_launch_link"
+                            app:tint="@color/purple" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toEndOf="@id/host_server_icon"
+                            android:text="@string/main_host_server"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Right panel with rounded corners -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/play_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@+id/launcher_menu"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Shadow separator -->
+        <View
+            android:id="@+id/shadowView"
+            android:layout_width="@dimen/_4sdp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow_gradient_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/play_layout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Right content card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/play_main_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:paddingHorizontal="@dimen/_8sdp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/shadowView"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/play_buttons_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- Version Selection - no tint on icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/version"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_38sdp"
+                        android:layout_marginBottom="@dimen/_12sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:strokeColor="@android:color/transparent"
+                        app:strokeWidth="0dp"
+                        app:layout_constraintBottom_toTopOf="@+id/play_button"
+                        app:layout_constraintEnd_toStartOf="@+id/manager_profile_button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:ripple_for_relative="true">
+
+                        <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingStart="@dimen/_8sdp"
+                            android:paddingEnd="@dimen/_8sdp">
+
+                            <ImageView
+                                android:id="@+id/version_icon"
+                                android:layout_width="@dimen/_36sdp"
+                                android:layout_height="@dimen/_36sdp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="@dimen/_12sdp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_minecraft" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="@dimen/_8sdp"
+                                android:layout_toEndOf="@id/version_icon"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/version_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="marquee"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="true"
+                                    android:gravity="start"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:scrollHorizontally="true"
+                                    android:singleLine="true"
+                                    android:text="@string/version_no_versions"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    android:textColor="?attr/colorOnSurface" />
+
+                                <TextView
+                                    android:id="@+id/version_info"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="marquee"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="true"
+                                    android:gravity="start"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:scrollHorizontally="true"
+                                    android:singleLine="true"
+                                    android:textAppearance="?attr/textAppearanceBodySmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+
+                        </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Profile Manager Button -->
+                    <ImageButton
+                        android:id="@+id/manager_profile_button"
+                        android:layout_width="@dimen/_38sdp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_setting"
+                        app:tint="@color/purple"
+                        app:layout_constraintBottom_toTopOf="@+id/play_button"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/version" />
+
+                    <!-- Play Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/play_button"
+                        style="@style/Yukari.MaterialButton.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_12sdp"
+                        android:text="@string/main_launch"
+                        android:textAllCaps="true"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <!-- Account View -->
+                    <include
+                        android:id="@+id/view_account"
+                        layout="@layout/view_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@id/version"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

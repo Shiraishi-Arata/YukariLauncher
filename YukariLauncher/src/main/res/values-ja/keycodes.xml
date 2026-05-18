@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keycode_unspecified">未指定</string>
+    <string name="keycode_special">特殊</string>
+    <string name="keycode_special_keyboard">キーボード</string>
+    <string name="keycode_special_pri">左クリック</string>
+    <string name="keycode_special_sec">右クリック</string>
+    <string name="keycode_special_mouse">マウス</string>
+    <string name="keycode_special_mid">マウスホイール - 中クリック</string>
+    <string name="keycode_special_scrollup">マウスホイール - 上スクロール</string>
+    <string name="keycode_special_scrolldown">マウスホイール - 下スクロール</string>
+    <string name="keycode_special_menu">メインメニュー</string>
+    <string name="keycode_mouse_right">右マウス</string>
+    <string name="keycode_mouse_middle">中マウス</string>
+    <string name="keycode_mouse_left">左マウス</string>
+    <string name="keycode_scroll_up">上スクロール</string>
+    <string name="keycode_scroll_down">下スクロール</string>
+    <string name="keycode_left_alt">左Alt</string>
+    <string name="keycode_right_alt">右Alt</string>
+    <string name="keycode_left_shift">左Shift</string>
+    <string name="keycode_right_shift">右Shift</string>
+    <string name="keycode_space">スペース</string>
+    <string name="keycode_kp_plus">テンキー +</string>
+    <string name="keycode_kp_divide">テンキー /</string>
+    <string name="keycode_kp_multiply">テンキー *</string>
+    <string name="keycode_kp_subtract">テンキー -</string>
+    <string name="keycode_kp_decimal">テンキー .</string>
+    <string name="keycode_kp_comma">テンキー ,</string>
+    <string name="keycode_kp_enter">テンキー Enter</string>
+    <string name="keycode_kp_equal">テンキー =</string>
+    <string name="keycode_kp_0">テンキー 0</string>
+    <string name="keycode_kp_1">テンキー 1</string>
+    <string name="keycode_kp_2">テンキー 2</string>
+    <string name="keycode_kp_3">テンキー 3</string>
+    <string name="keycode_kp_4">テンキー 4</string>
+    <string name="keycode_kp_5">テンキー 5</string>
+    <string name="keycode_kp_6">テンキー 6</string>
+    <string name="keycode_kp_7">テンキー 7</string>
+    <string name="keycode_kp_8">テンキー 8</string>
+    <string name="keycode_kp_9">テンキー 9</string>
+    <string name="keycode_left_ctrl">左Ctrl</string>
+    <string name="keycode_right_ctrl">右Ctrl</string>
+</resources>

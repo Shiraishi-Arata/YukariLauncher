@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@color/background_status_bar</item>
+        <item name="android:navigationBarColor">@color/background_app</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+
+        <item name="colorPrimary">@color/settings_category</item>
+        <item name="colorOnPrimary">@color/black_or_white</item>
+        <item name="colorPrimaryContainer">@color/background_menu_element</item>
+        <item name="colorOnPrimaryContainer">@color/primary_text</item>
+        <item name="colorSecondary">@color/favorite_color</item>
+        <item name="colorSecondaryContainer">@color/background_item_selected</item>
+        <item name="colorTertiary">@color/favorite_color</item>
+        <item name="colorSurface">@color/background_app</item>
+        <item name="colorSurfaceContainer">@color/background_item</item>
+        <item name="colorSurfaceContainerHigh">@color/background_overlay</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOutline">@color/background_menu_element</item>
+
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
+
+        <item name="buttonStyle">@style/Yukari.MaterialButton</item>
+        <item name="materialButtonStyle">@style/Yukari.MaterialButton</item>
+        <item name="materialCardViewStyle">@style/Yukari.MaterialCardView</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox</item>
+        <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
+        <item name="materialAlertDialogTheme">@style/CustomAlertDialogTheme</item>
+        <item name="shapeAppearanceMediumComponent">@style/Yukari.Shape.Medium</item>
+        <item name="shapeAppearanceSmallComponent">@style/Yukari.Shape.Small</item>
+        <item name="switchStyle">@style/Yukari.MaterialSwitch</item>
+        <item name="materialSwitchStyle">@style/Yukari.MaterialSwitch</item>
+    </style>
+
+
+    <style name="CustomDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+        <item name="colorPrimary">@color/settings_category</item>
+    </style>
+
+    <style name="CustomAlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:scrollbarThumbHorizontal">@color/favorite_color</item>
+        <item name="android:scrollbarThumbVertical">@color/favorite_color</item>
+        <item name="colorPrimary">@color/settings_category</item>
+    </style>
+</resources>

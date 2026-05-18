@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/console_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0D1A">
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TOOLBAR  (full width, top)                             -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/console_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/background_menu_top"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/console_back_button"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/generic_return" />
+
+        <View
+            android:id="@+id/console_status_dot"
+            android:layout_width="@dimen/_7sdp"
+            android:layout_height="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:background="@drawable/bg_status_dot_idle" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/console_title"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/primary_text"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/console_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:text="@string/console_status_idle"
+            android:textSize="@dimen/_9sdp"
+            android:textColor="#666688"
+            android:fontFamily="monospace" />
+
+        <ImageButton
+            android:id="@+id/console_clear_button"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu_delete_forever"
+            android:contentDescription="@string/host_server_clear_log" />
+
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- MAIN AREA  3 (terminal) : 2 (panel)                    -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/console_main_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/console_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- ───────────────────────────────────────────────── -->
+        <!--  LEFT  weight=3  Terminal + command input        -->
+        <!-- ───────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:background="#07070F">
+
+            <!-- Install/download progress (hidden when idle) -->
+            <LinearLayout
+                android:id="@+id/console_progress_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#12121F"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/_2sdp">
+                    <TextView
+                        android:id="@+id/console_progress_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/console_downloading"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#8D42EB"
+                        android:fontFamily="monospace" />
+                    <TextView
+                        android:id="@+id/console_progress_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#BB88FF"
+                        android:fontFamily="monospace" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/console_download_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_3sdp"
+                    android:max="100"
+                    android:progressTint="#8D42EB"
+                    android:progressBackgroundTint="#1A0A30" />
+            </LinearLayout>
+
+            <!-- Log output -->
+            <ScrollView
+                android:id="@+id/console_log_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="@dimen/_6sdp"
+                android:fillViewport="true">
+                <TextView
+                    android:id="@+id/console_log_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_9sdp"
+                    android:textColor="#BBFFBB"
+                    android:fontFamily="monospace"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/console_waiting" />
+            </ScrollView>
+
+            <!-- Command input row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_36sdp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="#0F0F1F"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_4sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&gt;"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="#55FF55"
+                    android:fontFamily="monospace"
+                    android:paddingEnd="@dimen/_6sdp" />
+
+                <EditText
+                    android:id="@+id/console_command_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="#DDFFD0"
+                    android:fontFamily="monospace"
+                    android:hint="@string/console_command_hint"
+                    android:textColorHint="#334433"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:imeOptions="actionSend"
+                    android:paddingHorizontal="@dimen/_4sdp" />
+
+                <ImageButton
+                    android:id="@+id/console_send_button"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_launch_link"
+                    android:contentDescription="@string/console_send" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- thin divider -->
+        <View
+            android:layout_width="@dimen/_1sdp"
+            android:layout_height="match_parent"
+            android:background="#1AFFFFFF" />
+
+        <!-- ───────────────────────────────────────────────── -->
+        <!--  RIGHT  weight=2  Panel (scrollable)             -->
+        <!-- ───────────────────────────────────────────────── -->
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="#0A0A18"
+            android:fillViewport="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_10sdp">
+
+                <!-- ─── System Resources ─── -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/console_section_resources"
+                    android:textSize="@dimen/_8sdp"
+                    android:textColor="#555577"
+                    android:fontFamily="monospace"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.15"
+                    android:paddingBottom="@dimen/_6sdp" />
+
+                <!-- RAM -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical"
+                    android:paddingBottom="@dimen/_7sdp">
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal"
+                        android:paddingBottom="@dimen/_2sdp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="RAM" android:textSize="@dimen/_9sdp"
+                            android:textColor="#55FF55" android:fontFamily="monospace" android:textStyle="bold" />
+                        <TextView android:id="@+id/console_ram_text" android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="1"
+                            android:gravity="end" android:text="--/--" android:textSize="@dimen/_9sdp"
+                            android:textColor="#99BB99" android:fontFamily="monospace" />
+                    </LinearLayout>
+                    <ProgressBar android:id="@+id/console_ram_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent" android:layout_height="@dimen/_4sdp"
+                        android:max="100" android:progressTint="#55FF55"
+                        android:progressBackgroundTint="#1A3A1A" />
+                </LinearLayout>
+
+                <!-- CPU -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical"
+                    android:paddingBottom="@dimen/_7sdp">
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal"
+                        android:paddingBottom="@dimen/_2sdp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="CPU" android:textSize="@dimen/_9sdp"
+                            android:textColor="#FFAA00" android:fontFamily="monospace" android:textStyle="bold" />
+                        <TextView android:id="@+id/console_cpu_text" android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="1"
+                            android:gravity="end" android:text="--%"  android:textSize="@dimen/_9sdp"
+                            android:textColor="#BBAA77" android:fontFamily="monospace" />
+                    </LinearLayout>
+                    <ProgressBar android:id="@+id/console_cpu_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent" android:layout_height="@dimen/_4sdp"
+                        android:max="100" android:progressTint="#FFAA00"
+                        android:progressBackgroundTint="#3A2E00" />
+                </LinearLayout>
+
+                <!-- DISK -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical"
+                    android:paddingBottom="@dimen/_12sdp">
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal"
+                        android:paddingBottom="@dimen/_2sdp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="DISK" android:textSize="@dimen/_9sdp"
+                            android:textColor="#55AAFF" android:fontFamily="monospace" android:textStyle="bold" />
+                        <TextView android:id="@+id/console_storage_text" android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="1"
+                            android:gravity="end" android:text="--/--" android:textSize="@dimen/_9sdp"
+                            android:textColor="#8899BB" android:fontFamily="monospace" />
+                    </LinearLayout>
+                    <ProgressBar android:id="@+id/console_storage_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent" android:layout_height="@dimen/_4sdp"
+                        android:max="100" android:progressTint="#55AAFF"
+                        android:progressBackgroundTint="#001A3A" />
+                </LinearLayout>
+
+                <!-- ─── Divider ─── -->
+                <View android:layout_width="match_parent" android:layout_height="@dimen/_1sdp"
+                    android:background="#1AFFFFFF" android:layout_marginBottom="@dimen/_12sdp" />
+
+                <!-- ─── Action Buttons ─── -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/console_section_actions"
+                    android:textSize="@dimen/_8sdp"
+                    android:textColor="#555577"
+                    android:fontFamily="monospace"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.15"
+                    android:paddingBottom="@dimen/_6sdp" />
+
+                <com.arata.yukarilauncher.ui.view.AnimButton
+                    android:id="@+id/console_start_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:text="@string/console_start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textAllCaps="true" />
+
+                <com.arata.yukarilauncher.ui.view.AnimButton
+                    android:id="@+id/console_restart_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:text="@string/console_restart"
+                    android:textSize="@dimen/_10sdp"
+                    android:textAllCaps="true"
+                    android:enabled="false" />
+
+                <com.arata.yukarilauncher.ui.view.AnimButton
+                    android:id="@+id/console_stop_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_marginBottom="@dimen/_12sdp"
+                    android:text="@string/console_stop"
+                    android:textSize="@dimen/_10sdp"
+                    android:textAllCaps="true"
+                    android:enabled="false" />
+
+                <!-- ─── Divider ─── -->
+                <View android:layout_width="match_parent" android:layout_height="@dimen/_1sdp"
+                    android:background="#1AFFFFFF" android:layout_marginBottom="@dimen/_12sdp" />
+
+                <!-- ─── Server Setup ─── -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/console_section_setup"
+                    android:textSize="@dimen/_8sdp"
+                    android:textColor="#555577"
+                    android:fontFamily="monospace"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.15"
+                    android:paddingBottom="@dimen/_8sdp" />
+
+                <!-- Server type tabs -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:orientation="horizontal"
+                    android:background="#0F0F20"
+                    android:layout_marginBottom="@dimen/_8sdp">
+
+                    <TextView
+                        android:id="@+id/console_tab_vanilla"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/console_type_vanilla"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#AAAACC"
+                        android:fontFamily="monospace"
+                        android:background="?android:attr/selectableItemBackground" />
+
+                    <View android:layout_width="@dimen/_1sdp" android:layout_height="match_parent"
+                        android:background="#1AFFFFFF" />
+
+                    <TextView
+                        android:id="@+id/console_tab_fabric"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/console_type_fabric"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#8D42EB"
+                        android:fontFamily="monospace"
+                        android:background="@drawable/console_tab_selected"
+                        android:textStyle="bold" />
+
+                    <View android:layout_width="@dimen/_1sdp" android:layout_height="match_parent"
+                        android:background="#1AFFFFFF" />
+
+                    <TextView
+                        android:id="@+id/console_tab_paper"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/console_type_paper"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#AAAACC"
+                        android:fontFamily="monospace"
+                        android:background="?android:attr/selectableItemBackground" />
+
+                </LinearLayout>
+
+                <!-- Version picker row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#0F0F20"
+                    android:padding="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_6sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/console_mc_version"
+                            android:textSize="@dimen/_9sdp"
+                            android:textColor="#888899"
+                            android:fontFamily="monospace" />
+
+                        <TextView
+                            android:id="@+id/console_version_fetch_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/console_fetch_versions"
+                            android:textSize="@dimen/_8sdp"
+                            android:textColor="#8D42EB"
+                            android:fontFamily="monospace"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:paddingHorizontal="@dimen/_4sdp" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/console_version_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:background="@drawable/background_edit_box"
+                        android:text="1.21.1"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/primary_text"
+                        android:fontFamily="monospace"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:inputType="text" />
+
+                    <!-- Version list (shown after fetch) -->
+                    <LinearLayout
+                        android:id="@+id/console_version_list_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/_4sdp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <!-- Port -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#0F0F20"
+                    android:padding="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_6sdp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/console_server_port"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#888899"
+                        android:fontFamily="monospace"
+                        android:paddingBottom="@dimen/_5sdp" />
+
+                    <EditText
+                        android:id="@+id/console_port_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:background="@drawable/background_edit_box"
+                        android:text="25565"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/primary_text"
+                        android:fontFamily="monospace"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:inputType="number" />
+
+                </LinearLayout>
+
+                <!-- JVM Args -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#0F0F20"
+                    android:padding="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_6sdp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/console_jvm_args"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="#888899"
+                        android:fontFamily="monospace"
+                        android:paddingBottom="@dimen/_5sdp" />
+
+                    <EditText
+                        android:id="@+id/console_jvm_args_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:background="@drawable/background_edit_box"
+                        android:text="-Xmx1G -Xms512M"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/primary_text"
+                        android:fontFamily="monospace"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:inputType="text"
+                        android:hint="-Xmx1G -Xms512M" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

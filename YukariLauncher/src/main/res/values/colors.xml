@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black_or_white">#E8E9FF</color>
+    <color name="purple">#8D42EB</color>
+
+    <color name="background_app">#06071B</color>
+    <color name="background_app_error">#31101A</color>
+    <color name="background_overlay">#161330</color>
+    <color name="background_status_bar">#0A0B23</color>
+    <color name="background_menu_top">#0A0A21</color>
+    <color name="background_menu_top_error">#5D2030</color>
+    <color name="background_menu_element">#1A1840</color>
+    <color name="background_ripple_effect">#A36DFF</color>
+
+    <color name="button_background">#1A1935</color>
+    <color name="button_background_selected">#8D42EB</color>
+    <color name="dialog_background">#14142C</color>
+
+    <color name="menu_bar">#0B0C24</color>
+    <color name="menu_bar_text">#ECEBFF</color>
+    <color name="menu_overlay">#C510102A</color>
+    <color name="menu_progress">#8D42EB</color>
+
+    <color name="background_item">#191733</color>
+    <color name="background_item_selected">#251A48</color>
+    <color name="background_item_disabled">#3321262E</color>
+    <color name="background_sponsor_intermediate">#66FFCB8B</color>
+    <color name="background_sponsor_advanced">#66FDA28A</color>
+
+    <color name="edit_box_fill">#171630</color>
+    <color name="edit_box_fill_selected">#231F42</color>
+
+    <color name="mod_category_fill">#4C8D42EB</color>
+    <color name="text_background_fill">#4C8D42EB</color>
+
+    <color name="settings_category">#8D42EB</color>
+    <color name="favorite_color">#8D42EB</color>
+
+    <color name="icon_color">#EDEBFF</color>
+    <color name="primary_text">#ECEBFF</color>
+    <color name="secondary_text">#ECEBFF</color>
+    
+    <!-- Switch track colours -->
+    <color name="switch_track_on">#8D42EB</color>
+    <color name="switch_track_off">#80FFFFFF</color>
+    <color name="switch_track_disabled_on">#408D42EB</color>
+    <color name="switch_track_disabled_off">#40FFFFFF</color>
+    
+    <color name="card_purple_transparent">#98361361</color>
+</resources>

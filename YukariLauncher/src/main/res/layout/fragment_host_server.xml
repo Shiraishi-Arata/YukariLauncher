@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/host_server_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_8sdp">
+
+    <!-- Header toolbar -->
+    <LinearLayout
+        android:id="@+id/host_server_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="@dimen/_8sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/host_server_back_button"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/generic_return" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:text="@string/main_host_server"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/primary_text"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Content ScrollView -->
+    <ScrollView
+        android:id="@+id/host_server_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/host_server_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/host_server_open_console_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_16sdp">
+
+            <!-- Info card: what is this -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@drawable/background_item"
+                android:orientation="vertical"
+                android:padding="@dimen/_12sdp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_server_info_title"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/primary_text"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/_6sdp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_server_info_desc"
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="@color/secondary_text" />
+
+            </LinearLayout>
+
+            <!-- Local port input -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@drawable/background_item"
+                android:orientation="vertical"
+                android:padding="@dimen/_12sdp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_server_local_port"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/primary_text"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/_6sdp" />
+
+                <EditText
+                    android:id="@+id/host_server_port_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_edit_box"
+                    android:inputType="number"
+                    android:text="25565"
+                    android:padding="@dimen/_8sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/primary_text"
+                    android:hint="@string/host_server_port_hint" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:text="@string/host_server_port_note"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/secondary_text"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- Start / Stop button -->
+            <com.arata.yukarilauncher.ui.view.AnimButton
+                android:id="@+id/host_server_toggle_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:text="@string/host_server_start"
+                android:textAllCaps="true" />
+
+            <!-- Status card -->
+            <LinearLayout
+                android:id="@+id/host_server_status_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@drawable/background_item"
+                android:orientation="vertical"
+                android:padding="@dimen/_12sdp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_server_status_title"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/primary_text"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/_6sdp" />
+
+                <!-- Status row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/_4sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/host_server_status_label"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/secondary_text" />
+
+                    <TextView
+                        android:id="@+id/host_server_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:text="@string/host_server_status_idle"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/primary_text" />
+
+                </LinearLayout>
+
+                <!-- Auth URL row (shown when auth is needed) -->
+                <LinearLayout
+                    android:id="@+id/host_server_auth_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="@dimen/_6sdp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/host_server_auth_required"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/secondary_text"
+                        android:paddingBottom="@dimen/_4sdp" />
+
+                    <TextView
+                        android:id="@+id/host_server_auth_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/primary_text"
+                        android:autoLink="web"
+                        android:linksClickable="true" />
+
+                    <com.arata.yukarilauncher.ui.view.AnimButton
+                        android:id="@+id/host_server_open_auth_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:text="@string/host_server_open_browser" />
+
+                </LinearLayout>
+
+                <!-- Tunnel address row (shown when tunnel is ready) -->
+                <LinearLayout
+                    android:id="@+id/host_server_tunnel_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="@dimen/_6sdp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/host_server_tunnel_ready"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/secondary_text"
+                        android:paddingBottom="@dimen/_4sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/host_server_tunnel_address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/_12sdp"
+                            android:textColor="@color/primary_text"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/host_server_copy_button"
+                            android:layout_width="@dimen/_32sdp"
+                            android:layout_height="@dimen/_32sdp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_copy"
+                            android:contentDescription="@string/host_server_copy_address" />
+
+                    </LinearLayout>
+
+                    <!-- Dashboard button -->
+                    <com.arata.yukarilauncher.ui.view.AnimButton
+                        android:id="@+id/host_server_open_dashboard_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:text="@string/host_server_open_dashboard"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Open Console button pinned to bottom -->
+    <com.arata.yukarilauncher.ui.view.AnimButton
+        android:id="@+id/host_server_open_console_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:text="@string/host_server_open_console"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

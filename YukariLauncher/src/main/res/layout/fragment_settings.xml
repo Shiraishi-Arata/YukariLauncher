@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_8sdp"
+    tools:context="com.arata.yukarilauncher.ui.fragment.SettingsFragment">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/settings_viewpager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_minus4sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settings_layout"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settings_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Shadow overlay for separation (kept as is) -->
+        <View
+            android:id="@+id/shadowView"
+            android:layout_width="@dimen/_4sdp"
+            android:layout_height="0dp"
+            android:background="@drawable/shadow_gradient_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Sidebar card with Material 3 styling -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/_4sdp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="0dp"
+            app:layout_constraintEnd_toStartOf="@+id/shadowView"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.angcyo.tablayout.DslTabLayout
+                android:id="@+id/settings_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingVertical="@dimen/_6sdp"
+                app:tab_draw_indicator="true"
+                app:tab_indicator_enable_flow="true"
+                app:tab_indicator_drawable="@drawable/selector_bar_vertical"
+                app:tab_indicator_x_offset="@dimen/_6sdp"
+                app:tab_orientation="VERTICAL">
+
+                <!-- Video Settings Tab -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/ripple_small">
+
+                    <ImageView
+                        android:id="@+id/video_image"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting_category_video"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.92"
+                        android:scaleY="0.92"
+                        app:srcCompat="@drawable/ic_setting_video"
+                        app:tint="@color/purple" />
+
+                    <TextView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_toEndOf="@+id/video_image"
+                        android:text="@string/setting_category_video"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                <!-- Controls Settings Tab -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/ripple_small">
+
+                    <ImageView
+                        android:id="@+id/controls_image"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting_category_control"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.92"
+                        android:scaleY="0.92"
+                        app:srcCompat="@drawable/ic_menu_custom_controls"
+                        app:tint="@color/purple" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_toEndOf="@+id/controls_image"
+                        android:text="@string/setting_category_control"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                <!-- Game Settings Tab -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/ripple_small">
+
+                    <ImageView
+                        android:id="@+id/game_image"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting_category_game"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        app:srcCompat="@drawable/ic_setting_game"
+                        app:tint="@color/purple" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_toEndOf="@+id/game_image"
+                        android:text="@string/setting_category_game"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                <!-- Launcher Settings Tab -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/ripple_small">
+
+                    <ImageView
+                        android:id="@+id/launcher_image"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting_category_launcher"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.92"
+                        android:scaleY="0.92"
+                        app:srcCompat="@drawable/ic_setting_launcher"
+                        app:tint="@color/purple" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_toEndOf="@+id/launcher_image"
+                        android:text="@string/setting_category_launcher"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                <!-- Experimental Settings Tab -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/ripple_small">
+
+                    <ImageView
+                        android:id="@+id/experimental_image"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting_category_experimental"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.92"
+                        android:scaleY="0.92"
+                        app:srcCompat="@drawable/ic_setting_experimental"
+                        app:tint="@color/purple" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_toEndOf="@+id/experimental_image"
+                        android:text="@string/setting_category_experimental"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+            </com.angcyo.tablayout.DslTabLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

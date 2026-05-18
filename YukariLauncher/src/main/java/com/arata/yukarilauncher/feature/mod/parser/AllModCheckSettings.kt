@@ -1,0 +1,17 @@
+package com.arata.yukarilauncher.feature.mod.parser
+
+import com.arata.yukarilauncher.setting.unit.StringSettingUnit
+
+enum class AllModCheckSettings(val unit: StringSettingUnit) {
+    TOUCH_CONTROLLER(StringSettingUnit("modCheckTouchController", "0")),
+    PHYSICS_MOD(StringSettingUnit("modCheckPhysics", "0")),
+    MCEF(StringSettingUnit("modCheckMCEF", "0")),
+    VALKYRIEN_SKIES(StringSettingUnit("modCheckValkyrienSkies", "0")),
+    YES_STEVE_MODEL(StringSettingUnit("modCheckYesSteveModel", "0")),
+    IM_BLOCKER(StringSettingUnit("modCheckIMBlocker", "0")),
+    REPLAY_MOD(StringSettingUnit("modCheckReplayMod", "0")),
+    BORDERLESS_WINDOW(StringSettingUnit("modCheckBorderlessWindow", "0")),
+    AXIOM(StringSettingUnit("modCheckAxiom", "0")),
+    SABLE(StringSettingUnit("modCheckSable", "0")),
+    FLASHBACK(StringSettingUnit("modCheckSable", "0"))
+}

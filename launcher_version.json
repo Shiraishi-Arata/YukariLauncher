@@ -1,0 +1,28 @@
+{
+  "version_code": 102000,
+  "version_name": "1.2.0",
+  "title": {
+    "en_us": "NONE",
+    "ja_jp": "NONE"
+  },
+  "description": {
+    "en_us": "### Fixes:\r\n- **Mod Compatibility**:  \r\n  - Fixed Physics Mod native support.  \r\n  - Fixed Crash on older Minecraft version. ",
+    "ja_jp": "### 修正点：\r\n- **Mod互換性**: \r\n - Physics Modのネイティブサポートを修正しました。 \r\n - 古いMinecraftバージョンでのクラッシュを修正しました。"
+  },
+  "published_at": "2026-05-10T04:45:30Z",
+  "file_size": {
+    "all": 307115398,
+    "arm": 152357518,
+    "arm64": 159728779,
+    "x86": 138682163,
+    "x86_64": 164924038
+  },
+  "download_link": {
+    "all": "",
+    "arm": "",
+    "arm64": "1GKicnAdr7_eFmUePstGKCYBUCYb-r8-R",
+    "x86": "",
+    "x86_64": ""
+  },
+  "pre_release": false
+}

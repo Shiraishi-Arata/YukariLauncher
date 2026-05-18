@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Disabled & Checked -->
+    <item android:state_enabled="false" android:state_checked="true" android:color="@color/switch_track_disabled_on" />
+    <!-- Disabled & Unchecked -->
+    <item android:state_enabled="false" android:state_checked="false" android:color="@color/switch_track_disabled_off" />
+    <!-- Enabled & Checked -->
+    <item android:state_checked="true" android:color="@color/switch_track_on" />
+    <!-- Enabled & Unchecked (default) -->
+    <item android:color="@color/switch_track_off" />
+</selector>

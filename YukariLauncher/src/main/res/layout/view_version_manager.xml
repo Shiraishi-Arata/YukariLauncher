@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_240sdp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="@dimen/_8sdp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:strokeColor="?attr/colorOutline"
+    app:strokeWidth="0dp"
+    android:translationZ="4dp"
+    tools:ignore="ContentDescription">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
+
+        <!-- Go to version folder -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/goto_view"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/profiles_path_settings_goto"
+            android:drawableStart="@drawable/ic_move"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Game directory -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/game_path"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/version_manager_shortcuts_version_path"
+            android:drawableStart="@drawable/ic_profile_saves"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Rename -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rename"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/version_manager_rename"
+            android:drawableStart="@drawable/ic_edit"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Copy -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/copy"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/version_manager_copy"
+            android:drawableStart="@drawable/ic_copy"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Export modpack -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/export_modpack"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/version_manager_export_modpack"
+            android:drawableStart="@drawable/ic_share"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Delete -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete"
+            style="@style/Yukari.MaterialButton.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:text="@string/version_manager_delete"
+            android:drawableStart="@drawable/ic_menu_delete_forever"
+            android:drawablePadding="@dimen/_8sdp"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
