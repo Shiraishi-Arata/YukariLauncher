@@ -124,15 +124,9 @@ int pojavInitOpenGL() {
 
     load_vulkan();
 
-    if (strncmp("opengles", renderer, 8) == 0) 
+    if (strncmp("opengles", renderer, 8) == 0 || !strcmp(renderer, "nggl4es")) 
     {
         pojav_environ->config_renderer = RENDERER_GL4ES;
-        if (!strcmp(renderer, "kopper_zink")) 
-        {
-            load_vulkan();
-            setenv("GALLIUM_DRIVER", "zink", 1);
-            setenv("MESA_ANDROID_NO_KMS_SWRAST", "1", 1);
-        }
         set_gl_bridge_tbl();
     }
 
@@ -168,9 +162,11 @@ int pojavInitOpenGL() {
     
     if (!strcmp(renderer, "kopper_zink")) 
     {
+        pojav_environ->config_renderer = RENDERER_VK_ZINK;
         load_vulkan();
         setenv("GALLIUM_DRIVER", "zink", 1);
         setenv("MESA_ANDROID_NO_KMS_SWRAST", "1", 1);
+        set_osm_bridge_tbl();
     }
     
     if (!strcmp(renderer, "gallium_virgl"))

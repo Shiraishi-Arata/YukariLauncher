@@ -275,7 +275,7 @@ public final class JREUtils {
             envMap.put("LIBGL_NORMALIZE", "1");
             envMap.put("LIBGL_NOINTOVLHACK", "1");
             envMap.put("LIBGL_NOERROR", "1");
-            envMap.put("POJAV_RENDERER", "opengles3");
+            envMap.put("POJAV_RENDERER", "nggl4es");
             envMap.put("POJAVEXEC_EGL", "libEGL.so");
         } else {
             envMap.put("MESA_GLSL_CACHE_DIR", PathManager.DIR_CACHE.getAbsolutePath());
@@ -296,6 +296,7 @@ public final class JREUtils {
             } else if (rendererId.equals("gallium_panfrost")) {
                 envMap.put("POJAV_RENDERER", "gallium_panfrost");
             } else if (rendererId.equals("kopper_zink")) {
+                envMap.put("POJAV_RENDERER", "kopper_zink");
                 envMap.put("POJAVEXEC_EGL","libEGL_mesa.so"); 
                 if (Tools.shouldUseUBWC()) envMap.put("FD_DEV_FEATURES", "enable_tp_ubwc_flag_hint=1");
             }
