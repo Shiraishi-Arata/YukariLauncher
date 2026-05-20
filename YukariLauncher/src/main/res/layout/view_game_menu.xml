@@ -112,7 +112,7 @@
                     android:text="@string/setting_game_menu_show_memory_title"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/open_memory_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                     android:text="@string/setting_game_menu_show_fps_title"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/open_fps_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -264,7 +264,7 @@
                     android:text="@string/setting_disable_gestures_title"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/disableGestures"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -292,7 +292,7 @@
                     android:text="@string/setting_disable_swap_hand_title"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/disableDoubleTap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -506,7 +506,7 @@
                     android:text="@string/setting_enable_gyro_title"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/enableGyro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -608,7 +608,7 @@
                         android:text="@string/setting_gyro_invert_x_axis"
                         android:textColor="@color/black_or_white" />
 
-                    <Switch
+                    <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/gyroInvertX"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -636,7 +636,7 @@
                         android:text="@string/setting_gyro_invert_y_axis"
                         android:textColor="@color/black_or_white" />
 
-                    <Switch
+                    <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/gyroInvertY"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

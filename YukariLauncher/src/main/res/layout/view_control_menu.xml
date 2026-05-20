@@ -168,7 +168,7 @@
                     android:text="@string/controls_settings_button_snapping"
                     android:textColor="@color/black_or_white" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/snapping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
