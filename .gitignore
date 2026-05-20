@@ -6,5 +6,6 @@ curseforge_key.txt
 local.properties
 .idea/
 .vscode
+/LWJGL/bin
 /YukariLauncher/.cxx/
 /YukariLauncher/release/

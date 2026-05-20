@@ -260,53 +260,120 @@
             app:layout_constraintTop_toBottomOf="@+id/editOrientation_textView" />
 
         <!-- TOGGLE SECTION -->
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/checkboxToggle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_36sdp"
             android:text="@string/customctrl_toggle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editOrientation_spinner"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintTop_toBottomOf="@id/editOrientation_spinner" />
 
         <!-- MOUSE PASS THROUGH SECTION -->
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/checkboxPassThrough"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_36sdp"
             android:text="@string/customctrl_passthru"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkboxToggle"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintTop_toBottomOf="@id/checkboxToggle" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/checkboxRepeatedly"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_36sdp"
+            android:text="@string/customctrl_repeatedly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkboxPassThrough" />
+
+        <TextView
+            android:id="@+id/editRepeatedlyCps_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/customctrl_repeatedly_cps"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkboxRepeatedly" />
+
+        <SeekBar
+            android:id="@+id/editRepeatedlyCps_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_36sdp"
+            android:max="29"
+            android:progress="9"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editRepeatedlyCps_textView" />
+
+        <TextView
+            android:id="@+id/editRepeatedlyCpsValue_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="10"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/editRepeatedlyCps_textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/editRepeatedlyCps_textView" />
+
+        <TextView
+            android:id="@+id/editRepeatedlyDelay_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/customctrl_repeatedly_delay"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editRepeatedlyCps_seekbar" />
+
+        <SeekBar
+            android:id="@+id/editRepeatedlyDelay_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_36sdp"
+            android:max="20"
+            android:progress="3"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editRepeatedlyDelay_textView" />
+
+        <TextView
+            android:id="@+id/editRepeatedlyDelayValue_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="300 ms"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/editRepeatedlyDelay_textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/editRepeatedlyDelay_textView" />
 
         <!-- SWIPEABLE BUTTON SECTION -->
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/checkboxSwipeable"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_36sdp"
             android:text="@string/customctrl_swipeable"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkboxPassThrough"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintTop_toBottomOf="@id/editRepeatedlyDelay_seekbar" />
 
         <!-- FORWARD LOCK SECTION -->
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/checkboxForwardLock"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_36sdp"
             android:text="@string/customctrl_forward_lock"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkboxSwipeable"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintTop_toBottomOf="@id/checkboxSwipeable" />
 
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/checkboxAbsoluteFingerTracking"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_36sdp"
             android:text="@string/customctrl_absolute_tracking"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkboxForwardLock"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintTop_toBottomOf="@id/checkboxForwardLock" />
 
         <!-- BACKGROUND COLOR SECTION -->
         <fr.spse.extended_view.ExtendedTextView

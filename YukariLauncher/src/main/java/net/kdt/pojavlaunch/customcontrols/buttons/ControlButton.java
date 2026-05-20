@@ -38,22 +38,14 @@ public class ControlButton extends TextView implements ControlInterface {
 
     protected boolean mIsToggled = false;
     protected boolean mIsPointerOutOfBounds = false;
-    private static final int SCROLL_REPEAT_INTERVAL_MS = 50;
-    private final Handler mScrollHandler = new Handler(Looper.getMainLooper());
-    private int mCurrentRepeatScrollKey = GLFW_KEY_UNKNOWN;
-    private final Runnable mScrollRepeatRunnable = new Runnable() {
+    private final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mRepeatRunnable = new Runnable() {
         @Override
         public void run() {
-            switch (mCurrentRepeatScrollKey) {
-                case ControlData.SPECIALBTN_SCROLLDOWN:
-                    CallbackBridge.sendScroll(0, 1d);
-                    mScrollHandler.postDelayed(this, SCROLL_REPEAT_INTERVAL_MS);
-                    break;
-                case ControlData.SPECIALBTN_SCROLLUP:
-                    CallbackBridge.sendScroll(0, -1d);
-                    mScrollHandler.postDelayed(this, SCROLL_REPEAT_INTERVAL_MS);
-                    break;
-            }
+            if (!mProperties.repeatedlyEnabled) return;
+            sendKeyPressesWithoutActivation(true);
+            sendKeyPressesWithoutActivation(false);
+            mRepeatHandler.postDelayed(this, getRepeatIntervalMs());
         }
     };
 
@@ -110,7 +102,7 @@ public class ControlButton extends TextView implements ControlInterface {
 
     @Override
     protected void onDetachedFromWindow() {
-        stopScrollRepeat();
+        stopButtonRepeat();
         super.onDetachedFromWindow();
     }
 
@@ -173,7 +165,14 @@ public class ControlButton extends TextView implements ControlInterface {
             case MotionEvent.ACTION_DOWN: // 0
             case MotionEvent.ACTION_POINTER_DOWN: // 5
                 if(!getProperties().isToggle){
-                    sendKeyPresses(true);
+                    if (getProperties().repeatedlyEnabled) {
+                        setActivated(true);
+                        sendKeyPressesWithoutActivation(true);
+                        sendKeyPressesWithoutActivation(false);
+                        startButtonRepeat();
+                    } else {
+                        sendKeyPresses(true);
+                    }
                 }
                 break;
 
@@ -188,7 +187,12 @@ public class ControlButton extends TextView implements ControlInterface {
                 mIsPointerOutOfBounds = false;
 
                 if(!triggerToggle()) {
-                    sendKeyPresses(false);
+                    if (getProperties().repeatedlyEnabled) {
+                        stopButtonRepeat();
+                        setActivated(false);
+                    } else {
+                        sendKeyPresses(false);
+                    }
                 }
                 break;
 
@@ -215,6 +219,10 @@ public class ControlButton extends TextView implements ControlInterface {
 
     public void sendKeyPresses(boolean isDown){
         setActivated(isDown);
+        sendKeyPressesWithoutActivation(isDown);
+    }
+
+    private void sendKeyPressesWithoutActivation(boolean isDown){
         for(int keycode : mProperties.keycodes){
             if(keycode >= GLFW_KEY_UNKNOWN){
                 sendKeyPress(keycode, CallbackBridge.getCurrentMods(), isDown);
@@ -225,16 +233,19 @@ public class ControlButton extends TextView implements ControlInterface {
         }
     }
 
-    private void startScrollRepeat(int keycode) {
-        if (mCurrentRepeatScrollKey == keycode) return;
-        stopScrollRepeat();
-        mCurrentRepeatScrollKey = keycode;
-        mScrollRepeatRunnable.run();
+
+    private int getRepeatIntervalMs() {
+        int cps = Math.max(1, mProperties.repeatCps);
+        return Math.max(1, 1000 / cps);
     }
 
-    private void stopScrollRepeat() {
-        mCurrentRepeatScrollKey = GLFW_KEY_UNKNOWN;
-        mScrollHandler.removeCallbacks(mScrollRepeatRunnable);
+    private void startButtonRepeat() {
+        stopButtonRepeat();
+        mRepeatHandler.postDelayed(mRepeatRunnable, Math.max(0, mProperties.repeatLongPressDelayMs));
+    }
+
+    private void stopButtonRepeat() {
+        mRepeatHandler.removeCallbacks(mRepeatRunnable);
     }
 
     private void sendSpecialKey(int keycode, boolean isDown){
@@ -264,19 +275,11 @@ public class ControlButton extends TextView implements ControlInterface {
                 break;
 
             case ControlData.SPECIALBTN_SCROLLDOWN:
-                if (isDown) {
-                    startScrollRepeat(keycode);
-                } else {
-                    stopScrollRepeat();
-                }
+                if (isDown) CallbackBridge.sendScroll(0, 1d);
                 break;
 
             case ControlData.SPECIALBTN_SCROLLUP:
-                if (isDown) {
-                    startScrollRepeat(keycode);
-                } else {
-                    stopScrollRepeat();
-                }
+                if (isDown) CallbackBridge.sendScroll(0, -1d);
                 break;
             case ControlData.SPECIALBTN_MENU:
                 mControlLayout.notifyAppMenu();

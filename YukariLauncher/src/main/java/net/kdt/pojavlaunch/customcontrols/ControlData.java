@@ -68,6 +68,9 @@ public class ControlData {
     public float strokeWidth;     // Dp instead of % now
     public float cornerRadius;  //0-100%
     public boolean isSwipeable;
+    public boolean repeatedlyEnabled;
+    public int repeatCps = 10;
+    public int repeatLongPressDelayMs = 300;
     public boolean displayInGame;
     public boolean displayInMenu;
     private float width;         //Dp instead of Px now
@@ -156,6 +159,9 @@ public class ControlData {
                 controlData.isSwipeable,
                 controlData.passThruEnabled
         );
+        this.repeatedlyEnabled = controlData.repeatedlyEnabled;
+        this.repeatCps = controlData.repeatCps;
+        this.repeatLongPressDelayMs = controlData.repeatLongPressDelayMs;
     }
 
     public static ControlData[] getSpecialButtons(Context context) {

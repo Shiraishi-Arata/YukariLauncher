@@ -20,7 +20,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -75,12 +75,14 @@ public class EditControlPopup {
         }
     };
     protected EditText mNameEditText, mWidthEditText, mHeightEditText;
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    protected Switch mToggleSwitch, mPassthroughSwitch, mSwipeableSwitch, mForwardLockSwitch, mAbsoluteTrackingSwitch;
+    protected MaterialSwitch mToggleSwitch, mPassthroughSwitch, mSwipeableSwitch, mForwardLockSwitch, mAbsoluteTrackingSwitch;
+    protected MaterialSwitch mRepeatedlySwitch;
     protected Spinner mOrientationSpinner;
     protected TextView[] mKeycodeTextviews = new TextView[4];
     protected SeekBar mStrokeWidthSeekbar, mCornerRadiusSeekbar, mAlphaSeekbar;
+    protected SeekBar mRepeatedlyCpsSeekbar, mRepeatedlyDelaySeekbar;
     protected TextView mStrokePercentTextView, mCornerRadiusPercentTextView, mAlphaPercentTextView;
+    protected TextView mRepeatedlyCpsValueTextView, mRepeatedlyDelayValueTextView, mRepeatedlyCpsTextView, mRepeatedlyDelayTextView;
     protected TextView mSelectBackgroundColor, mSelectStrokeColor;
     protected ArrayAdapter<String> mAdapter;
     protected List<String> mSpecialArray;
@@ -294,6 +296,12 @@ public class EditControlPopup {
         mToggleSwitch.setChecked(data.isToggle);
         mPassthroughSwitch.setChecked(data.passThruEnabled);
         mSwipeableSwitch.setChecked(data.isSwipeable);
+        mRepeatedlySwitch.setChecked(data.repeatedlyEnabled);
+        mRepeatedlyCpsSeekbar.setProgress(Math.max(0, data.repeatCps - 1));
+        mRepeatedlyDelaySeekbar.setProgress(Math.max(0, data.repeatLongPressDelayMs / 100));
+        mRepeatedlyCpsValueTextView.setText(String.valueOf(data.repeatCps));
+        mRepeatedlyDelayValueTextView.setText(context.getString(R.string.customctrl_repeatedly_delay_value, data.repeatLongPressDelayMs));
+        updateRepeatedlyVisibility(data.repeatedlyEnabled);
 
         mDisplayInGameCheckbox.setChecked(data.displayInGame);
         mDisplayInMenuCheckbox.setChecked(data.displayInMenu);
@@ -391,6 +399,7 @@ public class EditControlPopup {
         mSwipeableSwitch = mScrollView.findViewById(R.id.checkboxSwipeable);
         mForwardLockSwitch = mScrollView.findViewById(R.id.checkboxForwardLock);
         mAbsoluteTrackingSwitch = mScrollView.findViewById(R.id.checkboxAbsoluteFingerTracking);
+        mRepeatedlySwitch = mScrollView.findViewById(R.id.checkboxRepeatedly);
         mKeycodeSpinners[0] = mScrollView.findViewById(R.id.editMapping_spinner_1);
         mKeycodeSpinners[1] = mScrollView.findViewById(R.id.editMapping_spinner_2);
         mKeycodeSpinners[2] = mScrollView.findViewById(R.id.editMapping_spinner_3);
@@ -403,11 +412,17 @@ public class EditControlPopup {
         mStrokeWidthSeekbar = mScrollView.findViewById(R.id.editStrokeWidth_seekbar);
         mCornerRadiusSeekbar = mScrollView.findViewById(R.id.editCornerRadius_seekbar);
         mAlphaSeekbar = mScrollView.findViewById(R.id.editButtonOpacity_seekbar);
+        mRepeatedlyCpsSeekbar = mScrollView.findViewById(R.id.editRepeatedlyCps_seekbar);
+        mRepeatedlyDelaySeekbar = mScrollView.findViewById(R.id.editRepeatedlyDelay_seekbar);
         mSelectBackgroundColor = mScrollView.findViewById(R.id.editBackgroundColor_textView);
         mSelectStrokeColor = mScrollView.findViewById(R.id.editStrokeColor_textView);
         mStrokePercentTextView = mScrollView.findViewById(R.id.editStrokeWidth_textView_percent);
         mAlphaPercentTextView = mScrollView.findViewById(R.id.editButtonOpacity_textView_percent);
         mCornerRadiusPercentTextView = mScrollView.findViewById(R.id.editCornerRadius_textView_percent);
+        mRepeatedlyCpsValueTextView = mScrollView.findViewById(R.id.editRepeatedlyCpsValue_textView);
+        mRepeatedlyDelayValueTextView = mScrollView.findViewById(R.id.editRepeatedlyDelayValue_textView);
+        mRepeatedlyCpsTextView = mScrollView.findViewById(R.id.editRepeatedlyCps_textView);
+        mRepeatedlyDelayTextView = mScrollView.findViewById(R.id.editRepeatedlyDelay_textView);
         mDisplayInGameCheckbox = mScrollView.findViewById(R.id.visibility_game_checkbox);
         mDisplayInMenuCheckbox = mScrollView.findViewById(R.id.visibility_menu_checkbox);
 
@@ -478,6 +493,11 @@ public class EditControlPopup {
             if (internalChanges) return;
             mCurrentlyEditedButton.getProperties().passThruEnabled = isChecked;
         });
+        mRepeatedlySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (internalChanges) return;
+            mCurrentlyEditedButton.getProperties().repeatedlyEnabled = isChecked;
+            updateRepeatedlyVisibility(isChecked);
+        });
         mForwardLockSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (internalChanges) return;
             if(mCurrentlyEditedButton.getProperties() instanceof ControlJoystickData){
@@ -545,6 +565,30 @@ public class EditControlPopup {
             }
         });
 
+        mRepeatedlyCpsSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (internalChanges) return;
+                int cps = progress + 1;
+                mCurrentlyEditedButton.getProperties().repeatCps = cps;
+                mRepeatedlyCpsValueTextView.setText(String.valueOf(cps));
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        mRepeatedlyDelaySeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (internalChanges) return;
+                int delay = progress * 100;
+                mCurrentlyEditedButton.getProperties().repeatLongPressDelayMs = delay;
+                mRepeatedlyDelayValueTextView.setText(context.getString(R.string.customctrl_repeatedly_delay_value, delay));
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
 
         for (int i = 0; i < mKeycodeSpinners.length; ++i) {
             int finalI = i;
@@ -610,6 +654,16 @@ public class EditControlPopup {
             });
             appearColor(isAtRight(), mCurrentlyEditedButton.getProperties().bgColor);
         });
+    }
+
+    private void updateRepeatedlyVisibility(boolean isVisible) {
+        int visibility = isVisible ? VISIBLE : GONE;
+        mRepeatedlyCpsTextView.setVisibility(visibility);
+        mRepeatedlyCpsSeekbar.setVisibility(visibility);
+        mRepeatedlyCpsValueTextView.setVisibility(visibility);
+        mRepeatedlyDelayTextView.setVisibility(visibility);
+        mRepeatedlyDelaySeekbar.setVisibility(visibility);
+        mRepeatedlyDelayValueTextView.setVisibility(visibility);
     }
 
     private void updateKeycodeText(int index, int finalI) {

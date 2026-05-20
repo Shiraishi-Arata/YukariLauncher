@@ -172,6 +172,10 @@
     <string name="customctrl_selectdefault">Select Default Control Layout</string>
     <string name="customctrl_export">Save and Share</string>
     <string name="customctrl_passthru">Mouse Passthrough</string>
+    <string name="customctrl_repeatedly">Repeatedly</string>
+    <string name="customctrl_repeatedly_cps">Clicks Per Second (CPS)</string>
+    <string name="customctrl_repeatedly_delay">Long Press Delay</string>
+    <string name="customctrl_repeatedly_delay_value">%d ms</string>
     <string name="customctrl_swipeable">Swipeable</string>
     <string name="customctrl_forward_lock">Forward Lock</string>
     <string name="customctrl_absolute_tracking">Force Finger Tracking</string>
