@@ -119,8 +119,7 @@
     <string name="newdl_extracting_native_libraries">Extracting native libraries (%d/%d)</string>
     <string name="log_view_button_scroll_off">Auto-scroll: Off</string>
     <string name="log_view_button_scroll_on">Auto-scroll: On</string>
-    <string name="log_view_button_output_off">Output: Off</string>
-    <string name="log_view_button_output_on">Output: On</string>
+    <string name="log_view_button_clear_log">Clear Log</string>
     <string name="log_view_label_log_output">Log Output:</string>
     <string name="execute_jar_failed_to_read_file">Failed to read .jar file</string>
     <string name="execute_jar_incompatible_runtime">Executing .jar feature is incompatible with Java %d</string>

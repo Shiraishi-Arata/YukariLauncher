@@ -54,15 +54,16 @@
             android:textOn="@string/log_view_button_scroll_on"
             android:textSize="8sp" />
 
-        <ToggleButton
-            android:id="@+id/floating_toggle_log"
-            android:layout_width="wrap_content"
+        <ImageButton
+            android:id="@+id/floating_clear_log_button"
+            android:layout_width="26dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="3dp"
-            android:checked="true"
-            android:textOff="@string/log_view_button_output_off"
-            android:textOn="@string/log_view_button_output_on"
-            android:textSize="8sp" />
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/log_view_button_clear_log"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_close" />
 
         <ImageButton
             android:id="@+id/floating_close_button"

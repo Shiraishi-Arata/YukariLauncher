@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">استخراج المكتبات الأصلية (%d/%d)</string>
     <string name="log_view_button_scroll_off">التمرير التلقائي: مغلق</string>
     <string name="log_view_button_scroll_on">التمرير التلقائي: مفتوح</string>
-    <string name="log_view_button_output_off">الإخراج: مغلق</string>
-    <string name="log_view_button_output_on">الإخراج: مفتوح</string>
+    <string name="log_view_button_clear_log">مسح السجل</string>
     <string name="log_view_label_log_output">إخراج السجل:</string>
     <string name="execute_jar_failed_to_read_file">فشل في قراءة ملف .jar</string>
     <string name="execute_jar_incompatible_runtime">تنفيذ وظيفة .jar غير متوافق مع Java %d</string>

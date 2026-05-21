@@ -21,6 +21,10 @@
     <color name="menu_overlay">#C510102A</color>
     <color name="menu_progress">#8D42EB</color>
 
+    <color name="status_good">#6DD400</color>
+    <color name="status_warning">#F7C744</color>
+    <color name="status_error">#FF6B6B</color>
+
     <color name="background_item">#191733</color>
     <color name="background_item_selected">#251A48</color>
     <color name="background_item_disabled">#3321262E</color>

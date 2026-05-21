@@ -1,8 +1,12 @@
 package com.arata.yukarilauncher.ui.subassembly.view
 
 import android.app.Activity
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.setting.AllSettings
@@ -35,6 +39,7 @@ class GameMenuViewWrapper(
     private var visible: Boolean = false
 
     private var scopeFx: IFxScopeControl? = null
+    private val defaultTextColor: Int by lazy { ContextCompat.getColor(activity, R.color.primary_text) }
 
     init {
         refreshState()
@@ -122,15 +127,44 @@ class GameMenuViewWrapper(
 
         fun updateInfoText() {
             if (showMemory) {
-                val memoryString = "${this@GameMenuViewWrapper.memoryText} ${getUsedDeviceMemory()}/${getTotalDeviceMemory()}".let { string ->
+                val used = MemoryUtils.getUsedDeviceMemory(activity)
+                val total = MemoryUtils.getTotalDeviceMemory(activity)
+                val valueString = "${formatFileSize(used)}/${formatFileSize(total)}"
+                val memoryString = "${this@GameMenuViewWrapper.memoryText} $valueString".let { string ->
                     if (string.length > 40) return@let string.take(40)
                     string
                 }
-                TaskExecutors.runInUIThread { memoryText.text = memoryString }
+                TaskExecutors.runInUIThread {
+                    val spannable = SpannableStringBuilder(memoryString)
+                    val valueStart = memoryString.indexOf(valueString)
+                    val valueEnd = valueStart + valueString.length
+                    spannable.setSpan(
+                        ForegroundColorSpan(getColorForMemory(used, total)),
+                        valueStart,
+                        valueEnd,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    memoryText.setTextColor(defaultTextColor)
+                    memoryText.text = spannable
+                }
             }
             if (showFPS) {
-                val fpsString = "FPS: ${CallbackBridge.getCurrentFps()}"
-                TaskExecutors.runInUIThread { fpsText.text = fpsString }
+                val fpsValue = CallbackBridge.getCurrentFps()
+                val fpsValueString = fpsValue.toString()
+                val fpsString = "FPS: $fpsValueString"
+                TaskExecutors.runInUIThread {
+                    val spannable = SpannableStringBuilder(fpsString)
+                    val valueStart = fpsString.indexOf(fpsValueString)
+                    val valueEnd = valueStart + fpsValueString.length
+                    spannable.setSpan(
+                        ForegroundColorSpan(getColorForFps(fpsValue)),
+                        valueStart,
+                        valueEnd,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    fpsText.setTextColor(defaultTextColor)
+                    fpsText.text = spannable
+                }
             }
         }
 
@@ -155,6 +189,23 @@ class GameMenuViewWrapper(
     private fun getUsedDeviceMemory(): String = formatFileSize(MemoryUtils.getUsedDeviceMemory(activity))
 
     private fun getTotalDeviceMemory(): String = formatFileSize(MemoryUtils.getTotalDeviceMemory(activity))
+
+    private fun getColorForFps(fps: Int): Int {
+        return when {
+            fps >= 60 -> ContextCompat.getColor(activity, R.color.status_good)
+            fps >= 30 -> ContextCompat.getColor(activity, R.color.status_warning)
+            else -> ContextCompat.getColor(activity, R.color.status_error)
+        }
+    }
+
+    private fun getColorForMemory(usedBytes: Long, totalBytes: Long): Int {
+        val ratio = if (totalBytes > 0) usedBytes.toDouble() / totalBytes else 0.0
+        return when {
+            ratio <= 0.5 -> ContextCompat.getColor(activity, R.color.status_good)
+            ratio <= 0.75 -> ContextCompat.getColor(activity, R.color.status_warning)
+            else -> ContextCompat.getColor(activity, R.color.status_error)
+        }
+    }
 
     private fun cancelInfoTimer() {
         timer?.cancel()

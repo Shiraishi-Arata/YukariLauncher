@@ -117,8 +117,7 @@
     <string name="newdl_extracting_native_libraries">提取原生库 (%d/%d)</string>
     <string name="log_view_button_scroll_off">自动滚动: 关闭</string>
     <string name="log_view_button_scroll_on">自动滚动: 开启</string>
-    <string name="log_view_button_output_off">输出: 关闭</string>
-    <string name="log_view_button_output_on">输出: 开启</string>
+    <string name="log_view_button_clear_log">清空日志</string>
     <string name="log_view_label_log_output">日志输出:</string>
     <string name="execute_jar_failed_to_read_file">读取 .jar 文件失败</string>
     <string name="execute_jar_incompatible_runtime">执行 .jar 功能与 Java %d 不兼容</string>

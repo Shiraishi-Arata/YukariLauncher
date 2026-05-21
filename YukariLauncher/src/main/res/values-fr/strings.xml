@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">Extraction des bibliothèques natives (%d/%d)</string>
     <string name="log_view_button_scroll_off">Défilement automatique : Désactivé</string>
     <string name="log_view_button_scroll_on">Défilement automatique : Activé</string>
-    <string name="log_view_button_output_off">Sortie : Désactivé</string>
-    <string name="log_view_button_output_on">Sortie : Activé</string>
+    <string name="log_view_button_clear_log">Effacer le journal</string>
     <string name="log_view_label_log_output">Sortie du journal :</string>
     <string name="execute_jar_failed_to_read_file">Échec de la lecture du fichier .jar</string>
     <string name="execute_jar_incompatible_runtime">La fonction d\'exécution .jar est incompatible avec Java %d</string>

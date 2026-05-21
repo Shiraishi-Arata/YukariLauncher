@@ -115,8 +115,7 @@
     <string name="newdl_extracting_native_libraries">ネイティブライブラリを展開中（%d/%d）</string>
     <string name="log_view_button_scroll_off">自動スクロール: OFF</string>
     <string name="log_view_button_scroll_on">自動スクロール: ON</string>
-    <string name="log_view_button_output_off">出力: OFF</string>
-    <string name="log_view_button_output_on">出力: ON</string>
+    <string name="log_view_button_clear_log">ログをクリア</string>
     <string name="log_view_label_log_output">ログ出力:</string>
     <string name="execute_jar_failed_to_read_file">.jarファイルの読み取りに失敗しました</string>
     <string name="execute_jar_incompatible_runtime">.jar実行機能は Java %d と互換性がありません</string>

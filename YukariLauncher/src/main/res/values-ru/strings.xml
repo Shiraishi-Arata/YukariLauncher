@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">Извлечение нативных библиотек (%d/%d)</string>
     <string name="log_view_button_scroll_off">Автопрокрутка: Выкл</string>
     <string name="log_view_button_scroll_on">Автопрокрутка: Вкл</string>
-    <string name="log_view_button_output_off">Вывод: Выкл</string>
-    <string name="log_view_button_output_on">Вывод: Вкл</string>
+    <string name="log_view_button_clear_log">Очистить журнал</string>
     <string name="log_view_label_log_output">Вывод журнала:</string>
     <string name="execute_jar_failed_to_read_file">Не удалось прочитать файл .jar</string>
     <string name="execute_jar_incompatible_runtime">Выполнение функции .jar несовместимо с Java %d</string>

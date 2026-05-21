@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">Đang giải nén thư viện gốc (%d/%d)</string>
     <string name="log_view_button_scroll_off">Tự động cuộn: Tắt</string>
     <string name="log_view_button_scroll_on">Tự động cuộn: Bật</string>
-    <string name="log_view_button_output_off">Đầu ra: Tắt</string>
-    <string name="log_view_button_output_on">Đầu ra: Bật</string>
+    <string name="log_view_button_clear_log">Xóa nhật ký</string>
     <string name="log_view_label_log_output">Đầu ra nhật ký:</string>
     <string name="execute_jar_failed_to_read_file">Không thể đọc tệp .jar</string>
     <string name="execute_jar_incompatible_runtime">Chức năng thực thi .jar không tương thích với Java %d</string>

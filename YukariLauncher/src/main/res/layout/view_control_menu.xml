@@ -1,274 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/background_card"
-    android:padding="@dimen/_8sdp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:strokeColor="?attr/colorOutline"
+    app:strokeWidth="0dp"
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.Material3.TitleMedium"
-        android:gravity="center_horizontal"
-        android:text="@string/option_edit_controls"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp">
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:text="@string/option_edit_controls"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?attr/colorPrimary" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/option_edit_controls"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/add_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_addbutton"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/add_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_addbutton_drawer"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/add_joystick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_addbutton_joystick"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/generic_save"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/load"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/generic_load"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/generic_save"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/save_and_exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/global_save_and_exit"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/save_and_export"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_export"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/pedit_control"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/snapping_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/snapping_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/snapping"
-                    android:text="@string/controls_settings_button_snapping"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/snapping"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp">
 
             <LinearLayout
-                android:id="@+id/snapping_distance_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
                 android:orientation="vertical">
 
+                <!-- Section: Add buttons -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/controls_settings_button_snapping_distance"/>
+                    android:text="@string/option_edit_controls"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
 
-                <RelativeLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_button"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_addbutton"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_drawer"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_addbutton_drawer"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_joystick"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_addbutton_joystick"
+                    android:textAllCaps="false" />
+
+                <!-- Section: Save/Load -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/generic_save"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/load"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/generic_load"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/generic_save"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_and_exit"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/global_save_and_exit"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_and_export"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_export"
+                    android:textAllCaps="false" />
+
+                <!-- Section: Control settings -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/pedit_control"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
+
+                <!-- Snapping switch -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                    app:ripple_for_constraint="true">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/snapping_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
+
+                        <TextView
+                            android:id="@+id/snapping_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/snapping"
+                            android:text="@string/controls_settings_button_snapping"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/snapping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Snapping distance slider -->
+                <LinearLayout
+                    android:id="@+id/snapping_distance_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/snapping_distance_remove"
-                        android:layout_width="@dimen/_16sdp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
+                        android:text="@string/controls_settings_button_snapping_distance"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
-                    <SeekBar
-                        android:id="@+id/snapping_distance"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/snapping_distance_remove"
-                        android:layout_toStartOf="@id/snapping_distance_add"
-                        android:max="30"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/snapping_distance_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/snapping_distance_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
+                        <TextView
+                            android:id="@+id/snapping_distance_remove"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="-"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/snapping_distance_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
+                        <SeekBar
+                            android:id="@+id/snapping_distance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/snapping_distance_remove"
+                            android:layout_toStartOf="@id/snapping_distance_add"
+                            android:max="30"
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/snapping_distance_add"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/snapping_distance_value"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="+"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/snapping_distance_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- Select default button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/select_default"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_selectdefault"
+                    android:textAllCaps="false" />
+
+                <!-- Exit button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/exit"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/customctrl_editor_exit"
+                    android:textAllCaps="false" />
 
             </LinearLayout>
 
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/select_default"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_selectdefault"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
+        </ScrollView>
 
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/customctrl_editor_exit"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
+    </LinearLayout>
 
-        </LinearLayout>
-
-    </ScrollView>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

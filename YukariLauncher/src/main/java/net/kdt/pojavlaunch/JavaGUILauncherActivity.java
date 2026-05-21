@@ -256,7 +256,7 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
     private void showLogFloodWarning() {
         if (NewbieGuideUtils.showOnlyOne("LogFloodWarning")) return;
         TapTargetView.showFor(this,
-                NewbieGuideUtils.getSimpleTarget(this, binding.launcherLoggerView.getBinding().toggleLog,
+                NewbieGuideUtils.getSimpleTarget(this, binding.launcherLoggerView.getBinding().clearLog,
                         getString(R.string.version_install_log_flood_warning)
                 )
         );

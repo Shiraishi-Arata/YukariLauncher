@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">Extraindo bibliotecas nativas (%d/%d)</string>
     <string name="log_view_button_scroll_off">Rolagem automática: Desligada</string>
     <string name="log_view_button_scroll_on">Rolagem automática: Ligada</string>
-    <string name="log_view_button_output_off">Saída: Desligada</string>
-    <string name="log_view_button_output_on">Saída: Ligada</string>
+    <string name="log_view_button_clear_log">Limpar log</string>
     <string name="log_view_label_log_output">Saída de log:</string>
     <string name="execute_jar_failed_to_read_file">Falha ao ler arquivo .jar</string>
     <string name="execute_jar_incompatible_runtime">A funcionalidade de execução de .jar é incompatível com o Java %d</string>

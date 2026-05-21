@@ -38,8 +38,6 @@ public class LoggerView extends ConstraintLayout {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        // Triggers the log view shown state by default when viewing it
-        binding.toggleLog.setChecked(visibility == VISIBLE);
     }
 
     public void toggleViewWithAnim() {
@@ -75,21 +73,10 @@ public class LoggerView extends ConstraintLayout {
         //TODO clamp the max text so it doesn't go oob
         binding.logView.setMaxLines(Integer.MAX_VALUE);
         binding.logView.setEllipsize(null);
-        binding.logView.setVisibility(GONE);
+        binding.logView.setVisibility(VISIBLE);
 
-        // Toggle log visibility
-        binding.toggleLog.setOnCheckedChangeListener(
-                (compoundButton, isChecked) -> {
-                    binding.logView.setVisibility(isChecked ? VISIBLE : GONE);
-                    if (isChecked) {
-                        Logger.setLogListener(mLogListener);
-                    } else {
-                        binding.logView.setText("");
-                        Logger.setLogListener(null); // Makes the JNI code be able to skip expensive logger callbacks
-                        // NOTE: was tested by rapidly smashing the log on/off button, no sync issues found :)
-                    }
-                });
-        binding.toggleLog.setChecked(false);
+        // Clear log button
+        binding.clearLog.setOnClickListener(v -> binding.logView.setText(""));
 
         // Remove the loggerView from the user View
         binding.cancel.setOnClickListener(view -> setVisibilityWithAnim(false));
@@ -115,6 +102,7 @@ public class LoggerView extends ConstraintLayout {
                     binding.scroll.fullScroll(View.FOCUS_DOWN);
             });
         };
+        Logger.setLogListener(mLogListener);
     }
 
     public ViewLoggerBinding getBinding() {

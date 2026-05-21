@@ -1,42 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_game_menu">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    tools:ignore="ContentDescription">
 
-    <ImageView
-        android:id="@+id/settings_button"
-        android:layout_width="@dimen/_28sdp"
-        android:layout_height="@dimen/_28sdp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_menu_settings"
-        android:clickable="false"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/fps_text"
+    <!-- Settings button card -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_toEndOf="@id/settings_button"
-        android:visibility="gone"
-        android:text="FPS: 114514"
-        android:textColor="@android:color/white"
-        tools:ignore="HardcodedText" />
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:strokeColor="?attr/colorOutline"
+        app:strokeWidth="0dp">
 
-    <TextView
-        android:id="@+id/memory_text"
+        <ImageView
+            android:id="@+id/settings_button"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:src="@drawable/ic_menu_settings"
+            android:clickable="false"
+            android:tint="?attr/colorOnSurface"
+            android:padding="@dimen/_4sdp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- FPS text card -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_toEndOf="@id/fps_text"
-        android:visibility="gone"
-        android:text="M: 0MB/0MB"
-        android:textColor="@android:color/white"
-        tools:ignore="HardcodedText" />
+        android:layout_marginStart="@dimen/_4sdp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:strokeColor="?attr/colorOutline"
+        app:strokeWidth="0dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/fps_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:visibility="gone"
+            android:text="FPS: 114514"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurface"
+            tools:ignore="HardcodedText" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Memory text card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:strokeColor="?attr/colorOutline"
+        app:strokeWidth="0dp">
+
+        <TextView
+            android:id="@+id/memory_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:visibility="gone"
+            android:text="M: 0MB/0MB"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurface"
+            tools:ignore="HardcodedText" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

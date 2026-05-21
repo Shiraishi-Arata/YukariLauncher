@@ -114,8 +114,7 @@
     <string name="newdl_extracting_native_libraries">Extrahiere native Bibliotheken (%d/%d)</string>
     <string name="log_view_button_scroll_off">Automatisch scrollen: Aus</string>
     <string name="log_view_button_scroll_on">Automatisch scrollen: Ein</string>
-    <string name="log_view_button_output_off">Ausgabe: Aus</string>
-    <string name="log_view_button_output_on">Ausgabe: Ein</string>
+    <string name="log_view_button_clear_log">Protokoll löschen</string>
     <string name="log_view_label_log_output">Protokollausgabe:</string>
     <string name="execute_jar_failed_to_read_file">Fehler beim Lesen der .jar-Datei</string>
     <string name="execute_jar_incompatible_runtime">Die Ausführung der .jar-Funktion ist nicht kompatibel mit Java %d</string>

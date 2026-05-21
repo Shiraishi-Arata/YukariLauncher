@@ -1,543 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background_card"
-    android:padding="@dimen/_8sdp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:strokeColor="?attr/colorOutline"
+    app:strokeWidth="0dp"
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.Material3.TitleMedium"
-        android:gravity="center_horizontal"
-        android:text="@string/setting_category_game_menu"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp">
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:text="@string/setting_category_game_menu"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?attr/colorPrimary" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/option_category_debug"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/force_close"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/option_force_close"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/log_output"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/option_log_out"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/send_custom_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/option_send_custom_key"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/host_server"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/option_host_server"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-    
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/open_memory_info_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/open_memory_info_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/open_memory_info"
-                    android:text="@string/setting_game_menu_show_memory_title"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/open_memory_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/open_fps_info_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/open_fps_info_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/open_fps_info"
-                    android:text="@string/setting_game_menu_show_fps_title"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/open_fps_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/resolution_scaler_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_resolution_scaler_title"
-                    android:singleLine="true"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/resolution_scaler_preview"/>
-
-                <TextView
-                    android:id="@+id/resolution_scaler_preview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:background="@drawable/background_text"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="0"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/resolution_scaler_preview">
-
-                    <TextView
-                        android:id="@+id/resolution_scaler_remove"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <SeekBar
-                        android:id="@+id/resolution_scaler"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/resolution_scaler_remove"
-                        android:layout_toStartOf="@id/resolution_scaler_add"
-                        android:min="25"
-                        android:max="300"/>
-
-                    <TextView
-                        android:id="@+id/resolution_scaler_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/resolution_scaler_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/resolution_scaler_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
-
-                </RelativeLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/option_category_control"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/disableGestures_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/disableGestures_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/disableGestures"
-                    android:text="@string/setting_disable_gestures_title"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/disableGestures"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/disableDoubleTap_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/disableDoubleTap_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/disableDoubleTap"
-                    android:text="@string/setting_disable_swap_hand_title"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/disableDoubleTap"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp">
 
             <LinearLayout
-                android:id="@+id/timeLongPressTrigger_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
                 android:orientation="vertical">
 
+                <!-- Debug section -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/setting_longpress_trigger_title"/>
+                    android:text="@string/option_category_debug"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
 
-                <RelativeLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
 
-                    <TextView
-                        android:id="@+id/timeLongPressTrigger_remove"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <SeekBar
-                        android:id="@+id/timeLongPressTrigger"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/timeLongPressTrigger_remove"
-                        android:layout_toStartOf="@id/timeLongPressTrigger_add"
-                        android:max="1000"
-                        android:min="100"/>
-
-                    <TextView
-                        android:id="@+id/timeLongPressTrigger_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/timeLongPressTrigger_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/timeLongPressTrigger_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/mouse_speed_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
-
-                <TextView
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/force_close"
+                    style="@style/Yukari.MaterialButton.Flat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/mouse_settings_speed_name"/>
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/option_force_close"
+                    android:textAllCaps="false" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/mouse_speed_remove"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <SeekBar
-                        android:id="@+id/mouse_speed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/mouse_speed_remove"
-                        android:layout_toStartOf="@id/mouse_speed_add"
-                        android:max="300"
-                        android:min="25"/>
-
-                    <TextView
-                        android:id="@+id/mouse_speed_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/mouse_speed_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/mouse_speed_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/custom_mouse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/custom_mouse_title"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/replacement_customcontrol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/replacement_customcontrol"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/edit_control"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:text="@string/option_edit_controls"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:ripple_for_text="true"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/setting_category_gyro_controls"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:textStyle="bold"
-                android:background="@color/text_background_fill"/>
-
-            <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/enableGyro_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/background_item"
-                android:padding="@dimen/_8sdp"
-                app:ripple_for_relative="true">
-
-                <TextView
-                    android:id="@+id/enableGyro_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/enableGyro"
-                    android:text="@string/setting_enable_gyro_title"
-                    android:textColor="@color/black_or_white" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/enableGyro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
-            </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/gyro_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/gyro_sensitivity_layout"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/log_output"
+                    style="@style/Yukari.MaterialButton.Flat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/option_log_out"
+                    android:textAllCaps="false" />
 
-                    <TextView
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/send_custom_key"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/option_send_custom_key"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/host_server"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/option_host_server"
+                    android:textAllCaps="false" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="?attr/colorOutline" />
+
+                <!-- Memory info toggle -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/open_memory_info_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/setting_gyro_sensitivity_title"/>
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
+
+                        <TextView
+                            android:id="@+id/open_memory_info_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/open_memory_info"
+                            android:text="@string/setting_game_menu_show_memory_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/open_memory_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- FPS info toggle -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/open_fps_info_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
+
+                        <TextView
+                            android:id="@+id/open_fps_info_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/open_fps_info"
+                            android:text="@string/setting_game_menu_show_fps_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/open_fps_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Resolution scaler -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/resolution_scaler_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_resolution_scaler_title"
+                        android:singleLine="true"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/resolution_scaler_preview" />
+
+                    <TextView
+                        android:id="@+id/resolution_scaler_preview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:background="?attr/colorSurfaceContainerHigh"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_4sdp"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="0" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/resolution_scaler_preview">
 
                         <TextView
-                            android:id="@+id/gyro_sensitivity_remove"
+                            android:id="@+id/resolution_scaler_remove"
                             android:layout_width="@dimen/_16sdp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"
@@ -545,275 +229,766 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:gravity="center_horizontal"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:text="-"
                             android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             tools:ignore="HardcodedText" />
 
                         <SeekBar
-                            android:id="@+id/gyro_sensitivity"
+                            android:id="@+id/resolution_scaler"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/gyro_sensitivity_remove"
-                            android:layout_toStartOf="@id/gyro_sensitivity_add"
+                            android:layout_toEndOf="@id/resolution_scaler_remove"
+                            android:layout_toStartOf="@id/resolution_scaler_add"
+                            android:min="25"
                             android:max="300"
-                            android:min="25"/>
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
 
                         <TextView
-                            android:id="@+id/gyro_sensitivity_add"
+                            android:id="@+id/resolution_scaler_add"
                             android:layout_width="@dimen/_16sdp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_4sdp"
                             android:layout_centerVertical="true"
-                            android:layout_toStartOf="@id/gyro_sensitivity_value"
+                            android:layout_toStartOf="@id/resolution_scaler_value"
                             android:gravity="center_horizontal"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:text="+"
                             android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             tools:ignore="HardcodedText" />
 
                         <TextView
-                            android:id="@+id/gyro_sensitivity_value"
+                            android:id="@+id/resolution_scaler_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_8sdp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentEnd="true"
-                            android:background="@drawable/background_text"
-                            tools:text="0"/>
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
+
+                    </RelativeLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Control section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/option_category_control"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
+
+                <!-- Disable gestures -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/disableGestures_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
+
+                        <TextView
+                            android:id="@+id/disableGestures_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/disableGestures"
+                            android:text="@string/setting_disable_gestures_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/disableGestures"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Disable double tap -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/disableDoubleTap_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
+
+                        <TextView
+                            android:id="@+id/disableDoubleTap_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/disableDoubleTap"
+                            android:text="@string/setting_disable_swap_hand_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/disableDoubleTap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Long press trigger -->
+                <LinearLayout
+                    android:id="@+id/timeLongPressTrigger_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_longpress_trigger_title"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/timeLongPressTrigger_remove"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="-"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <SeekBar
+                            android:id="@+id/timeLongPressTrigger"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/timeLongPressTrigger_remove"
+                            android:layout_toStartOf="@id/timeLongPressTrigger_add"
+                            android:max="1000"
+                            android:min="100"
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/timeLongPressTrigger_add"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/timeLongPressTrigger_value"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="+"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/timeLongPressTrigger_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
 
                     </RelativeLayout>
 
                 </LinearLayout>
 
-                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                    android:id="@+id/gyroInvertX_layout"
+                <!-- Mouse speed -->
+                <LinearLayout
+                    android:id="@+id/mouse_speed_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:background="@drawable/background_item"
-                    android:padding="@dimen/_8sdp"
-                    app:ripple_for_relative="true">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/gyroInvertX_title"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_toStartOf="@+id/gyroInvertX"
-                        android:text="@string/setting_gyro_invert_x_axis"
-                        android:textColor="@color/black_or_white" />
+                        android:text="@string/mouse_settings_speed_name"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/gyroInvertX"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true" />
-                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                    android:id="@+id/gyroInvertY_layout"
+                        <TextView
+                            android:id="@+id/mouse_speed_remove"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="-"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <SeekBar
+                            android:id="@+id/mouse_speed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/mouse_speed_remove"
+                            android:layout_toStartOf="@id/mouse_speed_add"
+                            android:max="300"
+                            android:min="25"
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/mouse_speed_add"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/mouse_speed_value"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="+"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/mouse_speed_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- Custom mouse button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/custom_mouse"
+                    style="@style/Yukari.MaterialButton.Flat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:background="@drawable/background_item"
-                    android:padding="@dimen/_8sdp"
-                    app:ripple_for_relative="true">
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/custom_mouse_title"
+                    android:textAllCaps="false" />
 
-                    <TextView
-                        android:id="@+id/gyroInvertY_title"
-                        android:layout_width="0dp"
+                <!-- Replacement custom control -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/replacement_customcontrol"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/replacement_customcontrol"
+                    android:textAllCaps="false" />
+
+                <!-- Edit control button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/edit_control"
+                    style="@style/Yukari.MaterialButton.Flat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:text="@string/option_edit_controls"
+                    android:textAllCaps="false" />
+
+                <!-- Gyro section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/setting_category_gyro_controls"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
+
+                <!-- Enable gyro -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/enableGyro_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_toStartOf="@+id/gyroInvertY"
-                        android:text="@string/setting_gyro_invert_y_axis"
-                        android:textColor="@color/black_or_white" />
+                        android:padding="@dimen/_8sdp"
+                        app:ripple_for_relative="true">
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/gyroInvertY"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/enableGyro_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/enableGyro"
+                            android:text="@string/setting_enable_gyro_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/enableGyro"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Gyro sensitivity -->
+                <LinearLayout
+                    android:id="@+id/gyro_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/gyro_sensitivity_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true" />
-                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                        android:orientation="vertical">
 
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_gyro_sensitivity_title"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black_or_white"
-                android:text="@string/option_category_hotbar"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:textStyle="bold"
-                android:background="@color/text_background_fill"/>
+                            <TextView
+                                android:id="@+id/gyro_sensitivity_remove"
+                                android:layout_width="@dimen/_16sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_8sdp"
+                                android:layout_marginEnd="@dimen/_4sdp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:gravity="center_horizontal"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="-"
+                                android:textSize="@dimen/_16sdp"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:text="@string/option_hotbar_type"/>
+                            <SeekBar
+                                android:id="@+id/gyro_sensitivity"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_8sdp"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@id/gyro_sensitivity_remove"
+                                android:layout_toStartOf="@id/gyro_sensitivity_add"
+                                android:max="300"
+                                android:min="25"
+                                android:progressTint="?attr/colorPrimary"
+                                android:thumbTint="?attr/colorPrimary" />
 
-            <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/hotbar_type"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                android:background="@drawable/background_item"
-                android:paddingVertical="@dimen/_12sdp"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                app:spinner_arrow_tint="@color/primary_text"
-                app:spinner_item_height="@dimen/_40sdp"
-                app:spinner_popup_max_height="@dimen/_240sdp"
-                app:spinner_popup_background="@drawable/background_edit_box" />
+                            <TextView
+                                android:id="@+id/gyro_sensitivity_add"
+                                android:layout_width="@dimen/_16sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_4sdp"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@id/gyro_sensitivity_value"
+                                android:gravity="center_horizontal"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="+"
+                                android:textSize="@dimen/_16sdp"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                tools:ignore="HardcodedText" />
 
-            <LinearLayout
-                android:id="@+id/hotbar_width_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/gyro_sensitivity_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_8sdp"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:background="?attr/colorSurfaceContainerHigh"
+                                android:paddingHorizontal="@dimen/_8sdp"
+                                android:paddingVertical="@dimen/_4sdp"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurface"
+                                tools:text="0" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!-- Gyro invert X -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                        <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                            android:id="@+id/gyroInvertX_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_8sdp"
+                            app:ripple_for_relative="true">
+
+                            <TextView
+                                android:id="@+id/gyroInvertX_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginEnd="@dimen/_8sdp"
+                                android:layout_toStartOf="@+id/gyroInvertX"
+                                android:text="@string/setting_gyro_invert_x_axis"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/gyroInvertX"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                app:useMaterialThemeColors="true" />
+
+                        </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Gyro invert Y -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+                        <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                            android:id="@+id/gyroInvertY_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_8sdp"
+                            app:ripple_for_relative="true">
+
+                            <TextView
+                                android:id="@+id/gyroInvertY_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginEnd="@dimen/_8sdp"
+                                android:layout_toStartOf="@+id/gyroInvertY"
+                                android:text="@string/setting_gyro_invert_y_axis"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/gyroInvertY"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                app:useMaterialThemeColors="true" />
+
+                        </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Hotbar section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/option_category_hotbar"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="?attr/colorOutline" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/option_hotbar_width"/>
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/option_hotbar_type"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
-                <RelativeLayout
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/hotbar_type"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="?attr/colorSurfaceContainerHigh"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/padding_heavy"
+                    app:spinner_arrow_tint="?attr/colorOnSurfaceVariant"
+                    app:spinner_item_height="@dimen/_40sdp"
+                    app:spinner_popup_max_height="@dimen/_240sdp"
+                    app:spinner_popup_background="?attr/colorSurfaceContainerHigh" />
 
-                    <TextView
-                        android:id="@+id/hotbar_width_remove"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <SeekBar
-                        android:id="@+id/hotbar_width"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/hotbar_width_remove"
-                        android:layout_toStartOf="@id/hotbar_width_add"
-                        android:min="40"/>
-
-                    <TextView
-                        android:id="@+id/hotbar_width_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/hotbar_width_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/hotbar_width_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/hotbar_height_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
-
-                <TextView
+                <!-- Hotbar width -->
+                <LinearLayout
+                    android:id="@+id/hotbar_width_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/option_hotbar_height"/>
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
 
-                <RelativeLayout
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_hotbar_width"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/hotbar_width_remove"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="-"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <SeekBar
+                            android:id="@+id/hotbar_width"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/hotbar_width_remove"
+                            android:layout_toStartOf="@id/hotbar_width_add"
+                            android:min="40"
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/hotbar_width_add"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/hotbar_width_value"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="+"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/hotbar_width_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- Hotbar height -->
+                <LinearLayout
+                    android:id="@+id/hotbar_height_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/hotbar_height_remove"
-                        android:layout_width="@dimen/_16sdp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_4sdp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="-"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
+                        android:text="@string/option_hotbar_height"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
 
-                    <SeekBar
-                        android:id="@+id/hotbar_height"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/hotbar_height_remove"
-                        android:layout_toStartOf="@id/hotbar_height_add"
-                        android:min="20"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/hotbar_height_add"
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/hotbar_height_value"
-                        android:gravity="center_horizontal"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:text="+"
-                        android:textSize="@dimen/_16sdp"
-                        tools:ignore="HardcodedText" />
+                        <TextView
+                            android:id="@+id/hotbar_height_remove"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="-"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/hotbar_height_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/background_text"
-                        tools:text="0"/>
+                        <SeekBar
+                            android:id="@+id/hotbar_height"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/hotbar_height_remove"
+                            android:layout_toStartOf="@id/hotbar_height_add"
+                            android:min="20"
+                            android:progressTint="?attr/colorPrimary"
+                            android:thumbTint="?attr/colorPrimary" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/hotbar_height_add"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/hotbar_height_value"
+                            android:gravity="center_horizontal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="+"
+                            android:textSize="@dimen/_16sdp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/hotbar_height_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_8sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:text="0" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

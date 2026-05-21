@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.ToggleButton
 import com.arata.yukarilauncher.R
 import com.kdt.DefocusableScrollView
 
@@ -44,8 +43,8 @@ class FloatingLoggerWindow(context: Context) {
     private val scrollView: DefocusableScrollView = contentView.findViewById(R.id.floating_log_scroll)
     private val logTextView: TextView = contentView.findViewById(R.id.floating_log_view)
     private val closeBtn: ImageButton = contentView.findViewById(R.id.floating_close_button)
-    private val autoScrollBtn: ToggleButton = contentView.findViewById(R.id.floating_toggle_autoscroll)
-    private val outputBtn: ToggleButton = contentView.findViewById(R.id.floating_toggle_log)
+    private val autoScrollBtn: android.widget.ToggleButton = contentView.findViewById(R.id.floating_toggle_autoscroll)
+    private val clearLogBtn: ImageButton = contentView.findViewById(R.id.floating_clear_log_button)
 
     private val handles: Map<Dir, View> = mapOf(
         Dir.TOP to contentView.findViewById(R.id.rz_top),
@@ -212,6 +211,7 @@ class FloatingLoggerWindow(context: Context) {
         autoScrollBtn.setOnCheckedChangeListener { _, checked ->
             if (checked) scrollToBottom()
         }
+        clearLogBtn.setOnClickListener { clearLog() }
     }
 
     private fun applySize(w: Int, h: Int) {
@@ -262,12 +262,13 @@ class FloatingLoggerWindow(context: Context) {
 
     val isVisible: Boolean get() = wrapper.visibility == View.VISIBLE
 
-    fun isOutputEnabled(): Boolean = outputBtn.isChecked
-
     fun appendLog(text: String) {
-        if (!isOutputEnabled()) return
         logTextView.append(text)
         if (autoScrollBtn.isChecked) scrollToBottom()
+    }
+
+    fun clearLog() {
+        logTextView.text = ""
     }
 
     fun setLog(text: CharSequence) {
