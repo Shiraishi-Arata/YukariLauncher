@@ -23,9 +23,12 @@
     <!-- Top App Bar (Material 3 Surface) -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/top_bar_card"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_56sdp"
-        app:cardCornerRadius="0dp"
+        app:cardCornerRadius="14dp"
         app:cardElevation="@dimen/_3sdp"
         app:cardBackgroundColor="?attr/colorSurfaceContainer"
         app:strokeColor="?attr/colorOutline"

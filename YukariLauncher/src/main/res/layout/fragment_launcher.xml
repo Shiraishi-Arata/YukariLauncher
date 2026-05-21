@@ -321,7 +321,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/play_buttons_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    tools:layout_editor_absoluteX="-143dp"
+                    tools:layout_editor_absoluteY="61dp">
 
                     <!-- Version Selection - no tint on icon -->
                     <com.google.android.material.card.MaterialCardView
@@ -329,15 +331,15 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_38sdp"
                         android:layout_marginBottom="@dimen/_12sdp"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="14dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="@android:color/transparent"
-                        app:strokeColor="@android:color/transparent"
-                        app:strokeWidth="0dp"
                         app:layout_constraintBottom_toTopOf="@+id/play_button"
                         app:layout_constraintEnd_toStartOf="@+id/manager_profile_button"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:ripple_for_relative="true">
+                        app:ripple_for_relative="true"
+                        app:strokeColor="@android:color/transparent"
+                        app:strokeWidth="0dp">
 
                         <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
                             android:layout_width="match_parent"
@@ -407,15 +409,15 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_setting"
-                        app:tint="@color/purple"
                         app:layout_constraintBottom_toTopOf="@+id/play_button"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/version" />
+                        app:layout_constraintTop_toTopOf="@id/version"
+                        app:tint="@color/purple" />
 
                     <!-- Play Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/play_button"
-                        style="@style/Yukari.MaterialButton.Outlined"
+                        style="@style/Yukari.MaterialButton.Flat"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_8sdp"
@@ -439,7 +441,6 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

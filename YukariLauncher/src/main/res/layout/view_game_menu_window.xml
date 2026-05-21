@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
         app:strokeColor="?attr/colorOutline"
         app:strokeWidth="0dp">
 
@@ -24,8 +24,8 @@
             android:layout_height="@dimen/_28sdp"
             android:src="@drawable/ic_menu_settings"
             android:clickable="false"
-            android:tint="?attr/colorOnSurface"
-            android:padding="@dimen/_4sdp" />
+            android:padding="@dimen/_4sdp"
+            app:tint="?attr/colorOnSurface" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -36,7 +36,7 @@
         android:layout_marginStart="@dimen/_4sdp"
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
         app:strokeColor="?attr/colorOutline"
         app:strokeWidth="0dp">
 
@@ -61,7 +61,7 @@
         android:layout_marginStart="@dimen/_4sdp"
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
         app:strokeColor="?attr/colorOutline"
         app:strokeWidth="0dp">
 

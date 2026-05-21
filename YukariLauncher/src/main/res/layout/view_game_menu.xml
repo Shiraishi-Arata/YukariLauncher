@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:cardCornerRadius="18dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
     app:strokeColor="?attr/colorOutline"
     app:strokeWidth="0dp"
     tools:ignore="UseSwitchCompatOrMaterialXml">
@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/setting_category_game_menu"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <ScrollView
             android:layout_width="match_parent"
