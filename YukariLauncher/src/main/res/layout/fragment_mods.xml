@@ -115,7 +115,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/go_download_text"
-                style="@style/Yukari.MaterialButton.Flat"
+                style="@style/Yukari.MaterialButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_mods_download_mod"
@@ -132,7 +132,7 @@
         android:id="@+id/operate_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_margin="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="3"
