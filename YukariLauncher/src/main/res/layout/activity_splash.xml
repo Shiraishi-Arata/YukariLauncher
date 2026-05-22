@@ -114,7 +114,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_12sdp"
-                        android:fontFamily="@font/minecraft"
                         android:text="@string/splash_screen_desc"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant"
