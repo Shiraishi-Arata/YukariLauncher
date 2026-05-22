@@ -41,8 +41,9 @@
 
 
     <style name="Yukari.MaterialButton" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">@font/minecraft</item>
         <item name="android:textAllCaps">false</item>
-        <item name="backgroundTint">@color/button_background_selected</item>
+        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
         <item name="android:textColor">@color/black_or_white</item>
         <item name="cornerRadius">14dp</item>
     </style>

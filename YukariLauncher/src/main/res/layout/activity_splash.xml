@@ -57,8 +57,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginVertical="@dimen/_12sdp"
+            android:layout_margin="@dimen/_12sdp"
             android:paddingHorizontal="@dimen/_8sdp"
             android:paddingVertical="@dimen/_4sdp"
             android:background="@android:color/transparent"
@@ -94,6 +93,7 @@
                 android:id="@+id/operate_main_card"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="@dimen/_12sdp"
                 android:padding="@dimen/_12sdp"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
@@ -114,12 +114,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_12sdp"
+                        android:fontFamily="@font/minecraft"
                         android:text="@string/splash_screen_desc"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/start_button"

@@ -40,7 +40,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_8sdp"
                     app:cardCornerRadius="14dp"
@@ -302,7 +302,7 @@
             android:id="@+id/play_main_card"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/_4sdp"
+            android:layout_margin="@dimen/_12sdp"
             android:paddingHorizontal="@dimen/_8sdp"
             app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
@@ -330,15 +330,15 @@
                         android:id="@+id/version"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_38sdp"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
                         android:layout_marginBottom="@dimen/_12sdp"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
                         app:cardCornerRadius="14dp"
                         app:cardElevation="0dp"
                         app:layout_constraintBottom_toTopOf="@+id/play_button"
                         app:layout_constraintEnd_toStartOf="@+id/manager_profile_button"
                         app:layout_constraintStart_toStartOf="parent"
                         app:ripple_for_relative="true"
-                        app:strokeColor="@android:color/transparent"
                         app:strokeWidth="0dp">
 
                         <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
@@ -371,6 +371,7 @@
                                     android:ellipsize="marquee"
                                     android:focusable="true"
                                     android:focusableInTouchMode="true"
+                                    android:fontFamily="@font/minecraft"
                                     android:gravity="start"
                                     android:marqueeRepeatLimit="marquee_forever"
                                     android:scrollHorizontally="true"
@@ -404,8 +405,8 @@
                         android:id="@+id/manager_profile_button"
                         android:layout_width="@dimen/_38sdp"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_12sdp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_setting"
@@ -417,7 +418,7 @@
                     <!-- Play Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/play_button"
-                        style="@style/Yukari.MaterialButton.Flat"
+                        style="@style/Yukari.MaterialButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_8sdp"
