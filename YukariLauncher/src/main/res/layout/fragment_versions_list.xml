@@ -56,7 +56,7 @@
                         android:layout_height="@dimen/_24sdp"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_download"
-                        app:tint="@color/purple" />
+                        app:tint="?attr/colorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -98,13 +98,15 @@
                             android:id="@+id/all_category"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_8sdp">
+                            android:paddingHorizontal="@dimen/_12sdp"
+                            android:paddingVertical="@dimen/_8sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:paddingHorizontal="@dimen/_8sdp"
+                                android:gravity="center_vertical"
                                 android:maxLines="2"
                                 android:text="@string/generic_all"
                                 android:textAppearance="?attr/textAppearanceBodyMedium"
@@ -124,7 +126,7 @@
                         android:scaleY="0.92"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/purple"
+                        app:tint="?attr/colorPrimary"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -192,10 +194,7 @@
             android:id="@+id/versions_list_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_12sdp"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:strokeColor="?attr/colorOutline"
@@ -214,7 +213,7 @@
                     android:id="@+id/versions"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
                     android:paddingVertical="@dimen/_4sdp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -261,8 +260,8 @@
             android:id="@+id/operate_main_card"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/_12sdp"
-            app:cardCornerRadius="18dp"
+            android:layout_margin="@dimen/_12sdp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="?attr/colorSurfaceContainer"
             app:strokeColor="?attr/colorOutline"
@@ -312,7 +311,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/create_path_button"
-                        style="@style/Yukari.MaterialButton.Outlined"
+                        style="@style/Yukari.MaterialButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/profiles_path_create_new"
@@ -320,7 +319,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/refresh_button"
-                        style="@style/Yukari.MaterialButton.Outlined"
+                        style="@style/Yukari.MaterialButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/generic_refresh"
@@ -328,7 +327,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/return_button"
-                        style="@style/Yukari.MaterialButton.Outlined"
+                        style="@style/Yukari.MaterialButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/generic_return"

@@ -66,7 +66,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:src="@drawable/ic_menu_custom_controls"
-                            app:tint="@color/purple" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -113,7 +113,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:src="@drawable/ic_folder"
-                            app:tint="@color/purple" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -160,7 +160,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:src="@drawable/ic_java"
-                            app:tint="@color/purple" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -207,7 +207,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:src="@drawable/ic_share"
-                            app:tint="@color/purple" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -255,7 +255,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:src="@drawable/ic_launch_link"
-                            app:tint="@color/purple" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -412,7 +412,7 @@
                         app:layout_constraintBottom_toTopOf="@+id/play_button"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/version"
-                        app:tint="@color/purple" />
+                        app:tint="?attr/colorPrimary" />
 
                     <!-- Play Button -->
                     <com.google.android.material.button.MaterialButton

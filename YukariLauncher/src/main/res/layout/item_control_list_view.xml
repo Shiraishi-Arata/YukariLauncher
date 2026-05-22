@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@android:color/transparent"
             app:shapeAppearanceOverlay="@style/RoundedCornersImageView"
-            app:tint="@color/purple" />
+            app:tint="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/title"
