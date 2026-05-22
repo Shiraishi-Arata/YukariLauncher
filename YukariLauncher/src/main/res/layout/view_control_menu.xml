@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/_12sdp"
         app:cardCornerRadius="18dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
         app:strokeColor="?attr/colorOutline"
         app:strokeWidth="0dp">
 
@@ -46,7 +46,7 @@
                 android:layout_marginBottom="@dimen/_12sdp"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
                 app:strokeColor="?attr/colorOutline"
                 app:strokeWidth="0dp">
 
@@ -140,7 +140,7 @@
                 android:layout_marginBottom="@dimen/_12sdp"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
                 app:strokeColor="?attr/colorOutline"
                 app:strokeWidth="0dp">
 
@@ -254,7 +254,7 @@
                 android:layout_marginBottom="@dimen/_12sdp"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
                 app:strokeColor="?attr/colorOutline"
                 app:strokeWidth="0dp">
 
