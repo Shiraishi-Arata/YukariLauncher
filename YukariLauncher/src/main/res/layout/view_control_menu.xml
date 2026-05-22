@@ -1,316 +1,450 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="18dp"
-    app:cardElevation="0dp"
-    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
-    app:strokeColor="?attr/colorOutline"
-    app:strokeWidth="0dp"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp"
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
-    <LinearLayout
+    <!-- Main title card -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/_8sdp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_12sdp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:strokeColor="?attr/colorOutline"
+        app:strokeWidth="0dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:padding="@dimen/_12sdp"
             android:text="@string/option_edit_controls"
             android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <ScrollView
+    </com.google.android.material.card.MaterialCardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_8sdp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- ==================== ADD BUTTONS SECTION CARD ==================== -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="0dp">
 
-                <!-- Section: Add buttons -->
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/option_edit_controls"
-                    android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:background="?attr/colorOutline" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_button"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_addbutton"
-                    android:textAllCaps="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_drawer"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_addbutton_drawer"
-                    android:textAllCaps="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_joystick"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_addbutton_joystick"
-                    android:textAllCaps="false" />
-
-                <!-- Section: Save/Load -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:text="@string/generic_save"
-                    android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:background="?attr/colorOutline" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/load"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/generic_load"
-                    android:textAllCaps="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/generic_save"
-                    android:textAllCaps="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save_and_exit"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/global_save_and_exit"
-                    android:textAllCaps="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save_and_export"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_export"
-                    android:textAllCaps="false" />
-
-                <!-- Section: Control settings -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:text="@string/pedit_control"
-                    android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:background="?attr/colorOutline" />
-
-                <!-- Snapping switch -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
-                    app:ripple_for_constraint="true">
-
-                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
-                        android:id="@+id/snapping_layout"
+                    <!-- Section title (plain text inside the category card) -->
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/_8sdp"
-                        app:ripple_for_relative="true">
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="@string/option_edit_controls"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold" />
 
+                    <!-- Add Button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
                         <TextView
-                            android:id="@+id/snapping_title"
-                            android:layout_width="0dp"
+                            android:id="@+id/add_button"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_marginEnd="@dimen/_8sdp"
-                            android:layout_toStartOf="@+id/snapping"
-                            android:text="@string/controls_settings_button_snapping"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_addbutton"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/snapping"
-                            android:layout_width="wrap_content"
+                    <!-- Add Drawer -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/add_drawer"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            app:useMaterialThemeColors="true" />
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_addbutton_drawer"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                    <!-- Add Joystick -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/add_joystick"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_addbutton_joystick"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
-                <!-- Snapping distance slider -->
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ==================== SAVE / LOAD SECTION CARD ==================== -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="0dp">
+
                 <LinearLayout
-                    android:id="@+id/snapping_distance_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/controls_settings_button_snapping_distance"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="@string/generic_save"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold" />
 
-                    <RelativeLayout
+                    <!-- Load -->
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
                         <TextView
-                            android:id="@+id/snapping_distance_remove"
-                            android:layout_width="@dimen/_16sdp"
+                            android:id="@+id/load"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:layout_marginEnd="@dimen/_4sdp"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center_horizontal"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:text="-"
-                            android:textSize="@dimen/_16sdp"
-                            android:textColor="?attr/colorOnSurfaceVariant"
-                            tools:ignore="HardcodedText" />
-
-                        <SeekBar
-                            android:id="@+id/snapping_distance"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/snapping_distance_remove"
-                            android:layout_toStartOf="@id/snapping_distance_add"
-                            android:max="30"
-                            android:progressTint="?attr/colorPrimary"
-                            android:thumbTint="?attr/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/snapping_distance_add"
-                            android:layout_width="@dimen/_16sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_4sdp"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@id/snapping_distance_value"
-                            android:gravity="center_horizontal"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:text="+"
-                            android:textSize="@dimen/_16sdp"
-                            android:textColor="?attr/colorOnSurfaceVariant"
-                            tools:ignore="HardcodedText" />
-
-                        <TextView
-                            android:id="@+id/snapping_distance_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_8sdp"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"
-                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
                             android:paddingHorizontal="@dimen/_8sdp"
-                            android:paddingVertical="@dimen/_4sdp"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurface"
-                            tools:text="0" />
+                            android:text="@string/generic_load"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                    </RelativeLayout>
+                    <!-- Save -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/save"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/generic_save"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Save and Exit -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/save_and_exit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/global_save_and_exit"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Save and Export -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/save_and_export"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_export"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
 
-                <!-- Select default button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/select_default"
-                    style="@style/Yukari.MaterialButton.Flat"
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ==================== CONTROL SETTINGS SECTION CARD ==================== -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_selectdefault"
-                    android:textAllCaps="false" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
 
-                <!-- Exit button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/exit"
-                    style="@style/Yukari.MaterialButton.Flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:text="@string/customctrl_editor_exit"
-                    android:textAllCaps="false" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="@string/pedit_control"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <!-- Snapping switch -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                            android:id="@+id/snapping_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_8sdp"
+                            app:ripple_for_relative="true">
+                            <TextView
+                                android:id="@+id/snapping_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginEnd="@dimen/_8sdp"
+                                android:layout_toStartOf="@+id/snapping"
+                                android:text="@string/controls_settings_button_snapping"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnSurface" />
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/snapping"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                app:useMaterialThemeColors="true" />
+                        </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-        </ScrollView>
+                    <!-- Snapping distance slider (inside its own card) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer">
 
-    </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/snapping_distance_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_12sdp"
+                            android:orientation="vertical">
 
-</com.google.android.material.card.MaterialCardView>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/controls_settings_button_snapping_distance"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/snapping_distance_remove"
+                                    android:layout_width="@dimen/_16sdp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_8sdp"
+                                    android:layout_marginEnd="@dimen/_4sdp"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:gravity="center_horizontal"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:text="-"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:ignore="HardcodedText" />
+
+                                <SeekBar
+                                    android:id="@+id/snapping_distance"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_8sdp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toEndOf="@id/snapping_distance_remove"
+                                    android:layout_toStartOf="@id/snapping_distance_add"
+                                    android:max="30"
+                                    android:progressTint="?attr/colorPrimary"
+                                    android:thumbTint="?attr/colorPrimary" />
+
+                                <TextView
+                                    android:id="@+id/snapping_distance_add"
+                                    android:layout_width="@dimen/_16sdp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="@dimen/_4sdp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toStartOf="@id/snapping_distance_value"
+                                    android:gravity="center_horizontal"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:text="+"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:ignore="HardcodedText" />
+
+                                <TextView
+                                    android:id="@+id/snapping_distance_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="@dimen/_8sdp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:background="?attr/colorSurfaceContainer"
+                                    android:paddingHorizontal="@dimen/_8sdp"
+                                    android:paddingVertical="@dimen/_4sdp"
+                                    android:textAppearance="?attr/textAppearanceBodySmall"
+                                    android:textColor="?attr/colorOnSurface"
+                                    tools:text="0" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Select default button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/select_default"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_selectdefault"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Exit button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                        app:ripple_for_constraint="true">
+                        <TextView
+                            android:id="@+id/exit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingVertical="@dimen/_12sdp"
+                            android:paddingHorizontal="@dimen/_8sdp"
+                            android:text="@string/customctrl_editor_exit"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
