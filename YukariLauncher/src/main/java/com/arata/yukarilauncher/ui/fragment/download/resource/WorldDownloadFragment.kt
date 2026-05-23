@@ -19,6 +19,10 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 
+/**
+ * ワールドデータをダウンロードするためのフラグメントです。
+ * オンラインおよびローカルのワールドファイルをインストールできます。
+ */
 class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.WORLD,
@@ -27,6 +31,9 @@ class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResource
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("zip")) { uris: List<Uri>? ->
@@ -50,6 +57,9 @@ class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResource
         }
     }
 
+    /**
+     * インストールボタンを初期化し、ローカルワールドファイルの選択を開始します。
+     */
     override fun initInstallButton(installButton: Button) {
         installButton.setOnClickListener {
             val suffix = ".zip"

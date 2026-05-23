@@ -24,6 +24,15 @@ public class NotificationUtils {
     public static final int PENDINGINTENT_CODE_SHOW_ERROR = 4;
     public static final int PENDINGINTENT_CODE_GAME_START = 5;
 
+    /**
+     * 基本的な通知を送信します。
+     * @param context コンテキスト
+     * @param contentTitle 通知タイトルのリソースID
+     * @param contentText 通知テキストのリソースID
+     * @param actionIntent アクションインテント
+     * @param pendingIntentCode PendingIntentのコード
+     * @param notificationId 通知ID
+     */
     public static void sendBasicNotification(Context context, int contentTitle, int contentText, Intent actionIntent,
                                              int pendingIntentCode, int notificationId) {
 

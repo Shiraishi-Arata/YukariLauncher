@@ -2,23 +2,31 @@ package net.kdt.pojavlaunch;
 
 import androidx.annotation.Keep;
 
-/** Singleton class made to log on one file
- * The singleton part can be removed but will require more implementation from the end-dev
+/**
+ * 1つのファイルにログを記録するためのシングルトンクラス。
+ * シングルトン部分は削除可能ですが、エンドデベロッパーによる実装が必要になります。
  */
 @Keep
 public class Logger {
-    /** Print the text to the log file if not censored */
+    /**
+     * 検閲されていない場合、テキストをログファイルに出力します。
+     */
     public static native void appendToLog(String text);
 
-
-    /** Reset the log file, effectively erasing any previous logs */
+    /**
+     * ログファイルをリセットし、以前のログを消去します。
+     */
     public static native void begin(String logFilePath);
 
-    /** Small listener for anything listening to the log */
+    /**
+     * ログをリッスンするための小さなリスナーインターフェース。
+     */
     public interface eventLogListener {
         void onEventLogged(String text);
     }
 
-    /** Link a log listener to the logger */
+    /**
+     * ログリスナーをロガーにリンクします。
+     */
     public static native void setLogListener(eventLogListener logListener);
 }

@@ -10,8 +10,14 @@ import java.io.File
 
 class UnpackSingleFilesTask(val context: Context) : AbstractUnpackTask() {
 
+/**
+ * isNeedUnpackする
+ */
     override fun isNeedUnpack(): Boolean = true
 
+/**
+ * runする
+ */
     override fun run() {
         runCatching {
             // Existing unpack
@@ -36,6 +42,9 @@ class UnpackSingleFilesTask(val context: Context) : AbstractUnpackTask() {
         }
     }
 
+/**
+ * resolvePlayitBinaryNameする
+ */
     private fun resolvePlayitBinaryName(): String {
         for (abi in Build.SUPPORTED_ABIS) {
             when (abi) {

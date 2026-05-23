@@ -22,6 +22,10 @@ import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * Modパックをダウンロードするためのフラグメントです。
+ * オンラインおよびローカルのModパックをインストールできます。
+ */
 class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.MODPACK,
@@ -30,6 +34,9 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension(null)) { uris: List<Uri>? ->
@@ -54,6 +61,9 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
         }
     }
 
+    /**
+     * インストールボタンを初期化し、ローカルModパックファイルの選択を開始します。
+     */
     override fun initInstallButton(installButton: Button) {
         installButton.setOnClickListener {
             if (!isTaskRunning()) {

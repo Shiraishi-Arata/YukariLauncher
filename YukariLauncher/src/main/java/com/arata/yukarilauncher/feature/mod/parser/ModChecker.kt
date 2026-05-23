@@ -31,9 +31,24 @@ class ModChecker {
         var hasSable: Boolean = false
         var hasFlashBack: Boolean = false
 
+/**
+ * Booleanする
+ */
+        /**
+         * Boolean値をIntに変換する
+         * @return trueの場合は1、falseの場合は0
+         */
         private fun Boolean.getInt(): Int = if (this) 1 else 0
+        /**
+         * Int値をBooleanに変換する
+         * @return 0以外の場合はtrue
+         */
         private fun Int.toBoolean(): Boolean = this != 0
 
+        /**
+         * ParcelからModCheckResultを復元する
+         * @param parcel 復元元のParcel
+         */
         constructor(parcel: Parcel) : this() {
             hasTouchController = parcel.readInt().toBoolean()
             hasPhysics = parcel.readInt().toBoolean()
@@ -47,8 +62,14 @@ class ModChecker {
             hasFlashBack = parcel.readInt().toBoolean()
         }
 
+/**
+ * describeContentsする
+ */
         override fun describeContents(): Int = 0
 
+/**
+ * writeToParcelする
+ */
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeInt(hasTouchController.getInt())
             dest.writeInt(hasPhysics.getInt())
@@ -63,10 +84,16 @@ class ModChecker {
         }
 
         companion object CREATOR : Parcelable.Creator<ModCheckResult> {
+/**
+ * createFromParcelする
+ */
             override fun createFromParcel(parcel: Parcel): ModCheckResult {
                 return ModCheckResult(parcel)
             }
 
+/**
+ * newArrayする
+ */
             override fun newArray(size: Int): Array<ModCheckResult?> {
                 return arrayOfNulls(size)
             }
@@ -76,6 +103,10 @@ class ModChecker {
     /**
      * 检查所有模组，并对一些已知的模组进行判断
      */
+/**
+ * スポンサー情報のチェックを実行する
+ * @param listener チェック結果のコールバックリスナー
+ */
     fun check(context: Context, modInfoList: List<ModInfo>, executeTask: (ModCheckResult?) -> Unit) {
         runCatching {
             initAbis()
@@ -231,6 +262,9 @@ class ModChecker {
         }
     }
 
+/**
+ * handlePhysicsする
+ */
     private fun handlePhysics(context: Context, modFile: File): String? {
         val libFileName = "libPhysXJniBindings_64.so"
         val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
@@ -280,6 +314,9 @@ class ModChecker {
 
     private var abiTag: String = "aarch64"
 
+/**
+ * initAbisする
+ */
     private fun initAbis() {
         val deviceAbi = Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"
     
@@ -294,6 +331,9 @@ class ModChecker {
         Logging.i("ABI", "Detected ABI: $deviceAbi -> $abiTag")
     }
     
+/**
+ * matchesAbiする
+ */
     private fun matchesAbi(name: String): Boolean {
         return when (abiTag) {
             "arm64" ->
@@ -317,6 +357,9 @@ class ModChecker {
         }
     }
     
+/**
+ * handleAxiomする
+ */
     private fun handleAxiom(context: Context, modFile: File): String? {
 
         ZipFile(modFile).use { zipFile ->
@@ -455,6 +498,9 @@ class ModChecker {
         )
     }
     
+/**
+ * handleFlashbackする
+ */
     private fun handleFlashback(context: Context, modFile: File): String? {
         val libFileName = "libimgui-moulberry90-java-$abiTag.so"
         val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
@@ -507,6 +553,9 @@ class ModChecker {
         return error
     }
 
+/**
+ * handleSableする
+ */
     private fun handleSable(context: Context, modFile: File): String? {
     
         val libFileName = "libsable_rapier-$abiTag.so"
@@ -585,6 +634,9 @@ class ModChecker {
     }
 
 
+/**
+ * downloadLibraryWithProgressする
+ */
     private fun downloadLibraryWithProgress(url: String, targetFile: File, progressResId: Int, progressArg: String) {
         val connection = URL(url).openConnection().apply {
             setRequestProperty("User-Agent", "YukariLauncher")
@@ -631,6 +683,9 @@ class ModChecker {
         }
     }
 
+/**
+ * showResultDialogする
+ */
     private fun showResultDialog(
         context: Context,
         modCheckSettings: MutableMap<AllModCheckSettings, Pair<String, String>>,

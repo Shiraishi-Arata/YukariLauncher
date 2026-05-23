@@ -19,6 +19,9 @@ class McServerManager(private val context: Context) {
         private const val FABRIC_META = "https://meta.fabricmc.net/v2/versions/loader"
         private const val FABRIC_INSTALLER = "https://meta.fabricmc.net/v2/versions/installer"
 
+/**
+ * SERVER_DIRする
+ */
         val SERVER_DIR get() = File(PathManager.DIR_GAME_HOME, "server")
     }
 
@@ -35,6 +38,9 @@ class McServerManager(private val context: Context) {
     var onError: ((String) -> Unit)? = null
     var onProgress: ((Int, String) -> Unit)? = null
 
+/**
+ * startする
+ */
     fun start(config: McServerConfig) {
         if (running.get()) {
             log("[WARN] Server is already running")
@@ -52,6 +58,9 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * stopする
+ */
     fun stop() {
         scope.launch {
             try {
@@ -72,6 +81,9 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * restartする
+ */
     fun restart(config: McServerConfig) {
         scope.launch {
             stop()
@@ -80,6 +92,9 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * sendCommandする
+ */
     fun sendCommand(cmd: String) {
         try {
             process?.outputStream?.let {
@@ -92,8 +107,14 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * isRunningする
+ */
     fun isRunning() = running.get()
 
+/**
+ * prepareする
+ */
     private suspend fun prepare(config: McServerConfig) {
         SERVER_DIR.mkdirs()
         val jar = serverJarFile(config)
@@ -114,9 +135,15 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * serverJarFileする
+ */
     private fun serverJarFile(config: McServerConfig) =
         File(SERVER_DIR, "server-${config.type.name.lowercase()}-${config.version}.jar")
 
+/**
+ * downloadVanillaする
+ */
     private suspend fun downloadVanilla(version: String, dest: File) {
         log("[INSTALL] Fetching Vanilla manifest…")
         val manifest = fetchJson(MANIFEST_URL)
@@ -137,6 +164,9 @@ class McServerManager(private val context: Context) {
         downloadFile(serverUrl, dest, label = "Vanilla $version")
     }
 
+/**
+ * downloadPaperする
+ */
     private suspend fun downloadPaper(version: String, dest: File) {
         log("[INSTALL] Fetching Paper builds for $version…")
         val buildsJson = fetchJson("$PAPER_API/versions/$version/builds")
@@ -149,6 +179,9 @@ class McServerManager(private val context: Context) {
         downloadFile(url, dest, label = "Paper $version")
     }
 
+/**
+ * downloadFabricする
+ */
     private suspend fun downloadFabric(version: String, dest: File) {
         log("[INSTALL] Fetching Fabric loader versions…")
         val loaders = fetchJsonArray(FABRIC_META)
@@ -161,6 +194,9 @@ class McServerManager(private val context: Context) {
         downloadFile(url, dest, label = "Fabric $version")
     }
 
+/**
+ * launchProcessする
+ */
     private fun launchProcess(config: McServerConfig) {
         val jar = serverJarFile(config)
         val (javaPath, jreLibDir) = resolveJavaBinary(config.javaVersion)
@@ -212,6 +248,9 @@ class McServerManager(private val context: Context) {
         onStopped?.invoke()
     }
 
+/**
+ * resolveJavaBinaryする
+ */
     private fun resolveJavaBinary(preferredMajor: Int): Pair<String, String?> {
         val runtimesDir = File(PathManager.DIR_MULTIRT_HOME)
         log("[DEBUG] Looking for runtimes in: ${runtimesDir.absolutePath}")
@@ -221,6 +260,9 @@ class McServerManager(private val context: Context) {
             return "java" to null
         }
 
+/**
+ * getJreLibDirする
+ */
         fun getJreLibDir(javaBinPath: String): String? {
             val binDir = File(javaBinPath).parentFile ?: return null
             val jreRoot = binDir.parentFile ?: return null
@@ -269,6 +311,9 @@ class McServerManager(private val context: Context) {
         return "java" to null
     }
 
+/**
+ * ensureExecutableする
+ */
     private fun ensureExecutable(file: File) {
         if (!file.exists()) return
         if (file.canExecute()) return
@@ -285,17 +330,29 @@ class McServerManager(private val context: Context) {
         }
     }
 
+/**
+ * logする
+ */
     private fun log(line: String) {
         Log.d(TAG, line)
         onLog?.invoke(line)
     }
 
+/**
+ * fetchJsonする
+ */
     private suspend fun fetchJson(urlStr: String): JSONObject =
         withContext(Dispatchers.IO) { JSONObject(URL(urlStr).readText()) }
 
+/**
+ * fetchJsonArrayする
+ */
     private suspend fun fetchJsonArray(urlStr: String) =
         withContext(Dispatchers.IO) { org.json.JSONArray(URL(urlStr).readText()) }
 
+/**
+ * downloadFileする
+ */
     private suspend fun downloadFile(urlStr: String, dest: File, label: String) =
         withContext(Dispatchers.IO) {
             var conn: HttpURLConnection? = null

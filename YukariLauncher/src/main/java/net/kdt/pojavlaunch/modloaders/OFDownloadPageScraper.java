@@ -8,19 +8,34 @@ import org.htmlcleaner.TagNodeVisitor;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * OptiFineのダウンロードページをスクレイピングして実際のダウンロードURLを取得します。
+ */
 public class OFDownloadPageScraper implements TagNodeVisitor {
+    /**
+     * 指定されたURLから実際のダウンロードURLを抽出します。
+     * @param urlInput OptiFineのダウンロードページURL
+     * @return 実際のダウンロードURL
+     * @throws IOException I/Oエラーが発生した場合
+     */
     public static String run(String urlInput) throws IOException{
         return new OFDownloadPageScraper().runInner(urlInput);
     }
 
     private String mDownloadFullUrl;
 
+    /**
+     * 内部的なスクレイピング処理を実行します。
+     */
     private String runInner(String url) throws IOException {
         HtmlCleaner htmlCleaner = new HtmlCleaner();
         htmlCleaner.clean(new URL(url)).traverse(this);
         return mDownloadFullUrl;
     }
 
+    /**
+     * タグノードを訪問し、ダウンロードURLを検出したら抽出します。
+     */
     @Override
     public boolean visit(TagNode parentNode, HtmlNode htmlNode) {
         if(isDownloadUrl(parentNode, htmlNode)) {
@@ -33,6 +48,9 @@ public class OFDownloadPageScraper implements TagNodeVisitor {
         return true;
     }
 
+    /**
+     * 指定されたノードがダウンロードURLかどうかを判定します。
+     */
     public boolean isDownloadUrl(TagNode parentNode, HtmlNode htmlNode) {
         if(!(htmlNode instanceof TagNode)) return false;
         if(parentNode == null) return false;

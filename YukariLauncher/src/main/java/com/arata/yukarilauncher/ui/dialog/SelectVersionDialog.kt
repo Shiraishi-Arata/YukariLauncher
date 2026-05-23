@@ -10,6 +10,9 @@ import com.arata.yukarilauncher.databinding.DialogSelectVersionBinding
 import com.arata.yukarilauncher.ui.subassembly.versionlist.VersionSelectedListener
 import com.arata.yukarilauncher.ui.subassembly.versionlist.VersionType
 
+/**
+ * Minecraftバージョン選択ダイアログ
+ */
 class SelectVersionDialog(context: Context) : FullScreenDialog(context) {
     private val binding: DialogSelectVersionBinding = DialogSelectVersionBinding.inflate(layoutInflater)
     private lateinit var releaseTab: TabLayout.Tab
@@ -50,15 +53,24 @@ class SelectVersionDialog(context: Context) : FullScreenDialog(context) {
         }
     }
 
+    /**
+     * バージョン選択リスナーを設定する
+     */
     fun setOnVersionSelectedListener(versionSelectedListener: VersionSelectedListener?) {
         binding.version.setVersionSelectedListener(versionSelectedListener)
     }
 
+    /**
+     * 現在のタブに応じて表示を更新する
+     */
     private fun refresh(tab: TabLayout.Tab?) {
         setVersionType(tab)
         binding.version.setVersionType(versionType)
     }
 
+    /**
+     * タブに対応するバージョン種別を設定する
+     */
     private fun setVersionType(tab: TabLayout.Tab?) {
         when (tab) {
             releaseTab -> versionType = VersionType.RELEASE
@@ -70,6 +82,9 @@ class SelectVersionDialog(context: Context) : FullScreenDialog(context) {
         }
     }
 
+    /**
+     * タブをバインドする
+     */
     private fun bindTab() {
         binding.versionTab.apply {
             fun TabLayout.addNewTab(textRes: Int): TabLayout.Tab {

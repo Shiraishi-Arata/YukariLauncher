@@ -42,6 +42,9 @@ class UpdateUtils {
          * @param force 强制检测（用于设置内更新检测）
          */
         @JvmStatic
+/**
+ * checkDownloadedPackageする
+ */
         fun checkDownloadedPackage(context: Context, force: Boolean, ignore: Boolean) {
             if (force && !NetworkUtils.isNetworkAvailable(context)) {
                 Toast.makeText(context, context.getString(R.string.generic_no_network), Toast.LENGTH_SHORT).show()
@@ -78,21 +81,33 @@ class UpdateUtils {
             }
         }
 
+/**
+ * checkCoolingする
+ */
         private fun checkCooling(): Boolean {
-            return YLTools.getCurrentTimeMillis() - AllSettings.updateCheck.getValue() > 5 * 60 * 1000 //5分钟冷却
+            return YLツール：この依存関係は開発用ツールであり実行には不要s.getCurrentTimeMillis() - AllSettings.updateCheck.getValue() > 5 * 60 * 1000 //5分钟冷却
         }
 
         @Synchronized
+/**
+ * updateCheckerMainProgramする
+ */
         fun updateCheckerMainProgram(context: Context, ignore: Boolean) {
             if (YLTools.getCurrentTimeMillis() - LAST_UPDATE_CHECK_TIME <= 5000) return
             LAST_UPDATE_CHECK_TIME = YLTools.getCurrentTimeMillis()
 
             CallUtils(object : CallbackListener {
+/**
+ * onFailureする
+ */
                 override fun onFailure(call: Call?) {
                     showFailToast(context, context.getString(R.string.update_fail))
                 }
 
                 @Throws(IOException::class)
+/**
+ * onResponseする
+ */
                 override fun onResponse(call: Call?, response: Response?) {
                     if (!response!!.isSuccessful) {
                         showFailToast(context, context.getString(R.string.update_fail_code, response.code))
@@ -109,6 +124,9 @@ class UpdateUtils {
                             if (ignore && versionName == ignoreUpdate.getValue()) return  //忽略此版本
 
                             val versionCode = launcherVersion.versionCode
+/**
+ * checkPreReleaseする
+ */
                             fun checkPreRelease(): Boolean {
                                 return if (!launcherVersion.isPreRelease) true
                                 else YLTools.isPreRelease() || AllSettings.acceptPreReleaseUpdates.getValue()
@@ -138,6 +156,9 @@ class UpdateUtils {
         }
 
         @JvmStatic
+/**
+ * showFailToastする
+ */
         fun showFailToast(context: Context, resString: String) {
             runInUIThread {
                 Toast.makeText(context, resString, Toast.LENGTH_SHORT).show()
@@ -145,6 +166,9 @@ class UpdateUtils {
         }
 
         @JvmStatic
+/**
+ * getArchModelする
+ */
         fun getArchModel(arch: Int = Tools.DEVICE_ARCHITECTURE): String? {
             if (arch == Architecture.ARCH_ARM64) return "arm64-v8a"
             if (arch == Architecture.ARCH_ARM) return "armeabi-v7a"
@@ -154,6 +178,9 @@ class UpdateUtils {
         }
 
         @JvmStatic
+/**
+ * getFileSizeする
+ */
         fun getFileSize(fileSize: FileSize): Long {
             val arch = Tools.DEVICE_ARCHITECTURE
             if (arch == Architecture.ARCH_ARM64) return fileSize.arm64
@@ -164,6 +191,9 @@ class UpdateUtils {
         }
 
         @JvmStatic
+/**
+ * getDownloadUrlする
+ */
         fun getDownloadUrl(launcherVersion: LauncherVersion): String {
             val downloadLink = launcherVersion.downloadLink
             if (downloadLink != null) {
@@ -184,12 +214,18 @@ class UpdateUtils {
                 "${(if (archModel != null) String.format("-%s", archModel) else "")}.apk"
         }
 
+/**
+ * formatDownloadLinkする
+ */
         private fun formatDownloadLink(rawValue: String): String {
             if (rawValue.startsWith("http://") || rawValue.startsWith("https://")) return rawValue
             return GOOGLE_DRIVE_DOWNLOAD_PREFIX + rawValue + GOOGLE_DRIVE_DOWNLOAD_SUFFIX
         }
 
         @JvmStatic
+/**
+ * installApkする
+ */
         fun installApk(context: Context, outputFile: File) {
             runInUIThread {
                 TipDialog.Builder(context)

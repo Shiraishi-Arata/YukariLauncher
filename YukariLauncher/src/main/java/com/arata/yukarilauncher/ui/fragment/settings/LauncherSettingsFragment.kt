@@ -25,6 +25,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import net.kdt.pojavlaunch.LauncherActivity
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * ランチャー設定フラグメント
+ */
 class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fragment_launcher, SettingCategory.LAUNCHER) {
     private lateinit var binding: SettingsFragmentLauncherBinding
     private var parentFragment: FragmentWithAnim? = null
@@ -37,6 +40,9 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
         this.parentFragment = parentFragment
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +52,9 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
 
@@ -202,15 +211,27 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
     }
 
 
+    /**
+     * ビュー破棄時にブラー更新ハンドラーのコールバックを削除します。
+     */
     override fun onDestroyView() {
         blurUpdateHandler.removeCallbacks(blurUpdateRunnable)
         super.onDestroyView()
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.root, Animations.BounceInDown))
     }
 
+    /**
+     * 通知権限設定を初期化する
+     */
+    /**
+     * 通知権限設定を初期化します。
+     */
     private fun setupNotificationRequestPreference(notificationPermissionRequest: SwitchSettingsWrapper) {
         val activity = requireActivity()
         if (activity is LauncherActivity) {

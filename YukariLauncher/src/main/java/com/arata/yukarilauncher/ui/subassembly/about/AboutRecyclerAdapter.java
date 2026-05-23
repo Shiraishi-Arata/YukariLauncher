@@ -12,9 +12,15 @@ import com.arata.yukarilauncher.utils.YLTools;
 
 import java.util.List;
 
+/**
+ * アバウト画面のRecyclerViewアダプター
+ */
 public class AboutRecyclerAdapter extends RecyclerView.Adapter<AboutRecyclerAdapter.InnerHolder> {
     private final List<AboutItemBean> itemBeans;
 
+    /**
+     * アダプターを構築する
+     */
     public AboutRecyclerAdapter(List<AboutItemBean> data) {
         this.itemBeans = data;
     }
@@ -38,14 +44,23 @@ public class AboutRecyclerAdapter extends RecyclerView.Adapter<AboutRecyclerAdap
         return 0;
     }
 
+    /**
+     * アバウトアイテムのビューホルダー
+     */
     public static class InnerHolder extends RecyclerView.ViewHolder {
         private final ItemAboutViewBinding binding;
 
+        /**
+         * ホルダーを構築する
+         */
         public InnerHolder(@NonNull ItemAboutViewBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
+        /**
+         * アイテムデータをビューに設定する
+         */
         public void setData(AboutItemBean data) {
             binding.imageView.setImageDrawable(data.getIcon());
             binding.titleView.setText(data.getTitle());

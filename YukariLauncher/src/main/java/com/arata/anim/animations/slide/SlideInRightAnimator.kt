@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 右からスライドインするアニメーション
+ * 透明度を0→1に変化させ、X座標を100→0へ移動する
+ */
 class SlideInRightAnimator: BaseAnimator() {
+    /** スライドイン（右）アニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 0f, 1f),

@@ -14,6 +14,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.skin.SkinLoader
 import net.kdt.pojavlaunch.Tools
 
+/**
+ * アカウント情報表示ビューをラップするクラス
+ */
 class AccountViewWrapper(private val parentFragment: FragmentWithAnim? = null, val binding: ViewAccountBinding) {
     private val mContext: Context = binding.root.context
 
@@ -25,6 +28,9 @@ class AccountViewWrapper(private val parentFragment: FragmentWithAnim? = null, v
         }
     }
 
+    /**
+     * アカウント情報を更新する
+     */
     fun refreshAccountInfo() {
         binding.apply {
             val account = AccountsManager.currentAccount

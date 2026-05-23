@@ -20,27 +20,47 @@ import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 import java.util.function.Consumer
 
+/**
+ * NeoForgeをダウンロードするためのフラグメントです。
+ * NeoForgeのバージョン一覧を取得し、選択してインストールできます。
+ */
 class DownloadNeoForgeFragment : ModListFragment() {
     companion object {
         const val TAG: String = "DownloadNeoForgeFragment"
     }
 
+    /**
+     * ビューの初期設定を行います。
+     */
     override fun refreshCreatedView() {
         setIcon(ContextCompat.getDrawable(fragmentActivity!!, R.drawable.ic_neoforge))
         setTitleText("NeoForge")
         setLink("https://neoforged.net/")
         setMCMod("https://www.mcmod.cn/class/11433.html")
-        setReleaseCheckBoxGone() //隐藏“仅展示正式版”选择框，在这里没有用处
+        setReleaseCheckBoxGone() // 「安定版のみ表示」チェックボックスを非表示にする（ここでは不要）
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     * @return 非同期タスクのFuture
+     */
     override fun initRefresh(): Future<*> {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     * @return 非同期タスクのFuture
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * 指定されたモードでNeoForgeのバージョン一覧を取得します。
+     * @param force 強制更新するかどうか
+     * @return 非同期タスクのFuture
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -59,6 +79,11 @@ class DownloadNeoForgeFragment : ModListFragment() {
         }
     }
 
+    /**
+     * NeoForgeとNeoForgedForgeの両方のバージョンリストを読み込みます。
+     * @param force 強制更新するかどうか
+     * @return 統合されたバージョンリスト
+     */
     @Throws(Exception::class)
     fun loadVersionList(force: Boolean): List<String> {
         val versions: MutableList<String> = ArrayList()
@@ -70,6 +95,9 @@ class DownloadNeoForgeFragment : ModListFragment() {
         return versions
     }
 
+    /**
+     * 空の状態をUIに反映します。
+     */
     private fun empty() {
         TaskExecutors.runInUIThread {
             componentProcessing(false)
@@ -77,6 +105,10 @@ class DownloadNeoForgeFragment : ModListFragment() {
         }
     }
 
+    /**
+     * NeoForgeのバージョン情報を処理し、アダプターに設定します。
+     * @param neoForgeVersions NeoForgeのバージョンリスト
+     */
     private fun processModDetails(neoForgeVersions: List<String>?) {
         neoForgeVersions ?: run {
             empty()
@@ -88,7 +120,7 @@ class DownloadNeoForgeFragment : ModListFragment() {
         val mNeoForgeVersions: MutableMap<String, MutableList<String>> = HashMap()
         neoForgeVersions.forEach(Consumer { neoForgeVersion: String ->
             currentTask?.apply { if (isCancelled) return@Consumer }
-            //查找并分组Minecraft版本与NeoForge版本
+            // MinecraftバージョンとNeoForgeバージョンを検索してグループ化
             val gameVersion = if (neoForgeVersion == "47.1.82") {
                 return@Consumer
             } else {

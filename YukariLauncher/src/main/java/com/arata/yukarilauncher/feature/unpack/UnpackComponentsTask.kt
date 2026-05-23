@@ -28,8 +28,14 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
         }
     }
 
+/**
+ * isCheckFailedする
+ */
     fun isCheckFailed() = isCheckFailed
 
+/**
+ * isNeedUnpackする
+ */
     override fun isNeedUnpack(): Boolean {
         if (isCheckFailed) return false
 
@@ -51,6 +57,9 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
         }
     }
 
+/**
+ * runする
+ */
     override fun run() {
         listener?.onTaskStart()
         val fileList = am.list("components/${component.component}")
@@ -60,6 +69,9 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
         listener?.onTaskEnd()
     }
 
+/**
+ * requestEmptyParentDirする
+ */
     private fun requestEmptyParentDir(file: File) {
         file.parentFile!!.apply {
             if (exists() and isDirectory) {

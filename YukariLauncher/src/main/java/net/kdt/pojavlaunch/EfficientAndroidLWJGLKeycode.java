@@ -164,10 +164,16 @@ public class EfficientAndroidLWJGLKeycode {
         add(KeyEvent.KEYCODE_NUMPAD_EQUALS, LwjglGlfwKeycode.GLFW_KEY_EQUAL, getString(R.string.keycode_kp_equal)); //161
     }
 
+/**
+ * containsIndexメソッド
+ */
     public static boolean containsIndex(int index){
         return index >= 0;
     }
 
+/**
+ * generateKeyNameメソッド
+ */
     public static String[] generateKeyName() {
         if (androidKeyNameArray == null) {
             androidKeyNameArray = new String[sAndroidKeycodes.length];
@@ -178,6 +184,9 @@ public class EfficientAndroidLWJGLKeycode {
         return androidKeyNameArray;
     }
 
+/**
+ * execKeyメソッド
+ */
     public static void execKey(KeyEvent keyEvent, int valueIndex) {
         //valueIndex points to where the value is stored in the array.
         CallbackBridge.holdingAlt = keyEvent.isAltPressed();
@@ -196,15 +205,26 @@ public class EfficientAndroidLWJGLKeycode {
                 keyEvent.getAction() == KeyEvent.ACTION_DOWN);
     }
 
+/**
+ * execKeyIndexメソッド
+ */
     public static void execKeyIndex(int index){
         //Send a quick key press.
         sendKeyPress(getValueByIndex(index));
     }
 
+/**
+ * valueByIndexを取得する
+ * @return valueByIndexの値
+ */
     public static short getValueByIndex(int index) {
         return sLwjglKeycodes[index];
     }
 
+/**
+ * indexByKeyを取得する
+ * @return indexByKeyの値
+ */
     public static int getIndexByKey(int key){
         return Arrays.binarySearch(sAndroidKeycodes, key);
     }
@@ -218,6 +238,9 @@ public class EfficientAndroidLWJGLKeycode {
         return 0;
     }
 
+/**
+ * addメソッド
+ */
     private static void add(int androidKeycode, short LWJGLKeycode, String name){
         sAndroidKeycodes[mTmpCount] = androidKeycode;
         sLwjglKeycodes[mTmpCount] = LWJGLKeycode;

@@ -3,6 +3,10 @@ package com.arata.yukarilauncher.ui.fragment.download.addon
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.version.install.Addon
 
+/**
+ * Fabric APIをダウンロードするためのフラグメントです。
+ * ModrinthからFabric APIのバージョン情報を取得してインストールします。
+ */
 class DownloadFabricApiFragment: DownloadFabricLikeApiModFragment(
     Addon.FABRIC_API,
     "P7dR8mSH",

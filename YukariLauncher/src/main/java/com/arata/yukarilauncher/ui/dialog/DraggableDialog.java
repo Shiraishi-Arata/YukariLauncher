@@ -11,9 +11,15 @@ import androidx.annotation.NonNull;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.ui.subassembly.view.DraggableViewWrapper;
 
+/**
+ * ドラッグ可能なダイアログのユーティリティクラス
+ */
 public final class DraggableDialog {
     private DraggableDialog() {}
 
+    /**
+     * ダイアログにドラッグ機能を設定する
+     */
     public static void initDialog(DialogInitializationListener listener) {
         Window window = listener.onInit();
         if (window != null) {
@@ -51,6 +57,9 @@ public final class DraggableDialog {
         }
     }
 
+    /**
+     * ダイアログ初期化リスナー
+     */
     public interface DialogInitializationListener {
         Window onInit();
     }

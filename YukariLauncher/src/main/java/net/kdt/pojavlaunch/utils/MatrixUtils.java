@@ -8,31 +8,28 @@ import android.graphics.RectF;
 public class MatrixUtils {
 
     /**
-     * Transform the coordinates of the RectF using the supplied Matrix, and write the result back into
-     * the RectF
-     * @param inOutRect the RectF for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用してRectFの座標を変換し、結果を同じRectFに書き戻します。
+     * @param inOutRect この操作の対象となるRectF
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(Rect inOutRect, Matrix transformMatrix) {
         transformRect(inOutRect, inOutRect, transformMatrix);
     }
 
     /**
-     * Transform the coordinates of the RectF using the supplied Matrix, and write the result back into
-     * the RectF
-     * @param inOutRect the RectF for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用してRectFの座標を変換し、結果を同じRectFに書き戻します。
+     * @param inOutRect この操作の対象となるRectF
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(RectF inOutRect, Matrix transformMatrix) {
         transformRect(inOutRect, inOutRect, transformMatrix);
     }
 
     /**
-     * Transform the coordinates of the input RectF using the supplied Matrix, and write the result
-     * into the output Rect
-     * @param inRect the input RectF for this operation
-     * @param outRect the output Rect for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用して入力RectFの座標を変換し、結果を出力Rectに書き込みます。
+     * @param inRect この操作の入力RectF
+     * @param outRect この操作の出力Rect
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(RectF inRect, Rect outRect, Matrix transformMatrix) {
         float[] inOutDecodeRect = createInOutDecodeRect(transformMatrix);
@@ -43,11 +40,10 @@ public class MatrixUtils {
     }
 
     /**
-     * Transform the coordinates of the input Rect using the supplied Matrix, and write the result
-     * into the output RectF
-     * @param inRect the input Rect for this operation
-     * @param outRect the output RectF for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用して入力Rectの座標を変換し、結果を出力RectFに書き込みます。
+     * @param inRect この操作の入力Rect
+     * @param outRect この操作の出力RectF
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(Rect inRect, RectF outRect, Matrix transformMatrix) {
         float[] inOutDecodeRect = createInOutDecodeRect(transformMatrix);
@@ -58,11 +54,10 @@ public class MatrixUtils {
     }
 
     /**
-     * Transform the coordinates of the input Rect using the supplied Matrix, and write the result
-     * into the output Rect
-     * @param inRect the input Rect for this operation
-     * @param outRect the output Rect for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用して入力Rectの座標を変換し、結果を出力Rectに書き込みます。
+     * @param inRect この操作の入力Rect
+     * @param outRect この操作の出力Rect
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(Rect inRect, Rect outRect, Matrix transformMatrix) {
         float[] inOutDecodeRect = createInOutDecodeRect(transformMatrix);
@@ -73,11 +68,10 @@ public class MatrixUtils {
     }
 
     /**
-     * Transform the coordinates of the input RectF using the supplied Matrix, and write the result
-     * into the output RectF
-     * @param inRect the input RectF for this operation
-     * @param outRect the output RectF for this operation
-     * @param transformMatrix the Matrix for transforming the Rect.
+     * 指定されたMatrixを使用して入力RectFの座標を変換し、結果を出力RectFに書き込みます。
+     * @param inRect この操作の入力RectF
+     * @param outRect この操作の出力RectF
+     * @param transformMatrix Rectを変換するMatrix
      */
     public static void transformRect(RectF inRect, RectF outRect, Matrix transformMatrix) {
         float[] inOutDecodeRect = createInOutDecodeRect(transformMatrix);
@@ -87,8 +81,10 @@ public class MatrixUtils {
         readOutputRect(inOutDecodeRect, outRect);
     }
 
-    // The group of functions below are used as building blocks of the transformRect() functions
-    // in order to not repeat the same exact code a lot of times.
+    /**
+     * 以下の関数群はtransformRect()関数のビルディングブロックとして使用され、
+     * 同じコードを何度も繰り返さないようにするためのものです。
+     */
     private static void writeInputRect(float[] inOutDecodeRect, RectF inRect) {
         inOutDecodeRect[0] = inRect.left;
         inOutDecodeRect[1] = inRect.top;
@@ -117,24 +113,29 @@ public class MatrixUtils {
         outRect.bottom = (int)inOutDecodeRect[7];
     }
 
+    /**
+     * 変換用の8要素の浮動小数点配列を作成します。
+     * 単位行列の場合はnullを返します。
+     */
     private static float[] createInOutDecodeRect(Matrix transformMatrix) {
         if(transformMatrix.isIdentity()) return null;
-        // We need an array of 8 floats because each point is two floats,
-        // we need to transform two points and we need to have a separated input and output
         return new float[8];
     }
 
+    /**
+     * Matrixを使用して点群を変換します。
+     */
     private static void transformPoints(float[] inOutDecodeRect, Matrix transformMatrix) {
         transformMatrix.mapPoints(inOutDecodeRect, 4, inOutDecodeRect, 0, 2);
     }
 
     /**
-     * Invert the source matrix, and write the result into the destination matrix.
-     * Android's integrated Matrix.invert() has some unexpected conditions when the matrix
-     * can't be inverted, and in that case the method inverts the matrix by hand.
-     * @param source Source matrix
-     * @param destination The inverse of the source matrix
-     * @throws IllegalArgumentException when the matrix is not invertible
+     * ソース行列を反転し、結果をデスティネーション行列に書き込みます。
+     * Androidの組み込みMatrix.invert()は、行列が反転できない場合に予期しない条件があり、
+     * その場合は手動で行列を反転します。
+     * @param source ソース行列
+     * @param destination ソース行列の逆行列
+     * @throws IllegalArgumentException 行列が反転不可能な場合
      */
     public static void inverse(Matrix source, Matrix destination) throws IllegalArgumentException {
         if(source.invert(destination)) return;
@@ -144,7 +145,9 @@ public class MatrixUtils {
         destination.setValues(matrix);
     }
 
-    // This was made by ChatGPT and i have no clue what's happening here, but it works so eh
+    /**
+     * ChatGPTによって作成された手動の3x3行列反転処理。
+     */
     private static void inverseMatrix(float[] matrix) {
         float determinant = matrix[0] * (matrix[4] * matrix[8] - matrix[5] * matrix[7])
                 - matrix[1] * (matrix[3] * matrix[8] - matrix[5] * matrix[6])

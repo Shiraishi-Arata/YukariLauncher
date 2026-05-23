@@ -41,6 +41,9 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.util.EnumMap
 
+/**
+ * カスタム背景設定フラグメント
+ */
 class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_background) {
     companion object {
         const val TAG: String = "CustomBackgroundFragment"
@@ -51,6 +54,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
     private var openDocumentLauncher: ActivityResultLauncher<Array<String>>? = null
     private var backgroundType: BackgroundType = BackgroundType.MAIN_MENU
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult<Array<String>, Uri>(ActivityResultContracts.OpenDocument()) { result: Uri? ->
@@ -70,6 +76,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,6 +88,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
         initBackgroundMap()
@@ -98,8 +110,7 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
                         val mediaFile = image || video
                         val filesButton = FilesButton()
                         filesButton.setButtonVisibility(false, false, true, true, true, mediaFile)
-                        //默认虚拟鼠标不支持分享、重命名、删除操作
-                        val message = if (mediaFile) { //如果选中的不是图片或视频，那么将显示默认的文件选择提示信息
+                        val message = if (mediaFile) {
                             getString(R.string.custom_background_dialog_message, currentStatusName)
                         } else {
                             getString(R.string.file_message)
@@ -171,6 +182,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         startNewbieGuide()
     }
 
+    /**
+     * 初心者ガイドを開始する
+     */
     private fun startNewbieGuide() {
         if (NewbieGuideUtils.showOnlyOne(TAG)) return
         binding.actionBar.apply {
@@ -185,6 +199,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * 背景設定マップを初期化する
+     */
     private fun initBackgroundMap() {
         BackgroundManager.apply {
             backgroundMap[BackgroundType.MAIN_MENU] = properties[BackgroundType.MAIN_MENU.name] as String? ?: NULL
@@ -193,18 +210,27 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * 背景ファイルのパスを取得する
+     */
     private fun backgroundPath(): File {
         val dirBackground = PathManager.DIR_BACKGROUND
         if (!dirBackground.exists()) mkdirs(dirBackground)
         return dirBackground
     }
 
+    /**
+     * 背景表示を更新する
+     */
     private fun refreshBackground() {
         if (backgroundType == BackgroundType.MAIN_MENU) EventBus.getDefault().post(
             MainBackgroundChangeEvent())
         refreshBackgroundPreview()
     }
 
+    /**
+     * 現在のタブ名を取得する
+     */
     private val currentStatusName: String
         get() = when (this.backgroundType) {
             BackgroundType.MAIN_MENU -> getString(R.string.custom_background_main_menu)
@@ -212,6 +238,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
             BackgroundType.IN_GAME -> getString(R.string.custom_background_in_game)
         }
 
+    /**
+     * タブ選択に応じて背景種別を更新する
+     */
     private fun refreshType(index: Int) {
         when (index) {
             1 -> this.backgroundType = BackgroundType.CUSTOM_CONTROLS
@@ -223,6 +252,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         refreshBackgroundPreview()
     }
 
+    /**
+     * 背景プレビューを更新する
+     */
     private fun refreshBackgroundPreview() {
         binding.preview.let {
             BackgroundManager.getBackgroundImage(backgroundType)?.apply {
@@ -237,6 +269,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * ビューを初期化する
+     */
     private fun initViews() {
         binding.fileRecyclerView.setFileIcon(FileIcon.FILE)
 
@@ -257,6 +292,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * タブをバインドする
+     */
     private fun bindTabs() {
         binding.tabLayout.apply {
             val mainMenu = newTab()
@@ -275,6 +313,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(backgroundLayout, Animations.BounceInDown))
@@ -282,6 +323,9 @@ class CustomBackgroundFragment : FragmentWithAnim(R.layout.fragment_custom_backg
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(backgroundLayout, Animations.FadeOutUp))

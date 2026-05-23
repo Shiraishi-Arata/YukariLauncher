@@ -1,7 +1,7 @@
 package com.arata.yukarilauncher.event.value
 
 /**
- * 切换设置页面时，使用这个事件通知Fragment播放动画
- * @param index Fragment的类别索引
+ * 設定ページの切り替え時に、Fragmentにアニメーション再生を通知するイベント
+ * @param index Fragmentのカテゴリインデックス
  */
 class SettingsPageSwapEvent(val index: Int)

@@ -3,18 +3,13 @@ package com.arata.yukarilauncher.ui.subassembly.hotbar
 import com.arata.yukarilauncher.R
 
 /**
- * 快捷栏判定类型
- * @param nameId 类型的本地化名称id
- * @param valueName 类型的设置存储值
+ * ホットバー判定タイプ
+ * @param nameId タイプのローカライズ名リソースID
+ * @param valueName タイプの設定保存値
  */
 enum class HotbarType(val nameId: Int, val valueName: String) {
-    /**
-     * 自适应：根据屏幕分辨率、GUI缩放尺寸，为判定框自动计算出合适的宽与高（可能会不精准）
-     */
+    /** 自動: 画面解像度とGUIスケールに基づいて判定枠の幅と高さを自動計算する（精度が低い可能性あり） */
     AUTO(R.string.option_hotbar_type_auto, "auto"),
-
-    /**
-     * 手动：让用户自行调整判定框的宽与高
-     */
+    /** 手動: ユーザーが判定枠の幅と高さを手動調整する */
     MANUALLY(R.string.option_hotbar_type_manually, "manually")
 }

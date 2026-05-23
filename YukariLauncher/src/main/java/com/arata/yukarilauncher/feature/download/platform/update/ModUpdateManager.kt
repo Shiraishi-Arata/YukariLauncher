@@ -9,6 +9,19 @@ import java.io.File
 
 object ModUpdateManager {
 
+    /**
+     * インストール済みModのアップデートを確認する
+     * @param context コンテキスト
+     * @param modsDir Modディレクトリ
+     * @param minecraftVersion Minecraftのバージョン
+     * @param selectedLoader 選択されたローダー
+     * @param onProgress 進捗コールバック（現在数、合計数、Mod名）
+     * @param onComplete 完了コールバック（アップデートリスト）
+     * @param onError エラーコールバック
+     */
+/**
+ * checkUpdatesする
+ */
     fun checkUpdates(
         context: Context,
         modsDir: File,
@@ -43,8 +56,7 @@ object ModUpdateManager {
                         val update: ModUpdate? = when (targetLoader) {
 
                             "fabric", "quilt" -> {
-                                // PRIMARY: resolve by SHA-1 hash — works regardless of whether the
-                                // fabric.mod.json "id" matches the Modrinth project slug.
+                                // プライマリ: SHA-1ハッシュで解決 — fabric.mod.jsonの"id"がModrinthのスラグと一致しなくても動作
                                 val byHash = mod.sha1?.let { sha1 ->
                                     Logging.i("ModUpdate", "Trying hash lookup for ${mod.modName} (sha1=$sha1)")
                                     ModrinthUpdateHelper.checkUpdateByHash(
@@ -55,7 +67,7 @@ object ModUpdateManager {
                                     )
                                 }
 
-                                // FALLBACK: slug/id-based lookup (may fail if IDs don't match)
+                                // フォールバック: スラグ/IDベースの検索（IDが一致しないと失敗する可能性あり）
                                 byHash ?: run {
                                     Logging.i("ModUpdate", "Hash lookup missed, falling back to slug for ${mod.modName}")
                                     ModrinthUpdateHelper.checkUpdate(
@@ -71,7 +83,7 @@ object ModUpdateManager {
                             "forge", "neoforge" -> {
                                 val loaderKey = targetLoader
 
-                                // PRIMARY: hash lookup on Modrinth
+                                // プライマリ: Modrinthでハッシュ検索
                                 val byHash = mod.sha1?.let { sha1 ->
                                     Logging.i("ModUpdate", "Trying hash lookup for ${mod.modName} (sha1=$sha1)")
                                     ModrinthUpdateHelper.checkUpdateByHash(
@@ -90,7 +102,7 @@ object ModUpdateManager {
                                     }
                                 }
 
-                                // FALLBACK 1: Modrinth slug lookup
+                                // フォールバック1: Modrinthスラグ検索
                                 Logging.i("ModUpdate", "Hash lookup missed, trying Modrinth slug for ${mod.modName}")
                                 var result = ModrinthUpdateHelper.checkUpdate(
                                     projectIdOrSlug = mod.modId,
@@ -100,7 +112,7 @@ object ModUpdateManager {
                                     currentFileName = mod.file.name
                                 )
 
-                                // FALLBACK 2: CurseForge (numeric IDs only)
+                                // フォールバック2: CurseForge（数値IDのみ）
                                 if (result == null && mod.modId.toLongOrNull() != null) {
                                     Logging.i("ModUpdate", "Modrinth failed, trying CurseForge for ${mod.modName}")
                                     result = CurseForgeUpdateHelper.checkUpdate(
@@ -142,6 +154,18 @@ object ModUpdateManager {
         }
     }
 
+    /**
+     * アップデートを適用する（ファイルのダウンロードと置き換え）
+     * @param context コンテキスト
+     * @param updates 適用するアップデートのリスト
+     * @param gameDir ゲームディレクトリ
+     * @param onProgress 進捗コールバック（現在数、合計数、ファイル名、パーセンテージ）
+     * @param onComplete 完了コールバック
+     * @param onError エラーコールバック
+     */
+/**
+ * applyUpdatesする
+ */
     fun applyUpdates(
         context: Context,
         updates: List<ModUpdate>,
@@ -171,7 +195,7 @@ object ModUpdateManager {
                         TaskExecutors.runInUIThread {
                             onProgress(index + 1, total, update.fileName, 100)
                         }
-                        // Delete old file if it's a different file
+                        // 別のファイルであれば古いファイルを削除
                         update.originalFile?.takeIf { it.exists() && it != targetFile }?.delete()
                         return@forEachIndexed
                     }
@@ -189,7 +213,7 @@ object ModUpdateManager {
                             }
                         }
                     )
-                    // Delete old file after successful download
+                    // ダウンロード成功後に古いファイルを削除
                     update.originalFile?.takeIf { it.exists() && it != targetFile }?.delete()
                     successCount++
                     Logging.i("ModUpdate", "Downloaded ${update.fileName}")

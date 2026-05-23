@@ -1,38 +1,44 @@
-package com.arata.yukarilauncher.ui.subassembly.customcontrols;
+package com.arata.yukarilauncher.ui.subassembly.customcontrols
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 
-import com.google.android.flexbox.FlexboxLayout;
-import com.arata.yukarilauncher.R;
-import com.arata.yukarilauncher.databinding.ItemControlListViewBinding;
-import com.arata.yukarilauncher.databinding.ItemFileListViewBinding;
-import com.arata.yukarilauncher.task.Task;
-import com.arata.yukarilauncher.task.TaskExecutors;
-import com.arata.yukarilauncher.ui.dialog.ControlInfoDialog;
-import com.arata.yukarilauncher.utils.stringutils.StringUtils;
+import com.google.android.flexbox.FlexboxLayout
+import com.arata.yukarilauncher.R
+import com.arata.yukarilauncher.databinding.ItemControlListViewBinding
+import com.arata.yukarilauncher.databinding.ItemFileListViewBinding
+import com.arata.yukarilauncher.task.Task
+import com.arata.yukarilauncher.task.TaskExecutors
+import com.arata.yukarilauncher.ui.dialog.ControlInfoDialog
+import com.arata.yukarilauncher.utils.stringutils.StringUtils
 
-import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.Tools
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList
+import java.util.List
 
+/**
+ * コントロール設定一覧のRecyclerViewアダプター
+ */
 public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_VALID = 0;
     private static final int VIEW_TYPE_INVALID = 1;
     private final List<ControlItemBean> mData = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
+    /**
+     * アイテムタイプに応じたビューホルダーを生成します。
+     */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -43,6 +49,9 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * ビューホルダーにコントロールアイテムデータをバインドします。
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ControlItemBean controlItemBean = this.mData.get(position);
@@ -70,16 +79,25 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * アイテム総数を返します。
+     */
     @Override
     public int getItemCount() {
         return this.mData.size();
     }
 
+    /**
+     * 指定位置のアイテムタイプを返します（有効/無効）。
+     */
     @Override
     public int getItemViewType(int position) {
         return (this.mData.get(position).isInvalid) ? VIEW_TYPE_INVALID : VIEW_TYPE_VALID;
     }
 
+    /**
+     * アイテムリストを更新する
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void updateItems(List<ControlItemBean> items) {
         this.mData.clear();
@@ -87,22 +105,32 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     * アイテムクリックリスナーを設定する
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
+    /**
+     * アイテムクリックのコールバックインターフェース
+     */
     public interface OnItemClickListener {
         void onItemClick(String name);
-
         void onLongClick(String name);
-
         void onInvalidItemClick(String name);
     }
 
+    /**
+     * 無効なコントロール設定のビューホルダー
+     */
     public static class InvalidViewHolder extends RecyclerView.ViewHolder {
         private final Context context;
         private final ItemFileListViewBinding binding;
 
+        /**
+         * ホルダーを構築する
+         */
         public InvalidViewHolder(@NonNull ItemFileListViewBinding binding) {
             super(binding.getRoot());
             context = binding.getRoot().getContext();
@@ -111,27 +139,38 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             binding.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_disabled));
         }
 
+        /**
+         * 無効アイテムのデータを設定する
+         */
         public void setData(ControlItemBean controlItemBean) {
             String text = StringUtils.insertSpace(context.getString(R.string.controls_info_invalid), controlItemBean.controlInfoData.fileName);
             binding.name.setText(text);
 
-            //设置文本字体
             binding.name.setTextColor(Color.rgb(255, 60, 60));
             binding.name.setTypeface(null, Typeface.BOLD);
             binding.name.setTextSize(14);
         }
     }
 
+    /**
+     * 有効なコントロール設定のビューホルダー
+     */
     public class ValidViewHolder extends RecyclerView.ViewHolder {
         private final Context mContext;
         private final ItemControlListViewBinding binding;
 
+        /**
+         * ホルダーを構築する
+         */
         public ValidViewHolder(@NonNull ItemControlListViewBinding binding) {
             super(binding.getRoot());
             mContext = binding.getRoot().getContext();
             this.binding = binding;
         }
 
+        /**
+         * 有効アイテムのデータを設定する
+         */
         public void setData(ControlItemBean controlItemBean) {
             ControlInfoData controlInfoData = controlItemBean.controlInfoData;
 
@@ -148,7 +187,6 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             List<TextView> infoViews = new ArrayList<>();
 
-            //初始化控制布局名称，如果为空，那么将设置为文件名
             if (!controlInfoData.name.isEmpty() && !controlInfoData.name.equals("null")) {
                 if (controlInfoData.name.equals("control.default.title.text")) {
                     controlInfoData.name = mContext.getString(R.string.controls_info_default_title);
@@ -159,23 +197,19 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 binding.title.setText(controlInfoData.fileName);
             }
 
-            //设置高亮
             int color = controlItemBean.isHighlighted ?
                     Color.rgb(69, 179, 162) :
                     binding.title.getResources().getColor(R.color.primary_text, binding.title.getContext().getTheme());
             binding.title.setTextColor(color);
 
-            //初始化作者名，如果没有填写，那么就隐藏它
             if (!controlInfoData.author.isEmpty() && !controlInfoData.author.equals("null")) {
                 infoViews.add(getAInfoTextView(R.string.controls_info_author, controlInfoData.author));
             }
 
-            //初始化版本
             if (!controlInfoData.version.isEmpty() && !controlInfoData.version.equals("null")) {
                 infoViews.add(getAInfoTextView(R.string.controls_info_version, controlInfoData.version));
             }
 
-            //初始化描述说明
             if (!controlInfoData.desc.isEmpty() && !controlInfoData.desc.equals("null")) {
                 if (controlInfoData.desc.equals("control.default.desc.text")) {
                     controlInfoData.desc = mContext.getString(R.string.controls_info_default_desc);
@@ -192,6 +226,9 @@ public class ControlListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         }
 
+        /**
+         * 情報表示用のTextViewを生成する
+         */
         private TextView getAInfoTextView(int string, String value) {
             TextView textView = new TextView(mContext);
             textView.setText(StringUtils.insertSpace(mContext.getString(string), value));

@@ -22,11 +22,17 @@ public class ForgeDownloadTask implements InstallTask, Tools.DownloaderFeedback 
     private String mLoaderVersion;
     private String mGameVersion;
 
+/**
+ * ForgeDownloadTaskする
+ */
     public ForgeDownloadTask(String forgeVersion) {
         this.mDownloadUrl = ForgeUtils.getInstallerUrl(forgeVersion);
         this.mFullVersion = forgeVersion;
     }
 
+/**
+ * ForgeDownloadTaskする
+ */
     public ForgeDownloadTask(String gameVersion, String loaderVersion) {
         this.mLoaderVersion = loaderVersion;
         this.mGameVersion = gameVersion;
@@ -48,6 +54,10 @@ public class ForgeDownloadTask implements InstallTask, Tools.DownloaderFeedback 
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, progress100, R.string.mod_download_progress, mFullVersion);
     }
 
+/**
+ * ForgeインストーラーJARをダウンロードする
+ * @return ダウンロードファイル
+ */
     private File downloadForge() throws Exception {
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.mod_download_progress, mFullVersion);
         File destinationFile = new File(PathManager.DIR_CACHE, "forge-installer.jar");

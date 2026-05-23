@@ -57,7 +57,10 @@ public class GyroControl implements SensorEventListener, GrabListener {
     /* Store the gyro movement under the threshold */
     private float mStoredX = 0;
     private float mStoredY = 0;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public GyroControl(Activity activity) {
         mWindowManager = activity.getWindowManager();
         mSurfaceRotation = -10;
@@ -66,7 +69,10 @@ public class GyroControl implements SensorEventListener, GrabListener {
         mCorrectionListener = new OrientationCorrectionListener(activity);
         updateOrientation();
     }
-
+/**
+ * 「enable」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void enable() {
         if(mSensor == null) return;
         mWarmup = ROTATION_VECTOR_WARMUP_PERIOD;
@@ -75,7 +81,10 @@ public class GyroControl implements SensorEventListener, GrabListener {
         mShouldHandleEvents = CallbackBridge.isGrabbing();
         CallbackBridge.addGrabListener(this);
     }
-
+/**
+ * 「disable」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void disable() {
         if(mSensor == null) return;
         mSensorManager.unregisterListener(this);
@@ -84,7 +93,10 @@ public class GyroControl implements SensorEventListener, GrabListener {
         resetDamper();
         CallbackBridge.removeGrabListener(this);
     }
-
+/**
+ * 「on Sensor Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (!mShouldHandleEvents) return;
@@ -161,10 +173,16 @@ public class GyroControl implements SensorEventListener, GrabListener {
         if(AllStaticSettings.gyroInvertX) xFactor *= -1;
         if(AllStaticSettings.gyroInvertY) yFactor *= -1;
     }
-
+/**
+ * 「on Accuracy Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {}
-
+/**
+ * 「on Grab State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onGrabState(boolean isGrabbing) {
         mWarmup = ROTATION_VECTOR_WARMUP_PERIOD;
@@ -173,8 +191,8 @@ public class GyroControl implements SensorEventListener, GrabListener {
 
 
     /**
-     * Compute the moving average of the gyroscope to reduce jitter
-     * @param newAngleDifference The new angle difference
+     * ジャイロスコープの移動平均を計算してジッターを低減します
+     * @param newAngleDifference 新しい角度の差
      */
     private void damperValue(float[] newAngleDifference){
         mHistoryIndex ++;
@@ -206,11 +224,17 @@ public class GyroControl implements SensorEventListener, GrabListener {
     }
 
     class OrientationCorrectionListener extends OrientationEventListener {
-
+/**
+ * 「Orientation Correction Listener」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         public OrientationCorrectionListener(Context context) {
             super(context, SensorManager.SENSOR_DELAY_NORMAL);
         }
-
+/**
+ * 「on Orientation Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public void onOrientationChanged(int i) {
             // Force to wait to be in game before setting factors

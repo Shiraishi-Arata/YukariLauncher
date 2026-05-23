@@ -28,33 +28,59 @@ import java.util.Locale
 import java.util.StringJoiner
 import java.util.TimeZone
 
+/**
+ * Modのバージョン一覧を表示するRecyclerViewアダプター。
+ * 各バージョンのダウンロード数、日付、Modローダー、依存関係を表示し、インストール処理を行う。
+ */
 class VersionAdapter(
     private val infoItem: InfoItem,
     private val platformHelper: AbstractPlatformHelper,
     private val mData: List<VersionItem>?
 ) : RecyclerView.Adapter<VersionAdapter.InnerHolder>() {
 
+    /**
+     * 初期化時にデータをアップロード日でソートする。
+     */
     init {
-        mData?.sortedWith { o1, o2 ->  //按照日期进行一波排序
+        mData?.sortedWith { o1, o2 ->
             o1.uploadDate.compareTo(o2.uploadDate)
         }
     }
 
+    /**
+     * 新しいViewHolderを生成する。
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerHolder {
         return InnerHolder(ItemModVersionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
+    /**
+     * 指定位置のバージョンデータをViewHolderにバインドする。
+     */
     override fun onBindViewHolder(holder: InnerHolder, position: Int) {
         holder.setData(mData!![position])
     }
 
+    /**
+     * バージョンアイテムの総数を返す。
+     */
     override fun getItemCount(): Int = mData?.size ?: 0
 
+    /**
+     * バージョン1項目分のViewHolder。
+     * バージョン情報の表示とインストール処理を担当する。
+     */
     inner class InnerHolder(private val binding: ItemModVersionBinding) : RecyclerView.ViewHolder(
         binding.root
     ) {
         private val mContext: Context = itemView.context
 
+        /**
+         * バージョンアイテムのデータをビューに設定する。
+         * バージョンタイトル、ダウンロード数、日付、Modローダー、タグを表示する。
+         * クリック時は依存関係ダイアログを表示し、インストールを開始する。
+         * @param versionItem 表示するバージョンアイテム
+         */
         fun setData(versionItem: VersionItem) {
             binding.downloadImageview.setImageResource(getDownloadType(versionItem.versionType))
 
@@ -92,6 +118,11 @@ class VersionAdapter(
             }
         }
 
+        /**
+         * バージョンのインストールを開始する。
+         * 進行中のタスクがある場合はシェイクアニメーションを表示し、トーストで通知する。
+         * @param versionItem インストールするバージョンアイテム
+         */
         private fun startInstall(versionItem: VersionItem) {
             platformHelper.install(mContext, infoItem, versionItem) { key ->
                 val containsProgress = ProgressKeeper.containsProgress(key)
@@ -103,6 +134,11 @@ class VersionAdapter(
             }
         }
 
+        /**
+         * バージョンタイプに対応するダウンロードアイコンのリソースIDを取得する。
+         * @param versionType バージョンタイプ
+         * @return ダウンロードアイコンのリソースID
+         */
         private fun getDownloadType(versionType: VersionType): Int {
             return when (versionType) {
                 VersionType.BETA -> R.drawable.ic_download_beta
@@ -111,6 +147,11 @@ class VersionAdapter(
             }
         }
 
+        /**
+         * バージョンタイプに対応する表示テキストを取得する。
+         * @param versionType バージョンタイプ
+         * @return 表示用テキスト
+         */
         private fun getDownloadTypeText(versionType: VersionType): String {
             val text = when (versionType) {
                 VersionType.RELEASE -> mContext.getString(R.string.generic_release)
@@ -120,10 +161,21 @@ class VersionAdapter(
             return text
         }
 
+        /**
+         * リソースIDと値からタグ用のTextViewを生成する。
+         * @param string ラベルのリソースID
+         * @param value 表示する値
+         * @return 生成されたTextView
+         */
         private fun getTagTextView(string: Int, value: String): TextView {
             return getTagTextView(StringUtils.insertSpace(mContext.getString(string), value))
         }
 
+        /**
+         * 指定されたテキストでタグ用のTextViewを生成する。
+         * @param value 表示するテキスト
+         * @return 生成されたTextView
+         */
         private fun getTagTextView(value: String): TextView {
             val textView = TextView(mContext)
             textView.text = value

@@ -1,3 +1,7 @@
+/**
+ * プロジェクトの設定
+ * プラグイン管理、依存関係解決、サブプロジェクトの構成を行います。
+ */
 pluginManagement {
     repositories {
         gradlePluginPortal()

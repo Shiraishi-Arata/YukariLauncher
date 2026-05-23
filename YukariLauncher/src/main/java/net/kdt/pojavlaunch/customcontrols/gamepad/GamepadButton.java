@@ -1,12 +1,15 @@
 package net.kdt.pojavlaunch.customcontrols.gamepad;
 
 /**
- *  This class corresponds to a button that does exist on the gamepad
+ *  このクラスは、ゲームパッドに物理的に存在するボタンに対応します
  */
 public class GamepadButton extends GamepadEmulatedButton {
     public boolean isToggleable = false;
     private boolean mIsToggled = false;
-
+/**
+ * 「on Down State Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     @Override
     protected void onDownStateChanged(boolean isDown) {
@@ -18,7 +21,10 @@ public class GamepadButton extends GamepadEmulatedButton {
         }
         super.onDownStateChanged(isDown);
     }
-
+/**
+ * 「reset Button State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void resetButtonState() {
         if(!mIsDown && mIsToggled) {

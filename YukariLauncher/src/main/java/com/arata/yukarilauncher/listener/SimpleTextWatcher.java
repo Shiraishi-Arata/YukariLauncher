@@ -3,8 +3,8 @@ package com.arata.yukarilauncher.listener;
 import android.text.TextWatcher;
 
 /**
- * Most interfaces implementations of {@link TextWatcher} only implement the afterTextChanged method.
- * This class provides a default for other methods.
+ * {@link TextWatcher} の実装のほとんどは afterTextChanged メソッドのみを実装する
+ * このクラスは他のメソッドにデフォルト実装を提供する
  */
 public interface SimpleTextWatcher extends TextWatcher {
     @Override

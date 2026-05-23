@@ -11,6 +11,9 @@ import com.arata.yukarilauncher.utils.path.UrlManager
 class LocalAccountUtils {
     companion object {
         @JvmStatic
+/**
+ * checkUsageAllowedする
+ */
         fun checkUsageAllowed(listener: CheckResultListener) {
             if (AccountsManager.hasMicrosoftAccount()) {
                 listener.onUsageAllowed()
@@ -20,12 +23,18 @@ class LocalAccountUtils {
         }
 
         @JvmStatic
+/**
+ * saveRemindersする
+ */
         fun saveReminders(checked: Boolean) {
             AllSettings.localAccountReminders.put(!checked).save()
         }
 
         @JvmStatic
         @SuppressLint("InflateParams")
+/**
+ * openDialogする
+ */
         fun openDialog(
             activity: Activity,
             confirmClickListener: TipDialog.OnConfirmClickListener?,
@@ -47,7 +56,13 @@ class LocalAccountUtils {
     }
 
     interface CheckResultListener {
+/**
+ * onUsageAllowedする
+ */
         fun onUsageAllowed()
+/**
+ * onUsageDeniedする
+ */
         fun onUsageDenied()
     }
 }

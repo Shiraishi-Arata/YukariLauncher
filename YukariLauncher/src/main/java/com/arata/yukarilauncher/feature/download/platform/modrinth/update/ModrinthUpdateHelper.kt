@@ -10,20 +10,34 @@ import org.json.JSONObject
 object ModrinthUpdateHelper {
     private val client = OkHttpClient()
 
-    // ---------- helpers ----------
+    // ---------- ヘルパー ----------
 
     /**
-     * Normalise a version string for loose equality checking.
-     * Strips leading "v", spaces, and build-metadata (the "+..." suffix).
-     * Example: "v1.40.0+mc1.21.1" → "1.40.0"
+     * バージョン文字列を正規化して大まかな等価性をチェックできるようにする
+     * 先頭の"v"、スペース、ビルドメタデータ（"+..." サフィックス）を除去する
+     * 例: "v1.40.0+mc1.21.1" → "1.40.0"
+     * @param v 元のバージョン文字列
+     * @return 正規化されたバージョン文字列
      */
+/**
+ * normalizeVersionする
+ */
     private fun normalizeVersion(v: String): String =
         v.trim()
             .lowercase()
             .removePrefix("v")
             .replace(" ", "")
-            .substringBefore("+")   // drop build-metadata like "+mc1.21.1"
+            .substringBefore("+")   // "+mc1.21.1" のようなビルドメタデータを削除
 
+    /**
+     * 現在のバージョンと最新バージョンが等価かどうかを判定する
+     * @param current 現在のバージョン
+     * @param latest 最新バージョン
+     * @return 等価の場合はtrue
+     */
+/**
+ * versionsEquivalentする
+ */
     private fun versionsEquivalent(current: String, latest: String): Boolean {
         val nc = normalizeVersion(current)
         val nl = normalizeVersion(latest)
@@ -33,6 +47,15 @@ object ModrinthUpdateHelper {
             nc == nl
     }
 
+    /**
+     * 指定されたバージョンが特定のファイル名を持つかどうかを確認する
+     * @param version 確認するバージョンJSONオブジェクト
+     * @param fileName 確認するファイル名
+     * @return ファイル名が存在する場合はtrue
+     */
+/**
+ * hasFileNameする
+ */
     private fun hasFileName(version: JSONObject, fileName: String): Boolean {
         val files = version.optJSONArray("files") ?: return false
         for (i in 0 until files.length()) {
@@ -42,7 +65,16 @@ object ModrinthUpdateHelper {
         return false
     }
 
-    /** Filter a raw versions JSONArray to those compatible with [minecraftVersion] and optionally [loader]. */
+    /**
+     * バージョンのJSON配列を、指定されたMinecraftバージョンとローダーでフィルタリングする
+     * @param versions バージョンのJSON配列
+     * @param minecraftVersion 互換性のあるMinecraftバージョン
+     * @param loader 互換性のあるローダー（オプション）
+     * @return フィルタリングされたJSONObjectのリスト
+     */
+/**
+ * filterCompatibleする
+ */
     private fun filterCompatible(
         versions: JSONArray,
         minecraftVersion: String,
@@ -71,12 +103,24 @@ object ModrinthUpdateHelper {
         return result
     }
 
+    /**
+     * 最新バージョン情報からModUpdateを構築する
+     * @param modId ModのID
+     * @param modName Modの名前
+     * @param currentVersion 現在のバージョン
+     * @param latest 最新バージョンのJSONオブジェクト
+     * @param currentVersionId 現在のバージョンID（nullの場合は文字列比較にフォールバック）
+     * @return 構築されたModUpdate
+     */
+/**
+ * buildModUpdateする
+ */
     private fun buildModUpdate(
         modId: String,
         modName: String,
         currentVersion: String,
         latest: JSONObject,
-        currentVersionId: String?     // null → fall back to string comparison
+        currentVersionId: String?     // null → 文字列比較にフォールバック
     ): ModUpdate {
         val latestVersionId = latest.getString("id")
         val latestVersionNumber = latest.getString("version_number")
@@ -99,22 +143,31 @@ object ModrinthUpdateHelper {
         )
     }
 
-    // ---------- public API ----------
+    // ---------- 公開API ----------
 
     /**
-     * PRIMARY path: identify the installed file via its SHA-1 hash, then check
-     * whether a newer compatible version exists on Modrinth.
+     * プライマリパス：インストール済みファイルをSHA-1ハッシュで特定し、
+     * Modrinthに新しい互換バージョンが存在するか確認する
      *
-     * This sidesteps the modId ↔ Modrinth-slug mismatch problem entirely.
-     * Returns null if the hash is not recognised by Modrinth (e.g. CurseForge-only mod).
+     * この方法はmodIdとModrinthスラグの不一致問題を完全に回避する
+     * ハッシュがModrinthで認識されない場合（例：CurseForge専用Mod）はnullを返す
+     *
+     * @param sha1 ファイルのSHA-1ハッシュ
+     * @param fallbackModName フォールバック用のMod名
+     * @param minecraftVersion Minecraftのバージョン
+     * @param loader ローダー名（オプション）
+     * @return アップデート情報。見つからない場合はnull
      */
+/**
+ * checkUpdateByHashする
+ */
     fun checkUpdateByHash(
         sha1: String,
         fallbackModName: String,
         minecraftVersion: String,
         loader: String?
     ): ModUpdate? {
-        // Step 1 – resolve the installed file to a Modrinth version
+        // Step 1 – インストール済みファイルをModrinthのバージョンに解決
         val hashRequest = Request.Builder()
             .url("https://api.modrinth.com/v2/version_file/$sha1?algorithm=sha1")
             .build()
@@ -139,7 +192,7 @@ object ModrinthUpdateHelper {
 
         Logging.i("ModUpdate", "Hash resolved: $fallbackModName → project $projectId @ $installedVersionNumber")
 
-        // Step 2 – fetch all versions for this project and pick the latest compatible one
+        // Step 2 – このプロジェクトの全バージョンを取得し、互換性のある最新バージョンを選択
         val listRequest = Request.Builder()
             .url("https://api.modrinth.com/v2/project/$projectId/version")
             .build()
@@ -166,10 +219,20 @@ object ModrinthUpdateHelper {
     }
 
     /**
-     * FALLBACK path: use the mod's internal ID / known Modrinth slug directly.
-     * Less reliable because the fabric.mod.json id and the Modrinth project slug
-     * often differ, but kept as a best-effort fallback.
+     * フォールバックパス：Modの内部ID/既知のModrinthスラグを直接使用する
+     * fabric.mod.jsonのidとModrinthのプロジェクトスラグは
+     * しばしば異なるため信頼性は低いが、ベストエフォートのフォールバックとして維持
+     *
+     * @param projectIdOrSlug ModrinthのプロジェクトIDまたはスラグ
+     * @param currentVersion 現在のバージョン
+     * @param minecraftVersion Minecraftのバージョン
+     * @param loader ローダー名（オプション）
+     * @param currentFileName 現在のファイル名（オプション）
+     * @return アップデート情報。見つからない場合はnull
      */
+/**
+ * checkUpdateする
+ */
     fun checkUpdate(
         projectIdOrSlug: String,
         currentVersion: String,
@@ -191,8 +254,8 @@ object ModrinthUpdateHelper {
                 val latest = compatible[0]
                 val latestVersionId = latest.getString("id")
 
-                // Try to pin the installed version by filename first, then fall back to
-                // loose version-string comparison (with build-metadata stripped).
+                // まずファイル名でインストール済みバージョンを特定し、
+                // 見つからない場合はビルドメタデータを除去した文字列比較にフォールバック
                 val installedByFile = currentFileName?.let { name ->
                     compatible.firstOrNull { hasFileName(it, name) }
                 }

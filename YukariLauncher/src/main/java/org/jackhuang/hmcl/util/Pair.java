@@ -21,11 +21,18 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * キーと値のペアを保持する不変クラス
  *
  * @author huangyuhui
  */
 public final class Pair<K, V> implements Map.Entry<K, V> {
 
+    /**
+     * 新しいペアを作成します。
+     * @param key キー
+     * @param value 値
+     * @return 新しいPair
+     */
     public static <K, V> Pair<K, V> pair(K key, V value) {
         return new Pair<>(key, value);
     }
@@ -33,25 +40,40 @@ public final class Pair<K, V> implements Map.Entry<K, V> {
     private K key;
     private V value;
 
+    /**
+     * キーと値のペアを構築します。
+     */
     private Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }
 
+    /**
+     * キーを返します。
+     */
     @Override
     public K getKey() {
         return key;
     }
 
+    /**
+     * キーを設定します。
+     */
     public void setKey(K key) {
         this.key = key;
     }
 
+    /**
+     * 値を返します。
+     */
     @Override
     public V getValue() {
         return value;
     }
 
+    /**
+     * 値を設定し、古い値を返します。
+     */
     @Override
     public V setValue(V value) {
         V original = this.value;
@@ -59,6 +81,9 @@ public final class Pair<K, V> implements Map.Entry<K, V> {
         return original;
     }
 
+    /**
+     * このペアのハッシュコードを返します。
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -67,6 +92,9 @@ public final class Pair<K, V> implements Map.Entry<K, V> {
         return hash;
     }
 
+    /**
+     * このペアが指定されたオブジェクトと等しいかどうかを判定します。
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -79,6 +107,9 @@ public final class Pair<K, V> implements Map.Entry<K, V> {
         return Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value);
     }
 
+    /**
+     * このペアの文字列表現を返します。
+     */
     @Override
     public String toString() {
         return "(" + key + ", " + value + ")";

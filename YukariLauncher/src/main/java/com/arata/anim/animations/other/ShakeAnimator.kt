@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 横方向の振動（シェイク）アニメーション
+ * X座標を0→15→-15→10→-10→7→-7→4→-4→0と往復させて振動を表現する
+ */
 class ShakeAnimator: BaseAnimator() {
+    /** シェイクアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(ObjectAnimator.ofFloat(target, "translationX", 0f, 15f, -15f, 10f, -10f, 7f, -7f, 4f, -4f, 0f))
     }

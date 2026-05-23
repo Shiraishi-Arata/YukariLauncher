@@ -12,7 +12,7 @@ import net.kdt.pojavlaunch.prefs.LauncherPreferences
 
 class AllSettings {
     companion object {
-        // Video
+        // ビデオ設定
         @JvmStatic
         val renderer = StringSettingUnit("renderer", "opengles2")
 
@@ -46,7 +46,7 @@ class AllSettings {
         @JvmStatic
         val zinkPreferSystemDriver = BooleanSettingUnit("zinkPreferSystemDriver", false)
 
-        // Control
+        // コントロール設定
         @JvmStatic
         val disableGestures = BooleanSettingUnit("disableGestures", false)
 
@@ -98,7 +98,7 @@ class AllSettings {
         @JvmStatic
         val deadZoneScale = IntSettingUnit("gamepad_deadzone_scale", 100)
 
-        // Game
+        // ゲーム設定
         @JvmStatic
         val versionIsolation = BooleanSettingUnit("versionIsolation", true)
 
@@ -122,7 +122,7 @@ class AllSettings {
 
         @JvmStatic
         val ramAllocation = lazy {
-            //涉及到Context初始化，需要进行懒加载
+            // Contextの初期化が必要なため遅延ロード
             IntSettingUnit("allocation", LauncherPreferences.findBestRAMAllocation(ContextExecutor.getApplication()))
         }
 
@@ -147,7 +147,7 @@ class AllSettings {
         @JvmStatic
         val gameMenuAlpha = IntSettingUnit("gameMenuAlpha", 100)
 
-        // Launcher
+        // ランチャー設定
         @JvmStatic
         val checkLibraries = BooleanSettingUnit("checkLibraries", true)
 
@@ -188,7 +188,7 @@ class AllSettings {
         @JvmStatic
         val acceptPreReleaseUpdates = BooleanSettingUnit("acceptPreReleaseUpdates", false)
 
-        // Experimental
+        // 実験的設定
         @JvmStatic
         val dumpShaders = BooleanSettingUnit("dump_shaders", false)
 
@@ -198,7 +198,7 @@ class AllSettings {
         @JvmStatic
         val tcVibrateDuration = IntSettingUnit("tcVibrateDuration", 100)
 
-        // Other
+        // その他の設定
         @JvmStatic
         val currentAccount = StringSettingUnit("currentAccount", "")
 

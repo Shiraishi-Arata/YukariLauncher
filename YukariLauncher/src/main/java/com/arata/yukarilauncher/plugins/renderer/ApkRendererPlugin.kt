@@ -1,5 +1,9 @@
 package com.arata.yukarilauncher.plugins.renderer
 
+/**
+ * APKから読み込まれたレンダラープラグイン
+ * @param packageName プラグインのパッケージ名
+ */
 class ApkRendererPlugin(
     id: String,
     displayName: String,

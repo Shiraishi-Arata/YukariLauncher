@@ -19,6 +19,9 @@ import net.kdt.pojavlaunch.JMinecraftVersionList
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.tasks.AsyncVersionList
 
+/**
+ * Minecraftバージョン選択フラグメント
+ */
 class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
 
     companion object {
@@ -35,6 +38,9 @@ class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
 
     private var versionType: VersionType? = null
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,16 +50,19 @@ class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bindTab()
 
         binding.apply {
-        
+
             AsyncVersionList().getVersionList(
                 object : AsyncVersionList.VersionDoneListener {
                     override fun onVersionDone(versions: JMinecraftVersionList) {
-            
+
                         requireActivity().runOnUiThread {
                             binding.version.setVersionType(versionType)
                             binding.version.setFilterString(
@@ -120,12 +129,18 @@ class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
         }
     }
 
+    /**
+     * タブ選択に応じて表示を更新する
+     */
     private fun refresh(tab: TabLayout.Tab?) {
         setVersionType(tab)
 
         binding.version.setVersionType(versionType)
     }
 
+    /**
+     * タブに対応するバージョン種別を設定する
+     */
     private fun setVersionType(tab: TabLayout.Tab?) {
         versionType = when (tab) {
             release -> VersionType.RELEASE
@@ -137,6 +152,9 @@ class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
         }
     }
 
+    /**
+     * タブをバインドする
+     */
     private fun bindTab() {
         binding.apply {
 
@@ -156,12 +174,18 @@ class VersionSelectorFragment : FragmentWithAnim(R.layout.fragment_version) {
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer
             .apply(AnimPlayer.Entry(binding.versionLayout, Animations.BounceInDown))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.BounceInLeft))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer
             .apply(AnimPlayer.Entry(binding.versionLayout, Animations.FadeOutUp))

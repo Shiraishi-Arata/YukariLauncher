@@ -22,6 +22,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import fr.spse.gamepad_remapper.Remapper
 import net.kdt.pojavlaunch.fragments.GamepadMapperFragment
 
+/**
+ * コントロール設定フラグメント
+ */
 class ControlSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fragment_control, SettingCategory.CONTROL) {
     private lateinit var binding: SettingsFragmentControlBinding
     private var parentFragment: FragmentWithAnim? = null
@@ -30,6 +33,9 @@ class ControlSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fra
         this.parentFragment = parentFragment
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +45,9 @@ class ControlSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fra
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
         SwitchSettingsWrapper(
@@ -220,15 +229,27 @@ class ControlSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fra
         computeVisibility()
     }
 
+    /**
+     * 設定変更時に表示/非表示を再計算します。
+     */
     override fun onChange() {
         super.onChange()
         computeVisibility()
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.root, Animations.BounceInDown))
     }
 
+    /**
+     * 設定変更に応じて表示/非表示を切り替える
+     */
+    /**
+     * 設定変更に応じて表示/非表示を切り替えます。
+     */
     private fun computeVisibility() {
         binding.apply {
             setViewVisibility(
@@ -243,6 +264,9 @@ class ControlSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fra
         }
     }
 
+    /**
+     * ビューの表示/非表示を設定します。
+     */
     private fun setViewVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }

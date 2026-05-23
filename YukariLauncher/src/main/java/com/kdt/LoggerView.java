@@ -18,18 +18,24 @@ import com.arata.yukarilauncher.utils.anim.ViewAnimUtils;
 import net.kdt.pojavlaunch.Logger;
 
 /**
- * A class able to display logs to the user.
- * It has support for the Logger class
+ * ユーザーにログを表示するためのクラス
+ * Loggerクラスに対応しており、ログの表示・非表示をアニメーションで切り替える機能を持つ
  */
 public class LoggerView extends ConstraintLayout {
     private Logger.eventLogListener mLogListener;
     private ViewLoggerBinding binding;
     private boolean isShowing = false;
 
+    /**
+     * コンストラクタ
+     */
     public LoggerView(@NonNull Context context) {
         this(context, null);
     }
 
+    /**
+     * コンストラクタ（属性指定）
+     */
     public LoggerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -40,10 +46,16 @@ public class LoggerView extends ConstraintLayout {
         super.setVisibility(visibility);
     }
 
+    /**
+     * 現在の表示状態をトグルで切り替える（アニメーション付き）
+     */
     public void toggleViewWithAnim() {
         setVisibilityWithAnim(!isShowing);
     }
 
+    /**
+     * アニメーション付きで表示・非表示を設定する
+     */
     public void setVisibilityWithAnim(boolean visibility) {
         if (isShowing == visibility) return;
         isShowing = visibility;
@@ -56,7 +68,8 @@ public class LoggerView extends ConstraintLayout {
     }
 
     /**
-     * 强制展示日志，如果点击关闭按钮，那么将进行回调
+     * ログ表示を強制する
+     * 閉じるボタンが押された場合のコールバックを設定できる
      */
     public void forceShow(OnCloseClickListener listener) {
         setVisibilityWithAnim(true);
@@ -64,27 +77,27 @@ public class LoggerView extends ConstraintLayout {
     }
 
     /**
-     * Inflate the layout, and add component behaviors
+     * レイアウトをインフレートし、コンポーネントの動作を設定する
      */
     private void init() {
         binding = ViewLoggerBinding.inflate(LayoutInflater.from(getContext()), this, true);
 
         binding.logView.setTypeface(Typeface.MONOSPACE);
-        //TODO clamp the max text so it doesn't go oob
+        //TODO 最大テキスト数を制限して画面からはみ出さないようにする
         binding.logView.setMaxLines(Integer.MAX_VALUE);
         binding.logView.setEllipsize(null);
         binding.logView.setVisibility(VISIBLE);
 
-        // Clear log button
+        // ログクリアボタン
         binding.clearLog.setOnClickListener(v -> binding.logView.setText(""));
 
-        // Remove the loggerView from the user View
+        // ユーザーのビューからLoggerViewを削除する
         binding.cancel.setOnClickListener(view -> setVisibilityWithAnim(false));
 
-        // Set the scroll view
+        // スクロールビューの設定
         binding.scroll.setKeepFocusing(true);
 
-        //Set up the autoscroll switch
+        // 自動スクロールスイッチの設定
         binding.toggleAutoscroll.setOnCheckedChangeListener(
                 (compoundButton, isChecked) -> {
                     if (isChecked) binding.scroll.fullScroll(View.FOCUS_DOWN);
@@ -93,7 +106,7 @@ public class LoggerView extends ConstraintLayout {
         );
         binding.toggleAutoscroll.setChecked(true);
 
-        // Listen to logs
+        // ログのリスナー設定
         mLogListener = text -> {
             if (binding.logView.getVisibility() != VISIBLE) return;
             post(() -> {
@@ -105,10 +118,16 @@ public class LoggerView extends ConstraintLayout {
         Logger.setLogListener(mLogListener);
     }
 
+    /**
+     * ViewLoggerBindingを取得する
+     */
     public ViewLoggerBinding getBinding() {
         return binding;
     }
 
+    /**
+     * 閉じるボタンクリック時のコールバックインターフェース
+     */
     public interface OnCloseClickListener {
         void onClick();
     }

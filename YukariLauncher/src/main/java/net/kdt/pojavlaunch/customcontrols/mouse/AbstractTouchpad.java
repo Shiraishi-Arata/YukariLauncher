@@ -2,38 +2,38 @@ package net.kdt.pojavlaunch.customcontrols.mouse;
 
 public interface AbstractTouchpad {
     /**
-     * Get the supposed display state of the mouse (whether it should be shown when the user is in a GUI)
-     * Note that this does *not* reflect the actual visibility state of the mouse
-     * @return current supposed enabled state
+     * マウスの想定表示状態を取得します（GUI表示中にマウスを表示するかどうか）
+     * これはマウスの実際の表示状態を反映しないことに注意してください
+     * @return 現在の想定有効状態
      */
     boolean getDisplayState();
 
     /**
-     * Apply a motion vector to the mouse in form of a two-entry float array. This will move the mouse
-     * on the screen and send the new cursor position to the game.
-     * @param vector the array that contains the vector
+     * 2要素のfloat配列形式のモーションベクターをマウスに適用します。
+     * これにより画面上でマウスが移動し、新しいカーソル位置がゲームに送信されます。
+     * @param vector ベクターを含む配列
      */
     default void applyMotionVector(float[] vector) {
         applyMotionVector(vector[0], vector[1]);
     }
 
     /**
-     * Apply a motion vector to the mouse in form of the separate X/Y coordinates. This will move the mouse
-     * on the screen and send the new cursor position to the game.
-     * @param x the relative X coordinate of the vector
-     * @param y the relative Y coordinate for the vector
+     * マウスにモーションベクターをX/Y座標の個別指定で適用します。
+     * 画面上でマウスが移動し、新しいカーソル位置がゲームに送信されます。
+     * @param x ベクターの相対X座標
+     * @param y ベクターの相対Y座標
      */
     void applyMotionVector(float x, float y);
 
     /**
-     * Sets the state of the touchpad to "enabled"
-     * @param supposed if set to true, this will set the supposed display state to enabled but may not
-     *                 affect the touchpad until internal conditions are met
-     *                 if set to false it will turn the touchpad on regardless of internal conditions
+     * タッチパッドの状態を「有効」に設定します
+     * @param supposed trueの場合は想定表示状態を有効に設定しますが、
+     *                 内部条件が満たされるまでタッチパッドに反映されません。
+     *                 falseの場合は内部条件に関わらずタッチパッドを有効にします。
      */
     void enable(boolean supposed);
     /**
-     * Sets the state of the touchpad to "disabled".
+     * タッチパッドの状態を「無効」に設定します。
      */
     void disable();
 }

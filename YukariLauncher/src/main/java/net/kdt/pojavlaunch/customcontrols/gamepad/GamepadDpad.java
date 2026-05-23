@@ -7,6 +7,9 @@ import android.view.KeyEvent;
 
 
 public class GamepadDpad {
+/**
+ * このオブジェクトが「DpadEvent」状態であるかを判定します。
+ */
     public static boolean isDpadEvent(KeyEvent event) {
         return event.isFromSource(SOURCE_GAMEPAD) && (event.getDevice() == null || event.getDevice().getKeyboardType() != KEYBOARD_TYPE_ALPHABETIC);
     }

@@ -22,10 +22,20 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * マインクラフトのバージョンリストを非同期で取得・管理するクラス。
+ * キャッシュを使用してネットワークリクエストを最小限に抑えます。
+ */
 public class AsyncVersionList {
 
+    /** キャッシュの有効期間（5分） */
     private static final long CACHE_TIME = 5 * 60 * 1000;
 
+    /**
+     * バージョンリストを取得します。キャッシュが利用可能な場合はキャッシュを使用します。
+     * @param listener 完了リスナー
+     * @param forceRefresh 強制的にリフレッシュする場合はtrue
+     */
     public void getVersionList(@Nullable VersionDoneListener listener, boolean forceRefresh) {
         Task.runTask((java.util.concurrent.Callable<Void>) () -> {
 
@@ -33,7 +43,6 @@ public class AsyncVersionList {
             JMinecraftVersionList versionList = null;
 
             try {
-
                 boolean shouldDownload =
                         forceRefresh ||
                         !versionFile.exists() ||
@@ -42,7 +51,6 @@ public class AsyncVersionList {
                 if (shouldDownload) {
                     versionList = downloadVersionList(UrlManager.URL_MINECRAFT_VERSION_REPOS);
                 }
-
             } catch (Exception e) {
                 Logging.e("AsyncVersionList", "Refreshing version list failed :" + e);
                 Logging.e("GetVersionList", Tools.printToString(e));
@@ -59,7 +67,6 @@ public class AsyncVersionList {
                 } catch (JsonIOException | JsonSyntaxException e) {
                     Logging.e("AsyncVersionList", Tools.printToString(e));
                     versionFile.delete();
-
                     if (!forceRefresh) {
                         getVersionList(listener, true);
                         return null;
@@ -75,15 +82,24 @@ public class AsyncVersionList {
         }).execute();
     }
 
+    /**
+     * バージョンリストを強制的にリフレッシュします。
+     */
     public void refresh(@Nullable VersionDoneListener listener) {
         getVersionList(listener, true);
     }
 
+    /**
+     * バージョンリストのキャッシュをクリアします。
+     */
     public void clearCache() {
         File versionFile = new File(PathManager.FILE_VERSION_LIST);
         if (versionFile.exists()) versionFile.delete();
     }
 
+    /**
+     * バージョンリストをダウンロードし、キャッシュファイルに保存します。
+     */
     private JMinecraftVersionList downloadVersionList(String mirror) {
         JMinecraftVersionList list = null;
 
@@ -107,6 +123,9 @@ public class AsyncVersionList {
         return list;
     }
 
+    /**
+     * バージョンリスト取得完了リスナー。
+     */
     public interface VersionDoneListener {
         void onVersionDone(JMinecraftVersionList versions);
     }

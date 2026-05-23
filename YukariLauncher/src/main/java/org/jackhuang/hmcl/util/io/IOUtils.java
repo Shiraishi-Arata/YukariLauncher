@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * This utility class consists of some util methods operating on InputStream/OutputStream.
+ * InputStream/OutputStreamを操作するためのユーティリティメソッドを提供します。
  *
  * @author huangyuhui
  */
@@ -35,11 +35,11 @@ public final class IOUtils {
     public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
 
     /**
-     * Read all bytes to a buffer from given input stream, and close the input stream finally.
+     * 指定された入力ストリームからすべてのバイトをバッファに読み取り、最後に入力ストリームを閉じます。
      *
-     * @param stream the InputStream being read, closed finally.
-     * @return all bytes read from the stream
-     * @throws IOException if an I/O error occurs.
+     * @param stream 読み取り対象のInputStream、最後に閉じられます
+     * @return ストリームから読み取られたすべてのバイト
+     * @throws IOException I/Oエラーが発生した場合
      */
     public static ByteArrayOutputStream readFully(InputStream stream) throws IOException {
         try (InputStream is = stream) {
@@ -49,14 +49,33 @@ public final class IOUtils {
         }
     }
 
+    /**
+     * 入力ストリームをUTF-8文字列として完全に読み取ります。
+     * @param stream 入力ストリーム
+     * @return UTF-8文字列
+     * @throws IOException I/Oエラーが発生した場合
+     */
     public static String readFullyAsString(InputStream stream) throws IOException {
         return readFully(stream).toString("UTF-8");
     }
 
+    /**
+     * 入力ストリームから出力ストリームにデータをコピーします。
+     * @param src 入力ストリーム
+     * @param dest 出力ストリーム
+     * @throws IOException I/Oエラーが発生した場合
+     */
     public static void copyTo(InputStream src, OutputStream dest) throws IOException {
         copyTo(src, dest, new byte[DEFAULT_BUFFER_SIZE]);
     }
 
+    /**
+     * 指定されたバッファを使用して入力ストリームから出力ストリームにデータをコピーします。
+     * @param src 入力ストリーム
+     * @param dest 出力ストリーム
+     * @param buf コピーに使用するバッファ
+     * @throws IOException I/Oエラーが発生した場合
+     */
     public static void copyTo(InputStream src, OutputStream dest, byte[] buf) throws IOException {
         while (true) {
             int len = src.read(buf);

@@ -1,41 +1,42 @@
 package com.arata.yukarilauncher.renderer
 
 /**
- * 启动器渲染器实现
+ * ランチャーレンダラーの実装インターフェース
+ * 各レンダラーはこのインターフェースを実装する
  */
 interface RendererInterface {
     /**
-     * 获取渲染器的ID
+     * レンダラーIDを取得する
      */
     fun getRendererId(): String
 
     /**
-     * 获取渲染器的唯一标识ID
+     * レンダラーの一意識別子を取得する
      */
     fun getUniqueIdentifier(): String
 
     /**
-     * 获取渲染器的名称
+     * レンダラーの表示名を取得する
      */
     fun getRendererName(): String
 
     /**
-     * 获取渲染器的环境变量
+     * レンダラーの環境変数を取得する
      */
     fun getRendererEnv(): Lazy<Map<String, String>>
 
     /**
-     * 获取需要dlopen的库
+     * dlopenが必要なライブラリリストを取得する
      */
     fun getDlopenLibrary(): Lazy<List<String>>
 
     /**
-     * 获取渲染器的库
+     * レンダラーライブラリ名を取得する
      */
     fun getRendererLibrary(): String
 
     /**
-     * 获取EGL名称
+     * EGLライブラリ名を取得する（既定値はnull）
      */
     fun getRendererEGL(): String? = null
 }

@@ -17,7 +17,8 @@ import java.io.FileInputStream
 import java.util.zip.ZipFile
 
 /**
- * FCL、ZalithLauncher 渲染器插件，同时支持使用本地渲染器插件
+ * FCL、ZalithLauncher レンダラープラグイン管理
+ * ローカルレンダラープラグインも同時にサポートする
  * [FCL Renderer Plugin](https://github.com/FCL-Team/FCLRendererPlugin)
  */
 object RendererPluginManager {
@@ -26,13 +27,13 @@ object RendererPluginManager {
     private val localRendererPluginList: MutableList<LocalRendererPlugin> = mutableListOf()
 
     /**
-     * 获取当前渲染器插件加载的所有渲染器
+     * 現在読み込まれているすべてのレンダラープラグインを取得する
      */
     @JvmStatic
     fun getRendererList() = rendererPluginList
 
     /**
-     * 移除某些已加载的渲染器
+     * 指定されたレンダラープラグインを削除する
      */
     @JvmStatic
     fun removeRenderer(rendererPlugins: Collection<RendererPlugin>) {
@@ -40,13 +41,14 @@ object RendererPluginManager {
     }
 
     /**
-     * 获取当前本地渲染器插件加载的所有渲染器
+     * ローカルレンダラープラグインのリストを取得する
      */
     @JvmStatic
     fun getAllLocalRendererList() = localRendererPluginList
 
     /**
-     * @return 是可用的
+     * レンダラープラグインが利用可能かどうかを返す
+     * @return 利用可能な場合はtrue
      */
     @JvmStatic
     fun isAvailable(): Boolean {
@@ -54,8 +56,8 @@ object RendererPluginManager {
     }
 
     /**
-     * 当前选择的渲染器插件所加载的渲染器
-     * 根据总渲染器管理者选择的渲染器的渲染器唯一标识符进行判断
+     * 現在選択されているレンダラープラグインを取得する
+     * レンダラーの一意識別子に基づいて判断する
      */
     @JvmStatic
     val selectedRendererPlugin: RendererPlugin?
@@ -67,7 +69,7 @@ object RendererPluginManager {
         }
 
     /**
-     * 清除渲染器插件
+     * すべてのレンダラープラグインをクリアする
      */
     fun clearPlugin() {
         rendererPluginList.clear()
@@ -76,7 +78,7 @@ object RendererPluginManager {
     }
 
     /**
-     * 当前渲染器插件是否带有配置项（软件式插件、白名单包名）
+     * 設定可能なレンダラープラグインを取得する（ソフトウェア方式、ホワイトリストパッケージ）
      */
     @JvmStatic
     fun getConfigurablePluginOrNull(rendererUniqueIdentifier: String): RendererPlugin? {
@@ -89,7 +91,7 @@ object RendererPluginManager {
     }
 
     /**
-     * 解析 ZalithLauncher、FCL 渲染器插件
+     * APKからレンダラープラグインを解析する（ZalithLauncher / FCL形式）
      */
     fun parseApkPlugin(context: Context, info: ApplicationInfo) {
         if (info.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
@@ -155,22 +157,22 @@ object RendererPluginManager {
     }
 
     /**
-     * 从本地 `/files/renderer_plugins/` 目录下尝试解析渲染器插件
-     * @return 是否是符合要求的插件
+     * ローカルディレクトリからレンダラープラグインを解析する
+     * @return 有効なプラグインかどうか
      *
-     * 渲染器文件夹格式
+     * レンダラーフォルダの形式
      * renderer_plugins/
-     * ----文件夹名称/
-     * --------renderer_config.json (存放渲染器具体信息的配置文件)
-     * --------libs/ (渲染器`.so`文件的存放目录)
-     * ------------arm64-v8a/ (arm64架构)
-     * ----------------渲染器库文件.so
-     * ------------armeabi-v7a/ (arm32架构)
-     * ----------------渲染器库文件.so
-     * ------------x86/ (x86架构)
-     * ----------------渲染器库文件.so
-     * ------------x86_64/ (x86_64架构)
-     * ----------------渲染器库文件.so
+     * ----フォルダ名/
+     * --------config（レンダラー設定ファイル）
+     * --------libs/（レンダラー.soファイルの格納ディレクトリ）
+     * ------------arm64-v8a/ (arm64)
+     * ----------------レンダラーライブラリ.so
+     * ------------armeabi-v7a/ (arm32)
+     * ----------------レンダラーライブラリ.so
+     * ------------x86/ (x86)
+     * ----------------レンダラーライブラリ.so
+     * ------------x86_64/ (x86_64)
+     * ----------------レンダラーライブラリ.so
      */
     fun parseLocalPlugin(context: Context, directory: File): Boolean {
         val archModel: String = UpdateUtils.getArchModel(Architecture.getDeviceArchitecture()) ?: return false
@@ -209,10 +211,19 @@ object RendererPluginManager {
         return true
     }
 
+    /**
+     * EGL名を処理する
+     * 相対パスの場合はライブラリパスを先頭に付加する
+     */
     private fun String.progressEglName(libPath: String): String =
         if (startsWith("/")) "$libPath$this"
         else this
 
+    /**
+     * ローカルレンダラープラグインの設定ファイルを読み込む
+     * @param configFile 設定ファイル
+     * @return ファイルの内容（UTF-8文字列）
+     */
     private fun readLocalRendererPluginConfig(configFile: File): String {
         return FileInputStream(configFile).use { fileInputStream ->
             DataInputStream(fileInputStream).use { dataInputStream ->
@@ -222,7 +233,9 @@ object RendererPluginManager {
     }
 
     /**
-     * 导入本地渲染器插件
+     * ローカルレンダラープラグインを圧縮ファイルからインポートする
+     * @param pluginFile プラグインの圧縮ファイル
+     * @return インポート成功時はtrue
      */
     fun importLocalRendererPlugin(pluginFile: File): Boolean {
         if (!pluginFile.exists() || !pluginFile.isFile) {

@@ -26,72 +26,101 @@ import net.kdt.pojavlaunch.customcontrols.handleview.EditControlPopup;
 import org.lwjgl.glfw.CallbackBridge;
 
 /**
- * Interface injecting custom behavior to a View.
- * Most of the injected behavior is editing behavior,
- * sending keys has to be implemented by sub classes.
+ * カスタム動作をViewに注入するインターフェース。
+ * 注入される動作のほとんどは編集動作であり、
+ * キー送信はサブクラスで実装する必要があります。
  */
 public interface ControlInterface extends View.OnLongClickListener, GrabListener {
+/**
+ * 「ControlView」の値を取得します。
+ */
     View getControlView();
+/**
+ * 「Properties」の値を取得します。
+ */
 
     ControlData getProperties();
+/**
+ * 「Properties」の値を設定します。
+ */
 
     default void setProperties(ControlData properties) {
         setProperties(properties, true);
     }
 
     /**
-     * Remove the button presence from the CustomControl object
-     * You need to use {getControlParent()} for this.
+     * CustomControlオブジェクトからボタンの存在を削除します
+     * これには{getControlParent()}を使用する必要があります。
      */
     void removeButton();
 
     /**
-     * Duplicate the data of the button and add a view with the duplicated data
-     * Relies on the ControlLayout for the implementation.
+     * ボタンのデータを複製し、複製したデータでビューを追加します
+     * 実装はControlLayoutに依存します。
      */
     void cloneButton();
+/**
+ * 「Visible」の値を設定します。
+ */
 
     default void setVisible(boolean isVisible) {
         if(getProperties().isHideable)
             getControlView().setVisibility(isVisible ? VISIBLE : GONE);
     }
+/**
+ * 「send Key Presses」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     void sendKeyPresses(boolean isDown);
 
     /**
-     * Load the values and hide non useful forms
+     * 値を読み込み、不要なフォームを非表示にします
      */
     void loadEditValues(EditControlPopup editControlPopup);
-
+/**
+ * 「on Grab State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     default void onGrabState(boolean isGrabbing) {
         if (getControlLayoutParent() != null && getControlLayoutParent().getModifiable()) return; // Disable when edited
         setVisible(((getProperties().displayInGame && isGrabbing) || (getProperties().displayInMenu && !isGrabbing)) && getControlLayoutParent().areControlVisible());
     }
+/**
+ * 「ControlLayoutParent」の値を取得します。
+ */
 
     default ControlLayout getControlLayoutParent() {
         return (ControlLayout) getControlView().getParent();
     }
 
     /**
-     * Apply conversion steps for when the view is created
+     * ビュー作成時の変換手順を適用します
      */
     default ControlData preProcessProperties(ControlData properties, ControlLayout layout) {
-        //Size
+        //サイズ
         properties.setWidth(properties.getWidth() / layout.getLayoutScale() * AllSettings.getButtonScale().getValue());
         properties.setHeight(properties.getHeight() / layout.getLayoutScale() * AllSettings.getButtonScale().getValue());
 
-        //Visibility
+        //表示設定
         properties.isHideable = !properties.containsKeycode(ControlData.SPECIALBTN_TOGGLECTRL) && !properties.containsKeycode(ControlData.SPECIALBTN_VIRTUALMOUSE);
 
         return properties;
     }
+/**
+ * 「update Properties」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     default void updateProperties() {
         setProperties(getProperties());
     }
+/**
+ * 「Properties」の値を設定します。
+ */
 
-    /* This function should be overridden to store the properties */
+    /* この関数はプロパティを保存するためにオーバーライドされるべきです */
     @CallSuper
     default void setProperties(ControlData properties, boolean changePos) {
         if (changePos) {
@@ -99,7 +128,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
             getControlView().setY(properties.insertDynamicPos(getProperties().dynamicY));
         }
 
-        // Recycle layout params
+        // レイアウトパラメータを再利用
         ViewGroup.LayoutParams params = getControlView().getLayoutParams();
         if (params == null)
             params = new FrameLayout.LayoutParams((int) properties.getWidth(), (int) properties.getHeight());
@@ -109,7 +138,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Apply the background according to properties
+     * プロパティに従って背景を適用します
      */
     default void setBackground() {
         GradientDrawable gd = getControlView().getBackground() instanceof GradientDrawable
@@ -123,9 +152,9 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Apply the dynamic equation on the x axis.
+     * X軸に動的方程式を適用します。
      *
-     * @param dynamicX The equation to compute the position from
+     * @param dynamicX 位置計算のための方程式
      */
     default void setDynamicX(String dynamicX) {
         getProperties().dynamicX = dynamicX;
@@ -133,9 +162,9 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Apply the dynamic equation on the y axis.
+     * Y軸に動的方程式を適用します。
      *
-     * @param dynamicY The equation to compute the position from
+     * @param dynamicY 位置計算のための方程式
      */
     default void setDynamicY(String dynamicY) {
         getProperties().dynamicY = dynamicY;
@@ -143,10 +172,10 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Generate a dynamic equation from an absolute position, used to scale properly across devices
+     * 絶対位置から動的方程式を生成します。デバイス間で適切にスケーリングするために使用されます
      *
-     * @param x The absolute position on the horizontal axis
-     * @return The equation as a String
+     * @param x 水平軸上の絶対位置
+     * @return 文字列としての方程式
      */
     default String generateDynamicX(float x) {
         if (x + (getProperties().getWidth() / 2f) > CallbackBridge.physicalWidth / 2f) {
@@ -157,10 +186,10 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Generate a dynamic equation from an absolute position, used to scale properly across devices
+     * 絶対位置から動的方程式を生成します。デバイス間で適切にスケーリングするために使用されます
      *
-     * @param y The absolute position on the vertical axis
-     * @return The equation as a String
+     * @param y 垂直軸上の絶対位置
+     * @return 文字列としての方程式
      */
     default String generateDynamicY(float y) {
         if (y + (getProperties().getHeight() / 2f) > CallbackBridge.physicalHeight / 2f) {
@@ -171,7 +200,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Regenerate and apply coordinates with supposedly modified properties
+     * 変更されたプロパティで座標を再生成して適用します
      */
     default void regenerateDynamicCoordinates() {
         getProperties().dynamicX = generateDynamicX(getControlView().getX());
@@ -180,14 +209,14 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Do a pre-conversion of an equation using values from a button,
-     * so the variables can be used for another button
+     * ボタンの値を使用して方程式の事前変換を行います。
+     * 変数を別のボタンで使用できるようにします。
      * <p>
-     * Internal use only.
+     * 内部使用のみ。
      *
-     * @param equation The dynamic position as a String
-     * @param button   The button to get the values from.
-     * @return The pre-processed equation as a String.
+     * @param equation 動的位置を示す文字列
+     * @param button   値を取得するボタン
+     * @return 前処理済みの方程式（文字列）
      */
     default String applySize(String equation, ControlInterface button) {
         return equation
@@ -199,7 +228,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
 
 
     /**
-     * Convert a corner radius percentage into a px corner radius
+     * 角丸のパーセンテージをpxの角丸に変換します
      */
     default float computeCornerRadius(float radiusInPercent) {
         float minSize = Math.min(getProperties().getWidth(), getProperties().getHeight());
@@ -207,9 +236,9 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Passe a series of checks to determine if the ControlButton isn't available to be snapped on.
+     * 一連のチェックを実行し、ControlButtonがスナップ可能かどうかを判定します。
      *
-     * @param button The button to check
+     * @param button チェックするボタン
      * @return whether or not the button
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -230,14 +259,13 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Try to snap, then align to neighboring buttons, given the provided coordinates.
-     * The new position is automatically applied to the View,
-     * regardless of if the View snapped or not.
+     * 指定された座標で、スナップしてから隣接ボタンに位置合わせします。
+     * 新しい位置は、スナップの有無に関わらず自動的にViewに適用されます。
      * <p>
-     * The new position is always dynamic, thus replacing previous dynamic positions
+     * 新しい位置は常に動的であり、以前の動的位置を置き換えます
      *
-     * @param x Coordinate on the x axis
-     * @param y Coordinate on the y axis
+     * @param x X軸上の座標
+     * @param y Y軸上の座標
      */
     default void snapAndAlign(float x, float y) {
         final float MIN_DISTANCE = getSnapDistance();
@@ -248,10 +276,10 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
         getControlView().setY(y);
 
         for (ControlInterface button : ((ControlLayout) getControlView().getParent()).getButtonChildren()) {
-            //Step 1: Filter unwanted buttons
+            //ステップ1: 不要なボタンをフィルタリング
             if (!canSnap(button)) continue;
 
-            //Step 2: Get Coordinates
+            //ステップ2: 座標を取得
             float button_top = button.getControlView().getY();
             float button_bottom = button_top + button.getControlView().getHeight();
             float button_left = button.getControlView().getX();
@@ -262,7 +290,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
             float left = getControlView().getX();
             float right = getControlView().getX() + getControlView().getWidth();
 
-            //Step 3: For each axis, we try to snap to the nearest
+            //ステップ3: 各軸で最も近いボタンにスナップ
             if (Math.abs(top - button_bottom) < MIN_DISTANCE) { // Bottom snap
                 dynamicY = applySize(button.getProperties().dynamicY, button) + applySize(" + ${height}", button) + " + ${margin}";
             } else if (Math.abs(button_top - bottom) < MIN_DISTANCE) { //Top snap
@@ -296,7 +324,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Wrapper for multiple injections at once
+     * 複数の注入を一度に行うラッパー
      */
     default void injectBehaviors() {
         injectProperties();
@@ -306,7 +334,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
     }
 
     /**
-     * Inject the grab listener, remove it when the view is gone
+     * グラブリスナーを注入し、ビューが削除されたら削除します
      */
     default void injectGrabListenerBehavior() {
         if (getControlView() == null) {
@@ -316,11 +344,18 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
 
 
         getControlView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+/**
+ * 「on View Attached To Window」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onViewAttachedToWindow(@NonNull View v) {
                 CallbackBridge.addGrabListener(ControlInterface.this);
             }
-
+/**
+ * 「on View Detached From Window」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onViewDetachedFromWindow(@NonNull View v) {
                 getControlView().removeOnAttachStateChangeListener(this);
@@ -330,19 +365,27 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
 
 
     }
+/**
+ * 「inject Properties」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     default void injectProperties() {
         getControlView().post(() -> getControlView().setTranslationZ(10));
     }
 
     /**
-     * Inject a touch listener on the view to make editing controls straight forward
+     * 編集コントロールを簡単にするために、ビューにタッチリスナーを注入します
      */
     default void injectTouchEventBehavior() {
         getControlView().setOnTouchListener(new View.OnTouchListener() {
             private boolean mCanTriggerLongClick = true;
             private float downX, downY;
             private float downRawX, downRawY;
+/**
+ * 「on Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -354,7 +397,7 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
                 }
 
                 /* If the button can be modified/moved */
-                //Instantiate the gesture detector only when needed
+                //必要なときだけジェスチャー検出器をインスタンス化
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mCanTriggerLongClick) {
                     //TODO change this.
@@ -385,6 +428,10 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
             }
         });
     }
+/**
+ * 「inject Layout Param Behavior」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     default void injectLayoutParamBehavior() {
         getControlView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -397,7 +444,10 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
             getControlView().setY(getControlView().getY());
         });
     }
-
+/**
+ * 「on Long Click」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     default boolean onLongClick(View v) {
         if (getControlLayoutParent().getModifiable()) {
@@ -407,10 +457,16 @@ public interface ControlInterface extends View.OnLongClickListener, GrabListener
 
         return true;
     }
+/**
+ * 「SnapDistance」の値を取得します。
+ */
 
     static float getSnapDistance() {
         return Tools.dpToPx(AllSettings.getButtonSnappingDistance().getValue());
     }
+/**
+ * 「MarginDistance」の値を取得します。
+ */
     static float getMarginDistance() {
         return Tools.dpToPx(2);
     }

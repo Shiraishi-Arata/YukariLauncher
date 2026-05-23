@@ -12,6 +12,9 @@ import com.arata.yukarilauncher.feature.login.Servers.Server
 import com.arata.yukarilauncher.ui.dialog.DraggableDialog.DialogInitializationListener
 import com.arata.yukarilauncher.utils.YLTools
 
+/**
+ * 外部サーバーログインダイアログ
+ */
 class OtherLoginDialog(
     context: Context,
     private val server: Server,
@@ -19,6 +22,10 @@ class OtherLoginDialog(
 ) : FullScreenDialog(context), View.OnClickListener, DialogInitializationListener {
     private val binding = DialogOtherLoginBinding.inflate(layoutInflater)
 
+    /**
+     * ダイアログ作成時にUIを初期化する
+     * @param savedInstanceState 保存されたインスタンス状態
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,6 +46,9 @@ class OtherLoginDialog(
         DraggableDialog.initDialog(this)
     }
 
+    /**
+     * メールアドレスとパスワードの入力有無をチェックする
+     */
     private fun checkAccountInformation(email: String?, password: String?): Boolean {
         val emailEmpty = email.isNullOrEmpty()
         val passwordEmpty = password.isNullOrEmpty()
@@ -51,8 +61,16 @@ class OtherLoginDialog(
         } else true
     }
 
+    /**
+     * ダイアログ初期化時にWindowを返す
+     * @return Windowオブジェクト
+     */
     override fun onInit(): Window? = window
 
+    /**
+     * 各Viewのクリックイベントを処理する
+     * @param v クリックされたView
+     */
     override fun onClick(v: View) {
         binding.apply {
             when (v) {
@@ -66,7 +84,6 @@ class OtherLoginDialog(
                 loginButton -> {
                     val email = emailEdit.text.toString()
                     val password = passwordEdit.text.toString()
-                    //登录前需检查邮箱、密码、基础链接
                     if (!checkAccountInformation(email, password)) return
                     if (server.baseUrl.isNullOrEmpty()) {
                         Toast.makeText(context, context.getString(R.string.other_login_server_not_empty), Toast.LENGTH_SHORT).show()

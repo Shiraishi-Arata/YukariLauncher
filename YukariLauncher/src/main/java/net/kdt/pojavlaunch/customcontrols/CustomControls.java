@@ -18,11 +18,17 @@ public class CustomControls {
 	public List<ControlDrawerData> mDrawerDataList;
 	public List<ControlJoystickData> mJoystickDataList;
 	public ControlInfoData mControlInfoDataList;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
 	public CustomControls() {
 		this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ControlInfoData());
 	}
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
 	public CustomControls(List<ControlData> mControlDataList, List<ControlDrawerData> mDrawerDataList, List<ControlJoystickData> mJoystickDataList, ControlInfoData mControlInfoDataList) {
 		this.mControlDataList = mControlDataList;
 		this.mDrawerDataList = mDrawerDataList;
@@ -30,9 +36,12 @@ public class CustomControls {
 		this.mControlInfoDataList = mControlInfoDataList;
 		this.scaledAt = 100f;
 	}
-
+/**
+ * 「save」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
 	public void save(String path) throws IOException {
-		//Current version is the V3.2 so the version as to be marked as 8 !
+		// 現在のバージョンはV3.2のため、バージョンは8とマークする必要があります！
 		version = 8;
 		Tools.write(path, Tools.GLOBAL_GSON.toJson(this));
 	}

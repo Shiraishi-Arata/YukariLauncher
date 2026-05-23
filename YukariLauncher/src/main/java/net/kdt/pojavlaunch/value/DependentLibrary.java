@@ -12,8 +12,14 @@ public class DependentLibrary {
     public String url;
 
     @Keep
+/**
+ * LibraryDownloads内部クラス
+ */
 	public static class LibraryDownloads {
 		public final MinecraftLibraryArtifact artifact;
+/**
+ * LibraryDownloadsを構築します
+ */
 		public LibraryDownloads(MinecraftLibraryArtifact artifact) {
 			this.artifact = artifact;
 		}

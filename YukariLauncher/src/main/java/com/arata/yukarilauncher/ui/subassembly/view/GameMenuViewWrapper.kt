@@ -23,6 +23,12 @@ import org.lwjgl.glfw.CallbackBridge
 import java.util.Timer
 import java.util.TimerTask
 
+/**
+ * ゲームメニューのフローティングビューをラップするクラス。
+ * @param activity アクティビティ
+ * @param listener クリックリスナー
+ * @param showInfo 情報表示を行うかどうか
+ */
 class GameMenuViewWrapper(
     private val activity: Activity,
     private val listener: View.OnClickListener,
@@ -45,6 +51,9 @@ class GameMenuViewWrapper(
         refreshState()
     }
 
+    /**
+     * フローティングウィンドウの制御インスタンスを取得する
+     */
     private fun getWindow(): IFxScopeControl {
         return FxScopeHelper.Builder().apply {
             setLayout(R.layout.view_game_menu_window)
@@ -65,6 +74,9 @@ class GameMenuViewWrapper(
         }.build().toControl(activity)
     }
 
+    /**
+     * ニュービーガイドを開始する
+     */
     private fun startNewbieGuide(mainView: View) {
         if (NewbieGuideUtils.showOnlyOne(TAG)) return
         TapTargetView.showFor(
@@ -76,18 +88,24 @@ class GameMenuViewWrapper(
         )
     }
 
+    /**
+     * 表示状態を設定する
+     */
     fun setVisibility(visible: Boolean) {
         this.visible = visible
         thinkForVisibility()
     }
 
+    /**
+     * 設定状態を更新する
+     */
     fun refreshSettingsState() {
         refreshState()
         thinkForVisibility()
     }
 
     /**
-     * 根据三个条件判断是否显示悬浮窗（是否想要显示、是否展示内存信息、是否展示FPS）
+     * 3つの条件（表示フラグ、メモリ情報表示、FPS表示）に基づいてフローティングウィンドウの表示を判断する
      */
     private fun thinkForVisibility() {
         val v1 = visible || showMemory || showFPS
@@ -108,17 +126,26 @@ class GameMenuViewWrapper(
         }
     }
 
+    /**
+     * 設定からメモリ/FPS表示フラグを更新する
+     */
     private fun refreshState() {
         showMemory = AllSettings.gameMenuShowMemory.getValue()
         showFPS = AllSettings.gameMenuShowFPS.getValue()
     }
 
+    /**
+     * 現在のビューの情報テキストを更新する
+     */
     private fun updateInfoText() {
         scopeFx?.getView()?.apply {
             updateInfoText(this)
         }
     }
 
+    /**
+     * 指定されたビューのメモリ・FPS情報テキストを更新する
+     */
     private fun updateInfoText(view: View) {
         cancelInfoTimer()
 
@@ -186,10 +213,19 @@ class GameMenuViewWrapper(
         }
     }
 
+    /**
+     * 使用中のデバイスメモリサイズを取得する
+     */
     private fun getUsedDeviceMemory(): String = formatFileSize(MemoryUtils.getUsedDeviceMemory(activity))
 
+    /**
+     * 総デバイスメモリサイズを取得する
+     */
     private fun getTotalDeviceMemory(): String = formatFileSize(MemoryUtils.getTotalDeviceMemory(activity))
 
+    /**
+     * FPS値に応じた表示色を取得する
+     */
     private fun getColorForFps(fps: Int): Int {
         return when {
             fps >= 60 -> ContextCompat.getColor(activity, R.color.status_good)
@@ -198,6 +234,9 @@ class GameMenuViewWrapper(
         }
     }
 
+    /**
+     * メモリ使用率に応じた表示色を取得する
+     */
     private fun getColorForMemory(usedBytes: Long, totalBytes: Long): Int {
         val ratio = if (totalBytes > 0) usedBytes.toDouble() / totalBytes else 0.0
         return when {
@@ -207,11 +246,17 @@ class GameMenuViewWrapper(
         }
     }
 
+    /**
+     * 情報更新タイマーをキャンセルする
+     */
     private fun cancelInfoTimer() {
         timer?.cancel()
         timer = null
     }
 
+    /**
+     * 現在の設定に基づくフローティングウィンドウの表示位置を取得する
+     */
     private fun getCurrentGravity(): FxGravity {
         return when(AllSettings.gameMenuLocation.getValue()) {
             "left_or_top" -> FxGravity.LEFT_OR_TOP

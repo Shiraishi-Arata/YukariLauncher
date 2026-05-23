@@ -31,6 +31,11 @@ class LaunchArgs(
 ) {
     private var hasClasspathInJvmArgs = false
 
+    /**
+     * ゲーム起動に必要なすべての引数を取得する
+     * Java引数、Minecraft JVM引数、クラスパス、メインクラス、クライアント引数を含む
+     * @return 引数リスト
+     */
     fun getAllArgs(): List<String> {
         val argsList: MutableList<String> = ArrayList()
 
@@ -53,6 +58,11 @@ class LaunchArgs(
         return argsList
     }
 
+    /**
+     * Java仮想マシンに渡す引数を生成する
+     * PhysXフォールバック、ImGui Moulberryネイティブ、認証ライブラリ、Cacio、ログ設定などを含む
+     * @return Java引数リスト
+     */
     private fun getJavaArgs(): List<String> {
         val argsList: MutableList<String> = ArrayList()
 
@@ -79,7 +89,7 @@ class LaunchArgs(
         val configFilePath = if (is7) LibPath.LOG4J_XML_1_7 else LibPath.LOG4J_XML_1_12
         argsList.add("-Dlog4j.configurationFile=${configFilePath.absolutePath}")
 
-        // Build the library path string
+        // ライブラリパス文字列を構築する
         val versionSpecificNativesDir = File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
         val libraryPath = StringBuilder()
         if (versionSpecificNativesDir.exists()) {
@@ -91,7 +101,7 @@ class LaunchArgs(
         libraryPath.append(PathManager.DIR_NATIVE_LIB)
         argsList.add("-Djava.library.path=$libraryPath")
 
-        // JNA boot library path (used by JNA, which some mods may rely on)
+        // JNAブートライブラリパス（一部のModが依存するJNAで使用）
         val jnaPath = StringBuilder()
         if (versionSpecificNativesDir.exists()) {
             jnaPath.append(versionSpecificNativesDir.absolutePath).append(":")
@@ -105,6 +115,10 @@ class LaunchArgs(
         return argsList
     }
 
+    /**
+     * MinecraftのJVM引数をバージョン情報から取得・加工する
+     * @return JVM引数の配列
+     */
     private fun getMinecraftJVMArgs(): Array<String> {
         val versionInfo = Tools.getVersionInfo(minecraftVersion, true)
 
@@ -151,16 +165,20 @@ class LaunchArgs(
         return JSONUtils.insertJSONValueList(minecraftArgs.toTypedArray<String>(), varArgMap)
     }
 
+    /**
+     * Minecraftクライアント引数をバージョン情報から生成する
+     * 認証情報、アセットパス、ゲームディレクトリなどのプレースホルダを実際の値で置換する
+     * @return クライアント引数の配列
+     */
     private fun getMinecraftClientArgs(): Array<String> {
         val verArgMap: MutableMap<String, String> = ArrayMap()
         verArgMap["auth_session"] = account.accessToken
         verArgMap["auth_access_token"] = account.accessToken
         verArgMap["auth_player_name"] = account.username
         verArgMap["auth_uuid"] = account.profileId.replace("-", "")
-        // Newer Minecraft versions (including snapshots like 26.2-snapshot-1)
-        // expect a resolved client id placeholder.
+        // 新しいMinecraftバージョンでは解決済みのclientidプレースホルダーが必要
         verArgMap["clientid"] = account.clientToken
-        // Keep compatibility with launch argument templates using the underscored variant.
+        // アンダースコア付きのバリアントとの互換性を維持
         verArgMap["client_id"] = account.clientToken
         verArgMap["auth_xuid"] = account.xuid
         verArgMap["assets_root"] = ProfilePathHome.getAssetsHome()
@@ -173,7 +191,7 @@ class LaunchArgs(
             ?.takeIf { it.isNotBlank() }
             ?: minecraftVersion.getVersionName()
         verArgMap["version_name"] = resolvedVersionName
-        // Compatibility aliases used by some transformers/custom argument templates.
+        // 一部のトランスフォーマーやカスタム引数テンプレートで使用される互換エイリアス
         verArgMap["version"] = resolvedVersionName
         verArgMap["game_version"] = resolvedVersionName
 
@@ -181,7 +199,7 @@ class LaunchArgs(
 
         val minecraftArgs: MutableList<String> = ArrayList()
         versionInfo.arguments?.apply {
-            // Support Minecraft 1.13+
+            // Minecraft 1.13+ 対応
             game.forEach { if (it is String) minecraftArgs.add(it) }
         }
 
@@ -196,6 +214,10 @@ class LaunchArgs(
         return finalArgs + splitAndFilterEmpty(customGameArgs)
     }
 
+    /**
+     * ランチャー情報を引数マップに設定する
+     * @param verArgMap 引数マップ
+     */
     private fun setLauncherInfo(verArgMap: MutableMap<String, String>) {
         verArgMap["launcher_name"] = InfoDistributor.LAUNCHER_NAME
         verArgMap["launcher_version"] = YLTools.getVersionName()
@@ -205,6 +227,10 @@ class LaunchArgs(
     }
 
 
+    /**
+     * ImGui Moulberryネイティブライブラリのフォールバック処理を準備する
+     * Modのネイティブライブラリを互換性のあるバイナリで上書きする
+     */
     private fun prepareImGuiMoulberryNativeFallback() {
         val deviceAbi = Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a" 
         val abiTag = when { 
@@ -222,7 +248,7 @@ class LaunchArgs(
             return
         }
 
-        // Copy to DIR_NATIVE_LIB so java.library.path can find it
+        // java.library.pathで見つけられるようにDIR_NATIVE_LIBにコピーする
         val nativeLibTarget = File(PathManager.DIR_NATIVE_LIB, fallbackLib.name)
         kotlin.runCatching {
             nativeLibTarget.parentFile?.mkdirs()
@@ -232,9 +258,9 @@ class LaunchArgs(
             Logging.w("LaunchArgs", "Unable to place imgui-moulberry92 JNI fallback in native lib path: $nativeLibTarget")
         }
 
-        // Replace any already-extracted (glibc/x86_64) libs in the cache with our bionic aarch64 build.
-        // The mod extracts to DIR_CACHE/imgui-moulberry92-java-natives/<version>/libimgui-moulberry92-java64.so
-        // and calls System.load() on that absolute path, so we must overwrite in place.
+        // キャッシュ内の既存の抽出済みライブラリを当デバイス用のビルドで置き換える
+        // ModはDIR_CACHE/imgui-moulberry92-java-natives/<version>/libimgui-moulberry92-java64.so に抽出し、
+        // その絶対パスでSystem.load()を呼び出すため、その場で上書きする必要がある
         val extractDir = File(PathManager.DIR_CACHE, "imgui-moulberry92-java-natives")
         if (extractDir.exists() && extractDir.isDirectory) {
             extractDir.listFiles()?.forEach { versionDir ->
@@ -243,14 +269,13 @@ class LaunchArgs(
                     if (!extractedLib.name.startsWith("libimgui-moulberry92-java") ||
                         !extractedLib.name.endsWith(".so")) return@forEach
                     kotlin.runCatching {
-                        // Unlock both dir and file in case we already locked them on a prior launch
+                        // 以前の起動でロックした場合に備えて、ディレクトリとファイルのロックを解除
                         versionDir.setWritable(true, false)
                         extractedLib.setWritable(true, false)
                         fallbackLib.copyTo(extractedLib, overwrite = true)
-                        // Lock the file so it can't be opened for writing
+                        // ファイルをロックして書き込み不可にする
                         extractedLib.setReadOnly()
-                        // Lock the directory so the extractor can't unlink+recreate the file
-                        // (unlink requires write permission on the parent directory)
+                        // ディレクトリをロックして抽出側がファイルを削除・再作成できないようにする
                         versionDir.setReadOnly()
                         Logging.i("LaunchArgs", "Replaced and locked imgui-moulberry92 native with fallback: $extractedLib")
                     }.onFailure {
@@ -261,6 +286,10 @@ class LaunchArgs(
         }
     }
 
+    /**
+     * PhysXネイティブライブラリのフォールバック処理を準備する
+     * @return フォールバックが準備できた場合はModライブラリディレクトリ、そうでない場合はnull
+     */
     private fun preparePhysXNativeFallback(): File? {
         val fallbackLib = File(PathManager.DIR_MOD_LIBRARY, "libPhysXJniBindings_64.so")
         if (!fallbackLib.exists()) return null
@@ -297,6 +326,12 @@ class LaunchArgs(
         return File(PathManager.DIR_MOD_LIBRARY)
     }
 
+    /**
+     * ファイルがaarch64（ARM64）のELFバイナリかどうかを検証する
+     * ELFヘッダーを解析してアーキテクチャを確認する
+     * @param file 検証するファイル
+     * @return aarch64 ELFの場合はtrue
+     */
     private fun isAarch64Elf(file: File): Boolean {
         return kotlin.runCatching {
             java.io.RandomAccessFile(file, "r").use { raf ->
@@ -337,6 +372,14 @@ class LaunchArgs(
         }.getOrElse { false }
     }
 
+    /**
+     * ELFのテーブル（プログラムヘッダー/セクションヘッダー）がファイルサイズ内に収まっているかを確認する
+     * @param fileSize ファイルサイズ
+     * @param offset テーブルのオフセット
+     * @param entrySize エントリサイズ
+     * @param count エントリ数
+     * @return テーブルが有効な範囲内にある場合はtrue
+     */
     private fun isTableWithinFile(fileSize: Long, offset: Long, entrySize: Long, count: Long): Boolean {
         if (count == 0L) return true
         if (offset <= 0L || entrySize <= 0L) return false
@@ -347,11 +390,23 @@ class LaunchArgs(
         return offset <= fileSize - tableSize
     }
 
+    /**
+     * バイト配列からリトルエンディアンで16ビット符号なし整数を読み取る
+     * @param bytes バイト配列
+     * @param offset 読み取り開始位置
+     * @return 16ビット整数値
+     */
     private fun readU16LE(bytes: ByteArray, offset: Int): Int {
         return (bytes[offset].toInt() and 0xff) or
             ((bytes[offset + 1].toInt() and 0xff) shl 8)
     }
 
+    /**
+     * バイト配列からリトルエンディアンで64ビット符号なし整数を読み取る
+     * @param bytes バイト配列
+     * @param offset 読み取り開始位置
+     * @return 64ビット整数値
+     */
     private fun readU64LE(bytes: ByteArray, offset: Int): Long {
         var result = 0L
         for (i in 0 until 8) {
@@ -359,6 +414,12 @@ class LaunchArgs(
         }
         return result
     }
+
+    /**
+     * スペース区切りの引数文字列を分割し、空要素を除去する
+     * @param arg 分割する引数文字列
+     * @return フィルタリングされた引数配列
+     */
     private fun splitAndFilterEmpty(arg: String): Array<String> {
         val list: MutableList<String> = ArrayList()
         arg.split(" ").forEach {
@@ -368,11 +429,17 @@ class LaunchArgs(
     }
 
     companion object {
+        /**
+         * Caciocavallo（AWT実装）のJava引数を生成する
+         * Java 8とそれ以降で異なる設定を適用する
+         * @param isJava8 Java 8かどうか
+         * @return Cacio関連の引数リスト
+         */
         @JvmStatic
         fun getCacioJavaArgs(isJava8: Boolean): List<String> {
             val argsList: MutableList<String> = ArrayList()
 
-            // Caciocavallo config AWT-enabled version
+            // Caciocavallo AWT対応バージョンの設定
             argsList.add("-Djava.awt.headless=false")
             argsList.add("-Dcacio.managed.screensize=" + AWTCanvasView.AWT_CANVAS_WIDTH + "x" + AWTCanvasView.AWT_CANVAS_HEIGHT)
             argsList.add("-Dcacio.font.fontmanager=sun.awt.X11FontManager")
@@ -401,7 +468,7 @@ class LaunchArgs(
                 argsList.add("--add-opens=java.desktop/sun.java2d=ALL-UNNAMED")
                 argsList.add("--add-opens=java.base/java.lang.reflect=ALL-UNNAMED")
 
-                // Opens the java.net package to Arc DNS injector on Java 9+
+                // Java 9+でArc DNSインジェクターのためにjava.netパッケージを開く
                 argsList.add("--add-opens=java.base/java.net=ALL-UNNAMED")
             }
 

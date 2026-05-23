@@ -1,16 +1,32 @@
 package com.arata.yukarilauncher.task
 
 /**
- * 任务执行的各种阶段的监听器
+ * タスク実行の各フェーズを監視するリスナー
  */
 interface TaskExecutionPhaseListener {
-    fun onBeforeStart() {}
-    fun execute() {}
-    fun onEnded() {}
-    fun onFinally() {}
     /**
-     * 任务执行中触发异常后将会执行的内容
-     * @param throwable 触发的异常
+     * タスク開始前に実行される処理
+     */
+    fun onBeforeStart() {}
+
+    /**
+     * メインのタスク処理
+     */
+    fun execute() {}
+
+    /**
+     * タスク終了時に実行される処理
+     */
+    fun onEnded() {}
+
+    /**
+     * タスクの最終処理（成功・失敗に関わらず実行）
+     */
+    fun onFinally() {}
+
+    /**
+     * タスク実行中に例外が発生した場合の処理
+     * @param throwable 発生した例外
      */
     fun onThrowable(throwable: Throwable) {}
 }

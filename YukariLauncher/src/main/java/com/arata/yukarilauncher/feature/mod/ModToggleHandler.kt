@@ -18,16 +18,25 @@ class ModToggleHandler(
     private val fileSize = AtomicLong(0)
     private val fileCount = AtomicLong(0)
 
+/**
+ * startする
+ */
     fun start() {
         super.start(this)
     }
 
+/**
+ * addFileする
+ */
     private fun addFile(file: File) {
         foundFiles.add(file)
         fileCount.addAndGet(1)
         fileSize.addAndGet(FileUtils.sizeOf(file))
     }
 
+/**
+ * searchFilesToProcessする
+ */
     override fun searchFilesToProcess() {
         mSelectedFiles.forEach {
             currentTask?.let { task -> if (task.isCancelled) return@forEach }
@@ -37,6 +46,9 @@ class ModToggleHandler(
         totalFileSize.set(fileSize.get())
     }
 
+/**
+ * processFileする
+ */
     override fun processFile() {
         (foundFiles).forEach {
             currentTask?.let { task -> if (task.isCancelled) return@forEach }
@@ -53,12 +65,24 @@ class ModToggleHandler(
         }
     }
 
+/**
+ * getCurrentFileCountする
+ */
     override fun getCurrentFileCount() = fileCount.get()
 
+/**
+ * getTotalSizeする
+ */
     override fun getTotalSize() = totalFileSize.get()
 
+/**
+ * getPendingSizeする
+ */
     override fun getPendingSize() = fileSize.get()
 
+/**
+ * onEndする
+ */
     override fun onEnd() {
         onEndTask.execute()
     }

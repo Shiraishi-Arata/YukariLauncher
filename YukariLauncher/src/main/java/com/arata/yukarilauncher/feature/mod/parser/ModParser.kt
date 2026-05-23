@@ -29,6 +29,9 @@ class ModParser {
          * 获取当前版本的所有模组的模组信息
          */
         @JvmStatic
+/**
+ * checkAllModsする
+ */
         fun checkAllMods(minecraftVersion: Version, parserListener: ModParserListener) {
             File(minecraftVersion.getGameDir(), "mods").apply {
                 if (exists() && isDirectory && (listFiles()?.isNotEmpty() == true)) {
@@ -45,6 +48,9 @@ class ModParser {
      * @param modsFolder 模组文件夹
      * @param listener 解析过程监听器
      */
+/**
+ * parseAllModsする
+ */
     fun parseAllMods(modsFolder: File, listener: ModParserListener) {
         val gson = GsonBuilder().disableHtmlEscaping().create()
         val cacheFileName = "${modsFolder.absolutePath.replace(File.separator, "-")}.cache"
@@ -86,6 +92,9 @@ class ModParser {
         }.execute()
     }
 
+/**
+ * parseModFileする
+ */
     private fun parseModFile(
         modFile: File,
         totalCount: Int,
@@ -111,6 +120,9 @@ class ModParser {
         }
     }
 
+/**
+ * parseModContentsする
+ */
     private fun parseModContents(modFile: File): ModInfo? {
         return try {
             JarInputStream(FileInputStream(modFile)).use { jarStream ->
@@ -124,6 +136,9 @@ class ModParser {
         }
     }
 
+/**
+ * locateModDescriptorする
+ */
     private fun locateModDescriptor(jarStream: JarInputStream): java.util.jar.JarEntry? {
         val targetFiles = setOf(
             "fabric.mod.json",
@@ -137,6 +152,9 @@ class ModParser {
             .firstOrNull { it.name in targetFiles }
     }
 
+/**
+ * parseDescriptorContentする
+ */
     private fun parseDescriptorContent(modFile: File, jarStream: JarInputStream, fileName: String): ModInfo? {
         return when (fileName) {
             "fabric.mod.json" -> parseFabricMod(modFile, jarStream)
@@ -148,6 +166,9 @@ class ModParser {
     }
 
     @Throws(Exception::class)
+/**
+ * parseFabricModする
+ */
     private fun parseFabricMod(modFile: File, jarStream: JarInputStream): ModInfo {
         val content = jarStream.bufferedReader().use(BufferedReader::readText)
         val jsonObject = JsonParser.parseString(content).asJsonObject
@@ -171,6 +192,9 @@ class ModParser {
     }
 
     @Throws(Exception::class)
+/**
+ * parseQuiltModする
+ */
     private fun parseQuiltMod(modFile: File, jarStream: JarInputStream): ModInfo {
         val content = jarStream.bufferedReader().use(BufferedReader::readText)
         val quiltLoader = JsonParser.parseString(content).asJsonObject["quilt_loader"].asJsonObject
@@ -185,6 +209,9 @@ class ModParser {
     }
 
     @Throws(Exception::class)
+/**
+ * parseForgeModする
+ */
     private fun parseForgeMod(modFile: File, jarStream: JarInputStream): ModInfo? {
         val content = jarStream.bufferedReader().use(BufferedReader::readText)
         val toml = Toml().read(content)
@@ -199,6 +226,9 @@ class ModParser {
         ).apply { file = modFile }
     }
 
+/**
+ * parseForgeAuthorsする
+ */
     private fun parseForgeAuthors(modEntry: Toml): Array<String> {
         return when {
             modEntry.contains("authors") -> {
@@ -212,6 +242,9 @@ class ModParser {
     }
 
     @Throws(Exception::class)
+/**
+ * parseLegacyForgeModする
+ */
     private fun parseLegacyForgeMod(modFile: File, jarStream: JarInputStream): ModInfo? {
         val content = jarStream.bufferedReader().use(BufferedReader::readText)
         val jsonArray = JsonParser.parseString(content).asJsonArray
@@ -226,6 +259,9 @@ class ModParser {
         ).apply { file = modFile }
     }
 
+/**
+ * parseLegacyForgeAuthorsする
+ */
     private fun parseLegacyForgeAuthors(entry: com.google.gson.JsonObject): Array<String> {
         return when {
             entry.has("authorList") -> entry["authorList"].asJsonArray.toStringArray()
@@ -234,10 +270,16 @@ class ModParser {
         }
     }
 
+/**
+ * JsonArrayする
+ */
     private fun JsonArray.toStringArray(): Array<String> {
         return this.map { it.asString }.toTypedArray()
     }
 
+/**
+ * loadCacheする
+ */
     private fun loadCache(gson: Gson, cacheFile: File): Map<String, ModInfoCache> {
         return cacheFile.takeIf { it.exists() }?.let {
             runCatching {
@@ -252,6 +294,9 @@ class ModParser {
         } ?: emptyMap()
     }
 
+/**
+ * persistCacheする
+ */
     private fun persistCache(gson: Gson, cacheFile: File, data: List<ModInfoCache>) {
         Task.runTask {
             runCatching {
@@ -263,12 +308,18 @@ class ModParser {
         }.execute()
     }
 
+/**
+ * calculateOptimalThreadsする
+ */
     private fun calculateOptimalThreads(fileCount: Int): Int {
         val coreCount = Runtime.getRuntime().availableProcessors()
         return (fileCount.coerceAtMost(coreCount * 8))
             .coerceAtLeast(4)
     }
 
+/**
+ * calculateChunkSizeする
+ */
     private fun calculateChunkSize(totalFiles: Int): Int {
         return when {
             totalFiles < 50 -> 4
@@ -277,6 +328,11 @@ class ModParser {
         }
     }
 
+    /**
+     * セマフォのパーミットを取得して処理を実行する
+     * @param action 実行する処理
+     * @return 処理の結果
+     */
     private suspend fun <T> Semaphore.withPermit(action: suspend () -> T): T {
         acquire()
         try {

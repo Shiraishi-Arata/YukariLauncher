@@ -48,17 +48,23 @@ class InfoAdapter(
     private var selectMode = false
     private var selectListener: ((InfoItem) -> Unit)? = null
 
+    /**
+     * 新しいViewHolderを作成する。アイテムの種類に応じてViewの種類を切り替える
+     * @param viewGroup 親のViewGroup
+     * @param viewType Viewの種類（MOD_ITEMまたはLOADING）
+     * @return 作成されたViewHolder
+     */
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(viewGroup.context)
         val view: View
         when (viewType) {
             VIEW_TYPE_MOD_ITEM -> {
-                // Create a new view, which defines the UI of the list item
+                // リストアイテムのUIを定義する新しいビューを作成
                 return ViewHolder(ItemDownloadInfoBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false))
             }
 
             VIEW_TYPE_LOADING -> {
-                // Create a new view, which is actually just the progress bar
+                // 実際にはプログレスバーのみのビューを作成
                 view = layoutInflater.inflate(R.layout.view_loading, viewGroup, false)
                 return LoadingViewHolder(view)
             }
@@ -67,6 +73,11 @@ class InfoAdapter(
         }
     }
 
+    /**
+     * 指定された位置のアイテムをViewHolderにバインドする
+     * @param holder 対象のViewHolder
+     * @param position アイテムの位置
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             VIEW_TYPE_MOD_ITEM -> (holder as ViewHolder).setStateLimited(mItems[position])
@@ -75,16 +86,29 @@ class InfoAdapter(
         }
     }
 
+    /**
+     * アイテムの総数を返す。最終ページでなければ読み込み表示用に+1する
+     * @return アイテム数
+     */
     override fun getItemCount(): Int {
         if (listener.isLastPage() || mItems.isEmpty()) return mItems.size
         return mItems.size + 1
     }
 
+    /**
+     * 指定された位置のアイテムのViewタイプを返す
+     * @param position アイテムの位置
+     * @return アイテムのViewタイプ
+     */
     override fun getItemViewType(position: Int): Int {
         if (position < mItems.size) return VIEW_TYPE_MOD_ITEM
         return VIEW_TYPE_LOADING
     }
 
+    /**
+     * アイテムリストを設定し、表示を更新する
+     * @param item 設定するアイテムリスト
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(item: List<InfoItem>) {
         originalItems = item.toMutableList()
@@ -92,6 +116,11 @@ class InfoAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * 選択モードの有効/無効を設定する
+     * @param enabled 選択モードを有効にするかどうか
+     * @param listener 選択時に呼び出されるコールバック
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun setSelectMode(enabled: Boolean, listener: ((InfoItem) -> Unit)?) {
         selectMode = enabled
@@ -99,6 +128,10 @@ class InfoAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * 選択されたプロジェクトIDのセットを設定する
+     * @param ids 選択されたプロジェクトIDのセット
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun setSelectedProjectIds(ids: Set<String>) {
         selectedProjectIds.clear()
@@ -107,10 +140,17 @@ class InfoAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * 表示用アイテムリストを元のリストから再構築する
+     */
     private fun rebuildDisplayItems() {
         mItems = originalItems.toMutableList()
     }
 
+    /**
+     * リストアイテムのViewHolder。バインディングを用いてUIを設定する
+     * @param binding アイテムのバインディングオブジェクト
+     */
     inner class ViewHolder(val binding: ItemDownloadInfoBinding) : RecyclerView.ViewHolder(binding.root) {
         private val mContext = binding.root.context
         private var item: InfoItem? = null
@@ -119,6 +159,10 @@ class InfoAdapter(
             mViewHolderSet.add(this)
         }
 
+        /**
+         * アイテムのデータをビューに設定する。アイコン、タイトル、説明、カテゴリ、タグなどを表示する
+         * @param item 表示するInfoItem
+         */
         @SuppressLint("CheckResult")
         fun setStateLimited(item: InfoItem) {
             this.item = item
@@ -156,12 +200,12 @@ class InfoAdapter(
                 descriptionTextview.text = item.description
                 platformImageview.setImageDrawable(getPlatformIcon(item.platform))
                 platformTextview.text = item.platform.pName
-                //设置类别
+                // カテゴリの設定
                 categoriesLayout.removeAllViews()
                 item.category.forEach { item ->
                     addCategoryView(categoriesLayout, mContext.getString(item.resNameID))
                 }
-                //设置标签
+                // タグの設定
                 tagsLayout.removeAllViews()
 
                 val downloadCount = NumberWithUnits.formatNumberWithUnit(item.downloadCount, YLTools.isEnglish(mContext))
@@ -195,6 +239,11 @@ class InfoAdapter(
             binding.tagsLayout
         }
 
+        /**
+         * プラットフォームに対応するアイコンのDrawableを取得する
+         * @param platform 対象プラットフォーム
+         * @return プラットフォームアイコンのDrawable
+         */
         private fun getPlatformIcon(platform: Platform): Drawable? {
             return when (platform) {
                 Platform.MODRINTH -> ContextCompat.getDrawable(mContext, R.drawable.ic_modrinth)
@@ -202,6 +251,11 @@ class InfoAdapter(
             }
         }
 
+        /**
+         * FlexboxLayoutにカテゴリ表示用のTextViewを追加する
+         * @param layout 追加先のFlexboxLayout
+         * @param text 表示するテキスト
+         */
         private fun addCategoryView(layout: FlexboxLayout, text: String) {
             val textView = createCategoryView(mContext)
             textView.text = text
@@ -211,7 +265,7 @@ class InfoAdapter(
     }
 
     /**
-     * The view holder used to hold the progress bar at the end of the list
+     * リスト末尾のプログレスバーを保持するViewHolder
      */
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -220,13 +274,14 @@ class InfoAdapter(
      */
     interface CallSearchListener {
         /**
-         * 用于判定当前搜索结果是否为最后一页
-         * 如果是最后一页，那么将不再展示加载视图，也不会请求搜索更多结果
+         * 現在の検索結果が最終ページかどうかを判定する
+         * 最終ページの場合は、読み込みビューを表示せず、追加の検索結果も要求しない
+         * @return 最終ページの場合はtrue
          */
         fun isLastPage(): Boolean
 
         /**
-         * 请求加载更多结果
+         * さらに結果を読み込むよう要求する
          */
         fun loadMoreResult()
     }
@@ -235,6 +290,11 @@ class InfoAdapter(
         private const val VIEW_TYPE_MOD_ITEM = 0
         private const val VIEW_TYPE_LOADING = 1
 
+        /**
+         * カテゴリ表示用のTextViewを作成する
+         * @param context コンテキスト
+         * @return 作成されたTextView
+         */
         @JvmStatic
         fun createCategoryView(context: Context): TextView {
             return TextView(context).apply {
@@ -252,6 +312,13 @@ class InfoAdapter(
             }
         }
 
+        /**
+         * タグ表示用のTextViewを生成する
+         * @param context コンテキスト
+         * @param string リソース文字列のID
+         * @param value タグの値
+         * @return 作成されたTextView
+         */
         @JvmStatic
         fun getTagTextView(context: Context, string: Int, value: String): TextView {
             val textView = TextView(context)

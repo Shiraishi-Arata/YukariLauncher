@@ -41,6 +41,9 @@ import net.kdt.pojavlaunch.multirt.Runtime
 import org.greenrobot.eventbus.EventBus
 import kotlin.enums.EnumEntries
 
+/**
+ * バージョン設定エディタフラグメント
+ */
 class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config), View.OnClickListener {
     private lateinit var binding: FragmentVersionConfigBinding
     private lateinit var currentVersion: Version
@@ -62,6 +65,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
     }
     private var mSelectPathMark = ""
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -83,6 +89,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val version = getCurrentVersion()
         version ?: run {
@@ -128,11 +137,17 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         refreshIcon(true)
     }
 
+    /**
+     * カスタムパスを無効化する
+     */
     private fun disableCustomPath(disable: Boolean) {
         binding.customPath.isEnabled = !disable
         binding.resetCustomPath.isEnabled = !disable
     }
 
+    /**
+     * スピナーを初期化する
+     */
     private fun initSpinners(vararg spinners: PowerSpinnerView) {
         spinners.forEach { spinner ->
             spinner.apply {
@@ -142,6 +157,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         }
     }
 
+    /**
+     * すべてのスピナーを閉じる
+     */
     private fun closeSpinner() {
         binding.isolationType.dismiss()
         binding.rendererSpinner.dismiss()
@@ -149,6 +167,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         binding.runtimeSpinner.dismiss()
     }
 
+    /**
+     * クリックイベントを処理します。
+     */
     override fun onClick(v: View?) {
         val activity = requireActivity()
         binding.apply {
@@ -199,16 +220,25 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         }
     }
 
+    /**
+     * フラグメント一時停止時にスピナーを閉じます。
+     */
     override fun onPause() {
         closeSpinner()
         super.onPause()
     }
 
+    /**
+     * ビュー破棄時にスピナーを閉じます。
+     */
     override fun onDestroyView() {
         closeSpinner()
         super.onDestroyView()
     }
 
+    /**
+     * 戻るボタン処理：未保存の変更がある場合は確認ダイアログを表示します。
+     */
     override fun onBackPressed(): Boolean {
         val tempConfig = mTempConfig ?: return true
         val backupConfig = mBackupConfig ?: return true
@@ -226,8 +256,7 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
     }
 
     /**
-     * 刷新图标，并对重置图标的按钮播放显示或隐藏的动画
-     * @param init 首次刷新不需要对重置按钮播放动画
+     * アイコン表示を更新し、リセットボタンのアニメーションを制御する
      */
     private fun refreshIcon(init: Boolean) {
         binding.apply {
@@ -249,6 +278,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         }
     }
 
+    /**
+     * アイコンをリセットする
+     */
     private fun resetIcon() {
         TipDialog.Builder(requireActivity())
             .setTitle(R.string.generic_warning)
@@ -260,10 +292,12 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
             }.showDialog()
     }
 
+    /**
+     * 設定値を各ビューに読み込む
+     */
     private fun loadValues(context: Context) {
         mTempConfig?.let { config ->
             binding.apply {
-                //版本隔离
                 val isolationTypes: EnumEntries<IsolationType> = IsolationType.entries
                 val isolationAdapter = ObjectSpinnerAdapter<IsolationType>(isolationType) { getIsolationString(requireActivity(), it) }
                 isolationAdapter.setItems(isolationTypes)
@@ -283,12 +317,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                         }
                     })
 
-                //控制布局
                 controlName.text = config.getControl()
-                //自定义路径
                 customPath.text = config.getCustomPath().replaceFirst(ProfilePathManager.getCurrentPath().toRegex(), ".")
 
-                //渲染器
                 val renderersList = Renderers.getCompatibleRenderers(context).first
                 val rendererNames: MutableList<String> = ArrayList(renderersList.rendererIdentifier)
                 val renderList: MutableList<String> = ArrayList(renderersList.rendererNames.size + 1)
@@ -309,7 +340,6 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                         else config.setRenderer(rendererNames[i1])
                     })
 
-                //驱动器
                 val driverNames = DriverPluginManager.getDriverNameList()
                 val driverList = ArrayList(driverNames)
                 driverList.add(context.getString(R.string.generic_default))
@@ -328,14 +358,10 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                         else config.setDriver(driverNames[i1])
                     })
 
-                //自定义信息
                 customInfoEdit.setText(config.getCustomInfo())
-                //JVM 启动参数
                 jvmArgsEdit.setText(config.getJavaArgs())
-                //游戏启动参数
                 gameArgsEdit.setText(config.getGameArgs())
 
-                //Java 运行环境
                 val runtimes = MultiRTUtils.getRuntimes()
                 val runtimeNames: MutableList<String> = ArrayList()
                 runtimes.forEach { v: Runtime ->
@@ -364,6 +390,9 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         }
     }
 
+    /**
+     * 設定を保存する
+     */
     private fun save() {
         mTempConfig?.let {
             it.save()
@@ -372,16 +401,25 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         Toast.makeText(requireActivity(), getString(R.string.generic_saved), Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Editableの値を文字列として取得する
+     */
     private fun getEditableValue(editable: Editable?): String {
         return editable?.toString() ?: ""
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.editorLayout, Animations.BounceInDown))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.BounceInLeft))
             .apply(AnimPlayer.Entry(binding.iconLayout, Animations.Wobble))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.editorLayout, Animations.FadeOutUp))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.FadeOutRight))

@@ -29,7 +29,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 下方向からフェードインするアニメーション
+ * 透明度を0→1に変化させ、X座標を画面幅の1/4右から0へ移動する
+ */
 class FadeInDownAnimator: BaseAnimator() {
+    /** 下方向フェードインアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 0f, 1f),

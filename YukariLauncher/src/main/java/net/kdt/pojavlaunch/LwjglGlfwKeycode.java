@@ -1,8 +1,8 @@
-// Keycodes from https://github.com/glfw/glfw/blob/master/include/GLFW/glfw3.h
+// キーコードは https://github.com/glfw/glfw/blob/master/include/GLFW/glfw3.h から取得
 
 /*-************************************************************************
  * GLFW 3.4 - www.glfw.org
- * A library for OpenGL, window and input
+ * OpenGL、ウィンドウ、入力のためのライブラリ
  *------------------------------------------------------------------------
  * Copyright (c) 2002-2006 Marcus Geelnard
  * Copyright (c) 2006-2019 Camilla Löwy <elmindreda@glfw.org>
@@ -30,12 +30,15 @@
 
 package net.kdt.pojavlaunch;
 
+/**
+ * GLFWキーコード定数クラス。https://www.glfw.org/docs/latest/group__keys.html から取得したキーコードを定義します。
+ */
 @SuppressWarnings("unused")
 public class LwjglGlfwKeycode {
-    /** The unknown key. */
+    /** 不明なキー。 */
     public static final short GLFW_KEY_UNKNOWN = 0; // should be -1
 
-    /** Printable keys. */
+    /** 表示可能なキー。 */
     public static final short
     GLFW_KEY_SPACE         = 32,
     GLFW_KEY_APOSTROPHE    = 39,
@@ -88,7 +91,7 @@ public class LwjglGlfwKeycode {
     GLFW_KEY_WORLD_1       = 161,
     GLFW_KEY_WORLD_2       = 162;
 
-    /** Function keys. */
+    /** ファンクションキー。 */
     public static final short
     GLFW_KEY_ESCAPE        = 256,
     GLFW_KEY_ENTER         = 257,
@@ -162,26 +165,25 @@ public class LwjglGlfwKeycode {
     GLFW_KEY_MENU          = 348,
     GLFW_KEY_LAST          = GLFW_KEY_MENU;
 
-    /** If this bit is set one or more Shift keys were held down. */
+    /** このビットが設定されている場合、1つ以上のShiftキーが押されていたことを示します。 */
     public static final int GLFW_MOD_SHIFT = 0x1;
 
-    /** If this bit is set one or more Control keys were held down. */
+    /** このビットが設定されている場合、1つ以上のControlキーが押されていたことを示します。 */
     public static final int GLFW_MOD_CONTROL = 0x2;
 
-    /** If this bit is set one or more Alt keys were held down. */
+    /** このビットが設定されている場合、1つ以上のAltキーが押されていたことを示します。 */
     public static final int GLFW_MOD_ALT = 0x4;
 
-    /** If this bit is set one or more Super keys were held down. */
+    /** このビットが設定されている場合、1つ以上のSuperキーが押されていたことを示します。 */
     public static final int GLFW_MOD_SUPER = 0x8;
 
-    /** If this bit is set the Caps Lock key is enabled and the LOCK_KEY_MODS input mode is set. */
+    /** このビットが設定されている場合、Caps Lockキーが有効でLOCK_KEY_MODS入力モードが設定されています。 */
     public static final int GLFW_MOD_CAPS_LOCK = 0x10;
 
-    /** If this bit is set the Num Lock key is enabled and the LOCK_KEY_MODS input mode is set. */
+    /** このビットが設定されている場合、Num Lockキーが有効でLOCK_KEY_MODS入力モードが設定されています。 */
     public static final int GLFW_MOD_NUM_LOCK = 0x20;
 
-
-    /** Mouse buttons. See <a target="_blank" href="http://www.glfw.org/docs/latest/input.html#input_mouse_button">mouse button input</a> for how these are used. */
+    /** マウスボタン。 */
     public static final short
     GLFW_MOUSE_BUTTON_1      = 0,
     GLFW_MOUSE_BUTTON_2      = 1,
@@ -196,6 +198,7 @@ public class LwjglGlfwKeycode {
     GLFW_MOUSE_BUTTON_RIGHT  = GLFW_MOUSE_BUTTON_2,
     GLFW_MOUSE_BUTTON_MIDDLE = GLFW_MOUSE_BUTTON_3;
 
+    /** ウィンドウ属性定数。 */
     public static final int
     GLFW_FOCUSED                 = 0x20001,
     GLFW_VISIBLE                 = 0x20004,

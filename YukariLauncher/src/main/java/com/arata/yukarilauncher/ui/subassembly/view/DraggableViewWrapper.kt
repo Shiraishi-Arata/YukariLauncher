@@ -7,6 +7,14 @@ import com.arata.yukarilauncher.utils.YLTools
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * ドラッグ可能なビューをラップするクラス
+ */
+/**
+ * ドラッグ可能なビューをラップするクラス。
+ * @param mainView ドラッグ対象のビュー
+ * @param fetcher 位置情報の取得・設定を行うインターフェース
+ */
 class DraggableViewWrapper(private val mainView: View, private val fetcher: AttributesFetcher) {
     private var lastUpdateTime: Long = 0
     private var initialX = 0f
@@ -14,6 +22,9 @@ class DraggableViewWrapper(private val mainView: View, private val fetcher: Attr
     private var touchX = 0f
     private var touchY = 0f
 
+    /**
+     * ドラッグ処理を初期化する
+     */
     @SuppressLint("ClickableViewAccessibility")
     fun init() {
         mainView.setOnTouchListener { _: View?, event: MotionEvent ->
@@ -45,7 +56,9 @@ class DraggableViewWrapper(private val mainView: View, private val fetcher: Attr
         }
     }
 
-    //避免过于频繁的更新导致的性能开销
+    /**
+     * 過度に頻繁な更新によるパフォーマンス低下を回避する
+     */
     private fun updateRateLimits(): Boolean {
         var limit = false
         val millis = YLTools.getCurrentTimeMillis()
@@ -54,12 +67,20 @@ class DraggableViewWrapper(private val mainView: View, private val fetcher: Attr
         return limit
     }
 
+    /**
+     * ドラッグ可能なビューの属性を取得/設定するインターフェース
+     */
     interface AttributesFetcher {
-        //获取对应的屏幕的高宽限制值
+        /** 画面のピクセル制限値を取得する */
         val screenPixels: ScreenPixels
-        fun get(): IntArray //获取x, y值
+        /** x, y座標を取得する */
+        fun get(): IntArray
+        /** x, y座標を設定する */
         fun set(x: Int, y: Int)
     }
 
+    /**
+     * 画面の座標制限を表すクラス
+     */
     class ScreenPixels(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 }

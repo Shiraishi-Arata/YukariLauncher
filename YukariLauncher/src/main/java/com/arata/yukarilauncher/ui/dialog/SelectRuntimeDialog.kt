@@ -9,6 +9,9 @@ import net.kdt.pojavlaunch.multirt.MultiRTUtils
 import net.kdt.pojavlaunch.multirt.RTRecyclerViewAdapter
 import net.kdt.pojavlaunch.multirt.Runtime
 
+/**
+ * Javaランタイム選択ダイアログ
+ */
 class SelectRuntimeDialog(
     context: Context,
     private val listener: RuntimeSelectedListener

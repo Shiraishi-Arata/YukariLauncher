@@ -9,11 +9,17 @@ interface ModParserListener {
      * @param recentlyParsedModInfo 刚刚解析完成的模组信息
      * @param totalFileCount 所有需要检查的文件的数量
      */
+/**
+ * onProgressする
+ */
     fun onProgress(recentlyParsedModInfo: ModInfo, totalFileCount: Int)
 
     /**
      * 解析完成后通过这个函数将解析的结果进行回调
      * @param modInfoList 所有模组信息列表
      */
+/**
+ * onParseEndedする
+ */
     fun onParseEnded(modInfoList: List<ModInfo>)
 }

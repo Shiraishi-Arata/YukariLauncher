@@ -47,6 +47,9 @@ class ModLoaderWrapper(
      * The task will also install the mod loader if it does not require GUI installation
      * @return the task Runnable that needs to be ran
      */
+/**
+ * getDownloadTaskする
+ */
     fun getDownloadTask(): InstallTask? {
         return when (modLoader) {
             ModLoader.FORGE -> ForgeDownloadTask(
@@ -83,6 +86,9 @@ class ModLoaderWrapper(
      * @return the Intent which the launcher needs to start in order to install the mod loader
      */
     @Throws(Throwable::class)
+/**
+ * getInstallationIntentする
+ */
     fun getInstallationIntent(context: Context?, modInstallerJar: File, customName: String): Intent? {
         val baseIntent = Intent(context, JavaGUILauncherActivity::class.java)
         when (modLoader) {

@@ -16,11 +16,20 @@ object ProfilePathManager {
     private val defaultPath: String = PathManager.DIR_GAME_HOME
     private var profilePathData: MutableList<ProfileItem> = mutableListOf()
 
+    /**
+     * 現在使用するプロファイルパスのIDを設定する。
+     * 設定を保存し、バージョンリストを更新する。
+     * @param id プロファイルID
+     */
     fun setCurrentPathId(id: String) {
         AllSettings.launcherProfile.put(id).save()
         VersionsManager.refresh("ProfilePathManager:setCurrentPathId")
     }
 
+    /**
+     * プロファイルパスの設定ファイルを再読み込みする。
+     * 設定ファイルが存在しない場合は何も行わない。
+     */
     fun refreshPath() {
         val configFile = PathManager.FILE_PROFILE_PATH
         if (!configFile.exists()) return
@@ -29,6 +38,12 @@ object ProfilePathManager {
         profilePathData = parseProfileData(json)
     }
 
+    /**
+     * JSON文字列を解析してプロファイルアイテムのリストに変換する。
+     * 各エントリを ProfilePathJsonObject に変換し、エラーはログに記録してスキップする。
+     * @param json JSON形式の設定文字列
+     * @return プロファイルアイテムのリスト
+     */
     private fun parseProfileData(json: String): MutableList<ProfileItem> {
         val jsonObject = JsonParser.parseString(json).asJsonObject
         return jsonObject.entrySet().mapNotNull { (key, value) ->
@@ -41,6 +56,12 @@ object ProfilePathManager {
         }.toMutableList()
     }
 
+    /**
+     * 現在のプロファイルパスを取得する。
+     * ストレージ権限がない場合はデフォルトパスを返す。
+     * プロファイルIDが "default" の場合はデフォルトパス、それ以外は設定されたパスを返す。
+     * @return プロファイルのパス文字列
+     */
     fun getCurrentPath(): String {
         if (!StoragePermissionsUtils.checkPermissions()) return defaultPath
 
@@ -51,20 +72,45 @@ object ProfilePathManager {
         return path
     }
 
+    /**
+     * すべてのプロファイルパスをリストとして取得する。
+     * @return プロファイルアイテムのリスト
+     */
     fun getAllPath(): List<ProfileItem> = profilePathData.toList()
 
+    /**
+     * 新しいプロファイルパスを追加する。
+     * 追加後、設定ファイルを保存する。
+     * @param profile 追加するプロファイルアイテム
+     */
     fun addPath(profile: ProfileItem) {
         profilePathData.add(profile)
         save()
     }
 
+    /**
+     * 指定されたパスが既にプロファイルとして登録されているかを確認する。
+     * @param path 確認するパス
+     * @return 登録済みの場合は true
+     */
     fun containsPath(path: String): Boolean = profilePathData.any { it.path == path }
 
+    /**
+     * プロファイルIDに対応するパスを検索する。
+     * データが空の場合は先に refreshPath() を呼び出す。
+     * @param profileId プロファイルID
+     * @return 見つかったパス、なければ null
+     */
     private fun findProfilePath(profileId: String): String? {
         if (profilePathData.isEmpty()) refreshPath()
         return profilePathData.firstOrNull { it.id == profileId }?.path
     }
 
+    /**
+     * 指定されたパスに .nomedia ファイルを作成する。
+     * メディアスキャナがこのディレクトリをスキャンしないようにするため。
+     * @param path 対象ディレクトリのパス
+     */
     private fun createNoMediaFile(path: String) {
         val noMediaFile = File(path, ".nomedia")
         if (!noMediaFile.exists()) {
@@ -73,10 +119,18 @@ object ProfilePathManager {
         }
     }
 
+    /**
+     * 現在のプロファイルパスデータをファイルに保存する。
+     */
     fun save() {
         save(profilePathData)
     }
 
+    /**
+     * 指定されたプロファイルアイテムのリストをJSONとしてファイルに保存する。
+     * "default" IDのアイテムはスキップされる。
+     * @param items 保存するプロファイルアイテムのリスト
+     */
     fun save(items: List<ProfileItem>) {
         val jsonObject = JsonObject()
 

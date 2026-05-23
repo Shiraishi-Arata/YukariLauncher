@@ -9,6 +9,9 @@ import java.util.zip.ZipFile
 
 class UnpackWorldZipHelper {
     companion object {
+/**
+ * unpackFileする
+ */
         fun unpackFile(zipFile: File, targetPath: File) {
             val path = extractLevelPath(zipFile) ?: throw IOException()
             Logging.i("UnpackWorldZipHelper", "Found the level of the level.data file: $path")
@@ -24,6 +27,9 @@ class UnpackWorldZipHelper {
          * 读取zip文件，并找到level.data文件所在的路径
          * @param file 压缩包文件
          */
+/**
+ * extractLevelPathする
+ */
         private fun extractLevelPath(file: File): String? {
             if (!file.exists() || !file.isFile) {
                 return null

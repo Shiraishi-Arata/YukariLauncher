@@ -21,6 +21,9 @@ object OtherLoginApi {
     private var client: OkHttpClient = UrlManager.createOkHttpClient()
     private var baseUrl: String? = null
 
+/**
+ * setBaseUrlする
+ */
     fun setBaseUrl(baseUrl: String) {
         var url = baseUrl
         if (baseUrl.endsWith("/")) {
@@ -30,6 +33,9 @@ object OtherLoginApi {
     }
 
     @Throws(IOException::class)
+/**
+ * loginする
+ */
     fun login(context: Context, userName: String?, password: String?, listener: Listener) {
         if (Objects.isNull(baseUrl)) {
             listener.onFailed(context.getString(R.string.other_login_baseurl_not_set))
@@ -51,6 +57,9 @@ object OtherLoginApi {
     }
 
     @Throws(IOException::class)
+/**
+ * refreshする
+ */
     fun refresh(context: Context, account: MinecraftAccount, select: Boolean, listener: Listener) {
         if (Objects.isNull(baseUrl)) {
             listener.onFailed(context.getString(R.string.other_login_baseurl_not_set))
@@ -71,6 +80,9 @@ object OtherLoginApi {
         callLogin(data, "/authserver/refresh", listener)
     }
 
+/**
+ * callLoginする
+ */
     private fun callLogin(data: String, url: String, listener: Listener) {
         val body = data.toRequestBody("application/json".toMediaTypeOrNull())
         val call = client.newCall(createRequestBuilder(baseUrl + url, body).build())
@@ -103,7 +115,13 @@ object OtherLoginApi {
         }
     }
 
+/**
+ * getServeInfoする
+ */
     fun getServeInfo(context: Context, url: String): String? {
+/**
+ * callする
+ */
         val call = client.newCall(createRequestBuilder(url).get().build())
         runCatching {
             call.execute().use { response ->
@@ -115,7 +133,13 @@ object OtherLoginApi {
     }
 
     interface Listener {
+/**
+ * onSuccessする
+ */
         fun onSuccess(authResult: AuthResult)
+/**
+ * onFailedする
+ */
         fun onFailed(error: String)
     }
 }

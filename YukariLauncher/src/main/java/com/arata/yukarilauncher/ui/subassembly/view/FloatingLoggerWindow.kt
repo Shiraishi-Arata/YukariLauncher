@@ -13,6 +13,9 @@ import android.widget.TextView
 import com.arata.yukarilauncher.R
 import com.kdt.DefocusableScrollView
 
+/**
+ * フローティングログウィンドウ
+ */
 class FloatingLoggerWindow(context: Context) {
 
     private val activity = context as Activity
@@ -82,6 +85,9 @@ class FloatingLoggerWindow(context: Context) {
         }
     }
 
+    /**
+     * タイトルバーのドラッグ移動を設定する
+     */
     @SuppressLint("ClickableViewAccessibility")
     private fun setupDrag() {
         var dX = 0f
@@ -112,6 +118,9 @@ class FloatingLoggerWindow(context: Context) {
         }
     }
 
+    /**
+     * 全リサイズハンドルのドラッグ操作を設定する
+     */
     @SuppressLint("ClickableViewAccessibility")
     private fun setupAllResizeHandles() {
         handles.forEach { (dir, handle) ->
@@ -206,6 +215,9 @@ class FloatingLoggerWindow(context: Context) {
         }
     }
 
+    /**
+     * 閉じる・オートスクロール・ログクリアボタンの動作を設定する
+     */
     private fun setupButtons() {
         closeBtn.setOnClickListener { hide() }
         autoScrollBtn.setOnCheckedChangeListener { _, checked ->
@@ -214,6 +226,9 @@ class FloatingLoggerWindow(context: Context) {
         clearLogBtn.setOnClickListener { clearLog() }
     }
 
+    /**
+     * 指定された幅と高さを適用する
+     */
     private fun applySize(w: Int, h: Int) {
         val lp = wrapper.layoutParams
         if (lp != null) {
@@ -225,9 +240,19 @@ class FloatingLoggerWindow(context: Context) {
         }
     }
 
+    /**
+     * X方向の最大座標を取得する
+     */
     private fun maxX() = (contentParent.width - wrapper.width).toFloat().coerceAtLeast(0f)
+
+    /**
+     * Y方向の最大座標を取得する
+     */
     private fun maxY() = (contentParent.height - wrapper.height).toFloat().coerceAtLeast(0f)
 
+    /**
+     * 位置とサイズを画面内に収める
+     */
     private fun clampPositionAndSize() {
         val w = wrapper.width.coerceIn(minW, maxW)
         val h = wrapper.height.coerceIn(minH, maxH)
@@ -241,8 +266,14 @@ class FloatingLoggerWindow(context: Context) {
         winY = y
     }
 
+    /**
+     * dp値をピクセル値に変換する
+     */
     private fun dp(value: Int) = (value * density).toInt()
 
+    /**
+     * フローティングウィンドウを表示する
+     */
     fun show() {
         if (wrapper.parent == null) {
             applySize(dp(defaultWidthDp), dp(defaultHeightDp))
@@ -252,30 +283,49 @@ class FloatingLoggerWindow(context: Context) {
         wrapper.visibility = View.VISIBLE
     }
 
+    /**
+     * フローティングウィンドウを非表示にする
+     */
     fun hide() {
         wrapper.visibility = View.GONE
     }
 
+    /**
+     * 表示/非表示を切り替える
+     */
     fun toggle() {
         if (wrapper.visibility == View.VISIBLE) hide() else show()
     }
 
+    /** ウィンドウが表示されているかどうか */
     val isVisible: Boolean get() = wrapper.visibility == View.VISIBLE
 
+    /**
+     * ログテキストを追加する
+     */
     fun appendLog(text: String) {
         logTextView.append(text)
         if (autoScrollBtn.isChecked) scrollToBottom()
     }
 
+    /**
+     * ログをクリアする
+     */
     fun clearLog() {
         logTextView.text = ""
     }
 
+    /**
+     * ログテキストを設定する
+     */
     fun setLog(text: CharSequence) {
         logTextView.text = text
         if (autoScrollBtn.isChecked) scrollToBottom()
     }
 
+    /**
+     * スクロールを最下部に移動する
+     */
     private fun scrollToBottom() {
         scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
     }

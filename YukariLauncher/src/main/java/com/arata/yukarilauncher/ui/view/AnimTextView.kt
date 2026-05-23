@@ -10,12 +10,19 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.arata.yukarilauncher.R
 
+/**
+ * アニメーション効果付きのTextView。
+ * タップ時のスケールアニメーションとリップルエフェクトを提供する。
+ */
 @SuppressLint("Recycle")
 class AnimTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = android.R.attr.textStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
+    /**
+     * 初期化時にスケールアニメーションとリップルエフェクトを設定する。
+     */
     init {
         stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.xml.anim_scale)
         if (context.obtainStyledAttributes(attrs, R.styleable.AnimTextView).getBoolean(R.styleable.AnimTextView_ripple_for_text, false)) {
@@ -23,6 +30,9 @@ class AnimTextView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * レイアウト完了後にピボットを中心に設定する。
+     */
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         post {
@@ -31,6 +41,9 @@ class AnimTextView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * リップルエフェクト（波紋効果）を背景に設定する。
+     */
     private fun setRipple() {
         val rippleDrawable = RippleDrawable(
             ColorStateList.valueOf(ContextCompat.getColor(context, R.color.background_ripple_effect)),

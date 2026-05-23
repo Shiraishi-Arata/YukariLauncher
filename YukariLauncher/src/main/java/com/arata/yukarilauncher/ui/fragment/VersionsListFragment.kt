@@ -42,6 +42,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.UUID
 
+/**
+ * バージョン一覧フラグメント
+ */
 class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
     companion object {
         const val TAG: String = "VersionsListFragment"
@@ -58,6 +61,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         isOutsideTouchable = true
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,6 +90,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
             installNew.setOnClickListener {
@@ -92,7 +101,7 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
 
             fun refreshFavoritesFolderTab(index: Int) {
                 if (index < 0) return
-            
+
                 val keys = FavoritesVersionUtils.getFavoritesStructure().keys.toList()
                 when (index) {
                     0 -> refreshVersions(true)
@@ -129,7 +138,6 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
                 }
 
                 override fun isVersionFavorited(versionName: String): Boolean {
-                    //如果收藏栏选择的不是“全部”，那么当前版本一定会是被收藏的状态
                     if (favoritesFolderTab.currentItemIndex != 0) {
                         return true
                     }
@@ -181,6 +189,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         refresh()
     }
 
+    /**
+     * ビューを更新する
+     */
     private fun refresh(refreshVersions: Boolean = false, refreshVersionInfo: Boolean = false) {
         ProfilePathManager.refreshPath()
 
@@ -195,6 +206,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         profilePathAdapter?.updateData(path)
     }
 
+    /**
+     * バージョン一覧を更新する
+     */
     private fun refreshVersions(all: Boolean = true, favoritesFolder: String? = null) {
         versionsAdapter?.let {
             val versions = VersionsManager.getVersions()
@@ -225,6 +239,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         }
     }
 
+    /**
+     * お気に入りフォルダとバージョン一覧を更新する
+     */
     private fun refreshFavoritesFolderAndVersions() {
         binding.favoritesFolderTab.setCurrentItem(0)
         refreshVersions()
@@ -241,7 +258,6 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                //长按删除
                 root.setOnLongClickListener {
                     showFavoritesDeletePopupWindow(root, folderName)
                     true
@@ -256,6 +272,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         }
     }
 
+    /**
+     * アクションポップアップを表示する
+     */
     private fun refreshActionPopupWindow(anchorView: View, binding: ViewBinding) {
         mFavoritesActionPopupWindow.apply {
             binding.root.measure(0, 0)
@@ -266,6 +285,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         }
     }
 
+    /**
+     * お気に入り追加ポップアップを表示する
+     */
     private fun showFavoritesActionPopupWindow(anchorView: View) {
         refreshActionPopupWindow(anchorView, ViewSingleActionPopupBinding.inflate(LayoutInflater.from(requireActivity())).apply {
             icon.setImageDrawable(
@@ -286,6 +308,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         })
     }
 
+    /**
+     * お気に入り削除ポップアップを表示する
+     */
     private fun showFavoritesDeletePopupWindow(anchorView: View, folderName: String) {
         refreshActionPopupWindow(anchorView, ViewSingleActionPopupBinding.inflate(LayoutInflater.from(requireActivity())).apply {
             icon.setImageDrawable(
@@ -306,6 +331,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         })
     }
 
+    /**
+     * バージョン更新イベントを処理します。
+     */
     @Subscribe
     fun event(event: RefreshVersionsEvent) {
         binding.apply {
@@ -325,33 +353,47 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
                         refreshVersions.visibility = View.GONE
                     }
                 }
-                //无论刷新进度，都应该关闭所有的操作弹窗
                 closeAllPopupWindow()
             }
         }
     }
 
+    /**
+     * すべてのポップアップを閉じる
+     */
     private fun closeAllPopupWindow() {
         versionsAdapter?.closePopupWindow()
         profilePathAdapter?.closePopupWindow()
         mFavoritesActionPopupWindow.dismiss()
     }
 
+    /**
+     * フラグメント開始時にEventBusを登録します。
+     */
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
 
+    /**
+     * フラグメント停止時にEventBusの登録を解除します。
+     */
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
+    /**
+     * フラグメント一時停止時にすべてのポップアップを閉じます。
+     */
     override fun onPause() {
         super.onPause()
         closeAllPopupWindow()
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(versionsListLayout, Animations.BounceInUp))
@@ -360,6 +402,9 @@ class VersionsListFragment : FragmentWithAnim(R.layout.fragment_versions_list) {
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(versionsListLayout, Animations.FadeOutDown))

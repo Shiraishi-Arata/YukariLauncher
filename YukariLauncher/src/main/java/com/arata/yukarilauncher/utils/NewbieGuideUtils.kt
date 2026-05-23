@@ -22,6 +22,9 @@ class NewbieGuideUtils {
         private val NEWBIE_TAGS: MutableList<String> = ArrayList()
 
         init {
+            /**
+             * 初期化時に新規ガイドのタグをファイルから読み込む
+             */
             PathManager.FILE_NEWBIE_GUIDE.apply {
                 runCatching {
                     if (!exists()) createNewFile()
@@ -39,6 +42,10 @@ class NewbieGuideUtils {
             }
         }
 
+        /**
+         * 指定されたタグのガイドを一度だけ表示する
+         * 同じタグが既に表示済みの場合はtrueを返し、表示をスキップする
+         */
         @JvmStatic
         fun showOnlyOne(tag: String): Boolean {
             println(tag)
@@ -50,6 +57,9 @@ class NewbieGuideUtils {
             return true
         }
 
+        /**
+         * 現在のタグ一覧をJSONファイルに保存する
+         */
         private fun saveTags() {
             val jsonArray = JsonArray()
             for (tag in NEWBIE_TAGS) {
@@ -64,6 +74,9 @@ class NewbieGuideUtils {
             }.getOrElse { e -> e("Write Newbie Guide Tags", Tools.printToString(e)) }
         }
 
+        /**
+         * 新規ガイド用のTapTargetを生成する（説明文付き）
+         */
         @JvmStatic
         fun getSimpleTarget(context: Context, view: View?, title: String, desc: String): TapTarget {
             return TapTarget.forView(view, title, desc)
@@ -72,6 +85,9 @@ class NewbieGuideUtils {
                 .targetCircleColorInt(ContextCompat.getColor(context, TARGET_CIRCLE_COLOR))
         }
 
+        /**
+         * 新規ガイド用のTapTargetを生成する（タイトルのみ）
+         */
         @JvmStatic
         fun getSimpleTarget(context: Context, view: View?, title: String): TapTarget {
             return TapTarget.forView(view, title)

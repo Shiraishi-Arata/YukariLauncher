@@ -24,6 +24,19 @@ class VersionConfig(private var versionPath: File) : Parcelable {
     private var customInfo: String = ""
     private var gameArgs: String = ""
 
+    /**
+     * 指定されたファイルパスと設定値でVersionConfigを作成する
+     * @param filePath バージョンパス
+     * @param isolationType 分離タイプ
+     * @param javaDir Javaディレクトリ
+     * @param javaArgs Java引数
+     * @param renderer レンダラー
+     * @param driver ドライバー
+     * @param control コントロール
+     * @param customPath カスタムパス
+     * @param customInfo カスタム情報
+     * @param gameArgs ゲーム引数
+     */
     constructor(
         filePath: File,
         isolationType: IsolationType = IsolationType.FOLLOW_GLOBAL,
@@ -47,6 +60,10 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         this.gameArgs = gameArgs
     }
 
+    /**
+     * 現在の設定をコピーした新しいVersionConfigを生成する
+     * @return コピーされたVersionConfig
+     */
     fun copy(): VersionConfig = VersionConfig(versionPath,
         getIsolationTypeNotNull(isolationType),
         getStringNotNull(javaDir),
@@ -59,6 +76,9 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         getStringNotNull(gameArgs)
     )
 
+    /**
+     * 設定をファイルに保存する（エラーハンドリング付き）
+     */
     fun save() {
         runCatching {
             saveWithThrowable()
@@ -67,6 +87,9 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         }
     }
 
+    /**
+     * 設定をファイルに保存する（例外をスローする可能性あり）
+     */
     @Throws(Throwable::class)
     fun saveWithThrowable() {
         Logging.i("Save Version Config", "Trying to save: $this")
@@ -81,54 +104,133 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         Logging.i("Save Version Config", "Saved: $this")
     }
 
+    /**
+     * @return バージョンパスを取得する
+     */
     fun getVersionPath() = versionPath
 
+    /**
+     * バージョンパスを設定する
+     * @param versionPath バージョンパス
+     */
     fun setVersionPath(versionPath: File) {
         this.versionPath = versionPath
     }
 
+    /**
+     * バージョン分離が有効かどうかを判定する
+     * @return 分離が有効な場合はtrue
+     */
     fun isIsolation(): Boolean = when(getIsolationTypeNotNull(isolationType)) {
         IsolationType.FOLLOW_GLOBAL -> AllSettings.versionIsolation.getValue()
         IsolationType.ENABLE -> true
         IsolationType.DISABLE -> false
     }
 
+    /**
+     * @return 分離タイプを取得する
+     */
     fun getIsolationType() = getIsolationTypeNotNull(isolationType)
 
+    /**
+     * 分離タイプを設定する
+     * @param isolationType 分離タイプ
+     */
     fun setIsolationType(isolationType: IsolationType) { this.isolationType = isolationType }
 
+    /**
+     * @return Javaディレクトリを取得する
+     */
     fun getJavaDir(): String = getStringNotNull(javaDir)
 
+    /**
+     * Javaディレクトリを設定する
+     * @param dir Javaディレクトリ
+     */
     fun setJavaDir(dir: String) { this.javaDir = dir }
 
+    /**
+     * @return Java引数を取得する
+     */
     fun getJavaArgs(): String = getStringNotNull(javaArgs)
 
+    /**
+     * Java引数を設定する
+     * @param args Java引数
+     */
     fun setJavaArgs(args: String) { this.javaArgs = args }
 
+    /**
+     * @return レンダラーを取得する
+     */
     fun getRenderer(): String = getStringNotNull(renderer)
 
+    /**
+     * レンダラーを設定する
+     * @param renderer レンダラー
+     */
     fun setRenderer(renderer: String) { this.renderer = renderer }
 
+    /**
+     * @return ドライバーを取得する
+     */
     fun getDriver(): String = getStringNotNull(driver)
 
+    /**
+     * ドライバーを設定する
+     * @param driver ドライバー
+     */
     fun setDriver(driver: String) { this.driver = driver }
 
+    /**
+     * @return コントロールを取得する
+     */
     fun getControl(): String = getStringNotNull(control)
 
+    /**
+     * コントロールを設定する
+     * @param control コントロール
+     */
     fun setControl(control: String) { this.control = control }
 
+    /**
+     * @return カスタムパスを取得する
+     */
     fun getCustomPath(): String = getStringNotNull(customPath)
 
+    /**
+     * カスタムパスを設定する
+     * @param customPath カスタムパス
+     */
     fun setCustomPath(customPath: String) { this.customPath = customPath }
 
+    /**
+     * @return カスタム情報を取得する
+     */
     fun getCustomInfo(): String = getStringNotNull(customInfo)
 
+    /**
+     * カスタム情報を設定する
+     * @param customInfo カスタム情報
+     */
     fun setCustomInfo(customInfo: String) { this.customInfo = customInfo }
 
+    /**
+     * @return ゲーム引数を取得する
+     */
     fun getGameArgs(): String = getStringNotNull(gameArgs)
 
+    /**
+     * ゲーム引数を設定する
+     * @param args ゲーム引数
+     */
     fun setGameArgs(args: String) { this.gameArgs = args }
 
+    /**
+     * 現在の設定と別の設定が異なるかどうかをチェックする
+     * @param otherConfig 比較対象の設定
+     * @return 異なる場合はtrue
+     */
     fun checkDifferent(otherConfig: VersionConfig): Boolean {
         return !(this.getIsolationType() == otherConfig.getIsolationType() &&
                 this.getJavaDir() == otherConfig.getJavaDir() &&
@@ -141,10 +243,24 @@ class VersionConfig(private var versionPath: File) : Parcelable {
                 this.getGameArgs() == otherConfig.getGameArgs())
     }
 
+    /**
+     * 分離タイプがnullの場合はデフォルト値を返す
+     * @param type 分離タイプ
+     * @return nullでない分離タイプ
+     */
     private fun getIsolationTypeNotNull(type: IsolationType?) = type ?: IsolationType.FOLLOW_GLOBAL
 
+    /**
+     * Parcelable: コンテンツの種類を記述する
+     * @return 0（特別な種類はなし）
+     */
     override fun describeContents(): Int = 0
 
+    /**
+     * Parcelable: オブジェクトをParcelに書き込む
+     * @param dest 書き込み先のParcel
+     * @param flags 追加のフラグ
+     */
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(versionPath.absolutePath)
         dest.writeInt(getIsolationTypeNotNull(isolationType).ordinal)
@@ -159,6 +275,11 @@ class VersionConfig(private var versionPath: File) : Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<VersionConfig> {
+        /**
+         * Parcelable: ParcelからVersionConfigを作成する
+         * @param parcel 読み込み元のParcel
+         * @return 作成されたVersionConfig
+         */
         override fun createFromParcel(parcel: Parcel): VersionConfig {
             val versionPath = File(parcel.readString().orEmpty())
             val isolationType = IsolationType.entries.getOrNull(parcel.readInt()) ?: IsolationType.FOLLOW_GLOBAL
@@ -173,13 +294,24 @@ class VersionConfig(private var versionPath: File) : Parcelable {
             return VersionConfig(versionPath, isolationType, javaDir, javaArgs, renderer, driver, control, customPath, customInfo, gameArgs)
         }
 
+        /**
+         * Parcelable: 指定されたサイズのVersionConfig配列を作成する
+         * @param size 配列のサイズ
+         * @return 作成された配列
+         */
         override fun newArray(size: Int): Array<VersionConfig?> {
             return arrayOfNulls(size)
         }
 
+        /**
+         * バージョンフォルダから設定を解析する
+         * 旧バージョンの設定ファイルも自動的に認識して新形式で保存する
+         * @param versionPath バージョンフォルダ
+         * @return 解析されたVersionConfig
+         */
         @JvmStatic
         fun parseConfig(versionPath: File): VersionConfig {
-            //兼容旧版本的版本隔离文件（识别并保存为新版本后，旧的版本隔离文件将被删除）
+            // 旧バージョンのバージョン分離ファイルを認識して新形式で保存後、旧ファイルは削除
             val oldConfigFile = File(getYukariVersionPath(versionPath), "YukariVersion.cfg")
             val configFile = File(getYukariVersionPath(versionPath), "VersionConfig.json")
 
@@ -192,12 +324,12 @@ class VersionConfig(private var versionPath: File) : Parcelable {
                             save()
                         }
                     }.getOrNull().let { config ->
-                        //移除旧的配置文件
+                        // 古い設定ファイルを削除
                         oldConfigFile.delete()
                         config?.let { return@getConfig it }
                     }
                 }
-                //读取此文件的内容，并解析为VersionConfig
+                // このファイルの内容を読み取り、VersionConfigとして解析
                 val configString = Tools.read(configFile)
                 val config = Tools.GLOBAL_GSON.fromJson(configString, VersionConfig::class.java)
                 runCatching {
@@ -220,6 +352,11 @@ class VersionConfig(private var versionPath: File) : Parcelable {
             }
         }
 
+        /**
+         * バージョン分離を有効にして新しい設定を作成する
+         * @param versionPath バージョンフォルダ
+         * @return 作成されたVersionConfig
+         */
         @JvmStatic
         fun createIsolation(versionPath: File): VersionConfig {
             val config = VersionConfig(versionPath)
@@ -227,6 +364,12 @@ class VersionConfig(private var versionPath: File) : Parcelable {
             return config
         }
 
+        /**
+         * 分離タイプの表示文字列を取得する
+         * @param context コンテキスト
+         * @param type 分離タイプ
+         * @return 表示文字列
+         */
         @JvmStatic
         fun getIsolationString(context: Context, type: IsolationType): String = when (type) {
             IsolationType.FOLLOW_GLOBAL -> context.getString(R.string.version_manager_isolation_type_follow_global)

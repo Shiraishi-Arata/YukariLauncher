@@ -9,6 +9,9 @@ class ModUtils {
         const val DISABLE_JAR_FILE_SUFFIX: String = "$JAR_FILE_SUFFIX.disabled"
 
         @JvmStatic
+/**
+ * disableModする
+ */
         fun disableMod(file: File?) {
             val fileName = file!!.name
             val fileParent = file.parent
@@ -17,6 +20,9 @@ class ModUtils {
         }
 
         @JvmStatic
+/**
+ * enableModする
+ */
         fun enableMod(file: File?) {
             val fileName = file!!.name
             val fileParent = file.parent

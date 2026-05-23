@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 右へスライドアウトするアニメーション
+ * 透明度を1→0に変化させ、X座標を0→100へ移動する
+ */
 class SlideOutRightAnimator: BaseAnimator() {
+    /** スライドアウト（右）アニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 1f, 0f),

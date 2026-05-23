@@ -14,7 +14,9 @@ import androidx.annotation.CheckResult
 import com.arata.yukarilauncher.databinding.DialogTipBinding
 import com.arata.yukarilauncher.ui.dialog.DraggableDialog.DialogInitializationListener
 
-
+/**
+ * ヒント/確認ダイアログ
+ */
 class TipDialog private constructor(
     context: Context,
     private val title: String?,
@@ -36,9 +38,17 @@ class TipDialog private constructor(
 ) : FullScreenDialog(context), DialogInitializationListener {
     private val binding = DialogTipBinding.inflate(layoutInflater)
 
+    /**
+     * ダイアログ作成時にUIコンポーネントを初期化する
+     * @param savedInstanceState 保存されたインスタンス状態
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        /**
+         * TextViewにテキストを設定し、nullの場合は非表示にする
+         * @param textString 設定するテキスト
+         */
         fun TextView.addText(textString: String?) {
             this.text = textString
             textString ?: run { this.visibility = View.GONE }
@@ -77,7 +87,6 @@ class TipDialog private constructor(
             cancelButton.visibility = if (showCancel) View.VISIBLE else View.GONE
             confirmButton.visibility = if (showConfirm) View.VISIBLE else View.GONE
 
-            //如果开启了警告模式，那么就为标题添加一个红色的警告图标
             if (warning) {
                 warningIcon.visibility = View.VISIBLE
                 warningIcon.drawable.setTint(Color.RED)
@@ -85,13 +94,19 @@ class TipDialog private constructor(
         }
     }
 
+    /**
+     * ダイアログの高さをチェックし、画面に収まるよう調整する
+     */
     private fun checkHeight() {
         checkHeight(binding.root, binding.contentView, binding.scrollView)
     }
 
+    /**
+     * ダイアログを表示する
+     * 確認ボタンのカウントダウンが設定されている場合はタイマーを開始する
+     */
     override fun show() {
         super.show()
-        //尝试修复一些设备上的View宽度不正确的问题，在这里进行测量
         window?.findViewById<View>(android.R.id.content)?.measure(0, 0)
 
         if (confirmButtonCountdown > 0) {
@@ -101,7 +116,7 @@ class TipDialog private constructor(
                 val buttonText = text
                 var remainingTime = confirmButtonCountdown
 
-                val interval = 500L //更新频率
+                val interval = 500L
                 val handler = Handler(Looper.getMainLooper())
                 val runnable = object : Runnable {
                     @SuppressLint("SetTextI18n")
@@ -123,29 +138,52 @@ class TipDialog private constructor(
         }
     }
 
+    /**
+     * ダイアログを破棄する
+     * 破棄リスナーがfalseを返した場合は破棄をキャンセルする
+     */
     override fun dismiss() {
         if (dismissListener?.onDismiss() == false) return
         super.dismiss()
     }
 
+    /**
+     * ダイアログ初期化時にWindowを返す
+     * @return Windowオブジェクト
+     */
     override fun onInit(): Window? = window
 
+    /**
+     * テキスト整形のインターフェース
+     */
     fun interface TextBeautifier {
         fun beautify(titleText: TextView, messageText: TextView)
     }
 
+    /**
+     * キャンセルボタンクリックのコールバック
+     */
     fun interface OnCancelClickListener {
         fun onCancelClick()
     }
 
+    /**
+     * 確認ボタンクリックのコールバック
+     */
     fun interface OnConfirmClickListener {
         fun onConfirmClick(checked: Boolean)
     }
 
+    /**
+     * ダイアログ破棄時のコールバック
+     */
     fun interface OnDialogDismissListener {
         fun onDismiss(): Boolean
     }
 
+    /**
+     * TipDialogのビルダークラス
+     */
     open class Builder(private val context: Context) {
         private var title: String? = null
         private var message: String? = null
@@ -165,6 +203,7 @@ class TipDialog private constructor(
         private var selectable = false
         private var warning = false
 
+        /** ダイアログを構築する */
         fun buildDialog(): TipDialog {
             if (confirmButtonCountdown > 0 && cancelable)
                 throw IllegalArgumentException("Before setting the confirm button countdown, please disable the cancelable option first.")
@@ -180,95 +219,112 @@ class TipDialog private constructor(
             }
         }
 
+        /** ダイアログを表示する */
         fun showDialog() {
             buildDialog().show()
         }
 
+        /** タイトルを設定する */
         @CheckResult
         fun setTitle(title: String?): Builder {
             this.title = title
             return this
         }
 
+        /** タイトルを設定する */
         @CheckResult
         fun setTitle(title: Int): Builder {
             return setTitle(context.getString(title))
         }
 
+        /** メッセージを設定する */
         @CheckResult
         fun setMessage(message: String?): Builder {
             this.message = message
             return this
         }
 
+        /** メッセージを設定する */
         @CheckResult
         fun setMessage(message: Int): Builder {
             return setMessage(context.getString(message))
         }
 
+        /** キャンセルボタンのテキストを設定する */
         @CheckResult
         fun setCancel(cancel: String?): Builder {
             this.cancel = cancel
             return this
         }
 
+        /** キャンセルボタンのテキストを設定する */
         @CheckResult
         fun setCancel(cancel: Int): Builder {
             return setCancel(context.getString(cancel))
         }
 
+        /** チェックボックステキストを設定する */
         @CheckResult
         fun setCheckBox(checkBoxText: String?): Builder {
             this.checkBox = checkBoxText
             return this
         }
 
+        /** チェックボックステキストを設定する */
         @CheckResult
         fun setCheckBox(checkBoxText: Int): Builder {
             return setCheckBox(context.getString(checkBoxText))
         }
 
+        /** 確認ボタンのテキストを設定する */
         @CheckResult
         fun setConfirm(confirm: String?): Builder {
             this.confirm = confirm
             return this
         }
 
+        /** 確認ボタンのテキストを設定する */
         @CheckResult
         fun setConfirm(confirm: Int): Builder {
             return setConfirm(context.getString(confirm))
         }
 
+        /** チェックボックスの表示有無を設定する */
         @CheckResult
         fun setShowCheckBox(show: Boolean): Builder {
             showCheckBox = show
             return this
         }
 
+        /** テキスト整形を設定する */
         @CheckResult
         fun setTextBeautifier(beautifier: TextBeautifier): Builder {
             this.textBeautifier = beautifier
             return this
         }
 
+        /** キャンセルボタンクリックリスナーを設定する */
         @CheckResult
         fun setCancelClickListener(cancelClickListener: OnCancelClickListener?): Builder {
             this.cancelClickListener = cancelClickListener
             return this
         }
 
+        /** 確認ボタンクリックリスナーを設定する */
         @CheckResult
         fun setConfirmClickListener(confirmClickListener: OnConfirmClickListener?): Builder {
             this.confirmClickListener = confirmClickListener
             return this
         }
 
+        /** ダイアログ破棄リスナーを設定する */
         @CheckResult
         fun setDialogDismissListener(dialogDismissListener: OnDialogDismissListener?): Builder {
             this.dialogDismissListener = dialogDismissListener
             return this
         }
 
+        /** 確認ボタンのカウントダウンを設定する */
         @CheckResult
         fun setConfirmButtonCountdown(countdownMillis: Long): Builder {
             if (countdownMillis < 0L) throw IllegalArgumentException("The countdown cannot be negative!")
@@ -276,39 +332,42 @@ class TipDialog private constructor(
             return this
         }
 
+        /** キャンセル可否を設定する */
         @CheckResult
         fun setCancelable(cancelable: Boolean): Builder {
             this.cancelable = cancelable
             return this
         }
 
+        /** キャンセルボタンの表示有無を設定する */
         @CheckResult
         fun setShowCancel(showCancel: Boolean): Builder {
             this.showCancel = showCancel
             return this
         }
 
+        /** 確認ボタンの表示有無を設定する */
         @CheckResult
         fun setShowConfirm(showConfirm: Boolean): Builder {
             this.showConfirm = showConfirm
             return this
         }
 
+        /** メッセージを中央寄せにするかどうか */
         @CheckResult
         fun setCenterMessage(center: Boolean): Builder {
             this.centerMessage = center
             return this
         }
 
+        /** メッセージの選択可否を設定する */
         @CheckResult
         fun setSelectable(selectable: Boolean): Builder {
             this.selectable = selectable
             return this
         }
 
-        /**
-         * 为标题栏添加红色警告图标
-         */
+        /** タイトルバーに赤色の警告アイコンを追加する */
         @CheckResult
         fun setWarning(): Builder {
             this.warning = true

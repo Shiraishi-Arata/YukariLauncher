@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * ファイル一覧のRecyclerViewアダプター
+ */
 public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapter.InnerHolder> {
     private final List<FileItemBean> mData = new ArrayList<>();
     private final List<FileItemBean> selectedFiles = new ArrayList<>();
@@ -49,6 +52,9 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
         return mData.size();
     }
 
+    /**
+     * アイテムリストを更新する
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void updateItems(List<FileItemBean> items) {
         this.mData.clear();
@@ -56,14 +62,23 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
         notifyDataSetChanged();
     }
 
+    /**
+     * データリストを取得する
+     */
     public List<FileItemBean> getData() {
         return mData;
     }
 
+    /**
+     * ファイルが存在しないかどうかを返す
+     */
     public boolean isNoFile() {
         return (mData.size() == 1 && !mData.get(0).isCanCheck) || mData.isEmpty();
     }
 
+    /**
+     * アイテムの選択状態を切り替える
+     */
     private void toggleSelection(FileItemBean itemBean, CheckBox checkBox) {
         if (itemBean.isCanCheck) {
             if (selectedFiles.contains(itemBean)) {
@@ -76,19 +91,25 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
         }
     }
 
+    /**
+     * マルチ選択モードを設定する
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void setMultiSelectMode(boolean multiSelectMode) {
         isMultiSelectMode = multiSelectMode;
         if (!multiSelectMode) {
-            selectedFiles.clear(); // 退出多选模式时重置选择的文件
+            selectedFiles.clear();
         }
         notifyDataSetChanged();
     }
 
+    /**
+     * 全選択/全解除する
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void selectAllFiles(boolean selectAll) {
         selectedFiles.clear();
-        if (selectAll) { //全选时遍历全部item设置选择状态
+        if (selectAll) {
             for (FileItemBean item : mData) {
                 if (item.isCanCheck) {
                     selectedFiles.add(item);
@@ -98,40 +119,67 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
         notifyDataSetChanged();
     }
 
+    /**
+     * 選択されたファイルのリストを取得する
+     */
     public List<FileItemBean> getSelectedFiles() {
         return selectedFiles;
     }
 
+    /**
+     * クリックリスナーを設定する
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
+    /**
+     * マルチ選択リスナーを設定する
+     */
     public void setOnMultiSelectListener(OnMultiSelectListener listener) {
         this.mOnMultiSelectListener = listener;
     }
 
+    /**
+     * 長押しリスナーを設定する
+     */
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         this.mOnItemLongClickListener = listener;
     }
 
+    /**
+     * アイテムクリックのコールバックインターフェース
+     */
     public interface OnItemClickListener {
         void onItemClick(int position, FileItemBean itemBean);
     }
 
+    /**
+     * マルチ選択のコールバックインターフェース
+     */
     public interface OnMultiSelectListener {
         void onMultiSelect(List<FileItemBean> itemBeans);
     }
 
+    /**
+     * アイテム長押しのコールバックインターフェース
+     */
     public interface OnItemLongClickListener {
         void onItemLongClick(int position, FileItemBean itemBean);
     }
 
+    /**
+     * ファイルアイテムのビューホルダー
+     */
     public class InnerHolder extends RecyclerView.ViewHolder {
         private final Context context;
         private final ItemFileListViewBinding binding;
         private int mPosition;
         private FileItemBean mFileItemBean;
 
+        /**
+         * ホルダーを構築する
+         */
         public InnerHolder(@NonNull ItemFileListViewBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -163,6 +211,9 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
             });
         }
 
+        /**
+         * ファイルデータをビューに設定する
+         */
         public void setData(FileItemBean fileItemBean, int position) {
             mPosition = position;
             mFileItemBean = fileItemBean;
@@ -188,7 +239,7 @@ public class FileRecyclerAdapter extends RecyclerView.Adapter<FileRecyclerAdapte
             binding.infoLayout.setVisibility(infoLayoutVisible);
 
             if (fileItemBean.isHighlighted) {
-                binding.name.setTextColor(Color.rgb(69, 179, 162)); //设置高亮
+                binding.name.setTextColor(Color.rgb(69, 179, 162));
             } else {
                 binding.name.setTextColor(binding.name.getResources().getColor(R.color.black_or_white, binding.name.getContext().getTheme()));
             }

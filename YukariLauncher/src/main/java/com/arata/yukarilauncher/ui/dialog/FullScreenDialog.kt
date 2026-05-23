@@ -9,11 +9,21 @@ import android.view.View
 import android.view.WindowManager
 import com.arata.yukarilauncher.R
 
+/**
+ * 全画面表示のベースダイアログクラス
+ */
 abstract class FullScreenDialog(context: Context) : Dialog(context, R.style.CustomDialogStyle) {
+    /**
+     * ダイアログ作成時に全画面表示を設定する
+     * @param savedInstanceState 保存されたインスタンス状態
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         setupFullScreenDialog()
     }
 
+    /**
+     * 全画面表示を設定する
+     */
     private fun setupFullScreenDialog() {
         window?.apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -32,6 +42,9 @@ abstract class FullScreenDialog(context: Context) : Dialog(context, R.style.Cust
         }
     }
 
+    /**
+     * システムUIの表示状態を設定する
+     */
     private fun setSystemUiVisibility(decorView: View) {
         val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -44,7 +57,7 @@ abstract class FullScreenDialog(context: Context) : Dialog(context, R.style.Cust
     }
 
     /**
-     * 修改自FCL [FCLAlertDialog.java](https://github.com/FCL-Team/FoldCraftLauncher/blob/e7d82af/FCLLibrary/src/main/java/com/tungsten/fcllibrary/component/dialog/FCLAlertDialog.java#L62-L77)
+     * コンテンツの高さをチェックし、画面に収まるよう調整する
      */
     protected fun checkHeight(root: View, content: View, scrollView: View, dpValue: Int = 50) {
         root.post {

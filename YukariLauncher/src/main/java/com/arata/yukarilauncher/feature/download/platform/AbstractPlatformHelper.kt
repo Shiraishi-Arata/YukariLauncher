@@ -31,6 +31,9 @@ import java.io.File
 
 abstract class AbstractPlatformHelper(val api: ApiHandler) {
     @Throws(Throwable::class)
+/**
+ * searchする
+ */
     fun search(classify: Classify, filters: Filters, lastResult: SearchResult): SearchResult? {
         return when (classify) {
             Classify.ALL -> throw IllegalArgumentException("Cannot be the enum value ${Classify.ALL}")
@@ -43,6 +46,9 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
     }
 
     @Throws(Throwable::class)
+/**
+ * getVersionsする
+ */
     fun getVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>? {
         return when (infoItem.classify) {
             Classify.ALL -> throw IllegalArgumentException("Cannot be the enum value ${Classify.ALL}")
@@ -55,6 +61,9 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
     }
 
     @Throws(Throwable::class)
+/**
+ * installする
+ */
     fun install(context: Context, infoItem: InfoItem, version: VersionItem, isTaskRunning: (progressKey: String) -> Boolean) {
         try {
             when (infoItem.classify) {
@@ -91,6 +100,9 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
                                     val versionPath = VersionsManager.getVersionPath(customName)
                                     VersionConfig.createIsolation(versionPath).save()
 
+/**
+ * downloadIconする
+ */
                                     fun downloadIcon() {
                                         runCatching {
                                             infoItem.iconUrl?.let { DownloadUtils.downloadFile(it, VersionsManager.getVersionIconFile(customName)) }
@@ -155,6 +167,9 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
         }
     }
 
+/**
+ * customPathする
+ */
     private fun customPath(
         context: Context,
         version: VersionItem,
@@ -194,44 +209,113 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
             }.showDialog()
     }
 
+/**
+ * copyする
+ */
     abstract fun copy(): AbstractPlatformHelper
+/**
+ * getWebUrlする
+ */
     abstract fun getWebUrl(infoItem: InfoItem): String?
+/**
+ * getScreenshotsする
+ */
     abstract fun getScreenshots(projectId: String): List<ScreenshotItem>
 
+/**
+ * searchModする
+ */
     abstract fun searchMod(filters: Filters, lastResult: SearchResult): SearchResult?
+/**
+ * searchModPackする
+ */
     abstract fun searchModPack(filters: Filters, lastResult: SearchResult): SearchResult?
+/**
+ * searchResourcePackする
+ */
     abstract fun searchResourcePack(filters: Filters, lastResult: SearchResult): SearchResult?
+/**
+ * searchWorldする
+ */
     abstract fun searchWorld(filters: Filters, lastResult: SearchResult): SearchResult?
+/**
+ * searchShaderPackする
+ */
     abstract fun searchShaderPack(filters: Filters, lastResult: SearchResult): SearchResult?
 
+/**
+ * getModVersionsする
+ */
     abstract fun getModVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>?
+/**
+ * getModPackVersionsする
+ */
     abstract fun getModPackVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>?
+/**
+ * getResourcePackVersionsする
+ */
     abstract fun getResourcePackVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>?
+/**
+ * getWorldVersionsする
+ */
     abstract fun getWorldVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>?
+/**
+ * getShaderPackVersionsする
+ */
     abstract fun getShaderPackVersions(infoItem: InfoItem, force: Boolean): List<VersionItem>?
 
+/**
+ * installModする
+ */
     abstract fun installMod(infoItem: InfoItem, version: VersionItem, targetPath: File, progressKey: String)
+/**
+ * installModPackする
+ */
     abstract fun installModPack(version: VersionItem, customName: String): ModLoaderWrapper?
+/**
+ * installResourcePackする
+ */
     abstract fun installResourcePack(infoItem: InfoItem, version: VersionItem, targetPath: File, progressKey: String)
+/**
+ * installWorldする
+ */
     abstract fun installWorld(infoItem: InfoItem, version: VersionItem, targetPath: File, progressKey: String)
+/**
+ * installShaderPackする
+ */
     abstract fun installShaderPack(infoItem: InfoItem, version: VersionItem, targetPath: File, progressKey: String)
 
     companion object {
         @JvmStatic
+/**
+ * getDirする
+ */
         fun getDir(): File {
             return VersionsManager.getCurrentVersion()?.getGameDir() ?: throw NoVersionException("There is no installed version")
         }
 
         @JvmStatic
+/**
+ * getModsPathする
+ */
         fun getModsPath() = File(getDir(), "/mods")
 
         @JvmStatic
+/**
+ * getResourcePackPathする
+ */
         fun getResourcePackPath() = File(getDir(), "/resourcepacks")
 
         @JvmStatic
+/**
+ * getWorldPathする
+ */
         fun getWorldPath() = File(getDir(), "/saves")
 
         @JvmStatic
+/**
+ * getShaderPackPathする
+ */
         fun getShaderPackPath() = File(getDir(), "/shaderpacks")
     }
 }

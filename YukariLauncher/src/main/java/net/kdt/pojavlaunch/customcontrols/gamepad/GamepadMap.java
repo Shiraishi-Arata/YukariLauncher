@@ -31,9 +31,13 @@ public class GamepadMap {
                          THUMBSTICK_LEFT, DPAD_UP, DPAD_DOWN, DPAD_RIGHT, DPAD_LEFT;
 
     public GamepadEmulatedButton DIRECTION_FORWARD, DIRECTION_BACKWARD, DIRECTION_RIGHT, DIRECTION_LEFT;
+/**
+ * 「reset Pressed State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     /*
-     * Sets all buttons to a not pressed state, sending an input if needed
+     * すべてのボタンを未押し状態に設定し、必要に応じて入力を送信します
      */
     public void resetPressedState(){
         BUTTON_A.resetButtonState();
@@ -59,7 +63,10 @@ public class GamepadMap {
         DPAD_LEFT.resetButtonState();
 
     }
-
+/**
+ * 「create And Initialize Buttons」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static GamepadMap createAndInitializeButtons() {
         GamepadMap gamepadMap = new GamepadMap();
         gamepadMap.BUTTON_A = new GamepadButton();
@@ -90,9 +97,12 @@ public class GamepadMap {
         gamepadMap.DPAD_LEFT = new GamepadButton();
         return gamepadMap;
     }
+/**
+ * 「DefaultGameMap」の値を取得します。
+ */
 
     /*
-     * Returns a pre-done mapping used when the mouse is grabbed by the game.
+     * マウスがゲームにグラブされているときに使用される事前設定済みマッピングを返します。
      */
     public static GamepadMap getDefaultGameMap(){
         GamepadMap gameMap = GamepadMap.createEmptyMap();
@@ -108,9 +118,9 @@ public class GamepadMap {
         gameMap.DIRECTION_LEFT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_A;
 
         gameMap.DPAD_UP.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT;
-        gameMap.DPAD_DOWN.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_O;    //For mods ?
-        gameMap.DPAD_RIGHT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_K;   //For mods ?
-        gameMap.DPAD_LEFT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_J;    //For mods ?
+        gameMap.DPAD_DOWN.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_O;    // Mod用？
+        gameMap.DPAD_RIGHT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_K;   // Mod用？
+        gameMap.DPAD_LEFT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_J;    // Mod用？
 
         gameMap.SHOULDER_LEFT.keycodes[0] = GamepadMap.MOUSE_SCROLL_UP;
         gameMap.SHOULDER_RIGHT.keycodes[0] = GamepadMap.MOUSE_SCROLL_DOWN;
@@ -127,9 +137,12 @@ public class GamepadMap {
 
         return gameMap;
     }
+/**
+ * 「DefaultMenuMap」の値を取得します。
+ */
 
     /*
-     * Returns a pre-done mapping used when the mouse is NOT grabbed by the game.
+     * マウスがゲームにグラブされていないときに使用される事前設定済みマッピングを返します。
      */
     public static GamepadMap getDefaultMenuMap(){
         GamepadMap menuMap = GamepadMap.createEmptyMap();
@@ -152,9 +165,9 @@ public class GamepadMap {
             keycodes[0] = keycodes[1] = keycodes[2] = keycodes[3] = GamepadMap.MOUSE_SCROLL_DOWN;
         }
 
-        menuMap.DPAD_DOWN.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_O; //For mods ?
-        menuMap.DPAD_RIGHT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_K; //For mods ?
-        menuMap.DPAD_LEFT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_J; //For mods ?
+        menuMap.DPAD_DOWN.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_O; // Mod用？
+        menuMap.DPAD_RIGHT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_K; // Mod用？
+        menuMap.DPAD_LEFT.keycodes[0] = LwjglGlfwKeycode.GLFW_KEY_J; // Mod用？
 
         menuMap.SHOULDER_LEFT.keycodes[0] = GamepadMap.MOUSE_SCROLL_UP;
         menuMap.SHOULDER_RIGHT.keycodes[0] = GamepadMap.MOUSE_SCROLL_DOWN;
@@ -163,9 +176,12 @@ public class GamepadMap {
 
         return menuMap;
     }
+/**
+ * 「Buttons」の値を取得します。
+ */
 
     /*
-     * Returns all GamepadEmulatedButtons of the controller key map.
+     * コントローラーキーマップのすべてのGamepadEmulatedButtonを返します。
      */
     public GamepadEmulatedButton[] getButtons(){
         return new GamepadEmulatedButton[]{ BUTTON_A, BUTTON_B, BUTTON_X, BUTTON_Y,
@@ -179,7 +195,7 @@ public class GamepadMap {
     }
 
     /*
-     * Returns an pre-initialized GamepadMap with only empty keycodes
+     * 空のキーコードのみを持つ事前初期化済みのGamepadMapを返します
      */
     @SuppressWarnings("unused") public static GamepadMap createEmptyMap(){
         GamepadMap emptyMap = createAndInitializeButtons();
@@ -187,7 +203,9 @@ public class GamepadMap {
             button.keycodes = new short[] {UNSPECIFIED, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED};
         return emptyMap;
     }
-
+/**
+ * 「SpecialKeycodeNames」の値を取得します。
+ */
     public static String[] getSpecialKeycodeNames(Context context) {
         return new String[]{
                 context.getString(R.string.keycode_unspecified),

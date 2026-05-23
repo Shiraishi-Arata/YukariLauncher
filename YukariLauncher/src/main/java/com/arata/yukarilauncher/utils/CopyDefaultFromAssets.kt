@@ -8,15 +8,22 @@ import java.io.IOException
 
 class CopyDefaultFromAssets {
     companion object {
+        /**
+         * アセットからデフォルトファイルをコピーする
+         * コントロールマップディレクトリが空の場合、デフォルトの設定ファイルをアセットからコピーする
+         */
         @JvmStatic
         @Throws(IOException::class)
         fun copyFromAssets(context: Context?) {
-            //默认控制布局
+            // デフォルトのコントロールレイアウト
             if (checkDirectoryEmpty(PathManager.DIR_CTRLMAP_PATH)) {
                 Tools.copyAssetFile(context, "yukari.json", PathManager.DIR_CTRLMAP_PATH, false)
             }
         }
 
+        /**
+         * 指定されたディレクトリが空かどうかをチェックする
+         */
         private fun checkDirectoryEmpty(dir: String?): Boolean {
             val controlDir = dir?.let { File(it) }
             val files = controlDir?.listFiles()

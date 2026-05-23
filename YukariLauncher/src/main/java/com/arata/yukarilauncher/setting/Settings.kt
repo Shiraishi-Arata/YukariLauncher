@@ -21,6 +21,11 @@ class Settings {
         private val settingsLock = Any()
         private var settingsMap = ConcurrentHashMap<String, SettingAttribute>()
 
+        /**
+         * 設定ファイルから設定マップを再読み込みする
+         * ファイルが存在しない場合は空のマップを返す
+         * @return キーとSettingAttributeのマップ
+         */
         private fun refreshSettingsMap(): Map<String, SettingAttribute> {
             return PathManager.FILE_SETTINGS.takeIf { it.exists() }?.let { file ->
                 try {
@@ -36,7 +41,7 @@ class Settings {
         }
 
         /**
-         * 刷新启动器的所有设置项
+         * すべての設定項目をリフレッシュする
          */
         @Synchronized
         fun refreshSettings() {
@@ -47,14 +52,18 @@ class Settings {
     class Manager private constructor() {
         companion object {
             /**
-             * 在启动器设置中获取键对应的值
+             * 設定からキーに対応する値を取得する
+             * @param key 設定キー
+             * @param defaultValue デフォルト値
+             * @param parser 文字列から型Tへのパーサー
+             * @return 見つかった値、なければデフォルト値
              */
             fun <T> getValue(key: String, defaultValue: T, parser: (String) -> T?): T {
                 return settingsMap[key]?.value?.let { parser(it) } ?: defaultValue
             }
 
             /**
-             * 检查启动器设置中，是否存在某个键
+             * 設定に指定されたキーが存在するかを確認する
              */
             @JvmStatic
             fun contains(key: String): Boolean {
@@ -62,7 +71,8 @@ class Settings {
             }
 
             /**
-             * 在启动器设置中存入键值
+             * 設定にキーと値を設定する
+             * @return SettingBuilderインスタンス
              */
             @JvmStatic
             @CheckResult
@@ -73,7 +83,8 @@ class Settings {
             private val valueMap = ConcurrentHashMap<String, Any>()
 
             /**
-             * 在启动器设置中存入键值
+             * 設定にキーと値を追加する
+             * @return チェーン用のSettingBuilder
              */
             @CheckResult
             fun put(key: String, value: Any): SettingBuilder {
@@ -82,14 +93,19 @@ class Settings {
             }
 
             /**
-             * 在启动器设置中存入键值
-             * @param unit 设置单元
+             * 設定ユニットを使用して値を設定する
+             * @param unit 設定ユニット
+             * @return チェーン用のSettingBuilder
              */
             @CheckResult
             fun put(unit: AbstractSettingUnit<*>, value: Any): SettingBuilder {
                 return put(unit.key, value)
             }
 
+            /**
+             * すべての変更を保存し、設定ファイルに書き込む
+             * 保存後、設定をリフレッシュし、SettingsChangeEventを発行する
+             */
             fun save() {
                 val settingsFile = PathManager.FILE_SETTINGS
                 val newSettings = ConcurrentHashMap(settingsMap)

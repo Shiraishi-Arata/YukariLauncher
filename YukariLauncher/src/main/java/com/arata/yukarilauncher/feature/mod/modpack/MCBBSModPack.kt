@@ -26,6 +26,9 @@ class MCBBSModPack(private val context: Context, private val zipFile: File?) {
     private var isCanceled = false
 
     @Throws(IOException::class)
+/**
+ * installする
+ */
     fun install(versionFolder: File): ModLoaderWrapper? {
         zipFile?.let {
             ZipFile(this.zipFile).use { modpackZipFile ->
@@ -96,6 +99,9 @@ class MCBBSModPack(private val context: Context, private val zipFile: File?) {
         return null
     }
 
+/**
+ * initDialogする
+ */
     private fun initDialog() {
         TaskExecutors.runInUIThread {
             installDialog = ProgressDialog(context) {
@@ -106,14 +112,23 @@ class MCBBSModPack(private val context: Context, private val zipFile: File?) {
         }
     }
 
+/**
+ * closeDialogする
+ */
     private fun closeDialog() {
         TaskExecutors.runInUIThread { installDialog?.dismiss() }
     }
 
+/**
+ * cancelする
+ */
     private fun cancel(instanceDestination: File) {
         org.apache.commons.io.FileUtils.deleteQuietly(instanceDestination)
     }
 
+/**
+ * createInfoする
+ */
     private fun createInfo(addons: Array<MCBBSAddons?>): ModLoaderWrapper? {
         var version = ""
         var modLoader = ""

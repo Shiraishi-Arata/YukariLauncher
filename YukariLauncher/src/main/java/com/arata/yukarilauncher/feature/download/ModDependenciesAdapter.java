@@ -48,6 +48,9 @@ public class ModDependenciesAdapter extends RecyclerView.Adapter<ModDependencies
     private final List<DependenciesInfoItem> mData;
     private SetOnClickListener onClickListener;
 
+/**
+ * ModDependenciesAdapterを構築します
+ */
     public ModDependenciesAdapter(InfoItem item, List<DependenciesInfoItem> mData) {
         this.mInfoItem = item;
         this.mData = mData;
@@ -69,19 +72,32 @@ public class ModDependenciesAdapter extends RecyclerView.Adapter<ModDependencies
         return mData != null ? mData.size() : 0;
     }
 
+/**
+ * onItemCLickListenerを設定する
+ * @param onItemCLickListener 設定値
+ */
     public void setOnItemCLickListener(SetOnClickListener listener) {
         this.onClickListener = listener;
     }
 
+/**
+ * SetOnClickListenerインターフェース
+ */
     public interface SetOnClickListener {
         void onItemClick();
     }
 
+/**
+ * InnerHolder内部クラス
+ */
     public class InnerHolder extends RecyclerView.ViewHolder {
         private final Context context;
         private final ItemModDependenciesBinding binding;
         private Future<?> mExtensionFuture;
 
+/**
+ * InnerHolderを構築します
+ */
         public InnerHolder(@NonNull ItemModDependenciesBinding binding) {
             super(binding.getRoot());
             context = binding.getRoot().getContext();
@@ -89,6 +105,10 @@ public class ModDependenciesAdapter extends RecyclerView.Adapter<ModDependencies
         }
 
         @SuppressLint("CheckResult")
+/**
+ * dataを設定する
+ * @param data 設定値
+ */
         public void setData(DependenciesInfoItem infoItem) {
             ModTranslations.Mod mod = ModTranslations.getTranslationsByRepositoryType(infoItem.getClassify())
                     .getModByCurseForgeId(infoItem.getSlug());
@@ -168,12 +188,19 @@ public class ModDependenciesAdapter extends RecyclerView.Adapter<ModDependencies
             });
         }
 
+/**
+ * platformIconを取得する
+ * @return platformIconの値
+ */
         private Drawable getPlatformIcon(Platform platform) {
             if (platform == Platform.MODRINTH) return ContextCompat.getDrawable(context, R.drawable.ic_modrinth);
             if (platform == Platform.CURSEFORGE) return ContextCompat.getDrawable(context, R.drawable.ic_curseforge);
             return null;
         }
 
+/**
+ * addCategoryViewメソッド
+ */
         private void addCategoryView(FlexboxLayout layout, String text) {
             TextView textView = createCategoryView(context);
             textView.setText(text);

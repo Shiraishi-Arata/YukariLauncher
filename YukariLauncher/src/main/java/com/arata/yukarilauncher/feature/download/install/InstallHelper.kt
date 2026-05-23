@@ -19,11 +19,17 @@ import java.io.IOException
 class InstallHelper {
     companion object {
         @Throws(Throwable::class)
+/**
+ * downloadFileする
+ */
         fun downloadFile(version: VersionItem, targetFile: File, progressKey: String) {
             downloadFile(version, targetFile, progressKey, null)
         }
 
         @Throws(Throwable::class)
+/**
+ * downloadFileする
+ */
         fun downloadFile(
             version: VersionItem,
             targetFile: File,
@@ -54,6 +60,9 @@ class InstallHelper {
         }
 
         @Throws(IOException::class)
+/**
+ * installModPackする
+ */
         fun installModPack(
             version: VersionItem,
             customName: String,

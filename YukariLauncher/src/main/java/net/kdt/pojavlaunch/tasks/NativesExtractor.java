@@ -20,6 +20,9 @@ public class NativesExtractor {
     private final File mDestinationDir;
     private final String mLibraryLocation;
 
+/**
+ * NativesExtractorを構築します
+ */
     public NativesExtractor(File mDestinationDir) {
         this.mDestinationDir = mDestinationDir;
         this.mLibraryLocation = "jni/"+getAarArchitectureName()+"/";
@@ -42,6 +45,10 @@ public class NativesExtractor {
         return blacklist;
     }
 
+/**
+ * aarArchitectureNameを取得する
+ * @return aarArchitectureNameの値
+ */
     private static String getAarArchitectureName() {
         int architecture = Architecture.getDeviceArchitecture();
         switch (architecture) {
@@ -57,6 +64,9 @@ public class NativesExtractor {
         throw new RuntimeException("Unknown CPU architecture: "+architecture);
     }
 
+/**
+ * extractFromAarメソッド
+ */
     public void extractFromAar(File source) throws IOException {
         byte[] buffer = new byte[8192];
         try (FileInputStream fileInputStream = new FileInputStream(source);
@@ -78,6 +88,9 @@ public class NativesExtractor {
         }
     }
 
+/**
+ * fileCrc32メソッド
+ */
     private static long fileCrc32(File target, byte[] buffer) throws IOException {
         try(FileInputStream fileInputStream = new FileInputStream(target)) {
             CRC32 crc32 = new CRC32();
@@ -89,6 +102,9 @@ public class NativesExtractor {
         }
     }
 
+/**
+ * processEntryメソッド
+ */
     private void processEntry(InputStream sourceStream, ZipEntry zipEntry, File entryDestination, byte[] buffer) throws IOException {
         if(entryDestination.exists()) {
             long expectedSize = zipEntry.getSize();
@@ -103,8 +119,14 @@ public class NativesExtractor {
     }
 
 
+/**
+ * NonCloseableInputStream内部クラス
+ */
     private static class NonCloseableInputStream extends FilterInputStream {
 
+/**
+ * NonCloseableInputStreamを構築します
+ */
         protected NonCloseableInputStream(InputStream in) {
             super(in);
         }

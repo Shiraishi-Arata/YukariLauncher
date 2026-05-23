@@ -9,6 +9,9 @@ import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.dialog.DraggableDialog.DialogInitializationListener
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.formatFileSize
 
+/**
+ * 進捗表示ダイアログ
+ */
 class ProgressDialog(
     context: Context,
     private val listener: OnCancelListener
@@ -30,16 +33,25 @@ class ProgressDialog(
         DraggableDialog.initDialog(this)
     }
 
+    /**
+     * テキストを更新する
+     */
     fun updateText(text: String?) {
         binding.textView.text = text
     }
 
+    /**
+     * 転送速度を更新する
+     */
     fun updateRate(processingRate: Long) {
         if (processingRate > 0) binding.uploadRate.visibility = View.VISIBLE
         val formatFileSize = formatFileSize(processingRate)
         "$formatFileSize/s".also { binding.uploadRate.text = it }
     }
 
+    /**
+     * 進捗状況を更新する
+     */
     fun updateProgress(progress: Double, total: Double) {
         val doubleValue = progress / total * 1000
         val intValue = doubleValue.toInt()
@@ -52,6 +64,9 @@ class ProgressDialog(
 
     override fun onInit(): Window? = window
 
+    /**
+     * キャンセルボタンクリックのコールバックインターフェース
+     */
     fun interface OnCancelListener {
         fun onClick(): Boolean
     }

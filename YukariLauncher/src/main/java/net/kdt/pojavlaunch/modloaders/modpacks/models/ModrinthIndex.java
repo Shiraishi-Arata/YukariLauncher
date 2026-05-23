@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * POJO to represent the modrinth index inside mrpacks
+ * mrpacks内のmodrinthインデックスを表すPOJO
  */
 public class ModrinthIndex {
 
@@ -33,6 +33,9 @@ public class ModrinthIndex {
 
         @Nullable public ModrinthIndexFileEnv env;
 
+        /**
+         * このファイルの文字列表現を返します。
+         */
         @NonNull
         @Override
         public String toString() {
@@ -48,6 +51,9 @@ public class ModrinthIndex {
             public String sha1;
             public String sha512;
 
+            /**
+             * このハッシュの文字列表現を返します。
+             */
             @NonNull
             @Override
             public String toString() {
@@ -62,6 +68,9 @@ public class ModrinthIndex {
             public String client;
             public String server;
 
+            /**
+             * この環境設定の文字列表現を返します。
+             */
             @NonNull
             @Override
             public String toString() {
@@ -73,6 +82,9 @@ public class ModrinthIndex {
         }
     }
 
+    /**
+     * このModrinthIndexの文字列表現を返します。
+     */
     @NonNull
     @Override
     public String toString() {

@@ -22,6 +22,14 @@ import java.util.regex.Pattern
 import java.util.zip.ZipFile
 import org.json.JSONObject
 
+/**
+ * ファイル一覧のRecyclerView表示を管理するクラス。
+ * @param context コンテキスト
+ * @param recyclerView 表示に使用するRecyclerView
+ * @param onItemClickListener アイテムクリックリスナー
+ * @param onItemLongClickListener アイテム長押しリスナー
+ * @param data 初期データリスト
+ */
 class FileRecyclerViewCreator(
     context: Context?,
     recyclerView: RecyclerView,
@@ -54,6 +62,9 @@ class FileRecyclerViewCreator(
         if (data.isNotEmpty()) loadData(data)
     }
 
+    /**
+     * ファイル一覧データを読み込む
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun loadData(itemBeans: List<FileItemBean>) {
         this.itemBeans.apply {
@@ -63,6 +74,9 @@ class FileRecyclerViewCreator(
         updateWithFilter()
     }
 
+    /**
+     * フィルター文字列を設定する
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun setFilterString(string: String?) {
         this.filterString = string
@@ -80,10 +94,16 @@ class FileRecyclerViewCreator(
         mainRecyclerView.scheduleLayoutAnimation()
     }
 
+    /**
+     * マルチ選択リスナーを設定する
+     */
     fun setOnMultiSelectListener(listener: OnMultiSelectListener?) {
         fileRecyclerAdapter.setOnMultiSelectListener(listener)
     }
 
+    /**
+     * ファイルが存在しないかどうかを返す
+     */
     fun isNoFile(): Boolean {
         return fileRecyclerAdapter.isNoFile
     }
@@ -91,6 +111,10 @@ class FileRecyclerViewCreator(
     companion object {
         private const val ICON_SCAN_ENTRY_LIMIT = 256
         private const val ICON_SCAN_MAX_SIZE_BYTES = 512 * 1024L
+
+        /**
+         * パスからファイルアイテムのリストを読み込む
+         */
         fun loadItemBeansFromPath(context: Context, path: File, fileIcon: FileIcon,
             showFile: Boolean, showFolder: Boolean
         ): MutableList<FileItemBean> {
@@ -107,6 +131,9 @@ class FileRecyclerViewCreator(
             )
         }
 
+        /**
+         * パスからフィルタリング付きでファイルアイテムのリストを読み込む
+         */
         @JvmStatic
         @SuppressLint("UseCompatLoadingForDrawables")
         fun loadItemBeansFromPath(
@@ -143,12 +170,17 @@ class FileRecyclerViewCreator(
             return itemBeans
         }
 
+        /**
+         * ファイル/フォルダの表示可否を判定する
+         */
         private fun showFileOrFolder(file: File, showFile: Boolean, showFolder: Boolean): Boolean {
-            //显示文件与显示文件夹
             if (file.isDirectory && !showFolder) return false
             return !file.isFile || showFile
         }
 
+        /**
+         * ファイルに対応するアイコンを取得する
+         */
         private fun getIcon(context: Context, file: File, fileIcon: FileIcon, resources: Resources): Drawable? {
             return if (file.isFile) {
                 when (fileIcon) {
@@ -167,18 +199,19 @@ class FileRecyclerViewCreator(
                 ContextCompat.getDrawable(context, R.drawable.ic_folder)
             }
         }
-        
+
+        /**
+         * ファイル名がModアーカイブかどうかを判定します。
+         */
         private fun isModArchive(fileName: String): Boolean {
             return fileName.endsWith(ModUtils.JAR_FILE_SUFFIX) ||
                     fileName.endsWith(ModUtils.DISABLE_JAR_FILE_SUFFIX)
         }
 
         /**
-         * Attempts to read the icon path from common mod metadata files.
-         * Returns the normalized entry name (without leading slash) or null.
+         * メタデータからModアイコンパスを読み取る
          */
         private fun getIconPathFromMetadata(zip: ZipFile): String? {
-            // Try Fabric: fabric.mod.json
             val fabricEntry = zip.getEntry("fabric.mod.json")
             if (fabricEntry != null) {
                 zip.getInputStream(fabricEntry).use { input ->
@@ -190,17 +223,14 @@ class FileRecyclerViewCreator(
                             return normalizeIconPath(iconPath)
                         }
                     } catch (_: Exception) {
-                        // Ignore JSON parsing errors
                     }
                 }
             }
-        
-            // Helper to parse TOML (both Forge and NeoForge)
+
             fun parseTomlIconPath(entryName: String): String? {
                 val entry = zip.getEntry(entryName) ?: return null
                 zip.getInputStream(entry).use { input ->
                     val content = input.bufferedReader().readText()
-                    // Pattern: logoFile = "path/icon.png" (supports spaces)
                     val pattern = Pattern.compile("logoFile\\s*=\\s*\"([^\"]+)\"")
                     val matcher = pattern.matcher(content)
                     if (matcher.find()) {
@@ -209,27 +239,26 @@ class FileRecyclerViewCreator(
                 }
                 return null
             }
-        
-            // Try Forge: mods.toml
+
             parseTomlIconPath("META-INF/mods.toml")?.let { return it }
-            // Try NeoForge: neoforge.mods.toml
             parseTomlIconPath("META-INF/neoforge.mods.toml")?.let { return it }
-        
+
             return null
         }
-        
+
         /**
-         * Normalizes an icon path: removes leading slash and ensures it's a valid entry name.
+         * アイコンパスを正規化する（先頭のスラッシュを除去）
          */
         private fun normalizeIconPath(path: String): String {
             return path.trimStart('/')
         }
-        
-        // Now replace the existing getModArchiveIcon with this enhanced version:
+
+        /**
+         * Modアーカイブからアイコンを取得する
+         */
         private fun getModArchiveIcon(context: Context, file: File): Drawable? {
             return try {
                 ZipFile(file).use { zip ->
-                    // First try to get icon from metadata
                     val metadataIconPath = getIconPathFromMetadata(zip)
                     if (metadataIconPath != null) {
                         val entry = zip.getEntry(metadataIconPath)
@@ -241,15 +270,14 @@ class FileRecyclerViewCreator(
                             }
                         }
                     }
-        
-                    // Fallback: heuristic scanning
+
                     val entry = zip.entries().asSequence()
                         .take(ICON_SCAN_ENTRY_LIMIT)
                         .filter { !it.isDirectory && it.name.endsWith(".png", ignoreCase = true) }
                         .filter { it.size in 1..ICON_SCAN_MAX_SIZE_BYTES }
                         .minByOrNull { scoreIconEntry(it.name) }
                         ?: return null
-        
+
                     zip.getInputStream(entry).use { input ->
                         BitmapFactory.decodeStream(input)?.let { bitmap ->
                             BitmapDrawable(context.resources, bitmap)
@@ -260,7 +288,10 @@ class FileRecyclerViewCreator(
                 null
             }
         }
-        
+
+        /**
+         * エントリ名からアイコンのスコアを計算する
+         */
         private fun scoreIconEntry(name: String): Int {
             val lower = name.lowercase()
             return when {
@@ -272,6 +303,9 @@ class FileRecyclerViewCreator(
             }
         }
 
+        /**
+         * 名前と日付のペアからファイルアイテムリストを読み込む
+         */
         @JvmStatic
         fun loadItemBean(drawable: Drawable, namesPair: Array<Pair<String, Date>>): List<FileItemBean> {
             val itemBeans: MutableList<FileItemBean> = ArrayList()
@@ -281,6 +315,9 @@ class FileRecyclerViewCreator(
             return itemBeans
         }
 
+        /**
+         * ファイルタイプに応じたデフォルトアイコンを取得する
+         */
         @SuppressLint("UseCompatLoadingForDrawables")
         private fun getFileIcon(file: File, resources: Resources): Drawable {
             return if (file.isDirectory) {

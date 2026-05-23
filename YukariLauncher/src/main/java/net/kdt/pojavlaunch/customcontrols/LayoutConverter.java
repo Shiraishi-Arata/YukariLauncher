@@ -20,6 +20,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class LayoutConverter {
+/**
+ * 「load And Convert If Necessary」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static CustomControls loadAndConvertIfNecessary(Context ctx, String jsonPath) throws IOException, JsonSyntaxException {
 
         String jsonLayoutData = Tools.read(jsonPath);
@@ -31,7 +35,10 @@ public class LayoutConverter {
             return null;
         }
     }
-
+/**
+ * 「load From Assets」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static CustomControls loadFromAssets(Context context, String jsonName) {
         try (InputStream is = context.getAssets().open(jsonName)) {
             String string = IOUtils.toString(is, StandardCharsets.UTF_8);
@@ -43,7 +50,10 @@ public class LayoutConverter {
             return null;
         }
     }
-
+/**
+ * 「load From Json Object」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static CustomControls loadFromJsonObject(Context ctx, JSONObject layoutJobj, String jsonString, String jsonPath, boolean showError) {
         try {
             return loadAndConvertIfNecessary(ctx, layoutJobj, jsonString, jsonPath, showError);
@@ -52,7 +62,10 @@ public class LayoutConverter {
             return null;
         }
     }
-
+/**
+ * 「load And Convert If Necessary」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static CustomControls loadAndConvertIfNecessary(Context ctx, JSONObject layoutJobj, String jsonLayoutData, String jsonPath, boolean showError) throws Exception {
         if (!layoutJobj.has("version")) { //v1 layout
             CustomControls layout = LayoutConverter.convertV1Layout(layoutJobj);
@@ -83,9 +96,9 @@ public class LayoutConverter {
     }
 
     /**
-     * Normalize the layout to v8 from v6/7. An issue from the joystick height and position has to be fixed.
-     * @param oldLayoutJson The old layout
-     * @return The new layout with the fixed joystick height
+     * レイアウトをv6/7からv8に正規化します。ジョイスティックの高さと位置に関する問題を修正する必要があります。
+     * @param oldLayoutJson 古いレイアウト
+     * @return 修正されたジョイスティック高さを持つ新しいレイアウト
      */
     public static CustomControls convertV6_7Layout(JSONObject oldLayoutJson) {
         CustomControls layout = Tools.GLOBAL_GSON.fromJson(oldLayoutJson.toString(), CustomControls.class);
@@ -103,7 +116,7 @@ public class LayoutConverter {
     }
 
     /**
-     * Normalize the layout to v6 from v3/4: The stroke width is no longer dependant on the button size
+     * レイアウトをv3/4からv6に正規化します。ストローク幅はボタンサイズに依存しなくなりました。
      */
     private static CustomControls convertV3_4Layout(JSONObject oldLayoutJson) {
         CustomControls layout = Tools.GLOBAL_GSON.fromJson(oldLayoutJson.toString(), CustomControls.class);
@@ -111,7 +124,10 @@ public class LayoutConverter {
         layout.version = 6;
         return layout;
     }
-
+/**
+ * 「convert 2 Layout」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     private static CustomControls convertV2Layout(JSONObject oldLayoutJson) throws JSONException {
         CustomControls layout = Tools.GLOBAL_GSON.fromJson(oldLayoutJson.toString(), CustomControls.class);
@@ -155,7 +171,10 @@ public class LayoutConverter {
         layout.version = 3;
         return layout;
     }
-
+/**
+ * 「convert 1 Layout」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static CustomControls convertV1Layout(JSONObject oldLayoutJson) throws JSONException {
         CustomControls empty = new CustomControls();
         JSONArray layoutMainArray = oldLayoutJson.getJSONArray("mControlDataList");
@@ -213,7 +232,7 @@ public class LayoutConverter {
 
 
     /**
-     * Convert the layout stroke width to the V5 form
+     * レイアウトのストローク幅をV5形式に変換します
      */
     private static void convertStrokeWidth(CustomControls layout) {
         for (ControlData data : layout.mControlDataList) {
@@ -229,7 +248,7 @@ public class LayoutConverter {
     }
 
     /**
-     * Convert a size percentage into a px size, used by older layout versions
+     * サイズのパーセンテージをpxサイズに変換します。古いレイアウトバージョンで使用されます
      */
     static int computeStrokeWidth(float widthInPercent, float width, float height) {
         float maxSize = Math.max(width, height);

@@ -17,11 +17,18 @@ import com.arata.yukarilauncher.R;
 import net.kdt.pojavlaunch.customcontrols.buttons.ControlInterface;
 
 public class ControlHandleView extends View {
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlHandleView(Context context) {
         super(context);
         init();
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlHandleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -31,6 +38,10 @@ public class ControlHandleView extends View {
     private ControlInterface mView;
     private float mXOffset, mYOffset;
     private final ViewTreeObserver.OnPreDrawListener mPositionListener = new ViewTreeObserver.OnPreDrawListener() {
+/**
+ * 「on Pre Draw」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public boolean onPreDraw() {
             if(mView == null || !mView.getControlView().isShown()){
@@ -43,7 +54,10 @@ public class ControlHandleView extends View {
             return true;
         }
     };
-
+/**
+ * 「init」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     private void init(){
         int size = getResources().getDimensionPixelOffset(R.dimen._22sdp);
         mDrawable.setBounds(0,0,size,size);
@@ -52,7 +66,9 @@ public class ControlHandleView extends View {
         setBackground(mDrawable);
         setTranslationZ(10.5F);
     }
-
+/**
+ * 「ControlButton」の値を設定します。
+ */
     public void setControlButton(ControlInterface controlInterface){
         if(mView != null) mView.getControlView().getViewTreeObserver().removeOnPreDrawListener(mPositionListener);
 
@@ -63,6 +79,10 @@ public class ControlHandleView extends View {
         setX(controlInterface.getControlView().getX() + controlInterface.getControlView().getWidth());
         setY(controlInterface.getControlView().getY() + controlInterface.getControlView().getHeight());
     }
+/**
+ * タッチイベントを処理します。
+ * ユーザーからのタッチ入力を検出し、適切なアクションを実行します。
+ */
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -88,7 +108,10 @@ public class ControlHandleView extends View {
 
         return true;
     }
-
+/**
+ * 「hide」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void hide(){
         if(mView != null)
             mView.getControlView().getViewTreeObserver().removeOnPreDrawListener(mPositionListener);

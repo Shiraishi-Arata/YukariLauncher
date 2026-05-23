@@ -13,6 +13,10 @@ import com.arata.yukarilauncher.feature.log.Logging.e
 import com.arata.yukarilauncher.setting.unit.IntSettingUnit
 import com.arata.yukarilauncher.ui.dialog.EditTextDialog
 
+/**
+ * シークバー形式の設定ラッパークラスです。
+ * スライダーと手入力の両方で数値設定を編集できます。
+ */
 @SuppressLint("UseSwitchCompatOrMaterialCode", "StringFormatInvalid")
 class SeekBarSettingsWrapper(
     val context: Context,
@@ -27,6 +31,9 @@ class SeekBarSettingsWrapper(
 ) : AbstractSettingsWrapper(mainView) {
     private var listener: OnSeekBarProgressChangeListener? = null
 
+    /**
+     * 簡易コンストラクタです。初期化リスナーなしでインスタンスを生成します。
+     */
     constructor(
         context: Context,
         unit: IntSettingUnit,
@@ -48,6 +55,9 @@ class SeekBarSettingsWrapper(
         null
     )
 
+    /**
+     * 初期化ブロックです。シークバーと値テキストの設定、クリックリスナーを設定します。
+     */
     init {
         onStartListener?.onStart(this)
 
@@ -117,20 +127,32 @@ class SeekBarSettingsWrapper(
         }
     }
 
+    /**
+     * 現在のシークバーの値と接尾辞を組み合わせてテキストビューに表示します。
+     */
     fun setSeekBarValueTextView() {
         val text = "${seekbarView.progress} $suffix".trim()
         valueView.text = text
     }
 
+    /**
+     * シークバーの進行値変更リスナーを設定します。
+     * @param listener 進行値変更リスナー
+     */
     fun setOnSeekBarProgressChangeListener(listener: OnSeekBarProgressChangeListener) {
         this.listener = listener
     }
 
-    //部分场景需要在seekbar被包装前，完成一些操作，比如动态调整最大值或最小值
+    /**
+     * シークバーがラップされる前に動的に最大値や最小値を調整するためのインターフェースです。
+     */
     fun interface OnStartInit {
         fun onStart(wrapper: SeekBarSettingsWrapper)
     }
 
+    /**
+     * シークバーの進行値変更通知用の関数型インターフェースです。
+     */
     fun interface OnSeekBarProgressChangeListener {
         fun onChange(progress: Int)
     }

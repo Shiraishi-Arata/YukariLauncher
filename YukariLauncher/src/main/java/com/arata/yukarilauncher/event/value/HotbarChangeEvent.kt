@@ -1,8 +1,8 @@
 package com.arata.yukarilauncher.event.value
 
 /**
- * 当快捷栏判定框变更时，会广播这个事件
- * @param width 变更后的宽度
- * @param height 变更后的高度
+ * ホットバーの判定枠が変更されたときに通知されるイベント
+ * @param width 変更後の幅
+ * @param height 変更後の高さ
  */
 class HotbarChangeEvent(val width: Int, val height: Int)

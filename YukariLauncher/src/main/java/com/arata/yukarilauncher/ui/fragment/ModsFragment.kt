@@ -35,6 +35,9 @@ import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 import java.io.File
 import java.util.function.Consumer
 
+/**
+ * Mod管理フラグメント
+ */
 class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
     companion object {
         const val TAG: String = "ModsFragment"
@@ -46,6 +49,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
     private lateinit var mRootPath: String
     private lateinit var openDocumentLauncher: ActivityResultLauncher<Any>
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("jar", true)) { uris: List<Uri>? ->
@@ -67,6 +73,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,6 +86,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
         parseBundle()
@@ -107,7 +119,6 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
 
                                 filesDialog.setCopyButtonClick { visibility = View.VISIBLE }
 
-                                //检测后缀名，以设置正确的按钮
                                 if (fileName.endsWith(ModUtils.JAR_FILE_SUFFIX)) {
                                     filesDialog.setFileSuffix(ModUtils.JAR_FILE_SUFFIX)
                                     filesDialog.setMoreButtonClick {
@@ -136,7 +147,6 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
                 setOnMultiSelectListener { itemBeans: List<FileItemBean> ->
                     if (itemBeans.isNotEmpty()) {
                         Task.runTask {
-                            //取出全部文件
                             val selectedFiles: MutableList<File> = ArrayList()
                             itemBeans.forEach(Consumer { value: FileItemBean ->
                                 val file = value.file
@@ -243,6 +253,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         startNewbieGuide()
     }
 
+    /**
+     * 初心者ガイドを開始する
+     */
     private fun startNewbieGuide() {
         if (NewbieGuideUtils.showOnlyOne(TAG)) return
         binding.operateView.apply {
@@ -258,14 +271,19 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 
+    /**
+     * マルチセレクトモードを解除する
+     */
     private fun closeMultiSelect() {
-        //点击其它控件时关闭多选模式
         binding.apply {
             multiSelectFiles.isChecked = false
             selectAll.visibility = View.GONE
         }
     }
 
+    /**
+     * ファイルの拡張子を取得する
+     */
     private fun getFileSuffix(file: File): String {
         val name = file.name
         if (name.endsWith(ModUtils.DISABLE_JAR_FILE_SUFFIX)) {
@@ -278,6 +296,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 
+    /**
+     * ダウンロード画面に遷移する
+     */
     private fun goDownloadMod() {
         closeMultiSelect()
         YLTools.swapFragmentWithAnim(
@@ -288,11 +309,17 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         )
     }
 
+    /**
+     * バンドル引数を解析する
+     */
     private fun parseBundle() {
         val bundle = arguments ?: throw NullPointerException("The argument is null!")
         mRootPath = bundle.getString(BUNDLE_ROOT_PATH) ?: throw IllegalStateException("root path is not set！")
     }
 
+    /**
+     * ビューを初期化する
+     */
     private fun initViews() {
         binding.apply {
             mSearchViewWrapper.apply {
@@ -333,6 +360,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(modsLayout, Animations.BounceInDown))
@@ -340,6 +370,9 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(modsLayout, Animations.FadeOutUp))
@@ -347,4 +380,3 @@ class ModsFragment : FragmentWithAnim(R.layout.fragment_mods) {
         }
     }
 }
-

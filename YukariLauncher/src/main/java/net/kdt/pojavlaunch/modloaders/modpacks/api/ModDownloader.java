@@ -31,10 +31,19 @@ public class ModDownloader {
     private IOException mFirstIOException;
     private long mTotalSize;
 
+    /**
+     * ModDownloaderを構築します。
+     * @param destinationDirectory ダウンロード先ディレクトリ
+     */
     public ModDownloader(File destinationDirectory) {
         this(destinationDirectory, false);
     }
 
+    /**
+     * ModDownloaderを構築します。
+     * @param destinationDirectory ダウンロード先ディレクトリ
+     * @param useFileCount ファイル数で進捗を計測する場合はtrue
+     */
     public ModDownloader(File destinationDirectory, boolean useFileCount) {
         int maxThreads = AllSettings.getMaxDownloadThreads().getValue();
         this.mDownloadPool = new ThreadPoolExecutor(
@@ -50,26 +59,50 @@ public class ModDownloader {
         this.mUseFileCount = useFileCount;
     }
 
+    /**
+     * ダウンロードタスクを送信します。
+     * @param fileSize ファイルサイズ
+     * @param relativePath 相対パス
+     * @param downloadHash ダウンロードハッシュ（null可）
+     * @param url ダウンロードURL
+     */
     public void submitDownload(int fileSize, String relativePath, @Nullable String downloadHash, String... url) {
         if(mUseFileCount) mTotalSize += 1;
         else mTotalSize += fileSize;
         mDownloadPool.execute(new DownloadTask(url, new File(mDestinationDirectory, relativePath), downloadHash));
     }
 
+    /**
+     * ファイル情報プロバイダーを使用したダウンロードタスクを送信します。
+     * @param infoProvider ファイル情報プロバイダー
+     */
     public void submitDownload(FileInfoProvider infoProvider) {
         if(!mUseFileCount) throw new RuntimeException("This method can only be used in a file-counting ModDownloader");
         mTotalSize += 1;
         mDownloadPool.execute(new FileInfoQueryTask(infoProvider));
     }
 
+    /**
+     * すべてのダウンロードが完了するのを待機します。
+     * @param feedback 進捗フィードバック
+     * @throws IOException ダウンロード中にエラーが発生した場合
+     */
     public void awaitFinish(Tools.DownloaderFeedback feedback) throws IOException {
         awaitFinish(() -> feedback.updateProgress(mDownloadedSize.get(), mTotalSize));
     }
 
+    /**
+     * カスタムリスナーでダウンロード完了を待機します。
+     * @param listener ダウンロード進捗リスナー
+     * @throws IOException ダウンロード中にエラーが発生した場合
+     */
     public void awaitFinish(DownloadProgressListener listener) throws IOException {
         awaitFinish(() -> listener.feedback(mDownloadProgress.get(), (int) mTotalSize, mDownloadedSize.get()));
     }
 
+    /**
+     * 内部的な完了待機処理を実行します。
+     */
     private void awaitFinish(OnFileDownloadedListener listener) throws IOException {
         try {
             mDownloadPool.shutdown();
@@ -88,6 +121,9 @@ public class ModDownloader {
         }
     }
 
+    /**
+     * スレッドローカルバッファを取得します。
+     */
     private static byte[] getThreadLocalBuffer() {
         byte[] buffer = sThreadLocalBuffer.get();
         if(buffer != null) return buffer;
@@ -96,6 +132,9 @@ public class ModDownloader {
         return buffer;
     }
 
+    /**
+     * ダウンロード失敗を記録し、他のスレッドに通知します。
+     */
     private void downloadFailed(IOException exception) {
         mTerminator.set(true);
         synchronized (mExceptionSyncPoint) {
@@ -106,6 +145,9 @@ public class ModDownloader {
         }
     }
 
+    /**
+     * ファイル情報を取得してからダウンロードを実行するタスク
+     */
     class FileInfoQueryTask implements Runnable {
         private final FileInfoProvider mFileInfoProvider;
         public FileInfoQueryTask(FileInfoProvider fileInfoProvider) {
@@ -124,6 +166,9 @@ public class ModDownloader {
         }
     }
 
+    /**
+     * 実際のダウンロードを実行するタスク
+     */
     class DownloadTask implements Runnable, Tools.DownloaderFeedback {
         private final String[] mDownloadUrls;
         private final File mDestination;
@@ -155,6 +200,9 @@ public class ModDownloader {
             }
         }
 
+        /**
+         * 指定されたURLから5回までダウンロードを試行します。
+         */
         private IOException tryDownload(String sourceUrl) throws InterruptedIOException {
             IOException exception = null;
             for (int i = 0; i < 5; i++) {
@@ -174,6 +222,9 @@ public class ModDownloader {
             return exception;
         }
 
+        /**
+         * ダウンロード進捗を更新します。
+         */
         @Override
         public void updateProgress(long curr, long max) {
             long size = curr - last;
@@ -182,6 +233,9 @@ public class ModDownloader {
         }
     }
 
+    /**
+     * ダウンロードするファイルの情報
+     */
     public static class FileInfo {
         public final String url;
         public final String relativePath;
@@ -194,16 +248,22 @@ public class ModDownloader {
         }
     }
 
+    /**
+     * ファイル情報を提供するインターフェース
+     */
     public interface FileInfoProvider {
         FileInfo getFileInfo() throws IOException;
     }
 
+    /**
+     * ファイルダウンロード時の内部リスナー
+     */
     private interface OnFileDownloadedListener {
         void downloaded();
     }
 
     /**
-     * 一个已下载文件数量、已下载文件总大小的监听器
+     * ダウンロード進捗リスナー
      */
     public interface DownloadProgressListener {
         void feedback(int downloadedCount, int totalCount, long downloadedSize);

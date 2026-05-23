@@ -1,7 +1,12 @@
 package net.kdt.pojavlaunch.authenticator.listener;
 
-/** Called when there is a complete failure, guaranteed to be on the UI Thread */
+/**
+ * 完全な失敗が発生したときに呼び出されます。UIスレッドで実行されることが保証されています。
+ */
 public interface ErrorListener {
+    /**
+     * ログインエラーが発生したときに呼び出されます。
+     * @param errorMessage エラーの詳細
+     */
     void onLoginError(Throwable errorMessage);
 }
-

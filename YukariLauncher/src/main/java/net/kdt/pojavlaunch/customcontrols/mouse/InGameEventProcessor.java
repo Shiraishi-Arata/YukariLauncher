@@ -18,11 +18,17 @@ public class InGameEventProcessor implements TouchEventProcessor {
     private final PointerTracker mTracker = new PointerTracker();
     private final LeftClickGesture mLeftClickGesture = new LeftClickGesture(mGestureHandler);
     private final RightClickGesture mRightClickGesture = new RightClickGesture(mGestureHandler);
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public InGameEventProcessor(double sensitivity) {
         mSensitivity = sensitivity;
     }
-
+/**
+ * 「process Touch Event」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public boolean processTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getActionMasked()) {
@@ -52,12 +58,18 @@ public class InGameEventProcessor implements TouchEventProcessor {
         }
         return true;
     }
-
+/**
+ * 「cancel Pending Actions」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void cancelPendingActions() {
         cancelGestures(true);
     }
-
+/**
+ * タッチイベントを処理します。
+ * ユーザーからのタッチ入力を検出し、適切なアクションを実行します。
+ */
     @Override
     public void dispatchTouchEvent(MotionEvent event, View view) {
         if (AllStaticSettings.useControllerProxy) {
@@ -65,7 +77,10 @@ public class InGameEventProcessor implements TouchEventProcessor {
             ContactHandler.INSTANCE.progressEvent(event, view);
         }
     }
-
+/**
+ * 「check Gestures」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void checkGestures() {
         mLeftClickGesture.inputEvent();
         // Only register right click events if it's a fresh event stream, not one after a transition.
@@ -73,7 +88,10 @@ public class InGameEventProcessor implements TouchEventProcessor {
         // exiting a menu for example.
         if(!mEventTransitioned) mRightClickGesture.inputEvent();
     }
-
+/**
+ * 「cancel Gestures」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void cancelGestures(boolean isSwitching) {
         mEventTransitioned = true;
         mLeftClickGesture.cancel(isSwitching);

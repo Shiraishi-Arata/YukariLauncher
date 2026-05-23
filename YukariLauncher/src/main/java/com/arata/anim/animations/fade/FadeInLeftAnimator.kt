@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 左方向からフェードインするアニメーション
+ * 透明度を0→1に変化させ、X座標を画面幅の-1/4から0へ移動する
+ */
 class FadeInLeftAnimator: BaseAnimator() {
+    /** 左方向フェードインアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 0f, 1f),

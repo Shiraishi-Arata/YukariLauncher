@@ -13,13 +13,20 @@ import com.arata.yukarilauncher.utils.path.PathManager
 import org.apache.commons.io.FileUtils
 
 /**
- * 统一插件的加载，保证仅获取一次应用列表
+ * プラグインの読み込みを一元管理する
+ * アプリケーションリストの取得は1回のみに保証する
  */
 object PluginLoader {
     private var isInitialized: Boolean = false
     private const val PACKAGE_FLAGS =
         PackageManager.GET_META_DATA or PackageManager.GET_SHARED_LIBRARY_FILES
 
+    /**
+     * すべてのプラグインを読み込む
+     * ドライバープラグイン、APKレンダラープラグイン、ローカルレンダラープラグインを読み込む
+     * @param context コンテキスト
+     * @param force 強制的に再読み込みするかどうか
+     */
     @JvmStatic
     @SuppressLint("QueryPermissionsNeeded")
     fun loadAllPlugins(context: Context, force: Boolean = false) {
@@ -40,11 +47,11 @@ object PluginLoader {
             RendererPluginManager.parseApkPlugin(context, applicationInfo)
         }
 
-        //尝试解析本地渲染器插件
+        // ローカルレンダラープラグインを解析
         PathManager.DIR_INSTALLED_RENDERER_PLUGIN.listFiles()?.let { files ->
             files.forEach { file ->
                 if (!(file.isDirectory && RendererPluginManager.parseLocalPlugin(context, file))) {
-                    //不符合要求的渲染器插件，将被删除！
+                    // 要件を満たさないレンダラープラグインは削除
                     FileUtils.deleteQuietly(file)
                 }
             }

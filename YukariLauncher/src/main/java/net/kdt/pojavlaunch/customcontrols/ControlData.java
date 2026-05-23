@@ -49,23 +49,22 @@ public class ControlData {
         buildConversionMap();
     }
 
-    // Internal usage only
+    // 内部使用のみ
     public transient boolean isHideable;
     /**
-     * Both fields below are dynamic position data, auto updates
-     * X and Y position, unlike the original one which uses fixed
-     * position, so it does not provide auto-location when a control
-     * is made on a small device, then import the control to a
-     * bigger device or vice versa.
+     * 以下のフィールドは動的な位置データで、自動更新されます
+     * X/Y座標。元の固定値方式とは異なります
+     * そのため、小型デバイスで作成したコントロールを大型デバイスにインポートした場合や、
+     * その逆の場合、自動位置調整は提供されません。
      */
     public String dynamicX, dynamicY;
     public boolean isToggle, passThruEnabled;
     public String name;
-    public int[] keycodes;      //Should store up to 4 keys
-    public float opacity;       //Alpha value from 0 to 1;
+    public int[] keycodes;      //最大4つのキーを格納
+    public float opacity;       //0から1の間のアルファ値
     public int bgColor;
     public int strokeColor;
-    public float strokeWidth;     // Dp instead of % now
+    public float strokeWidth;     // 現在は%ではなくDp
     public float cornerRadius;  //0-100%
     public boolean isSwipeable;
     public boolean repeatedlyEnabled;
@@ -73,53 +72,89 @@ public class ControlData {
     public int repeatLongPressDelayMs = 300;
     public boolean displayInGame;
     public boolean displayInMenu;
-    private float width;         //Dp instead of Px now
-    private float height;        //Dp instead of Px now
-
+    private float width;         // 現在はPxではなくDp
+    private float height;        // 現在はPxではなくDp
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData() {
         this(getString(R.string.controls_add_control_button));
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name) {
         this(name, new int[]{});
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes) {
         this(name, keycodes, Tools.currentDisplayMetrics.widthPixels / 2f, Tools.currentDisplayMetrics.heightPixels / 2f);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, float x, float y) {
         this(name, keycodes, x, y, 50, 50);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(Context ctx, int resId, int[] keycodes, float x, float y, boolean isSquare) {
         this(ctx.getResources().getString(resId), keycodes, x, y, isSquare);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, float x, float y, boolean isSquare) {
         this(name, keycodes, x, y, isSquare ? 50 : 80, isSquare ? 50 : 30);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, float x, float y, float width, float height) {
         this(name, keycodes, Float.toString(x), Float.toString(y), width, height, false);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, String dynamicX, String dynamicY) {
         this(name, keycodes, dynamicX, dynamicY, 50, 50, false);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(Context ctx, int resId, int[] keycodes, String dynamicX, String dynamicY, boolean isSquare) {
         this(ctx.getResources().getString(resId), keycodes, dynamicX, dynamicY, isSquare);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, String dynamicX, String dynamicY, boolean isSquare) {
         this(name, keycodes, dynamicX, dynamicY, isSquare ? 50 : 80, isSquare ? 50 : 30, false);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, String dynamicX, String dynamicY, float width, float height, boolean isToggle) {
         this(name, keycodes, dynamicX, dynamicY, width, height, isToggle, 1, 0x4D000000, 0xFFFFFFFF, 0, 0, true, true, false, false);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlData(String name, int[] keycodes, String dynamicX, String dynamicY, float width, float height, boolean isToggle, float opacity, int bgColor, int strokeColor, float strokeWidth, float cornerRadius, boolean displayInGame, boolean displayInMenu, boolean isSwipable, boolean mousePassthrough) {
         this.name = name;
         this.keycodes = inflateKeycodeArray(keycodes);
@@ -138,8 +173,12 @@ public class ControlData {
         this.isSwipeable = isSwipable;
         this.passThruEnabled = mousePassthrough;
     }
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
 
-    //Deep copy constructor
+    // ディープコピーコンストラクタ
     public ControlData(ControlData controlData) {
         this(
                 controlData.name,
@@ -163,7 +202,9 @@ public class ControlData {
         this.repeatCps = controlData.repeatCps;
         this.repeatLongPressDelayMs = controlData.repeatLongPressDelayMs;
     }
-
+/**
+ * 「SpecialButtons」の値を取得します。
+ */
     public static ControlData[] getSpecialButtons(Context context) {
         if (SPECIAL_BUTTONS == null) {
             SPECIAL_BUTTONS = new ControlData[]{
@@ -182,7 +223,10 @@ public class ControlData {
 
         return SPECIAL_BUTTONS;
     }
-
+/**
+ * 「build Special Button Array」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static List<String> buildSpecialButtonArray(Context context) {
         if (SPECIAL_BUTTON_NAME_ARRAY == null) {
             List<String> nameList = new ArrayList<>();
@@ -195,12 +239,18 @@ public class ControlData {
 
         return SPECIAL_BUTTON_NAME_ARRAY;
     }
-
+/**
+ * 「calculate」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     private static float calculate(String math) {
         setExpression(math);
         return (float) builder.get().build().evaluate();
     }
-
+/**
+ * 「inflate Keycode Array」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static int[] inflateKeycodeArray(int[] keycodes) {
         int[] inflatedArray = new int[]{GLFW_KEY_UNKNOWN, GLFW_KEY_UNKNOWN, GLFW_KEY_UNKNOWN, GLFW_KEY_UNKNOWN};
         System.arraycopy(keycodes, 0, inflatedArray, 0, keycodes.length);
@@ -208,17 +258,25 @@ public class ControlData {
     }
 
     /**
-     * Create a builder, keep a weak reference to it to use it with all views on first inflation
+     * ビルダーを作成し、初回インフレーション時にすべてのビューで使用するために弱参照を保持します
      */
     private static void buildExpressionBuilder() {
         ExpressionBuilder expressionBuilder = new ExpressionBuilder("1 + 1")
                 .function(new Function("dp", 1) {
+/**
+ * 「apply」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
                     @Override
                     public double apply(double... args) {
                         return Tools.pxToDp((float) args[0]);
                     }
                 })
                 .function(new Function("px", 1) {
+/**
+ * 「apply」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
                     @Override
                     public double apply(double... args) {
                         return Tools.dpToPx((float) args[0]);
@@ -230,7 +288,7 @@ public class ControlData {
     /**
      * wrapper for the WeakReference to the expressionField.
      *
-     * @param stringExpression the expression to set.
+     * @param stringExpression 設定する式
      */
     private static void setExpression(String stringExpression) {
         if (builder.get() == null) buildExpressionBuilder();
@@ -238,8 +296,8 @@ public class ControlData {
     }
 
     /**
-     * Build a shared conversion map without the ControlData dependent values
-     * You need to set the view dependent values before using it.
+     * ControlData依存の値なしで共有変換マップを構築します
+     * 使用する前にビュー依存の値を設定する必要があります。
      */
     private static void buildConversionMap() {
         // Values in the map below may be always changed
@@ -257,7 +315,10 @@ public class ControlData {
 
         conversionMap = new WeakReference<>(keyValueMap);
     }
-
+/**
+ * 「insert Dynamic Pos」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public float insertDynamicPos(String dynamicPos) {
         // Insert value to ${variable}
         String insertedPos = JSONUtils.insertSingleJSONValue(dynamicPos, fillConversionMap());
@@ -265,6 +326,10 @@ public class ControlData {
         // Calculate, because the dynamic position contains some math equations
         return calculate(insertedPos);
     }
+/**
+ * 「contains Keycode」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean containsKeycode(int keycodeToCheck) {
@@ -274,29 +339,38 @@ public class ControlData {
 
         return false;
     }
+/**
+ * 「Width」の値を取得します。
+ */
 
-    //Getters || setters (with conversion for ease of use)
+    // ゲッター || セッター（使いやすさのための変換付き）
     public float getWidth() {
         return Tools.dpToPx(width);
     }
-
+/**
+ * 「Width」の値を設定します。
+ */
     public void setWidth(float widthInPx) {
         width = Tools.pxToDp(widthInPx);
     }
-
+/**
+ * 「Height」の値を取得します。
+ */
     public float getHeight() {
         return Tools.dpToPx(height);
     }
-
+/**
+ * 「Height」の値を設定します。
+ */
     public void setHeight(float heightInPx) {
         height = Tools.pxToDp(heightInPx);
     }
 
     /**
-     * Fill the conversionMap with controlData dependent values.
-     * The returned valueMap should NOT be kept in memory.
+     * conversionMapにControlData依存の値を設定します。
+     * 返されたvalueMapはメモリに保持しないでください。
      *
-     * @return the valueMap to use.
+     * @return 使用するvalueMap
      */
     private Map<String, String> fillConversionMap() {
         ArrayMap<String, String> valueMap = conversionMap.get();

@@ -27,15 +27,27 @@ import net.kdt.pojavlaunch.utils.NotificationUtils;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * コンテキストに応じたダウンロード完了リスナー。アクティビティが利用可能な場合は直接ゲームを起動し、
+ * 利用できない場合は通知を送信します。
+ */
 public class ContextAwareDoneListener implements AsyncMinecraftDownloader.DoneListener, ContextExecutorTask {
     private final String mErrorString;
     private final Version mVersion;
 
+    /**
+     * コンストラクタ。
+     * @param baseContext 基本コンテキスト（エラーメッセージの取得に使用）
+     * @param version ゲームバージョン
+     */
     public ContextAwareDoneListener(Context baseContext, Version version) {
         this.mErrorString = baseContext.getString(R.string.mc_download_failed);
         this.mVersion = version;
     }
 
+    /**
+     * ゲーム起動インテントを作成します。
+     */
     private Intent createGameStartIntent(Context context) {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.putExtra(INTENT_VERSION, mVersion);
@@ -43,10 +55,16 @@ public class ContextAwareDoneListener implements AsyncMinecraftDownloader.DoneLi
         return mainIntent;
     }
 
+    /**
+     * タスクが完了するのを待ってから、コンテキストに応じた処理を実行します。
+     */
     private void executeTask() {
         ProgressKeeper.waitUntilDone(() -> ContextExecutor.executeTask(this));
     }
 
+    /**
+     * ダウンロード完了時にModをチェックし、その後タスクを実行します。
+     */
     @Override
     public void onDownloadDone() {
         AtomicInteger progressCount = new AtomicInteger(0);
@@ -73,11 +91,17 @@ public class ContextAwareDoneListener implements AsyncMinecraftDownloader.DoneLi
         });
     }
 
+    /**
+     * ダウンロード失敗時にエラーを表示します。
+     */
     @Override
     public void onDownloadFailed(Throwable throwable) {
         Tools.showErrorRemote(mErrorString, throwable);
     }
 
+    /**
+     * アクティビティが利用可能な場合、ゲームを直接起動します。
+     */
     @Override
     public void executeWithActivity(Activity activity) {
         try {
@@ -85,20 +109,19 @@ public class ContextAwareDoneListener implements AsyncMinecraftDownloader.DoneLi
             activity.startActivity(gameStartIntent);
             if (AllSettings.getQuitLauncher().getValue()) {
                 activity.finish();
-                android.os.Process.killProcess(android.os.Process.myPid()); //You should kill yourself, NOW!
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         } catch (Throwable e) {
             Tools.showError(activity.getBaseContext(), e);
         }
     }
 
+    /**
+     * アクティビティが利用できない場合、通知でゲーム起動を知らせます。
+     */
     @Override
     public void executeWithApplication(Context context) {
         Intent gameStartIntent = createGameStartIntent(context);
-        // Since the game is a separate process anyway, it does not matter if it gets invoked
-        // from somewhere other than the launcher activity.
-        // The only problem may arise if the launcher starts doing something when the user starts the notification.
-        // So, the notification is automatically removed once there are tasks ongoing in the ProgressKeeper
         NotificationUtils.sendBasicNotification(context,
                 R.string.notif_download_finished,
                 R.string.notif_download_finished_desc,
@@ -106,7 +129,5 @@ public class ContextAwareDoneListener implements AsyncMinecraftDownloader.DoneLi
                 NotificationUtils.PENDINGINTENT_CODE_GAME_START,
                 NotificationUtils.NOTIFICATION_ID_GAME_START
         );
-        // You should keep yourself safe, NOW!
-        // otherwise android does weird things...
     }
 }

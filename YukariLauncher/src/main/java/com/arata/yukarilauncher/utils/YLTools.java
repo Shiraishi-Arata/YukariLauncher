@@ -69,30 +69,49 @@ public final class YLTools {
     private YLTools() {
     }
 
+    /**
+     * 戻るボタン操作を処理する
+     */
     public static void onBackPressed(FragmentActivity fragmentActivity) {
         fragmentActivity.getOnBackPressedDispatcher().onBackPressed();
     }
 
+    /**
+     * 現在の言語設定が英語かどうかを判定する
+     */
     public static boolean isEnglish(Context context) {
         LocaleList locales = context.getResources().getConfiguration().getLocales();
         return locales.get(0).getLanguage().equals("en");
     }
 
+    /**
+     * 現在の言語設定が中国語（簡体字）かどうかを判定する
+     */
     public static boolean isChinese(Context context) {
         Locale locale = context.getResources().getConfiguration().getLocales().get(0);
         return locale.equals(Locale.SIMPLIFIED_CHINESE);
     }
 
+    /**
+     * 複数のImageViewにツールチップテキストを設定する
+     */
     public static void setTooltipText(ImageView... views) {
         for (ImageView view : views) {
             setTooltipText(view, view.getContentDescription());
         }
     }
 
+    /**
+     * ビューにツールチップテキストを設定する
+     */
     public static void setTooltipText(View view, CharSequence tooltip) {
         TooltipCompat.setTooltipText(view, tooltip);
     }
 
+    /**
+     * カスタムマウスカーソルのDrawableを取得する
+     * カスタムマウスが設定されていない場合や存在しない場合はデフォルトのマウスポインターを返す
+     */
     public synchronized static Drawable customMouse(Context context) {
         File mouseFile = getCustomMouse();
         if (mouseFile == null) {
@@ -107,16 +126,25 @@ public final class YLTools {
         return ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_mouse_pointer, context.getTheme());
     }
 
+    /**
+     * カスタムマウスのファイルを取得する
+     */
     public static File getCustomMouse() {
         String customMouse = AllSettings.getCustomMouse().getValue();
         if (customMouse.isEmpty()) return null;
         return new File(PathManager.DIR_CUSTOM_MOUSE, customMouse);
     }
 
+    /**
+     * ファイルがサポート対象のマウスカーソルソースかどうかを判定する
+     */
     public static boolean isSupportedMouseSource(File file) {
         return CursorPackUtils.isSupportedCursorSource(file);
     }
 
+    /**
+     * 強制終了の確認ダイアログを表示する
+     */
     public static void dialogForceClose(Context ctx) {
         new TipDialog.Builder(ctx)
                 .setTitle(R.string.option_force_close)
@@ -131,17 +159,18 @@ public final class YLTools {
     }
 
     /**
-     * 展示一个提示弹窗，告知用户接下来将要在浏览器内访问的链接，用户可以选择不进行访问
-     * @param link 要访问的链接
+     * リンクをブラウザで開く前に確認ダイアログを表示する（データ型指定なし）
+     * @param link アクセスするリンク
      */
     public static void openLink(Context context, String link) {
         openLink(context, link, null);
     }
 
     /**
-     * 展示一个提示弹窗，告知用户接下来将要在浏览器内访问的链接，用户可以选择不进行访问
-     * @param link 要访问的链接
-     * @param dataType 设置 intent 的数据以及显式 MIME 数据类型
+     * リンクをブラウザで開く前に確認ダイアログを表示する
+     * ユーザーはアクセスをキャンセルできる
+     * @param link アクセスするリンク
+     * @param dataType Intentのデータ型とMIMEタイプを設定する
      */
     public static void openLink(Context context, String link, String dataType) {
         new TipDialog.Builder(context)
@@ -160,6 +189,9 @@ public final class YLTools {
                 }).showDialog();
     }
 
+    /**
+     * アニメーション付きでフラグメントを切り替える
+     */
     public static void swapFragmentWithAnim(
             Fragment fragment,
             Class<? extends Fragment> fragmentClass,
@@ -175,6 +207,9 @@ public final class YLTools {
                 .commit();
     }
 
+    /**
+     * フラグメントを追加する（バックスタック付き）
+     */
     public static void addFragment(
             Fragment fragment,
             Class<? extends Fragment> fragmentClass,
@@ -188,6 +223,9 @@ public final class YLTools {
                 .commit();
     }
 
+    /**
+     * アニメーション設定を考慮したFragmentTransactionを取得する
+     */
     private static FragmentTransaction getFragmentTransaction(Fragment fragment) {
         FragmentTransaction transaction = fragment.requireActivity().getSupportFragmentManager().beginTransaction();
         if (AllSettings.getAnimation().getValue()) {
@@ -196,23 +234,37 @@ public final class YLTools {
         return transaction.setReorderingAllowed(true);
     }
 
+    /**
+     * 現在のプロセスを強制終了する
+     */
     public static void killProcess() {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
+    /**
+     * アプリのバージョンコードを取得する
+     */
     public static int getVersionCode() {
         return BuildConfig.VERSION_CODE;
     }
 
+    /**
+     * アプリのバージョン名を取得する
+     */
     public static String getVersionName() {
         return BuildConfig.VERSION_NAME;
     }
 
+    /**
+     * アプリのパッケージ名を取得する
+     */
     public static String getPackageName() {
         return BuildConfig.APPLICATION_ID;
     }
 
-    //获取软件上一次更新时间
+    /**
+     * アプリの最終更新日時を取得する
+     */
     public static String getLastUpdateTime(Context context) {
         PackageManager packageManager = context.getPackageManager();
         try {
@@ -227,27 +279,29 @@ public final class YLTools {
     }
 
     /**
-     * @return 启动器是否为预发布版
+     * @return ランチャーがプレリリース版かどうか
      */
     public static boolean isPreRelease() {
         return "PRE_RELEASE".equals(InfoDistributor.BUILD_TYPE);
     }
 
     /**
-     * @return 启动器是否为正式版
+     * @return ランチャーが正式リリース版かどうか
      */
     public static boolean isRelease() {
         return "RELEASE".equals(InfoDistributor.BUILD_TYPE);
     }
 
     /**
-     * @return 启动器是否为测试版
+     * @return ランチャーがデバッグ版かどうか
      */
     public static boolean isDebug() {
         return "DEBUG".equals(InfoDistributor.BUILD_TYPE);
     }
 
-    //获取版本状态信息
+    /**
+     * バージョンステータス情報を取得する
+     */
     public static String getVersionStatus(Context context) {
         String status;
         if (isPreRelease()) status = context.getString(R.string.generic_pre_release);
@@ -257,6 +311,10 @@ public final class YLTools {
         return status;
     }
 
+    /**
+     * 日付文字列をDateオブジェクトにパースする
+     * 複数の日付形式をサポートする
+     */
     public static Date getDate(String dateString) {
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
@@ -278,24 +336,39 @@ public final class YLTools {
         return Date.from(instant);
     }
 
+    /**
+     * 現在の日付が指定された月・日と一致するかどうかをチェックする
+     */
     public static boolean checkDate(int month, int day) {
         LocalDate currentDate = LocalDate.now();
         return currentDate.getMonthValue() == month && currentDate.getDayOfMonth() == day;
     }
 
+    /**
+     * システム言語が指定された地域と一致するかどうかをチェックする
+     */
     public static boolean areaChecks(String area) {
         return getSystemLanguageName().equals(area);
     }
 
+    /**
+     * システム言語名を取得する
+     */
     public static String getSystemLanguageName() {
         return Locale.getDefault().getLanguage();
     }
 
+    /**
+     * システム言語と国を「言語_国」形式で取得する
+     */
     public static String getSystemLanguage() {
         Locale locale = Locale.getDefault();
         return locale.getLanguage() + "_" + locale.getCountry().toLowerCase();
     }
 
+    /**
+     * 通知権限が許可されているかどうかをチェックする
+     */
     public static boolean checkForNotificationPermission() {
         return Build.VERSION.SDK_INT < 33 || ContextCompat.checkSelfPermission(
                 ContextExecutor.getApplication(),
@@ -303,10 +376,16 @@ public final class YLTools {
         ) != PackageManager.PERMISSION_DENIED;
     }
 
+    /**
+     * タスク実行中ダイアログを作成する（メッセージなし）
+     */
     public static AlertDialog createTaskRunningDialog(Context context) {
         return createTaskRunningDialog(context, null);
     }
 
+    /**
+     * タスク実行中ダイアログを作成する（メッセージ付き）
+     */
     public static AlertDialog createTaskRunningDialog(Context context, String message) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.view_task_running, null);
@@ -322,18 +401,27 @@ public final class YLTools {
                 .create();
     }
 
+    /**
+     * タスク実行中ダイアログを表示する（メッセージなし）
+     */
     public static AlertDialog showTaskRunningDialog(Context context) {
         AlertDialog dialog = createTaskRunningDialog(context);
         dialog.show();
         return dialog;
     }
 
+    /**
+     * タスク実行中ダイアログを表示する（メッセージ付き）
+     */
     public static AlertDialog showTaskRunningDialog(Context context, String message) {
         AlertDialog dialog = createTaskRunningDialog(context, message);
         dialog.show();
         return dialog;
     }
 
+    /**
+     * GPUがAdrenoかどうかをEGL/GLESを使用してチェックする
+     */
     public static boolean isAdrenoGPU() {
         EGLDisplay eglDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
         if (eglDisplay == EGL14.EGL_NO_DISPLAY) {
@@ -360,7 +448,7 @@ public final class YLTools {
         }
 
         int[] contextAttributes = new int[]{
-                EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,  // OpenGL ES 2.0
+                EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,
                 EGL14.EGL_NONE
         };
 
@@ -384,7 +472,7 @@ public final class YLTools {
                 vendor.equalsIgnoreCase("Qualcomm") &&
                 renderer.toLowerCase().contains("adreno"));
 
-        // Cleanup
+        // リソースをクリーンアップ
         EGL14.eglMakeCurrent(eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
         EGL14.eglDestroyContext(eglDisplay, context);
         EGL14.eglTerminate(eglDisplay);
@@ -393,6 +481,9 @@ public final class YLTools {
         return isAdreno;
     }
 
+    /**
+     * ログをZIPファイルに圧縮して共有する
+     */
     public static synchronized void shareLogs(Context context) {
         AlertDialog dialog = YLTools.createTaskRunningDialog(context);
 
@@ -427,11 +518,18 @@ public final class YLTools {
                 .execute();
     }
 
+    /**
+     * ダークモードが有効かどうかを判定する
+     */
     public static boolean isDarkMode(Context context) {
         Configuration configuration = context.getResources().getConfiguration();
         return (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
+    /**
+     * WebViewにダークモード対応のCSSを適用する
+     * リンクのインタラクティブ性を無効化し、テキスト選択は可能
+     */
     public static void getWebViewAfterProcessing(WebView view) {
         view.setWebViewClient(new WebViewClient() {
             @Override
@@ -447,10 +545,10 @@ public final class YLTools {
                         "a, a:link, a:visited, a:hover, a:active {" +
                         "  color: " + color[1] + ";" +
                         "  text-decoration: none;" +
-                        "  pointer-events: none;" + //禁止链接的交互性
+                        "  pointer-events: none;" +
                         "}";
 
-                //JavaScript代码，用于将CSS样式添加到WebView中
+                // WebViewにCSSスタイルを追加するJavaScriptコード
                 String js = "var parent = document.getElementsByTagName('head').item(0);" +
                         "var style = document.createElement('style');" +
                         "style.type = 'text/css';" +
@@ -466,6 +564,9 @@ public final class YLTools {
         });
     }
 
+    /**
+     * 現在のシステム時刻をミリ秒で取得する
+     */
     public static long getCurrentTimeMillis() {
         return System.currentTimeMillis();
     }

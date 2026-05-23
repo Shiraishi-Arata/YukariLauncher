@@ -37,6 +37,9 @@ import org.json.JSONObject
 import java.io.File
 import java.util.zip.ZipFile
 
+/**
+ * バージョン管理フラグメント
+ */
 class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manager), View.OnClickListener {
     companion object {
         const val TAG: String = "VersionManagerFragment"
@@ -46,6 +49,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
 
     private lateinit var binding: FragmentVersionManagerBinding
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,6 +61,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val fragment = this
         binding.apply {
@@ -74,11 +83,17 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         }
     }
 
+    /**
+     * 存在しない場合はディレクトリを作成する
+     */
     private fun File.mustExists(): File {
         if (!exists()) mkdirs()
         return this
     }
 
+    /**
+     * ファイル管理フラグメントに遷移する
+     */
     private fun swapFilesFragment(lockPath: File, listPath: File) {
         val bundle = Bundle().apply {
             putString(FilesFragment.BUNDLE_LOCK_PATH, lockPath.mustExists().absolutePath)
@@ -88,6 +103,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         YLTools.swapFragmentWithAnim(this, FilesFragment::class.java, FilesFragment.TAG, bundle)
     }
 
+    /**
+     * バージョンからMinecraftゲームバージョンを取得する
+     */
     private fun getGameVersion(version: Version): String {
         val versionInfo = version.getVersionInfo()
         if (versionInfo != null && versionInfo.minecraftVersion.isNotBlank()) {
@@ -101,6 +119,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
             .trim()
     }
 
+    /**
+     * バージョンにインストールされているModローダーを取得する
+     */
     private fun getSelectedLoader(version: Version): String? {
         val loaderName = version.getVersionInfo()
             ?.loaderInfo
@@ -118,14 +139,15 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         }
     }
 
-    // ---------- Icon extraction from mod JAR (supports Fabric, Forge, NeoForge) ----------
+    /**
+     * Mod JARファイルからアイコンを抽出する
+     */
     private fun loadModIcon(context: android.content.Context, modFile: File?): Drawable? {
         if (modFile == null || !modFile.isFile || !modFile.name.endsWith(".jar")) {
             return ContextCompat.getDrawable(context, R.drawable.ic_file)
         }
         return try {
             ZipFile(modFile).use { zip ->
-                // First try metadata-defined icon
                 val metadataIconPath = getIconPathFromMetadata(zip)
                 if (metadataIconPath != null) {
                     val entry = zip.getEntry(metadataIconPath)
@@ -138,7 +160,6 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
                     }
                 }
 
-                // Fallback heuristic scanning
                 val entry = zip.entries().asSequence()
                     .take(ICON_SCAN_ENTRY_LIMIT)
                     .filter { !it.isDirectory && it.name.endsWith(".png", ignoreCase = true) }
@@ -157,8 +178,10 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         } ?: ContextCompat.getDrawable(context, R.drawable.ic_file)
     }
 
+    /**
+     * メタデータからアイコンパスを取得する
+     */
     private fun getIconPathFromMetadata(zip: ZipFile): String? {
-        // Fabric: fabric.mod.json
         val fabricEntry = zip.getEntry("fabric.mod.json")
         if (fabricEntry != null) {
             zip.getInputStream(fabricEntry).use { input ->
@@ -173,7 +196,6 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
             }
         }
 
-        // Forge & NeoForge: mods.toml / neoforge.mods.toml
         fun parseTomlIconPath(entryName: String): String? {
             val entry = zip.getEntry(entryName) ?: return null
             zip.getInputStream(entry).use { input ->
@@ -192,8 +214,14 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         return null
     }
 
+    /**
+     * アイコンパスを正規化する
+     */
     private fun normalizeIconPath(path: String): String = path.trimStart('/')
 
+    /**
+     * アイコンファイル名のスコアを計算する
+     */
     private fun scoreIconEntry(name: String): Int {
         val lower = name.lowercase()
         return when {
@@ -205,7 +233,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         }
     }
 
-    // ---------- Custom RecyclerView Adapter for Update Selection ----------
+    /**
+     * Mod更新選択用のアダプター
+     */
     private inner class ModUpdateSelectionAdapter(
         private val context: android.content.Context,
         private val updates: List<ModUpdate>,
@@ -231,7 +261,6 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
             holder.versionInfo.text = "${update.currentVersion} → ${update.latestVersion}"
             holder.checkbox.isChecked = checkedStates[position]
 
-            // Load icon in background using the original mod file
             val modFile = update.originalFile
             Thread {
                 val drawable = loadModIcon(context, modFile)
@@ -248,7 +277,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         override fun getItemCount(): Int = updates.size
     }
 
-    // ---------- Material 3 Progress Dialog Helper ----------
+    /**
+     * プログレスダイアログのコンポーネント
+     */
     private data class ProgressDialogComponents(
         val builder: MaterialAlertDialogBuilder,
         val container: LinearLayout,
@@ -256,6 +287,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         val progressBar: LinearProgressIndicator
     )
 
+    /**
+     * Material3スタイルのプログレスダイアログを作成する
+     */
     private fun createMaterialProgressDialog(title: String): ProgressDialogComponents {
         val context = requireContext()
         val container = LinearLayout(context).apply {
@@ -289,7 +323,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         return ProgressDialogComponents(builder, container, messageView, progressBar)
     }
 
-    // ---------- Update Selection Dialog with Icons ----------
+    /**
+     * 更新選択ダイアログを表示する
+     */
     private fun showMaterialUpdateSelectionDialog(
         activity: android.app.Activity,
         updates: List<ModUpdate>,
@@ -356,7 +392,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
             .show()
     }
 
-    // ---------- OnClick Handler ----------
+    /**
+     * クリックイベントを処理します。
+     */
     override fun onClick(v: View) {
         val activity = requireActivity()
         val version = VersionsManager.getCurrentVersion() ?: run {
@@ -410,21 +448,21 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
                     val components = createMaterialProgressDialog("Checking mod updates")
                     var isCancelled = false
                     var progressDialog: android.app.Dialog? = null
-                
+
                     val builder = components.builder
                     builder.setNegativeButton("Cancel") { _, _ ->
                         isCancelled = true
                         progressDialog?.dismiss()
                     }
                     progressDialog = builder.show()
-                
+
                     components.messageView.text = "Scanning mods..."
-                
+
                     val modsDir = File(gameDir, "mods").apply { if (!exists()) mkdirs() }
                     val minecraftVersion = getGameVersion(version)
                     val selectedLoader = getSelectedLoader(version)
                     Logging.i("ModUpdate", "Using game version: $minecraftVersion, selected loader: ${selectedLoader ?: "none"}")
-                
+
                     ModUpdateManager.checkUpdates(
                         context = activity,
                         modsDir = modsDir,
@@ -469,6 +507,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(shortcutsLayout, Animations.BounceInRight))
@@ -476,6 +517,9 @@ class VersionManagerFragment : FragmentWithAnim(R.layout.fragment_version_manage
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(shortcutsLayout, Animations.FadeOutLeft))

@@ -47,6 +47,9 @@ public class MainMenuFragment extends FragmentWithAnim {
     private FragmentLauncherBinding binding;
     private AccountViewWrapper accountViewWrapper;
 
+/**
+ * MainMenuFragmentを構築します
+ */
     public MainMenuFragment() {
         super(R.layout.fragment_launcher);
     }
@@ -102,6 +105,9 @@ public class MainMenuFragment extends FragmentWithAnim {
         refreshCurrentVersion();
     }
 
+/**
+ * refreshCurrentVersionメソッド
+ */
     private void refreshCurrentVersion() {
         Version version = VersionsManager.INSTANCE.getCurrentVersion();
 
@@ -125,6 +131,9 @@ public class MainMenuFragment extends FragmentWithAnim {
     }
 
     @Subscribe()
+/**
+ * eventメソッド
+ */
     public void event(RefreshVersionsEvent event) {
         if (event.getMode() == END) {
             TaskExecutors.runInUIThread(this::refreshCurrentVersion);
@@ -132,6 +141,9 @@ public class MainMenuFragment extends FragmentWithAnim {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+/**
+ * eventメソッド
+ */
     public void event(AccountUpdateEvent event) {
         if (accountViewWrapper != null) accountViewWrapper.refreshAccountInfo();
     }
@@ -148,6 +160,9 @@ public class MainMenuFragment extends FragmentWithAnim {
         EventBus.getDefault().unregister(this);
     }
 
+/**
+ * runInstallerWithConfirmationメソッド
+ */
     private void runInstallerWithConfirmation(boolean isCustomArgs) {
         if (ProgressKeeper.getTaskCount() == 0)
             Tools.installMod(requireActivity(), isCustomArgs);

@@ -42,10 +42,11 @@ import org.greenrobot.eventbus.EventBus
 class LaunchGame {
     companion object {
         /**
-         * 改为启动游戏前进行的操作
-         * - 进行登录，同时也能及时的刷新账号的信息（这明显更合理不是吗，PojavLauncher？）
-         * - 复制 options.txt 文件到游戏目录
-         * @param version 选择的版本
+         * ゲーム起動前の前処理を行う
+         * - ログイン処理とアカウント情報の更新
+         * - options.txtファイルをゲームディレクトリにコピー
+         * @param context コンテキスト
+         * @param version 選択されたバージョン
          */
         @JvmStatic
         fun preLaunch(context: Context, version: Version) {
@@ -57,7 +58,7 @@ class LaunchGame {
                 val versionName = version.getVersionName()
                 val mcVersion = AsyncMinecraftDownloader.getListedVersion(versionName)
                 val listener = ContextAwareDoneListener(context, version)
-                //若网络未连接，跳过下载任务直接启动
+                // ネットワーク未接続の場合はダウンロードをスキップして直接起動
                 if (!networkAvailable) {
                     listener.onDownloadDone()
                 } else {
@@ -76,7 +77,7 @@ class LaunchGame {
             }
 
             if (!networkAvailable) {
-                // 网络未链接，无法登录，但是依旧允许玩家启动游戏 (临时创建一个同名的离线账号启动游戏)
+                // ネットワーク未接続、ログイン不可だがゲーム起動は許可（同名のオフラインアカウントを作成して起動）
                 Toast.makeText(context, context.getString(R.string.account_login_no_network), Toast.LENGTH_SHORT).show()
                 launch(true)
                 return
@@ -94,7 +95,7 @@ class LaunchGame {
                     TaskExecutors.runInUIThread {
                         Toast.makeText(context, context.getString(R.string.account_login_done), Toast.LENGTH_SHORT).show()
                     }
-                    //登录完成，正式启动游戏！
+                    // ログイン完了、ゲームを正式に起動
                     launch()
                 },
                 { exception ->
@@ -117,6 +118,13 @@ class LaunchGame {
             setGameProgress(true)
         }
 
+        /**
+         * ゲームを実際に実行する
+         * レンダラーの検証、アカウント設定、Javaランタイムの選択、起動情報の表示、ゲームプロセスの開始を行う
+         * @param activity アクティビティ
+         * @param minecraftVersion 選択されたバージョン
+         * @param version バージョン情報
+         */
         @Throws(Throwable::class)
         @JvmStatic
         fun runGame(activity: AppCompatActivity, minecraftVersion: Version, version: JMinecraftVersionList.Version) {
@@ -159,10 +167,18 @@ class LaunchGame {
 
             launch(activity, account, minecraftVersion, javaRuntime, customArgs)
 
-            //Note that we actually stall in the above function, even if the game crashes. But let's be safe.
+            // 実際には上記の関数でゲームがクラッシュしてもストールするが、念のため
             GameService.setActive(false)
         }
 
+        /**
+         * バージョンに適したJavaランタイムを取得する
+         * バージョン固有の設定がない場合は、自動的に最適な環境を選択する
+         * @param activity アクティビティ
+         * @param version バージョン
+         * @param targetJavaVersion 必要なJavaバージョン
+         * @return ランタイム名
+         */
         private fun getRuntime(activity: Activity, version: Version, targetJavaVersion: Int): String {
             val versionRuntime = version.getJavaDir()
                 .takeIf { it.isNotEmpty() && it.startsWith(Tools.LAUNCHERPROFILES_RTPREFIX) }
@@ -171,7 +187,7 @@ class LaunchGame {
 
             if (versionRuntime.isNotEmpty()) return versionRuntime
 
-            //如果版本未选择Java环境，则自动选择合适的环境
+            // バージョンがJava環境を選択していない場合、自動的に適切な環境を選択
             var runtime = AllSettings.defaultRuntime.getValue()
             val pickedRuntime = MultiRTUtils.read(runtime)
             if (pickedRuntime.javaVersion == 0 || pickedRuntime.javaVersion < targetJavaVersion) {
@@ -185,6 +201,13 @@ class LaunchGame {
             return runtime
         }
 
+        /**
+         * 起動情報をログに出力する
+         * @param minecraftVersion Minecraftバージョン
+         * @param javaArguments Java引数
+         * @param javaRuntime Javaランタイム
+         * @param account アカウント情報
+         */
         private fun printLauncherInfo(
             minecraftVersion: Version,
             javaArguments: String,
@@ -211,6 +234,15 @@ class LaunchGame {
             Logger.appendToLog("---------\r\n")
         }
 
+        /**
+         * ゲームプロセスを起動する内部処理
+         * メモリチェック、ランタイム解決、クラスパス生成、引数構築を行いJREを起動する
+         * @param activity アクティビティ
+         * @param account アカウント
+         * @param minecraftVersion バージョン
+         * @param javaRuntime Javaランタイム
+         * @param customArgs カスタム引数
+         */
         @Throws(Throwable::class)
         @JvmStatic
         private fun launch(
@@ -227,7 +259,7 @@ class LaunchGame {
             val versionInfo = Tools.getVersionInfo(minecraftVersion)
             val gameDirPath = minecraftVersion.getGameDir()
 
-            //预处理
+            // 前処理
             Tools.disableSplash(gameDirPath)
             val launchClassPath = Tools.generateLaunchClassPath(versionInfo, minecraftVersion)
 
@@ -246,6 +278,10 @@ class LaunchGame {
             JREUtils.launchWithUtils(activity, runtime, minecraftVersion, launchArgs, customArgs)
         }
 
+        /**
+         * メモリの空き容量をチェックし、不足している場合は警告を表示する
+         * @param activity アクティビティ
+         */
         private fun checkMemory(activity: AppCompatActivity) {
             var freeDeviceMemory = Tools.getFreeDeviceMemory(activity)
             val freeAddressSpace =
@@ -268,9 +304,8 @@ class LaunchGame {
                     .setCenterMessage(false)
                     .setShowCancel(false)
                 if (LifecycleAwareTipDialog.haltOnDialog(activity.lifecycle, builder)) return
-                // If the dialog's lifecycle has ended, return without
-                // actually launching the game, thus giving us the opportunity
-                // to start after the activity is shown again
+                // ダイアログのライフサイクルが終了した場合、ゲームを実際に起動せずに戻る
+                // これにより、Activityが再表示された後に開始する機会を与える
             }
         }
     }

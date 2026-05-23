@@ -22,6 +22,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 public class SkinLoader {
+    /**
+     * プレイヤーのアバターDrawableを取得する
+     * ローカルにスキン画像が存在する場合はそれを読み込み、存在しない場合はデフォルトのアバター（Steve）を返す
+     */
     public static Drawable getAvatarDrawable(Context context, MinecraftAccount account, int size) throws Exception {
         File skin = new File(PathManager.DIR_USER_SKIN, account.getUniqueUUID() + ".png");
         if (skin.exists()) {
@@ -30,19 +34,26 @@ public class SkinLoader {
                 if (bitmap == null) throw new IOException("Failed to read the skin picture and try to parse it to a bitmap");
                 return new BitmapDrawable(context.getResources(), getAvatar(bitmap, size));
             } catch (Exception e) {
-                //本地皮肤加载失败，输出到日志内，稍后尝试加载默认的头像“steve”
+                // ローカルのスキン読み込みに失敗した場合はログに出力し、デフォルトのアバター（Steve）を読み込む
                 Logging.e("SkinLoader", "Failed to load avatar from locally!", e);
             }
         }
         return getDefaultAvatar(context, size);
     }
 
+    /**
+     * デフォルトのアバター（Steve）をアセットから読み込む
+     */
     private static Drawable getDefaultAvatar(Context context, int size) throws Exception {
         InputStream is = context.getAssets().open("steve.png");
         Bitmap bitmap = BitmapFactory.decodeStream(is);
         return new BitmapDrawable(context.getResources(), getAvatar(bitmap, size));
     }
 
+    /**
+     * スキンBitmapからアバター用の顔部分を切り出してリサイズする
+     * 顔部分と帽子部分を適切にスケーリングし、結合して一つのアバター画像を生成する
+     */
     public static Bitmap getAvatar(@NotNull Bitmap skin, int size) {
         float faceOffset = Math.round(size / 18.0);
         float scaleFactor = skin.getWidth() / 64.0f;

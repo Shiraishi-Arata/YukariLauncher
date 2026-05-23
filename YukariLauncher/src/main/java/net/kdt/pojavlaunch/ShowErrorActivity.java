@@ -16,10 +16,16 @@ import net.kdt.pojavlaunch.utils.NotificationUtils;
 
 import java.io.Serializable;
 
+/**
+ * エラーを表示するためのアクティビティ。リモートエラーハンドリングもサポートします。
+ */
 public class ShowErrorActivity extends Activity {
 
     private static final String ERROR_ACTIVITY_REMOTE_TASK = "remoteTask";
 
+    /**
+     * インテントからエラータスクを取得し、アクティビティとともに実行します。
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +42,9 @@ public class ShowErrorActivity extends Activity {
         remoteErrorTask.executeWithActivity(this);
     }
 
-
+    /**
+     * コンテキストに応じてエラーを表示するリモートエラータスク。シリアライズ可能。
+     */
     public static class RemoteErrorTask implements ContextExecutorTask, Serializable {
         private final Throwable mThrowable;
         private final String mRolledMsg;
@@ -46,6 +54,9 @@ public class ShowErrorActivity extends Activity {
             this.mRolledMsg = mRolledMsg;
         }
 
+        /**
+         * アクティビティが利用可能な場合、エラーダイアログを表示します。
+         */
         @Override
         public void executeWithActivity(Activity activity) {
             if(mThrowable instanceof ContextExecutorTask) {
@@ -55,6 +66,9 @@ public class ShowErrorActivity extends Activity {
             }
         }
 
+        /**
+         * アクティビティが利用できない場合、通知でエラーを表示します。
+         */
         @Override
         public void executeWithApplication(Context context) {
             Intent showErrorIntent = new Intent(context, ShowErrorActivity.class);
@@ -70,10 +84,10 @@ public class ShowErrorActivity extends Activity {
     }
 
     /**
-     * Install remote dialog handling onto a dialog. This should be used when the dialog is planned to be presented
-     * through Tools.showError or Tools.showErrorRemote as a Throwable implementing a ContextExecutorTask.
-     * @param callerActivity the activity provided by the ContextExecutorTask.executeWithActivity
-     * @param builder the alert dialog builder.
+     * リモートダイアログ処理をダイアログにインストールします。
+     * ShowErrorActivity経由で表示されるダイアログは、閉じられたらアクティビティも終了します。
+     * @param callerActivity ContextExecutorTask.executeWithActivityから提供されるアクティビティ
+     * @param builder アラートダイアログビルダー
      */
     public static void installRemoteDialogHandling(Activity callerActivity, @NonNull AlertDialog.Builder builder) {
         if (callerActivity instanceof ShowErrorActivity) {

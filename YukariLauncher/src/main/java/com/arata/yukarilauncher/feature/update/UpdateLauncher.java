@@ -43,6 +43,9 @@ public final class UpdateLauncher {
     private Timer timer;
     private boolean isCanceled = false;
 
+/**
+ * UpdateLauncherを構築します
+ */
     public UpdateLauncher(Context context, LauncherVersion launcherVersion) {
         this.context = context;
         this.launcherVersion = launcherVersion;
@@ -56,6 +59,9 @@ public final class UpdateLauncher {
                 );
     }
 
+/**
+ * startメソッド
+ */
     public void start() {
         this.call.enqueue(new Callback() {
             @Override
@@ -130,6 +136,9 @@ public final class UpdateLauncher {
         });
     }
 
+/**
+ * finishメソッド
+ */
     private void finish(File outputFile) {
         handleDialog(Dialog::dismiss);
         timer.cancel();
@@ -137,12 +146,18 @@ public final class UpdateLauncher {
         UpdateUtils.installApk(context, outputFile);
     }
 
+/**
+ * handleDialogメソッド
+ */
     public void handleDialog(Consumer<ProgressDialog> func) {
         if (UpdateLauncher.this.dialog != null) {
             runInUIThread(() -> func.accept(UpdateLauncher.this.dialog));
         }
     }
 
+/**
+ * handleDownloadErrorメソッド
+ */
     private void handleDownloadError(Exception e) {
         if (isCanceled) {
             //已经取消了下载，不处理取消带来的任何异常
@@ -156,6 +171,9 @@ public final class UpdateLauncher {
         Logging.e("Update Launcher", "There was an exception downloading the update!", e);
     }
 
+/**
+ * stopメソッド
+ */
     private void stop() {
         this.isCanceled = true;
         this.call.cancel();

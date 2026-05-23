@@ -29,17 +29,29 @@ import java.util.Map;
  */
 public final class StringUtils {
 
+    /**
+     * ユーティリティクラスのプライベートコンストラクタ。
+     */
     private StringUtils() {
     }
 
+    /**
+     * 文字が変数名の開始文字として有効かどうかを判定します。
+     */
     private static boolean isVarNameStart(char ch) {
         return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_';
     }
 
+    /**
+     * 文字が変数名の一部として有効かどうかを判定します。
+     */
     private static boolean isVarNamePart(char ch) {
         return isVarNameStart(ch) || (ch >= '0' && ch <= '9');
     }
 
+    /**
+     * 指定された位置から変数名の終端を検索します。
+     */
     private static int findVarEnd(String str, int offset) {
         if (offset < str.length() - 1 && isVarNameStart(str.charAt(offset))) {
             int end = offset + 1;
@@ -55,10 +67,22 @@ public final class StringUtils {
         return -1;
     }
 
+    /**
+     * 文字列をトークン化します。
+     * @param str 入力文字列
+     * @return トークンのリスト
+     */
     public static List<String> tokenize(String str) {
         return tokenize(str, null);
     }
 
+    /**
+     * 変数置換を行いながら文字列をトークン化します。
+     * 引用符で囲まれた文字列と変数展開を適切に処理します。
+     * @param str 入力文字列
+     * @param vars 変数マップ
+     * @return トークンのリスト
+     */
     public static List<String> tokenize(String str, Map<String, String> vars) {
         if (StringUtilsKt.isBlank(str)) {
             return new ArrayList<>();
@@ -68,7 +92,7 @@ public final class StringUtils {
             vars = Collections.emptyMap();
         }
 
-        // Split the string with ' and space cleverly.
+        // 引用符とスペースを適切に処理して文字列を分割
         ArrayList<String> parts = new ArrayList<>();
         int varEnd;
 
@@ -164,14 +188,19 @@ public final class StringUtils {
     }
 
     /**
-     * Class for computing the longest common subsequence between strings.
+     * 文字列間の最長共通部分列（LCS）を計算するためのクラス。
      */
     public static final class LongestCommonSubsequence {
-        // We reuse dynamic programming storage array here to reduce allocations.
+        // 動的計画法の配列を再利用して割り当てを削減
         private final int[][] f;
         private final int maxLengthA;
         private final int maxLengthB;
 
+        /**
+         * 最大長を指定してLCS計算インスタンスを構築します。
+         * @param maxLengthA 文字列Aの最大長
+         * @param maxLengthB 文字列Bの最大長
+         */
         public LongestCommonSubsequence(int maxLengthA, int maxLengthB) {
             this.maxLengthA = maxLengthA;
             this.maxLengthB = maxLengthB;
@@ -181,6 +210,12 @@ public final class StringUtils {
             }
         }
 
+        /**
+         * 2つの文字列間の最長共通部分列の長さを計算します。
+         * @param a 最初の文字列
+         * @param b 2番目の文字列
+         * @return LCSの長さ
+         */
         public int calc(CharSequence a, CharSequence b) {
             if (a.length() > maxLengthA || b.length() > maxLengthB) {
                 throw new IllegalArgumentException("Too large length");

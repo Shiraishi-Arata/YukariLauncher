@@ -9,13 +9,17 @@ import java.text.DecimalFormat
 
 class NumberWithUnits {
     companion object {
-        private val UNITS_EN = arrayOf("", "K", "M") //英文单位：千、百万
+        private val UNITS_EN = arrayOf("", "K", "M")
         private val UNITS_ZH = arrayOf(
             "",
             getString(R.string.generic_wan),
             getString(R.string.generic_yi)
-        ) //中文单位:万、亿
+        )
 
+        /**
+         * 数値に単位を付けてフォーマットする
+         * 英語の場合は千（K）・百万（M）、中国語の場合は万・億の単位を使用する
+         */
         @JvmStatic
         fun formatNumberWithUnit(number: Long, isEnglish: Boolean): String {
             return if (isEnglish) {
@@ -25,14 +29,24 @@ class NumberWithUnits {
             }
         }
 
+        /**
+         * 中国語の単位（万・億）で数値をフォーマットする
+         */
         private fun formatNumberWithUnitChinese(number: Long): String {
             return formatNumber(number, 10000, UNITS_ZH)
         }
 
+        /**
+         * 英語の単位（K・M）で数値をフォーマットする
+         */
         private fun formatNumberWithUnitEnglish(number: Long): String {
             return formatNumber(number, 1000, UNITS_EN)
         }
 
+        /**
+         * 指定されたステップ値と単位配列を使用して数値をフォーマットする
+         * 単位が空の場合はフォーマットせずに元の値を返す
+         */
         private fun formatNumber(number: Long, stage: Int, units: Array<String>): String {
             var bigDecimal = BigDecimal(number)
             var unitIndex = 0
@@ -42,7 +56,7 @@ class NumberWithUnits {
                 unitIndex++
             }
 
-            //检查是否为空的单位，如果是，那么就不做格式化，直接返回原始值
+            // 単位が空の場合はフォーマットせずに元の値を返す
             if (units[unitIndex].isEmpty()) {
                 return number.toString()
             } else {

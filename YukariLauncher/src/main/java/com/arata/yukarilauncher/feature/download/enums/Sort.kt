@@ -2,6 +2,10 @@ package com.arata.yukarilauncher.feature.download.enums
 
 import com.arata.yukarilauncher.R
 
+/**
+ * 検索結果の並び替え方法を定義する列挙型。
+ * 各プラットフォーム（CurseForge、Modrinth）における並び替えパラメータを保持する。
+ */
 enum class Sort(val resNameID: Int, val curseforge: Int, val modrinth: String) {
     RELEVANT(R.string.download_ui_sort_by_relevant, 1, "relevance"),
     DOWNLOADS(R.string.download_ui_sort_by_total_downloads, 6, "downloads"),

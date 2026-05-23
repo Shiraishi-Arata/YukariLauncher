@@ -21,6 +21,10 @@ import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 import java.util.function.Consumer
 
+/**
+ * Fabric系API Mod（Fabric API、QSL等）をダウンロードするための抽象フラグメントです。
+ * Modrinthからプロジェクト情報を取得し、Minecraftバージョンに合ったAPIを選択してインストールします。
+ */
 abstract class DownloadFabricLikeApiModFragment(
     private val addon: Addon,
     private val projectId: String,
@@ -29,6 +33,9 @@ abstract class DownloadFabricLikeApiModFragment(
     private val icon: Int
 ) : ModListFragment() {
 
+    /**
+     * ビューの初期設定を行います。アイコン、タイトル、リンクをセットします。
+     */
     override fun refreshCreatedView() {
         setIcon(ContextCompat.getDrawable(fragmentActivity!!, icon))
         setTitleText(addon.addonName)
@@ -37,14 +44,27 @@ abstract class DownloadFabricLikeApiModFragment(
         setReleaseCheckBoxGone()
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     * @return 非同期タスクのFuture
+     */
     override fun initRefresh(): Future<*>? {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     * @return 非同期タスクのFuture
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * 指定されたモードでデータを更新します。
+     * @param force 強制更新するかどうか
+     * @return 非同期タスクのFuture
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -64,6 +84,11 @@ abstract class DownloadFabricLikeApiModFragment(
         }
     }
 
+    /**
+     * Modrinthから指定されたプロジェクトのバージョン情報を検索します。
+     * @param force 強制更新するかどうか
+     * @return 検索結果のバージョンリスト
+     */
     private fun search(force: Boolean): List<VersionItem> {
         val mcVersion = arguments?.getString(BUNDLE_MC_VERSION) ?: throw IllegalArgumentException("The Minecraft version is not passed")
 
@@ -83,6 +108,9 @@ abstract class DownloadFabricLikeApiModFragment(
         return emptyList()
     }
 
+    /**
+     * 空の状態をUIに反映します。
+     */
     private fun empty() {
         TaskExecutors.runInUIThread {
             componentProcessing(false)
@@ -90,6 +118,10 @@ abstract class DownloadFabricLikeApiModFragment(
         }
     }
 
+    /**
+     * 取得したバージョン情報をアダプターに設定してUIに表示します。
+     * @param versions バージョン情報のリスト
+     */
     private fun processInfo(versions: List<VersionItem>) {
         currentTask?.apply { if (isCancelled) return }
 

@@ -18,11 +18,18 @@ import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 import java.util.function.Consumer
 
+/**
+ * Forgeをダウンロードするためのフラグメントです。
+ * Forgeのバージョン一覧を取得し、選択してインストールできます。
+ */
 class DownloadForgeFragment : ModListFragment() {
     companion object {
         const val TAG: String = "DownloadForgeFragment"
     }
 
+    /**
+     * ビューの初期設定を行います。
+     */
     override fun refreshCreatedView() {
         setIcon(ContextCompat.getDrawable(fragmentActivity!!, R.drawable.ic_anvil))
         setTitleText("Forge")
@@ -31,14 +38,27 @@ class DownloadForgeFragment : ModListFragment() {
         setReleaseCheckBoxGone() //隐藏“仅展示正式版”选择框，在这里没有用处
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     * @return 非同期タスクのFuture
+     */
     override fun initRefresh(): Future<*> {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     * @return 非同期タスクのFuture
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * 指定されたモードでForgeのバージョン一覧を取得します。
+     * @param force 強制更新するかどうか
+     * @return 非同期タスクのFuture
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -58,6 +78,9 @@ class DownloadForgeFragment : ModListFragment() {
         }
     }
 
+    /**
+     * 空の状態をUIに反映します。
+     */
     private fun empty() {
         TaskExecutors.runInUIThread {
             componentProcessing(false)
@@ -65,6 +88,10 @@ class DownloadForgeFragment : ModListFragment() {
         }
     }
 
+    /**
+     * Forgeのバージョン情報を処理し、アダプターに設定します。
+     * @param forgeVersions Forgeのバージョンリスト
+     */
     private fun processModDetails(forgeVersions: List<String>?) {
         forgeVersions ?: run {
             empty()
@@ -77,7 +104,7 @@ class DownloadForgeFragment : ModListFragment() {
         forgeVersions.forEach(Consumer { forgeVersion: String ->
             currentTask?.apply { if (isCancelled) return@Consumer }
 
-            //查找并分组Minecraft版本与Forge版本
+            // MinecraftバージョンとForgeバージョンを検索してグループ化
             val dashIndex = forgeVersion.indexOf("-")
             val gameVersion = forgeVersion.substring(0, dashIndex)
             addIfAbsent(mForgeVersions, gameVersion, forgeVersion)

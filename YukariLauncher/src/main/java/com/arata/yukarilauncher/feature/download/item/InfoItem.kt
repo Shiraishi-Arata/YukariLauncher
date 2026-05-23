@@ -32,10 +32,16 @@ open class InfoItem(
     val iconUrl: String?,
     val category: List<Category>
 ) {
+/**
+ * copyする
+ */
     fun copy() = InfoItem(
         classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category
     )
 
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "InfoItem(" +
                 "classify='$classify', " +

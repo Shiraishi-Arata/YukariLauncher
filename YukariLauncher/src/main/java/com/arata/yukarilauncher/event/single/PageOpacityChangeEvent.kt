@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.event.single
 
 /**
- * 通知LauncherActivity实时变更页面不透明度
+ * LauncherActivityにページの不透明度のリアルタイム変更を通知するイベント
  */
 class PageOpacityChangeEvent(val progress: Int)

@@ -16,16 +16,28 @@ import androidx.annotation.Nullable;
 import com.arata.yukarilauncher.R;
 
 /**
- * This class is intended for sending characters used in chat via the virtual keyboard
+ * このクラスは、仮想キーボードを介してチャットで使用される文字を送信するためのものです
  */
 public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText {
     public static final String TEXT_FILLER = "                              ";
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public TouchCharInput(@NonNull Context context) {
         this(context, null);
     }
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public TouchCharInput(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.editTextStyle);
     }
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public TouchCharInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setup();
@@ -36,8 +48,8 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
     private CharacterSenderStrategy mCharacterSender;
 
     /**
-     * When we change from app to app, the keyboard gets disabled.
-     * So, we disable the object
+     * アプリ間を移動するとキーボードが無効になります。
+     * そのため、オブジェクトを無効化します
      */
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
@@ -46,8 +58,8 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     /**
-     * Intercepts the back key to disable focus
-     * Does not affect the rest of the activity.
+     * バックキーをインターセプトしてフォーカスを無効にします
+     * アクティビティの残りの部分には影響しません。
      */
     @Override
     public boolean onKeyPreIme(final int keyCode, final KeyEvent event) {
@@ -59,7 +71,7 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
 
 
     /**
-     * Toggle on and off the soft keyboard, depending of the state
+     * 状態に応じてソフトキーボードのオン/オフを切り替えます
      */
     public void switchKeyboardState(){
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
@@ -75,8 +87,8 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
 
 
     /**
-     * Clear the EditText from any leftover inputs
-     * It does not affect the in-game input
+     * EditTextから残りの入力をクリアします
+     * ゲーム内の入力には影響しません
      */
     public void clear(){
         mIsDoingInternalChanges = true;
@@ -84,13 +96,15 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
         // of the TextView.
         Editable editable = getEditableText();
         editable.clear();
-        //Braille space, doesn't trigger keyboard auto-complete
+        // 点字スペース。キーボードの自動補完をトリガーしない
         editable.append(TEXT_FILLER);
         Selection.setSelection(editable, TEXT_FILLER.length());
         mIsDoingInternalChanges = false;
     }
 
-    /** Regain ability to exist, take focus and have some text being input */
+    /**
+     * 存在、フォーカス取得、テキスト入力の機能を回復します。
+     */
     public void enable(){
         setEnabled(true);
         setFocusable(true);
@@ -98,7 +112,9 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
         requestFocus();
     }
 
-    /** Lose ability to exist, take focus and have some text being input */
+    /**
+     * 存在、フォーカス取得、テキスト入力の機能を失います。
+     */
     public void disable(){
         clear();
         setVisibility(GONE);
@@ -107,18 +123,24 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
         //setFocusable(false);
     }
 
-    /** Send the enter key. */
+    /**
+     * Enterキーを送信します。
+     */
     private void sendEnter(){
         mCharacterSender.sendEnter();
         clear();
     }
 
-    /** Just sets the char sender that should be used. */
+    /**
+     * 使用する文字送信戦略を設定します。
+     */
     public void setCharacterSender(CharacterSenderStrategy characterSender){
         mCharacterSender = characterSender;
     }
 
-    /** This function deals with anything that has to be executed when the constructor is called */
+    /**
+     * コンストラクタが呼び出されたときに実行する必要がある処理を行います。
+     */
     private void setup(){
         // Using TextWatcher instead of overriding onTextChanged because some Huawei firmware
         // calls setText in constructor, causing havoc for our listener
@@ -133,14 +155,18 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
         disable();
     }
     private class InputTextWatcher implements android.text.TextWatcher {
+/**
+ * 「before Text Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
         /**
-         * We take the new chars, and send them to the game.
-         * If less chars are present, remove some.
-         * The text is always cleaned up.
+         * 新しい文字を取得してゲームに送信します。
+         * 文字数が少ない場合は、いくつか削除します。
+         * テキストは常にクリーンアップされます。
          */
         @Override
         public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
@@ -155,6 +181,10 @@ public class TouchCharInput extends androidx.appcompat.widget.AppCompatEditText 
                 }
             }
         }
+/**
+ * 「after Text Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public void afterTextChanged(Editable editable) {
             if(mIsDoingInternalChanges) return;

@@ -8,6 +8,10 @@ import androidx.appcompat.app.AlertDialog
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.setting.unit.StringSettingUnit
 
+/**
+ * リスト選択式の設定ラッパークラスです。
+ * ダイアログで選択肢を表示し、選択値を設定ユニットに保存します。
+ */
 @SuppressLint("UseSwitchCompatOrMaterialCode")
 class ListSettingsWrapper(
     val context: Context,
@@ -20,6 +24,9 @@ class ListSettingsWrapper(
     val onValueSelected: ((selectedValue: String) -> Boolean)? = null
 ) : AbstractSettingsWrapper(mainView) {
 
+    /**
+     * リソースIDから選択肢を指定するコンストラクタです。
+     */
     constructor(
         context: Context,
         unit: StringSettingUnit,
@@ -35,6 +42,9 @@ class ListSettingsWrapper(
         null
     )
 
+    /**
+     * リソースIDから選択肢を指定し、選択時のコールバックを設定するコンストラクタです。
+     */
     constructor(
         context: Context,
         unit: StringSettingUnit,
@@ -51,11 +61,17 @@ class ListSettingsWrapper(
         onValueSelected
     )
 
+    /**
+     * 初期化ブロックです。リスト値の表示を更新し、クリックリスナーを設定します。
+     */
     init {
         updateListViewValue()
         mainView.setOnClickListener { createAListDialog() }
     }
 
+    /**
+     * 選択肢ダイアログを作成して表示します。
+     */
     private fun createAListDialog() {
         val index = entryValues.indexOf(unit.getValue())
         AlertDialog.Builder(context, R.style.CustomAlertDialogTheme)
@@ -78,6 +94,9 @@ class ListSettingsWrapper(
             .show()
     }
 
+    /**
+     * 現在の設定値に基づいてリストビューの表示を更新します。
+     */
     private fun updateListViewValue() {
         val index = entryValues.indexOf(unit.getValue()).takeIf { it in entryValues.indices } ?: run {
             unit.reset()

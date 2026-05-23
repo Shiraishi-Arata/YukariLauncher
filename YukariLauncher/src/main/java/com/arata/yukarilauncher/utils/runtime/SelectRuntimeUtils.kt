@@ -7,6 +7,13 @@ import com.arata.yukarilauncher.ui.dialog.SelectRuntimeDialog
 
 class SelectRuntimeUtils {
     companion object {
+        /**
+         * ランタイム選択処理を実行する
+         * 設定に応じて、ダイアログ表示・デフォルト使用・自動選択のいずれかの動作を行う
+         * @param context コンテキスト
+         * @param dialogTitle ダイアログのタイトル（省略可）
+         * @param selectedListener 選択結果を受け取るリスナー
+         */
         @JvmStatic
         fun selectRuntime(context: Context, dialogTitle: String?, selectedListener: RuntimeSelectedListener) {
             TaskExecutors.runInUIThread {

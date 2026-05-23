@@ -13,6 +13,9 @@ public class ModInfo {
     private final String description;
     private final String[] authors;
 
+/**
+ * ModInfoする
+ */
     public ModInfo(String id, String version, String name, String description, String[] authors) {
         this.id = id;
         this.version = version;
@@ -45,6 +48,11 @@ public class ModInfo {
         return description;
     }
 
+/**
+ * JSON配列から著者リストを抽出する
+ * @param array 著者JSON配列
+ * @return 著者名リスト
+ */
     public String[] getAuthors() {
         return authors;
     }

@@ -2,6 +2,10 @@ package com.arata.yukarilauncher.feature.mod.parser
 
 import com.arata.yukarilauncher.setting.unit.StringSettingUnit
 
+/**
+ * 全Modの互換性チェック設定を管理する列挙型。
+ * 各Modのチェック状態を設定ユニットとして保持する。
+ */
 enum class AllModCheckSettings(val unit: StringSettingUnit) {
     TOUCH_CONTROLLER(StringSettingUnit("modCheckTouchController", "0")),
     PHYSICS_MOD(StringSettingUnit("modCheckPhysics", "0")),

@@ -3,25 +3,25 @@ package net.kdt.pojavlaunch.customcontrols.mouse;
 import android.os.Handler;
 
 /**
- * This class implements an abstract "validator gesture", meant as a base for implementation of
- * more complex gestures with finger position tracking and such.
+ * このクラスは抽象的な「バリデータージェスチャー」を実装し、
+ * 指の位置追跡などを使用したより複雑なジェスチャーのベースとして使用されます。
  */
 public abstract class ValidatorGesture implements Runnable{
     private final Handler mHandler;
     private boolean mGestureActive;
 
     /**
-     * @param mHandler the Handler that will be used for calling back the checkAndTrigger() method.
-     *                 This Handler should run on the same thread as the callee of submit()/cancel()
+     * @param mHandler checkAndTrigger()メソッドのコールバックに使用されるHandler。
+     * このHandlerはsubmit()/cancel()の呼び出し元と同じスレッドで実行する必要があります。
      */
     public ValidatorGesture(Handler mHandler) {
         this.mHandler = mHandler;
     }
 
     /**
-     * Submit the gesture, starting the timer and marking this gesture as "active".
-     * If the gesture was already active, this call will be ignored
-     * @return true if the gesture was submitted, false if the call was ignored
+     * ジェスチャーを送信し、タイマーを開始してこのジェスチャーを「アクティブ」としてマークします。
+     * ジェスチャーが既にアクティブだった場合、この呼び出しは無視されます
+     * @return ジェスチャーが送信された場合はtrue、無視された場合はfalse
      */
     public final boolean submit() {
         if(mGestureActive) return false;
@@ -31,11 +31,11 @@ public abstract class ValidatorGesture implements Runnable{
     }
 
     /**
-     * Cancel the gesture, stopping the timer and marking this gesture as "inactive".
-     * If the gesture was already inactive, this call will be ignored.
-     * @param isSwitching true if this gesture was cancelled due to user interaction (the user let go of the finger)
-     *                    false if this gesture is cancelled due a request from the programmer or the OS.
-     *                    Note that returning false from checkAndTrigger() counts as user interaction.
+     * ジェスチャーをキャンセルし、タイマーを停止して「非アクティブ」としてマークします。
+     * ジェスチャーが既に非アクティブだった場合、この呼び出しは無視されます。
+     * @param isSwitching ユーザー操作によりジェスチャーがキャンセルされた場合はtrue（ユーザーが指を離した）、
+     * プログラマーまたはOSからの要求でキャンセルされた場合はfalse。
+     * checkAndTrigger()からfalseを返すこともユーザー操作としてカウントされます。
      */
     public final void cancel(boolean isSwitching) {
         if(!mGestureActive) return;
@@ -43,7 +43,10 @@ public abstract class ValidatorGesture implements Runnable{
         onGestureCancelled(isSwitching);
         mGestureActive = false;
     }
-
+/**
+ * 「run」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     @Override
     public final void run() {
         if(checkAndTrigger()) return;
@@ -52,23 +55,23 @@ public abstract class ValidatorGesture implements Runnable{
     }
 
     /**
-     * This method will be called during gesture submission to determine the gesture check duration.
-     * @return the required gesture check duration in milliseconds
+     * このメソッドはジェスチャー送信時に呼び出され、チェック時間を決定します。
+     * @return 必要なジェスチャーチェック時間（ミリ秒）
      */
     protected abstract int getGestureDelay();
 
     /**
-     * This method will be called after getGestureDelay() milliseconds, if the gesture was not cancelled.
-     * @return false if you want to mark this gesture as "inactive"
-     *         true otherwise
+     * このメソッドは、ジェスチャーがキャンセルされなかった場合、getGestureDelay()ミリ秒後に呼び出されます。
+     * @return このジェスチャーを「非アクティブ」としてマークする場合はfalse
+     * それ以外の場合はtrue
      */
     public abstract boolean checkAndTrigger();
 
     /**
-     * This method will be called if the gesture was cancelled using the cancel() method or by returning false
-     * from checkAndTrigger().
-     * @param isSwitching true if this gesture was cancelled due to user interaction (the user let go of the finger)
-     *                    false if this gesture is cancelled due a request from the programmer or the OS.
+     * このメソッドは、cancel()メソッドまたはfalseの返却によってジェスチャーがキャンセルされた場合に呼び出されます。
+     * checkAndTrigger()から呼び出されます。
+     * @param isSwitching ユーザー操作によりジェスチャーがキャンセルされた場合はtrue（ユーザーが指を離した）、
+     * プログラマーまたはOSからの要求でキャンセルされた場合はfalse。
      */
     public abstract void onGestureCancelled(boolean isSwitching);
 }

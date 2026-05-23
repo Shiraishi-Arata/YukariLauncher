@@ -61,6 +61,9 @@ object AccountsManager {
     }
 
     @JvmOverloads
+/**
+ * performLoginする
+ */
     fun performLogin(
         context: Context,
         minecraftAccount: MinecraftAccount,
@@ -74,6 +77,9 @@ object AccountsManager {
         }
     }
 
+/**
+ * reloadする
+ */
     fun reload() {
         synchronized(accountsLock) {
             reloadInternal()
@@ -94,10 +100,16 @@ object AccountsManager {
     val allAccounts: List<MinecraftAccount>
         get() = synchronized(accountsLock) { accounts.toList() }
 
+/**
+ * hasMicrosoftAccountする
+ */
     fun hasMicrosoftAccount(): Boolean = synchronized(accountsLock) {
         accounts.any(::isMicrosoftAccount)
     }
 
+/**
+ * reloadInternalする
+ */
     private fun reloadInternal() {
         accounts.clear()
         File(PathManager.DIR_ACCOUNT_NEW).takeIf { it.exists() && it.isDirectory }
@@ -116,6 +128,9 @@ object AccountsManager {
         Logging.i("AccountsManager", "Reloaded ${accounts.size} accounts")
     }
 
+/**
+ * handlePresentedExceptionする
+ */
     private fun handlePresentedException(activity: Context, exception: PresentedException) {
         exception.cause?.let {
             Tools.showError(activity, exception.toString(activity), it)

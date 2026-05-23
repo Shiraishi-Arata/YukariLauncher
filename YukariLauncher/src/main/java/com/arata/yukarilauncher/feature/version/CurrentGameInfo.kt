@@ -9,9 +9,9 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * 当前游戏状态信息（支持旧配置迁移）
- * @property version 当前选择的版本名称
- * @property favoritesMap 收藏夹映射表 <收藏夹名称, 包含的版本集合>
+ * 現在のゲーム状態情報（旧設定からの移行をサポート）
+ * @property version 現在選択されているバージョン名
+ * @property favoritesMap お気に入りマッピングテーブル <お気に入り名, 含まれるバージョンのセット>
  */
 data class CurrentGameInfo(
     @SerializedName("version")
@@ -20,7 +20,7 @@ data class CurrentGameInfo(
     val favoritesMap: MutableMap<String, MutableSet<String>> = ConcurrentHashMap()
 ) {
     /**
-     * 原子化保存当前状态到文件
+     * 現在の状態を原子的にファイルに保存する
      */
     fun saveCurrentInfo() {
         val infoFile = getInfoFile()
@@ -35,12 +35,19 @@ data class CurrentGameInfo(
     }
 
     companion object {
+        /**
+         * @return 現在のゲーム情報ファイルを取得する
+         */
         private fun getInfoFile() = File(ProfilePathHome.getGameHome(), "CurrentInfo.cfg")
 
+        /**
+         * @return 旧バージョンのゲーム情報ファイルを取得する
+         */
         private fun getLegacyInfoFile() = File(ProfilePathHome.getGameHome(), "CurrentVersion.cfg")
 
         /**
-         * 刷新并返回最新的游戏信息（自动处理旧配置迁移）
+         * 最新のゲーム情報を取得する（旧設定の移行を自動処理）
+         * @return 現在のゲーム情報
          */
         fun refreshCurrentInfo(): CurrentGameInfo {
             val infoFile = getInfoFile()
@@ -58,11 +65,21 @@ data class CurrentGameInfo(
             }
         }
 
+        /**
+         * JSONファイルからCurrentGameInfoを読み込む
+         * @param infoFile JSONファイル
+         * @return 読み込まれたCurrentGameInfo
+         */
         private fun loadFromJsonFile(infoFile: File): CurrentGameInfo {
             return Tools.GLOBAL_GSON.fromJson(infoFile.readText(), CurrentGameInfo::class.java)
                 .also { info -> checkNotNull(info) { "Deserialization returned null" } }
         }
 
+        /**
+         * 旧設定ファイルから新形式に移行する
+         * @param infoFile 旧設定ファイル
+         * @return 移行後のCurrentGameInfo
+         */
         private fun migrateLegacyConfig(infoFile: File): CurrentGameInfo {
             return CurrentGameInfo().apply {
                 version = infoFile.takeIf { it.exists() }?.readText() ?: ""
@@ -70,8 +87,16 @@ data class CurrentGameInfo(
             }.applyPostActions()
         }
 
+        /**
+         * 新しいデフォルト設定を作成する
+         * @return 新しいCurrentGameInfo
+         */
         private fun createNewConfig() = CurrentGameInfo().applyPostActions()
 
+        /**
+         * 保存処理を含む後処理を実行する
+         * @return 処理後のCurrentGameInfo
+         */
         private fun CurrentGameInfo.applyPostActions(): CurrentGameInfo {
             saveCurrentInfo()
             return this

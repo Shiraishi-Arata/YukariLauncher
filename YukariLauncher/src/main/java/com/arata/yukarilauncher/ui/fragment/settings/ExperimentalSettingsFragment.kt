@@ -12,10 +12,16 @@ import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SeekBarSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapper
 
+/**
+ * 実験的設定フラグメント
+ */
 class ExperimentalSettingsFragment :
     AbstractSettingsFragment(R.layout.settings_fragment_experimental, SettingCategory.EXPERIMENTAL) {
     private lateinit var binding: SettingsFragmentExperimentalBinding
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,6 +31,9 @@ class ExperimentalSettingsFragment :
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
 
@@ -54,6 +63,9 @@ class ExperimentalSettingsFragment :
         )
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.root, Animations.BounceInDown))
     }

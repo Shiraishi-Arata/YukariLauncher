@@ -25,7 +25,19 @@ import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
 
 class ModrinthModHelper {
     companion object {
+        /**
+         * Mod/Modパックの検索を実行する
+         * @param api APIハンドラー
+         * @param lastResult 前回の検索結果
+         * @param filters 検索フィルター
+         * @param type プロジェクトタイプ（"mod"または"modpack"）
+         * @param classify 分類タイプ
+         * @return 検索結果
+         */
         @Throws(Throwable::class)
+/**
+ * modLikeSearchする
+ */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
             if (filters.category != Category.ALL && filters.category.modrinthName == null) {
                 throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
@@ -47,7 +59,7 @@ class ModrinthModHelper {
                 val modloaders: MutableList<ModLoader> = ArrayList()
                 for (category in categories) {
                     val string = category.asString
-                    if (string == "datapack") continue@responseHit //这里经常能搜到数据包，很奇怪...
+                    if (string == "datapack") continue@responseHit // ここでよくデータパックが検索にヒットするため、不思議...
                     ModLoaderUtils.getModLoaderByModrinth(string)?.let { modloaders.add(it) }
                 }
 
@@ -72,7 +84,17 @@ class ModrinthModHelper {
             return ModrinthCommonUtils.returnResults(lastResult, infoItems, response, responseHits)
         }
 
+        /**
+         * Modのバージョン一覧を取得する（依存関係情報付き）
+         * @param api APIハンドラー
+         * @param infoItem 対象のInfoItem
+         * @param force キャッシュを無視するかどうか
+         * @return ModVersionItemのリスト
+         */
         @Throws(Throwable::class)
+/**
+ * getModVersionsする
+ */
         internal fun getModVersions(api: ApiHandler, infoItem: InfoItem, force: Boolean): List<VersionItem>? {
             return ModrinthCommonUtils.getCommonVersions(
                 api, infoItem, force, InfoCache.ModVersionCache
@@ -129,7 +151,17 @@ class ModrinthModHelper {
             }
         }
 
+        /**
+         * Modパックのバージョン一覧を取得する
+         * @param api APIハンドラー
+         * @param infoItem 対象のInfoItem
+         * @param force キャッシュを無視するかどうか
+         * @return ModLikeVersionItemのリスト
+         */
         @Throws(Throwable::class)
+/**
+ * getModPackVersionsする
+ */
         internal fun getModPackVersions(api: ApiHandler, infoItem: InfoItem, force: Boolean): List<ModLikeVersionItem>? {
             return ModrinthCommonUtils.getCommonVersions(
                 api, infoItem, force, InfoCache.ModPackVersionCache
@@ -149,6 +181,14 @@ class ModrinthModHelper {
             }
         }
 
+        /**
+         * JSON配列からModLoaderのリストを取得する
+         * @param jsonArray ローダー名のJSON配列
+         * @return ModLoaderのリスト
+         */
+/**
+ * getModLoadersする
+ */
         private fun getModLoaders(jsonArray: JsonArray): List<ModLoader> {
             val modLoaders: MutableList<ModLoader> = ArrayList()
             jsonArray.forEach {

@@ -35,11 +35,17 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final int mType;
     private boolean mIsDeleting = false;
 
+/**
+ * RTRecyclerViewAdapterを構築します
+ */
     public RTRecyclerViewAdapter(List<Runtime> mData) {
         this.mData = mData;
         this.mType = TYPE_MODE_EDIT;
     }
 
+/**
+ * RTRecyclerViewAdapterを構築します
+ */
     public RTRecyclerViewAdapter(List<Runtime> mData, RuntimeSelectedListener listener, SelectRuntimeDialog dialog) {
         this.mData = mData;
         this.mType = TYPE_MODE_SELECT;
@@ -78,6 +84,10 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return 0;
     }
 
+/**
+ * defaultRuntimeを取得する
+ * @return defaultRuntimeの値
+ */
     public boolean isDefaultRuntime(Runtime rt) {
         return Objects.equals(AllSettings.getDefaultRuntime().getValue(), rt.name);
     }
@@ -88,26 +98,45 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @SuppressLint("NotifyDataSetChanged") //not a problem, given the typical size of the list
+/**
+ * defaultを設定する
+ * @param default 設定値
+ */
     public void setDefault(Runtime rt) {
         AllSettings.getDefaultRuntime().put(rt.name).save();
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged") //not a problem, given the typical size of the list
+/**
+ * isEditingを設定する
+ * @param isEditing 設定値
+ */
     public void setIsEditing(boolean isEditing) {
         mIsDeleting = isEditing;
         notifyDataSetChanged();
     }
 
+/**
+ * isEditingを取得する
+ * @return isEditingの値
+ */
     public boolean getIsEditing(){
         return mIsDeleting;
     }
 
+/**
+ * javaVersionNameを取得する
+ * @return javaVersionNameの値
+ */
     private String getJavaVersionName(Runtime runtime) {
         return runtime.name.replace(".tar.xz", "")
                 .replace("-", " ");
     }
 
+/**
+ * RTSelectViewHolder内部クラス
+ */
     public class RTSelectViewHolder extends RecyclerView.ViewHolder {
         final View mainView;
         final Context mContext;
@@ -115,6 +144,9 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final TextView mFullJavaVersionTextView;
         final TextView mProvidedByLauncherTextView;
 
+/**
+ * RTSelectViewHolderを構築します
+ */
         public RTSelectViewHolder(@NonNull View itemView) {
             super(itemView);
             mainView = itemView;
@@ -124,6 +156,9 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             mProvidedByLauncherTextView = itemView.findViewById(R.id.multirt_provided_by_launcher);
         }
 
+/**
+ * bindRuntimeメソッド
+ */
         public void bindRuntime(Runtime runtime) {
             if (!Objects.equals(runtime.name, "auto")) {
                 mProvidedByLauncherTextView.setVisibility(runtime.isProvidedByLauncher ? View.VISIBLE : View.GONE);
@@ -151,12 +186,18 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
 
+/**
+ * selectRuntimeメソッド
+ */
         private void selectRuntime(String jreName) {
             if (mSelectedListener != null) mSelectedListener.onSelected(jreName);
             if (mDialog != null) mDialog.dismiss();
         }
     }
 
+/**
+ * RTEditViewHolder内部クラス
+ */
     public class RTEditViewHolder extends RecyclerView.ViewHolder {
         final TextView mJavaVersionTextView;
         final TextView mFullJavaVersionTextView;
@@ -168,6 +209,9 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         Runtime mCurrentRuntime;
         int mCurrentPosition;
 
+/**
+ * RTEditViewHolderを構築します
+ */
         public RTEditViewHolder(View itemView) {
             super(itemView);
             mJavaVersionTextView = itemView.findViewById(R.id.multirt_view_java_version);
@@ -183,6 +227,10 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         @SuppressLint("NotifyDataSetChanged") // same as all the other ones
+/**
+ * upOnClickListenersを設定する
+ * @param upOnClickListeners 設定値
+ */
         private void setupOnClickListeners() {
             mSetDefaultButton.setOnClickListener(v -> {
                 if(mCurrentRuntime != null) {
@@ -208,6 +256,9 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
         }
 
+/**
+ * bindRuntimeメソッド
+ */
         public void bindRuntime(Runtime runtime, int pos) {
             mCurrentRuntime = runtime;
             mCurrentPosition = pos;
@@ -238,6 +289,9 @@ public class RTRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             mSetDefaultButton.setVisibility(View.GONE);
         }
 
+/**
+ * updateButtonsVisibilityメソッド
+ */
         private void updateButtonsVisibility(Runtime runtime) {
             mSetDefaultButton.setVisibility(mIsDeleting ? View.INVISIBLE : View.VISIBLE);
             mDeleteButton.setVisibility(!mIsDeleting || runtime.isProvidedByLauncher ? View.INVISIBLE : View.VISIBLE);

@@ -24,7 +24,7 @@ import net.kdt.pojavlaunch.GrabListener;
 import org.lwjgl.glfw.CallbackBridge;
 
 /**
- * Class dealing with the virtual mouse
+ * 仮想マウスを扱うクラス
  */
 public class Touchpad extends View implements GrabListener, AbstractTouchpad {
     /* Whether the Touchpad should be displayed */
@@ -33,47 +33,70 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
     private Drawable mMousePointerDrawable;
     private int mLastCursorType = Integer.MIN_VALUE;
     private float mMouseX, mMouseY;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public Touchpad(@NonNull Context context) {
         this(context, null);
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public Touchpad(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    /** Enable the touchpad */
+    /**
+     * タッチパッドを有効にします。
+     */
     private void _enable(){
         setVisibility(VISIBLE);
         placeMouseAt(currentDisplayMetrics.widthPixels / 2f, currentDisplayMetrics.heightPixels / 2f);
     }
 
-    /** Disable the touchpad and hides the mouse */
+    /**
+     * タッチパッドを無効にしてマウスを非表示にします。
+     */
     private void _disable(){
         setVisibility(GONE);
     }
 
-    /** @return The new state, enabled or disabled */
+    /** @return 新しい状態（有効または無効） */
     public boolean switchState(){
         mDisplayState = !mDisplayState;
         if(!CallbackBridge.isGrabbing()) {
             if(mDisplayState) _enable();
+/**
+ * 「_disable」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
             else _disable();
         }
         return mDisplayState;
     }
-
+/**
+ * 「place Mouse At」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void placeMouseAt(float x, float y) {
         mMouseX = x;
         mMouseY = y;
         updateMousePosition();
     }
-
+/**
+ * 「send Mouse Position」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void sendMousePosition() {
         CallbackBridge.sendCursorPos((mMouseX * AllStaticSettings.scaleFactor), (mMouseY * AllStaticSettings.scaleFactor));
     }
-
+/**
+ * 「update Mouse Position」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateMousePosition() {
         sendMousePosition();
         // I wanted to implement a dirty rect for this, but it is ignored since API level 21
@@ -81,7 +104,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         // Let's hope the "internally calculated area" is good enough.
         invalidate();
     }
-
+/**
+ * Viewの描画処理を行います。
+ * このメソッドはシステムによって自動的に呼び出されます。
+ */
     @Override
     protected void onDraw(Canvas canvas) {
         int cursorType = CallbackBridge.getCurrentCursorType();
@@ -91,7 +117,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         canvas.translate(mMouseX, mMouseY);
         mMousePointerDrawable.draw(canvas);
     }
-
+/**
+ * 「init」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     private void init(){
         // Setup mouse pointer
         updateMouseDrawable();
@@ -108,7 +137,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         disable();
         mDisplayState = false;
     }
-
+/**
+ * 「update Mouse Scale」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void updateMouseScale() {
         Dimension mousescale = ImageUtils.resizeWithRatio(mMousePointerDrawable.getIntrinsicWidth(), mMousePointerDrawable.getIntrinsicHeight(),
                 AllSettings.getMouseScale().getValue());
@@ -117,7 +149,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         int[] hotspot = CursorDrawableUtils.getScaledHotspot(mMousePointerDrawable, scaledWidth, scaledHeight);
         mMousePointerDrawable.setBounds(-hotspot[0], -hotspot[1], scaledWidth - hotspot[0], scaledHeight - hotspot[1]);
     }
-
+/**
+ * 「update Mouse Drawable」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void updateMouseDrawable() {
         mLastCursorType = CallbackBridge.getCurrentCursorType();
         mMousePointerDrawable = YLTools.customMouse(getContext());
@@ -128,12 +163,18 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         }
         updateMouseScale();
     }
-
+/**
+ * 「verify Drawable」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     protected boolean verifyDrawable(@NonNull Drawable who) {
         return who == mMousePointerDrawable || super.verifyDrawable(who);
     }
-
+/**
+ * 「invalidate Drawable」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void invalidateDrawable(@NonNull Drawable drawable) {
         if (drawable == mMousePointerDrawable) {
@@ -142,11 +183,18 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         }
         super.invalidateDrawable(drawable);
     }
-
+/**
+ * 「on Grab State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onGrabState(boolean isGrabbing) {
         post(()->updateGrabState(isGrabbing));
     }
+/**
+ * 「update Grab State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateGrabState(boolean isGrabbing) {
         if(!isGrabbing) {
             if(mDisplayState && getVisibility() != VISIBLE) _enable();
@@ -155,19 +203,27 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
             if(getVisibility() != View.GONE) _disable();
         }
     }
-
+/**
+ * 「DisplayState」の値を取得します。
+ */
     @Override
     public boolean getDisplayState() {
         return mDisplayState;
     }
-
+/**
+ * 「apply Motion Vector」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void applyMotionVector(float x, float y) {
         mMouseX = Math.max(0, Math.min(currentDisplayMetrics.widthPixels, mMouseX + x * (AllSettings.getMouseSpeed().getValue() / 100f)));
         mMouseY = Math.max(0, Math.min(currentDisplayMetrics.heightPixels, mMouseY + y * (AllSettings.getMouseSpeed().getValue() / 100f)));
         updateMousePosition();
     }
-
+/**
+ * 「enable」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     @Override
     public void enable(boolean supposed) {
         if(mDisplayState) return;
@@ -175,7 +231,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         if(supposed && CallbackBridge.isGrabbing()) return;
         _enable();
     }
-
+/**
+ * 「disable」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     @Override
     public void disable() {
         if(!mDisplayState) return;

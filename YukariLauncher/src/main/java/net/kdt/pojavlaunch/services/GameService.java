@@ -24,23 +24,40 @@ import net.kdt.pojavlaunch.MainActivity;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.utils.NotificationUtils;
 
+/**
+ * ゲーム実行中のフォアグラウンドサービス。プロセスが強制終了されるのを防ぎます。
+ */
 public class GameService extends Service {
     private final Messenger mMessenger = new Messenger(new IncomingHandler());
     private static boolean isActive;
 
+    /**
+     * @return サービスがアクティブかどうか
+     */
     public static boolean isActive() {
         return isActive;
     }
 
+    /**
+     * サービスのアクティブ状態を設定します。
+     */
     public static void setActive(boolean active) {
         isActive = active;
     }
 
+    /**
+     * サービスが作成されたときに呼び出されます。
+     * 通知チャンネルを構築します。
+     */
     @Override
     public void onCreate() {
         Tools.buildNotificationChannel(getApplicationContext());
     }
 
+    /**
+     * サービスが開始されたときに呼び出されます。
+     * フォアグラウンド通知を設定します。
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null && intent.getBooleanExtra("kill", false)) {
@@ -66,7 +83,7 @@ public class GameService extends Service {
         Notification notification = notificationBuilder.build();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             int serviceType;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { //SDK 34+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 serviceType = ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE;
             } else {
                 serviceType = ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST;
@@ -75,16 +92,21 @@ public class GameService extends Service {
         } else {
             startForeground(NotificationUtils.NOTIFICATION_ID_GAME_SERVICE, notification);
         }
-        return START_NOT_STICKY; // non-sticky so android wont try restarting the game after the user uses the "Quit" button
+        return START_NOT_STICKY;
     }
 
+    /**
+     * タスクが削除されたときにプロセスを終了します。
+     */
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        //At this point in time  only the game runs and the user poofed the window, time to die
         stopSelf();
         Process.killProcess(Process.myPid());
     }
 
+    /**
+     * サービスにバインドするためのIBinderを返します。
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,6 +118,9 @@ public class GameService extends Service {
             super(Looper.getMainLooper());
         }
 
+        /**
+         * メッセージを処理します（現在は何もしません）。
+         */
         @Override
         public void handleMessage(@NonNull Message msg) {
         }

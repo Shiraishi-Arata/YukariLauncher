@@ -34,6 +34,9 @@ import com.arata.yukarilauncher.utils.stringutils.StringUtils
 import net.kdt.pojavlaunch.Tools
 import java.io.File
 
+/**
+ * カスタムマウスカーソル設定フラグメント
+ */
 class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
     companion object {
         const val TAG: String = "CustomMouseFragment"
@@ -43,6 +46,9 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
     private lateinit var openDocumentLauncher: ActivityResultLauncher<Array<String>>
     private var fileRecyclerViewCreator: FileRecyclerViewCreator? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult<Array<String>, Uri>(ActivityResultContracts.OpenDocument()) { result: Uri? ->
@@ -70,6 +76,9 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,6 +88,9 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
 
@@ -105,6 +117,9 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         startNewbieGuide()
     }
 
+    /**
+     * 初心者ガイドを開始する
+     */
     private fun startNewbieGuide() {
         if (NewbieGuideUtils.showOnlyOne(TAG)) return
         val fragmentActivity = requireActivity()
@@ -118,6 +133,9 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         }
     }
 
+    /**
+     * マウスカーソルデータを読み込みます。
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun loadData() {
         val fileItemBeans = FileRecyclerViewCreator.loadItemBeansFromPath(
@@ -133,22 +151,30 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         ))
         TaskExecutors.runInUIThread {
             fileRecyclerViewCreator?.loadData(fileItemBeans)
-            //默认显示当前选中的鼠标
             refreshIcon()
         }
     }
 
+    /**
+     * マウスファイルのパスを取得する
+     */
     private fun mousePath(): File {
         val path = File(PathManager.DIR_CUSTOM_MOUSE)
         if (!path.exists()) mkdirs(path)
         return path
     }
 
+    /**
+     * 現在選択中のマウスアイコンを更新する
+     */
     private fun refreshIcon() {
         binding.mouseIcon.setImageDrawable(YLTools.customMouse(requireContext()))
         (binding.mouseIcon.drawable as? Animatable)?.start()
     }
 
+    /**
+     * ビューを初期化する
+     */
     private fun initViews() {
         binding.actionBar.apply {
             addFileButton.setContentDescription(getString(R.string.custom_mouse_add))
@@ -170,9 +196,8 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
 
                 val filesButton = FilesButton()
                 filesButton.setButtonVisibility(false, false,
-                    !isDefaultMouse, !isDefaultMouse, !isDefaultMouse, (isDefaultMouse || YLTools.isSupportedMouseSource(file))) //默认虚拟鼠标不支持分享、重命名、删除操作
+                    !isDefaultMouse, !isDefaultMouse, !isDefaultMouse, (isDefaultMouse || YLTools.isSupportedMouseSource(file)))
 
-                //如果选中的虚拟鼠标是默认的虚拟鼠标，那么将加上额外的提醒
                 var message = getString(R.string.file_message)
                 if (isDefaultMouse) message += """
      
@@ -200,11 +225,17 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
         )
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.mouseLayout, Animations.BounceInDown))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.BounceInLeft))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.mouseLayout, Animations.FadeOutUp))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.FadeOutRight))

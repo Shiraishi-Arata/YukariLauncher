@@ -16,17 +16,31 @@ object CurseForgeUpdateHelper {
     }
 
     /**
-     * Normalise a version string for loose equality checking.
-     * Strips leading "v", spaces, and build-metadata (the "+..." suffix).
-     * Example: "v1.40.0+mc1.21.1" → "1.40.0"
+     * バージョン文字列を正規化して大まかな等価性をチェックできるようにする
+     * 先頭の"v"、スペース、ビルドメタデータ（"+..." サフィックス）を除去する
+     * 例: "v1.40.0+mc1.21.1" → "1.40.0"
+     * @param v 元のバージョン文字列
+     * @return 正規化されたバージョン文字列
      */
+/**
+ * normalizeVersionする
+ */
     private fun normalizeVersion(v: String): String =
         v.trim()
             .lowercase()
             .removePrefix("v")
             .replace(" ", "")
-            .substringBefore("+")   // drop build-metadata like "+mc1.21.1"
+            .substringBefore("+")   // "+mc1.21.1" のようなビルドメタデータを削除
 
+    /**
+     * 現在のバージョンと最新バージョンが等価かどうかを判定する
+     * @param current 現在のバージョン
+     * @param latest 最新バージョン
+     * @return 等価の場合はtrue
+     */
+/**
+ * versionsEquivalentする
+ */
     private fun versionsEquivalent(current: String, latest: String): Boolean {
         val nc = normalizeVersion(current)
         val nl = normalizeVersion(latest)
@@ -36,6 +50,17 @@ object CurseForgeUpdateHelper {
             nc == nl
     }
 
+    /**
+     * CurseForge APIを使用してModのアップデートを確認する
+     * @param modId ModのID
+     * @param currentVersion 現在のバージョン
+     * @param minecraftVersion Minecraftのバージョン
+     * @param currentFileName 現在のファイル名（オプション）
+     * @return アップデート情報。見つからない場合はnull
+     */
+/**
+ * checkUpdateする
+ */
     fun checkUpdate(
         modId: String,
         currentVersion: String,
@@ -58,7 +83,7 @@ object CurseForgeUpdateHelper {
             val downloadUrl = latest.getString("downloadUrl")
             val fileName = latest.getString("fileName")
 
-            // Try to find the installed file in the results list
+            // 結果リストからインストール済みファイルを特定する
             val installedIndex = currentFileName?.let { installed ->
                 (0 until data.length()).firstOrNull { i ->
                     installed.equals(data.getJSONObject(i).optString("fileName"), ignoreCase = true)

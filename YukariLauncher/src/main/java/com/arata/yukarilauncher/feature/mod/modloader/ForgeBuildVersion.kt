@@ -25,6 +25,9 @@ class ForgeBuildVersion private constructor(
     val revision: Int
 ) : Comparable<ForgeBuildVersion> {
     companion object {
+/**
+ * parseする
+ */
         fun parse(versionString: String): ForgeBuildVersion {
             val parts = versionString.split('.', '-').mapNotNull { it.toIntOrNull() }
             return ForgeBuildVersion(
@@ -36,6 +39,9 @@ class ForgeBuildVersion private constructor(
         }
     }
 
+/**
+ * compareToする
+ */
     override fun compareTo(other: ForgeBuildVersion): Int {
         return compareValuesBy(
             this, other,
@@ -46,6 +52,9 @@ class ForgeBuildVersion private constructor(
         )
     }
 
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "$major.$minor.$build.$revision"
     }

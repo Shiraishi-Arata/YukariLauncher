@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * パルス（脈動）アニメーション
+ * スケールを1→1.05→1と変化させて脈動する効果を表現する
+ */
 class PulseAnimator: BaseAnimator() {
+    /** パルスアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "scaleY", 1f, 1.05f, 1f),

@@ -11,11 +11,11 @@ import net.kdt.pojavlaunch.Tools
 import java.io.File
 
 /**
- * Minecraft 版本，由版本名称进行区分
- * @param versionsFolder 版本所属的版本文件夹
- * @param versionPath 版本的路径
- * @param versionConfig 独立版本的配置
- * @param isValid 版本的有效性
+ * Minecraftのバージョン。バージョン名で区別される
+ * @param versionsFolder バージョンが属するバージョンフォルダ
+ * @param versionPath バージョンのパス
+ * @param versionConfig 個別バージョンの設定
+ * @param isValid バージョンの有効性
  */
 class Version(
     private val versionsFolder: String,
@@ -24,76 +24,108 @@ class Version(
     private val isValid: Boolean
 ) :Parcelable {
     /**
-     * 控制是否将当前账号视为离线账号启动游戏
+     * 現在のアカウントをオフラインアカウントとしてゲームを起動するかどうかを制御する
      */
     var offlineAccountLogin: Boolean = false
 
     /**
-     * 模组检查结果
+     * Modチェック結果
      */
     var modCheckResult: ModChecker.ModCheckResult? = null
 
     /**
-     * @return 获取版本所属的版本文件夹
+     * @return バージョンが属するバージョンフォルダ
      */
     fun getVersionsFolder(): String = versionsFolder
 
     /**
-     * @return 获取版本文件夹
+     * @return バージョンフォルダ
      */
     fun getVersionPath(): File = File(versionPath)
 
     /**
-     * @return 获取版本名称
+     * @return バージョン名
      */
     fun getVersionName(): String = getVersionPath().name
 
     /**
-     * @return 获取版本隔离配置
+     * @return バージョン分離設定
      */
     fun getVersionConfig() = versionConfig
 
     /**
-     * @return 版本的有效性：是否存在版本JSON文件、版本文件夹是否存在
+     * @return バージョンの有効性：バージョンJSONファイルとバージョンフォルダの存在を確認
      */
     fun isValid() = isValid && getVersionPath().exists()
 
     /**
-     * @return 是否开启了版本隔离
+     * @return バージョン分離が有効かどうか
      */
     fun isIsolation() = versionConfig.isIsolation()
 
     /**
-     * @return 获取版本的游戏文件夹路径（若开启了版本隔离，则路径为版本文件夹）
+     * @return バージョンのゲームフォルダパス（バージョン分離が有効な場合はバージョンフォルダのパス）
      */
     fun getGameDir(): File {
         return if (versionConfig.isIsolation()) versionConfig.getVersionPath()
-        //未开启版本隔离可以使用自定义路径，如果自定义路径为空（则为未设置），那么返回默认游戏路径（.minecraft/）
+        // バージョン分離が無効な場合はカスタムパスを使用できる
+        // カスタムパスが空の場合はデフォルトのゲームパス（.minecraft/）を返す
         else if (versionConfig.getCustomPath().isNotEmpty()) File(versionConfig.getCustomPath())
         else File(ProfilePathHome.getGameHome())
     }
 
     private fun String.getValueOrDefault(default: String): String = this.takeIf { it.isNotEmpty() } ?: default
 
+    /**
+     * レンダラー設定を取得する
+     * @return レンダラー名
+     */
     fun getRenderer(): String = versionConfig.getRenderer().getValueOrDefault(AllSettings.renderer.getValue())
 
+    /**
+     * ドライバー設定を取得する
+     * @return ドライバー名
+     */
     fun getDriver(): String = versionConfig.getDriver().getValueOrDefault(AllSettings.driver.getValue())
 
+    /**
+     * Javaディレクトリ設定を取得する
+     * @return Javaのパス
+     */
     fun getJavaDir(): String = versionConfig.getJavaDir().getValueOrDefault(AllSettings.defaultRuntime.getValue())
 
+    /**
+     * Java引数設定を取得する
+     * @return Java引数文字列
+     */
     fun getJavaArgs(): String = versionConfig.getJavaArgs().getValueOrDefault(AllSettings.javaArgs.getValue())
 
+    /**
+     * コントロール設定を取得する
+     * @return コントロールマップのパス
+     */
     fun getControl(): String {
         val configControl = versionConfig.getControl().removeSuffix("./")
         return if (configControl.isNotEmpty()) File(PathManager.DIR_CTRLMAP_PATH, configControl).absolutePath
         else File(AllSettings.defaultCtrl.getValue()).absolutePath
     }
 
+    /**
+     * カスタム情報を取得する
+     * @return カスタム情報文字列
+     */
     fun getCustomInfo(): String = versionConfig.getCustomInfo().getValueOrDefault(AllSettings.versionCustomInfo.getValue())
         .replace("[zl_version]", YLTools.getVersionName())
 
+    /**
+     * ゲーム引数を取得する
+     * @return ゲーム引数文字列
+     */
     fun getGameArgs(): String = versionConfig.getGameArgs()
 
+    /**
+     * @return 保存されているバージョン情報
+     */
     fun getVersionInfo(): VersionInfo? {
         return runCatching {
             val infoFile = File(VersionsManager.getYukariVersionPath(this), "VersionInfo.json")
@@ -101,10 +133,23 @@ class Version(
         }.getOrElse { null }
     }
 
+    /**
+     * Boolean値をIntに変換する
+     * @return trueの場合は1、falseの場合は0
+     */
     private fun Boolean.getInt(): Int = if (this) 1 else 0
 
+    /**
+     * Parcelable: コンテンツの種類を記述する
+     * @return 0（特別な種類はなし）
+     */
     override fun describeContents(): Int = 0
 
+    /**
+     * Parcelable: オブジェクトをParcelに書き込む
+     * @param dest 書き込み先のParcel
+     * @param flags 追加のフラグ
+     */
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeStringList(listOf(versionsFolder, versionPath))
         dest.writeParcelable(versionConfig, flags)
@@ -114,8 +159,17 @@ class Version(
     }
 
     companion object CREATOR : Parcelable.Creator<Version> {
+        /**
+         * Int値をBooleanに変換する
+         * @return 0以外の場合はtrue
+         */
         private fun Int.toBoolean(): Boolean = this != 0
 
+        /**
+         * Parcelable: ParcelからVersionを作成する
+         * @param parcel 読み込み元のParcel
+         * @return 作成されたVersion
+         */
         override fun createFromParcel(parcel: Parcel): Version {
             val stringList = ArrayList<String>()
             parcel.readStringList(stringList)
@@ -130,6 +184,11 @@ class Version(
             }
         }
 
+        /**
+         * Parcelable: 指定されたサイズのVersion配列を作成する
+         * @param size 配列のサイズ
+         * @return 作成された配列
+         */
         override fun newArray(size: Int): Array<Version?> {
             return arrayOfNulls(size)
         }

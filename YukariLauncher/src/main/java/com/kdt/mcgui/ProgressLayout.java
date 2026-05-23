@@ -44,14 +44,23 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
     private AlertDialog mDialog;
     private LinearLayout popupContainer;
 
+/**
+ * ProgressLayoutを構築します
+ */
     public ProgressLayout(@NonNull Context context) {
         this(context, null);
     }
 
+/**
+ * ProgressLayoutを構築します
+ */
     public ProgressLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
+/**
+ * ProgressLayoutを構築します
+ */
     public ProgressLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -76,29 +85,48 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         setVisibility(GONE);
     }
 
+/**
+ * observeメソッド
+ */
     public void observe(String progressKey) {
         if (mMap.containsKey(progressKey)) return;
         mMap.put(progressKey, new LayoutProgressListener(progressKey));
     }
 
+/**
+ * unObserveメソッド
+ */
     public void unObserve(String progressKey) {
         LayoutProgressListener listener = mMap.remove(progressKey);
         if (listener != null) ProgressKeeper.removeListener(progressKey, listener);
     }
 
+/**
+ * cleanUpObserversメソッド
+ */
     public void cleanUpObservers() {
         mMap.forEach((key, listener) -> ProgressKeeper.removeListener(key, listener));
         handler.removeCallbacksAndMessages(null);
     }
 
+/**
+ * hasProcessesメソッド
+ */
     public boolean hasProcesses() {
         return ProgressKeeper.getTaskCount() > 0;
     }
 
+/**
+ * progressを設定する
+ * @param progress 設定値
+ */
     public static void setProgress(String progressKey, int progress, @StringRes int resource, Object... message) {
         ProgressKeeper.submitProgress(progressKey, progress, resource, message);
     }
 
+/**
+ * clearProgressメソッド
+ */
     public static void clearProgress(String progressKey) {
         setProgress(progressKey, -1, -1);
     }
@@ -109,6 +137,9 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         showProgressPopup();
     }
 
+/**
+ * showProgressPopupメソッド
+ */
     private void showProgressPopup() {
         if (mDialog != null && mDialog.isShowing()) mDialog.dismiss();
 
@@ -186,10 +217,16 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         });
     }
 
+/**
+ * dpメソッド
+ */
     private int dp(int value) {
         return (int) (value * getResources().getDisplayMetrics().density);
     }
 
+/**
+ * LayoutProgressListener内部クラス
+ */
     class LayoutProgressListener implements ProgressListener {
         final String progressKey;
 

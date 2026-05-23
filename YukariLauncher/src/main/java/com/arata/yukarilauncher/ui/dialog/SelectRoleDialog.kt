@@ -10,6 +10,9 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.ItemFileListViewBinding
 import com.arata.yukarilauncher.feature.login.AuthResult.AvailableProfiles
 
+/**
+ * ロール（ゲーム内プロファイル）選択ダイアログ
+ */
 class SelectRoleDialog(
     context: Context,
     private val profiles: List<AvailableProfiles>,
@@ -25,6 +28,9 @@ class SelectRoleDialog(
         recyclerView.adapter = adapter
     }
 
+    /**
+     * ロール一覧のアダプター
+     */
     private inner class RoleAdapter : RecyclerView.Adapter<RoleAdapter.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(ItemFileListViewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -55,6 +61,9 @@ class SelectRoleDialog(
         }
     }
 
+    /**
+     * ロール選択のコールバックインターフェース
+     */
     fun interface RoleSelectedListener {
         fun onSelectedListener(profile: AvailableProfiles)
     }

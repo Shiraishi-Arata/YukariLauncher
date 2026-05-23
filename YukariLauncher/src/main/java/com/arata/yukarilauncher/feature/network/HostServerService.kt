@@ -24,9 +24,15 @@ class HostServerService : Service() {
     val downloadProgress = MutableLiveData<Int?>()
 
     inner class LocalBinder : android.os.Binder() {
+/**
+ * getServiceする
+ */
         fun getService(): HostServerService = this@HostServerService
     }
 
+/**
+ * onCreateする
+ */
     override fun onCreate() {
         super.onCreate()
         playitManager = PlayitManager(applicationContext)
@@ -34,8 +40,14 @@ class HostServerService : Service() {
         startForegroundNotification()
     }
 
+/**
+ * onBindする
+ */
     override fun onBind(intent: Intent?): IBinder = binder
 
+/**
+ * onStartCommandする
+ */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("HostServerService", "onStartCommand action: ${intent?.action}")
         when (intent?.action) {
@@ -53,6 +65,9 @@ class HostServerService : Service() {
         return START_STICKY
     }
 
+/**
+ * setupPlayitCallbacksする
+ */
     private fun setupPlayitCallbacks() {
         playitManager.onLog = { line ->
             logs.postValue(line)
@@ -82,6 +97,9 @@ class HostServerService : Service() {
         }
     }
 
+/**
+ * startTunnelする
+ */
     private fun startTunnel(port: Int) {
         try {
             playitManager.start(port)
@@ -95,17 +113,26 @@ class HostServerService : Service() {
         }
     }
 
+/**
+ * stopTunnelする
+ */
     private fun stopTunnel() {
         playitManager.stop()
         isRunning.postValue(false)
         cancelNotification()
     }
 
+/**
+ * cancelNotificationする
+ */
     private fun cancelNotification() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(NOTIFICATION_ID)
     }
 
+/**
+ * startForegroundNotificationする
+ */
     private fun startForegroundNotification() {
         val channelId = "tunnel_channel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -136,6 +163,9 @@ class HostServerService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
+/**
+ * updateNotificationする
+ */
     private fun updateNotification(text: String) {
         val notification = NotificationCompat.Builder(this, "tunnel_channel")
             .setContentTitle("Playit Tunnel")
@@ -147,6 +177,9 @@ class HostServerService : Service() {
             .notify(NOTIFICATION_ID, notification)
     }
 
+/**
+ * onDestroyする
+ */
     override fun onDestroy() {
         stopTunnel()
         cancelNotification()

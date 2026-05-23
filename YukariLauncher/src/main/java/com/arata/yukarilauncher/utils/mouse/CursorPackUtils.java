@@ -51,6 +51,9 @@ public final class CursorPackUtils {
     private static final int GLFW_RESIZE_ALL_CURSOR = 0x36009;
     private static final int GLFW_NOT_ALLOWED_CURSOR = 0x3600A;
 
+    /**
+     * ファイルがカーソル用のアーカイブ（zip, tar, tgz, tar.gz, txz, tar.xz）かどうかを判定する
+     */
     public static boolean isCursorArchive(File file) {
         String name = file.getName().toLowerCase(Locale.ROOT);
         return name.endsWith(".zip")
@@ -61,6 +64,10 @@ public final class CursorPackUtils {
                 || name.endsWith(".tar.xz");
     }
 
+    /**
+     * ファイルがX11カーソルファイル（XCursor形式）かどうかを判定する
+     * マジックナンバーを確認して判定する
+     */
     public static boolean isXCursorFile(File file) {
         if (file == null || !file.isFile()) return false;
         try (DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -71,17 +78,28 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * ファイルがサポート対象のカーソルソースかどうかを判定する
+     * ディレクトリの場合は内部のカーソル候補を検索する
+     */
     public static boolean isSupportedCursorSource(File file) {
         if (file == null || !file.exists()) return false;
         if (file.isDirectory()) return findCursorCandidate(file) != null;
         return ImageUtils.isImage(file) || isXCursorFile(file);
     }
 
+    /**
+     * カーソルファイルからDrawableを読み込む（デフォルトは標準矢印カーソル）
+     */
     @Nullable
     public static Drawable loadCursorDrawable(File source) {
         return loadCursorDrawable(source, GLFW_ARROW_CURSOR);
     }
 
+    /**
+     * カーソルファイルから指定されたカーソルタイプのDrawableを読み込む
+     * ディレクトリの場合は適切なカーソルファイルを検索する
+     */
     @Nullable
     public static Drawable loadCursorDrawable(File source, int cursorType) {
         if (source == null || !source.exists()) return null;
@@ -97,11 +115,18 @@ public final class CursorPackUtils {
         return decodeXCursorDrawable(source);
     }
 
+    /**
+     * ディレクトリからカーソル候補ファイルを検索する（デフォルトは標準矢印カーソル）
+     */
     @Nullable
     public static File findCursorCandidate(File directory) {
         return findCursorCandidate(directory, GLFW_ARROW_CURSOR);
     }
 
+    /**
+     * ディレクトリから指定されたカーソルタイプに適したカーソルファイルを検索する
+     * 優先名のリストで検索し、見つからない場合は任意の画像またはXCursorファイルを返す
+     */
     @Nullable
     public static File findCursorCandidate(File directory, int cursorType) {
         if (directory == null || !directory.isDirectory()) return null;
@@ -123,6 +148,9 @@ public final class CursorPackUtils {
         return null;
     }
 
+    /**
+     * カーソルタイプに対応する優先検索名のリストを取得する
+     */
     private static String[] getPreferredNames(int cursorType) {
         switch (cursorType) {
             case GLFW_IBEAM_CURSOR:
@@ -149,6 +177,10 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * カーソルアーカイブを指定されたルートディレクトリに展開する
+     * アーカイブの種類（zip/tar/tgz/tar.gz/txz/tar.xz）に応じて適切に処理する
+     */
     public static File extractCursorArchive(File archive, File destinationRoot) throws IOException {
         String archiveName = archive.getName();
         String folderName = archiveName.replaceAll("(?i)\\.(zip|tar|tgz|tar\\.gz|txz|tar\\.xz)$", "");
@@ -168,6 +200,9 @@ public final class CursorPackUtils {
         return outDir;
     }
 
+    /**
+     * ZIPアーカイブを展開する
+     */
     private static void extractZip(File archive, File destinationRoot) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(archive)))) {
             ZipEntry entry;
@@ -186,6 +221,10 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * TARアーカイブを展開する（gzip/xz圧縮にも対応）
+     * シンボリックリンクは解決してコピーする
+     */
     private static void extractTar(File archive, File destinationRoot, boolean gzip, boolean xz) throws IOException {
         List<String[]> symbolicLinks = new ArrayList<>();
         try (FileInputStream fis = new FileInputStream(archive);
@@ -216,8 +255,8 @@ public final class CursorPackUtils {
             }
         }
 
-        // Resolve symbolic links after extraction so theme aliases (left_ptr, move, etc.)
-        // still work even on filesystems without symlink support.
+        // シンボリックリンクを解決するために抽出後にテーマエイリアス（left_ptr, move等）が
+        // シンボリックリンクをサポートしていないファイルシステムでも動作するようにコピーする
         for (String[] link : symbolicLinks) {
             File aliasFile = safeResolve(destinationRoot, link[0]);
             File targetFile = safeResolve(destinationRoot, link[1]);
@@ -227,6 +266,9 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * ZipSlip攻撃を防ぐためにパスを安全に解決する
+     */
     private static File safeResolve(File root, String childPath) throws IOException {
         File resolved = new File(root, childPath);
         String rootPath = root.getCanonicalPath() + File.separator;
@@ -237,6 +279,9 @@ public final class CursorPackUtils {
         return resolved;
     }
 
+    /**
+     * ファイルの親ディレクトリが存在することを確認し、なければ作成する
+     */
     private static void ensureParentExists(File file) throws IOException {
         File parent = file.getParentFile();
         if (parent == null) return;
@@ -245,6 +290,10 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * ディレクトリ内の全ファイルを再帰的に収集する（最大4000ファイル）
+     * 絶対パス順でソートして返す
+     */
     private static List<File> collectFiles(File root) {
         List<File> files = new ArrayList<>();
         ArrayDeque<File> queue = new ArrayDeque<>();
@@ -265,6 +314,10 @@ public final class CursorPackUtils {
         return files;
     }
 
+    /**
+     * XCursorファイルをデコードしてDrawableを生成する
+     * アニメーションフレームを含むカーソルはAnimationDrawableとして返す
+     */
     @Nullable
     private static Drawable decodeXCursorDrawable(File file) {
         try {
@@ -324,6 +377,10 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * 最適なカーソルサイズ（サブタイプ）を選択する
+     * 32ピクセルに最も近いサイズで、フレーム数が多いものを優先する
+     */
     private static int selectBestSubtype(Map<Integer, List<Integer>> chunkPositionsBySubtype) {
         int preferredSize = 32;
         int selectedSubtype = -1;
@@ -343,6 +400,10 @@ public final class CursorPackUtils {
         return selectedSubtype;
     }
 
+    /**
+     * XCursorの単一フレームをデコードする
+     * 幅・高さ・ホットスポット・遅延情報を読み取り、Bitmapを生成する
+     */
     @Nullable
     private static XCursorFrame decodeXCursorFrame(ByteBuffer originalBuffer, int position) {
         ByteBuffer buffer = originalBuffer.duplicate().order(ByteOrder.LITTLE_ENDIAN);
@@ -374,6 +435,9 @@ public final class CursorPackUtils {
         );
     }
 
+    /**
+     * XCursorの単一フレームデータを保持する内部クラス
+     */
     private static final class XCursorFrame {
         private final Bitmap bitmap;
         private final int delay;
@@ -388,6 +452,9 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * 静止画カーソル用のDrawable実装（ホットスポット対応）
+     */
     private static final class CursorBitmapDrawable extends BitmapDrawable implements CursorHotspotAware {
         private final int hotspotX;
         private final int hotspotY;
@@ -419,6 +486,9 @@ public final class CursorPackUtils {
         }
     }
 
+    /**
+     * アニメーションカーソル用のDrawable実装（ホットスポット対応）
+     */
     private static final class CursorAnimationDrawable extends AnimationDrawable implements CursorHotspotAware {
         private final int hotspotX;
         private final int hotspotY;

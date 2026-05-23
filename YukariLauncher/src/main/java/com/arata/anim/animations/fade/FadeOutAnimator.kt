@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * フェードアウトアニメーション（基本）
+ * 透明度を1から0へ変化させて非表示にする
+ */
 class FadeOutAnimator: BaseAnimator() {
+    /** フェードアウトアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(ObjectAnimator.ofFloat(target, "alpha", 1f, 0f))
     }

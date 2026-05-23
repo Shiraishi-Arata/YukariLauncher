@@ -42,6 +42,9 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.util.EnumMap
 
+/**
+ * ゲームインストール設定フラグメント
+ */
 class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), View.OnClickListener {
     companion object {
         const val TAG = "InstallGameFragment"
@@ -51,6 +54,9 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     private lateinit var mcVersion: String
     private val addonMap: MutableMap<Addon, Pair<String, InstallTask>> = EnumMap(Addon::class.java)
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +72,9 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mcVersion = arguments?.getString(BUNDLE_MC_VERSION) ?: throw IllegalArgumentException("The Minecraft version is not passed")
 
@@ -93,13 +102,16 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         }
     }
 
+    /**
+     * フラグメント再開時に互換性チェックを実行します。
+     */
     override fun onResume() {
         super.onResume()
         checkIncompatible()
     }
 
     /**
-     * 检查不兼容的Addon，并禁止用户选择该Addon版本
+     * 互換性のないAddonをチェックし、選択を無効化する
      */
     @SuppressLint("SetTextI18n")
     private fun checkIncompatible() {
@@ -121,11 +133,7 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     }
 
     /**
-     * 检查传入的Addon是否在AddonMap中有不兼容的Addon
-     * @param addon 传入的Addon
-     * @param layout Addon的layout
-     * @param versionText Addon的版本信息
-     * @param installText Addon的安装类型
+     * 指定されたAddonの互換性をチェックする
      */
     private fun checkIncompatible(
         addon: Addon,
@@ -174,7 +182,7 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     }
 
     /**
-     * 切换至Addon版本选择界面
+     * Addonバージョン選択画面に遷移する
      */
     private fun swapFragment(fragmentClass: Class<out Fragment>, tag: String) {
         val bundle = Bundle()
@@ -183,13 +191,16 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     }
 
     /**
-     * 移除Addon，并刷新当前不兼容的Addon
+     * Addonを削除し、互換性表示を更新する
      */
     private fun removeAddon(addon: Addon) {
         addonMap.remove(addon)
         checkIncompatible()
     }
 
+    /**
+     * クリックイベントを処理します。
+     */
     override fun onClick(v: View) {
         val activity = requireActivity()
 
@@ -237,8 +248,6 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
                         Tools.backToMainMenu(activity)
                     }
 
-                    //检查OptiFine与Forge附加包是否同时存在
-                    //最后告诉用户兼容性问题
                     if (addonMap.containsKey(Addon.OPTIFINE) && addonMap.containsKey(Addon.FORGE)) {
                         TipDialog.Builder(activity)
                             .setTitle(R.string.generic_warning)
@@ -254,12 +263,15 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         }
     }
 
+    /**
+     * インストールタスクを整理する
+     */
     private fun organizeInstallationTasks(customVersionName: String): Map<Addon, InstallTaskItem> {
         val mapSize = addonMap.size
         val taskMap: MutableMap<Addon, InstallTaskItem> = EnumMap(Addon::class.java)
 
         fun getModPath(): File {
-            return if (AllSettings.versionIsolation.getValue()) //启用了版本隔离
+            return if (AllSettings.versionIsolation.getValue())
                 File(
                     ProfilePathHome.getGameHome(),
                     "versions${File.separator}$customVersionName${File.separator}mods"
@@ -270,7 +282,7 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         addonMap.forEach { (addon, taskPair) ->
             when (addon) {
                 Addon.OPTIFINE -> {
-                    val endTask: InstallTaskItem.EndTask = if (mapSize < 2) { //安装为一个版本
+                    val endTask: InstallTaskItem.EndTask = if (mapSize < 2) {
                         InstallTaskItem.EndTask { activity, file ->
                             installInGUITask(activity, addon.addonName, taskPair.first) { intent, argUtils ->
                                 argUtils.setOptiFine(intent, file, customVersionName)
@@ -316,6 +328,9 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         return taskMap
     }
 
+    /**
+     * ファイルを移動します。
+     */
     @Throws(Throwable::class)
     private fun moveFile(file: File, file1: File) {
         if (file1.exists()) FileUtils.deleteQuietly(file1)
@@ -323,8 +338,7 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     }
 
     /**
-     * 在JavaGUI内进行安装，作为EndTask，需要在UI线程内运行
-     * @param activity **此处必须使用activity的上下文！不能调用Fragment的上下文！！因为调用到这里的时候，Fragment早就被销毁了！！！**
+     * JavaGUIランチャー内でインストールを実行する
      */
     @Throws(Throwable::class)
     private fun installInGUITask(activity: Activity, addonName: String, selectVersion: String, setArgs: (Intent, InstallArgsUtils) -> Unit) {
@@ -340,11 +354,17 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.nameLayout, Animations.BounceInDown))
             .apply(AnimPlayer.Entry(binding.addonsLayout, Animations.BounceInUp))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.nameLayout, Animations.FadeOutUp))
             .apply(AnimPlayer.Entry(binding.addonsLayout, Animations.FadeOutDown))

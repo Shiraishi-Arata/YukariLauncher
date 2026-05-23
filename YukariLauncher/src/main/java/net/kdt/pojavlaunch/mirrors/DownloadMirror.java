@@ -14,9 +14,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Objects;
 
+/**
+ * ダウンロードミラーリング機能を提供するクラス。
+ * BMCLAPIなどのミラーを使用してファイルをダウンロードし、失敗した場合は公式ソースにフォールバックします。
+ */
 public class DownloadMirror {
+    /** ライブラリダウンロードクラス */
     public static final int DOWNLOAD_CLASS_LIBRARIES = 0;
+    /** メタデータダウンロードクラス */
     public static final int DOWNLOAD_CLASS_METADATA = 1;
+    /** アセットダウンロードクラス */
     public static final int DOWNLOAD_CLASS_ASSETS = 2;
 
     private static final String URL_PROTOCOL_TAIL = "://";
@@ -27,14 +34,12 @@ public class DownloadMirror {
     };
 
     /**
-     * Download a file with the current mirror. If the file is missing on the mirror,
-     * fall back to the official source.
-     * @param downloadClass Class of the download. Can either be DOWNLOAD_CLASS_LIBRARIES,
-     *                      DOWNLOAD_CLASS_METADATA or DOWNLOAD_CLASS_ASSETS
-     * @param urlInput The original (Mojang) URL for the download
-     * @param outputFile The output file for the download
-     * @param buffer The shared buffer
-     * @param monitor The download monitor.
+     * 現在のミラーを使用してファイルをダウンロードします。ミラーにファイルがない場合は公式ソースにフォールバックします。
+     * @param downloadClass ダウンロードクラス（DOWNLOAD_CLASS_LIBRARIES / DOWNLOAD_CLASS_METADATA / DOWNLOAD_CLASS_ASSETS）
+     * @param urlInput 元の（Mojang）URL
+     * @param outputFile 出力ファイル
+     * @param buffer 共有バッファ
+     * @param monitor ダウンロードモニター
      */
     public static void downloadFileMirrored(int downloadClass, String urlInput, File outputFile,
                                             @Nullable byte[] buffer, Tools.DownloaderFeedback monitor) throws IOException {
@@ -50,17 +55,11 @@ public class DownloadMirror {
     }
 
     /**
-     * Download a file with the current mirror. If the file is missing on the mirror,
-     * fall back to the official source.
-     * @param downloadClass Class of the download. Can either be DOWNLOAD_CLASS_LIBRARIES,
-     *                      DOWNLOAD_CLASS_METADATA or DOWNLOAD_CLASS_ASSETS
-     * @param urlInput The original (Mojang) URL for the download
-     * @param outputFile The output file for the download
+     * ミラーを使用してファイルをダウンロードします（モニターなし）。
      */
     public static void downloadFileMirrored(int downloadClass, String urlInput, File outputFile) throws IOException {
         try {
-            DownloadUtils.downloadFile(getMirrorMapping(downloadClass, urlInput),
-                    outputFile);
+            DownloadUtils.downloadFile(getMirrorMapping(downloadClass, urlInput), outputFile);
             return;
         }catch (Exception e) {
             Logging.w("DownloadMirror", "Cannot find the file on the mirror", e);
@@ -70,12 +69,8 @@ public class DownloadMirror {
     }
 
     /**
-     * Get the content length of a file on the current mirror. If the file is missing on the mirror,
-     * or the mirror does not give out the length, request the length from the original source
-     * @param downloadClass Class of the download. Can either be DOWNLOAD_CLASS_LIBRARIES,
-     *                      DOWNLOAD_CLASS_METADATA or DOWNLOAD_CLASS_ASSETS
-     * @param urlInput The original (Mojang) URL for the download
-     * @return the length of the file denoted by the URL in bytes, or -1 if not available
+     * ミラー上のファイルのコンテンツ長を取得します。利用できない場合は公式ソースから取得します。
+     * @return ファイルの長さ（バイト）。利用できない場合は-1。
      */
     public static long getContentLengthMirrored(int downloadClass, String urlInput) throws IOException {
         long length = DownloadUtils.getContentLength(getMirrorMapping(downloadClass, urlInput));
@@ -89,12 +84,7 @@ public class DownloadMirror {
     }
 
     /**
-     * Download a file as a string from the current mirror. If the file does not exist on the mirror
-     * or the mirror returns an invalid string, request the file from the original source
-     * @param downloadClass Class of the download. Can either be DOWNLOAD_CLASS_LIBRARIES,
-     *                      DOWNLOAD_CLASS_METADATA or DOWNLOAD_CLASS_ASSETS
-     * @param urlInput The original (Mojang) URL for the download
-     * @return the contents of the downloaded file as a String.
+     * ミラーからファイルを文字列としてダウンロードします。存在しない場合や無効な場合は公式ソースを使用します。
      */
     public static String downloadStringMirrored(int downloadClass, String urlInput) throws IOException{
         String resultString = null;
@@ -112,13 +102,15 @@ public class DownloadMirror {
     }
 
     /**
-     * Check if the current download source is a mirror and not an official source.
-     * @return true if the source is a mirror, false otherwise
+     * @return 現在のダウンロードソースがミラーである場合はtrue
      */
     public static boolean isMirrored() {
         return !Objects.equals(AllSettings.getDownloadSource().getValue(), "default");
     }
 
+    /**
+     * 現在のミラー設定を取得します。
+     */
     private static String[] getMirrorSettings() {
         switch (Objects.requireNonNull(AllSettings.getDownloadSource().getValue())) {
             case "bmclapi": return MIRROR_BMCLAPI;
@@ -128,6 +120,9 @@ public class DownloadMirror {
         }
     }
 
+    /**
+     * MojangのURLをミラーURLにマッピングします。
+     */
     private static String getMirrorMapping(int downloadClass, String mojangUrl) throws MalformedURLException{
         String[] mirrorSettings = getMirrorSettings();
         if(mirrorSettings == null) return mojangUrl;
@@ -147,6 +142,9 @@ public class DownloadMirror {
         return baseUrl + path;
     }
 
+    /**
+     * URLからベースURLの末尾位置を取得します。
+     */
     private static int getBaseUrlTail(String wholeUrl) throws MalformedURLException{
         int protocolNameEnd = wholeUrl.indexOf(URL_PROTOCOL_TAIL);
         if(protocolNameEnd == -1)

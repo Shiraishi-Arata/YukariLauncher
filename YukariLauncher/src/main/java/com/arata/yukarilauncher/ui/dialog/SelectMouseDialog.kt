@@ -13,6 +13,9 @@ import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.mkdirs
 import java.io.File
 
+/**
+ * カスタムマウスカーソル選択ダイアログ
+ */
 class SelectMouseDialog(
     context: Context,
     private val listener: MouseSelectedListener
@@ -29,6 +32,9 @@ class SelectMouseDialog(
         )
     }
 
+    /**
+     * ビューを初期化する
+     */
     private fun initView(mMouseListView: RecyclerView) {
         FileRecyclerViewCreator(
             context,
@@ -53,6 +59,9 @@ class SelectMouseDialog(
         )
     }
 
+    /**
+     * マウスファイルのアイテムリストを取得する
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun getItems(): MutableList<FileItemBean> {
         val fileItemBeans = FileRecyclerViewCreator.loadItemBeansFromPath(
@@ -69,12 +78,18 @@ class SelectMouseDialog(
         return fileItemBeans
     }
 
+    /**
+     * カスタムマウスファイルのパスを取得する
+     */
     private fun mousePath(): File {
         val path = File(PathManager.DIR_CUSTOM_MOUSE)
         if (!path.exists()) mkdirs(path)
         return path
     }
 
+    /**
+     * マウス選択のコールバックインターフェース
+     */
     interface MouseSelectedListener {
         fun onSelectedListener()
     }

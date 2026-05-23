@@ -20,11 +20,14 @@ class UrlManager {
         const val URL_MCMOD: String = "https://www.mcmod.cn/"
         const val URL_MINECRAFT: String = "https://www.minecraft.net/"
         const val URL_MINECRAFT_VERSION_REPOS: String = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
-        const val URL_SUPPORT: String = "" // "https://afdian.com/a/MovTery"
+        const val URL_SUPPORT: String = ""
         const val URL_HOME: String = "https://github.com/Shiraishi-Arata/YukariLauncher"
         const val URL_FCL_RENDERER_PLUGIN: String = "https://github.com/ShirosakiMio/FCLRendererPlugin/releases/tag/Renderer"
         const val URL_FCL_DRIVER_PLUGIN: String = "https://github.com/FCL-Team/FCLDriverPlugin/releases/tag/Turnip"
 
+        /**
+         * URL接続を作成し、タイムアウトとUser-Agentを設定する
+         */
         @JvmStatic
         fun createConnection(url: URL): URLConnection {
             val connection = url.openConnection()
@@ -35,17 +38,26 @@ class UrlManager {
             return connection
         }
 
+        /**
+         * HTTP用のURL接続を作成する
+         */
         @JvmStatic
         @Throws(IOException::class)
         fun createHttpConnection(url: URL): HttpURLConnection {
             return createConnection(url) as HttpURLConnection
         }
 
+        /**
+         * OkHttpのRequest.Builderを作成する（ボディなし）
+         */
         @JvmStatic
         fun createRequestBuilder(url: String): Request.Builder {
             return createRequestBuilder(url, null)
         }
 
+        /**
+         * OkHttpのRequest.Builderを作成する（ボディ付き）
+         */
         @JvmStatic
         fun createRequestBuilder(url: String, body: RequestBody?): Request.Builder {
             val request = Request.Builder().url(url).header("User-Agent", URL_USER_AGENT)
@@ -53,11 +65,15 @@ class UrlManager {
             return request
         }
 
+        /**
+         * デフォルト設定のOkHttpClientを作成する
+         */
         @JvmStatic
         fun createOkHttpClient(): OkHttpClient = createOkHttpClientBuilder().build()
 
         /**
-         * 创建一个OkHttpClient，可自定义一些内容
+         * OkHttpClient.Builderを作成する
+         * カスタム設定を追加可能な拡張ポイントを提供する
          */
         @JvmStatic
         fun createOkHttpClientBuilder(action: (OkHttpClient.Builder) -> Unit = { }): OkHttpClient.Builder {

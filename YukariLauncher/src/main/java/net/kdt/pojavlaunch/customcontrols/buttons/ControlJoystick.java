@@ -37,17 +37,27 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
     private ControlJoystickData mControlData;
     private int mLastDirectionInt = GamepadJoystick.DIRECTION_NONE;
     private int mCurrentDirectionInt = GamepadJoystick.DIRECTION_NONE;
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlJoystick(ControlLayout parent, ControlJoystickData data) {
         super(parent.getContext());
         init(data, parent);
     }
-
+/**
+ * 「send Input」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static void sendInput(int[] keys, boolean isDown) {
         for (int key : keys) {
             CallbackBridge.sendKeyPress(key, CallbackBridge.getCurrentMods(), isDown);
         }
     }
-
+/**
+ * 「init」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     private void init(ControlJoystickData data, ControlLayout layout) {
         mControlData = data;
         setProperties(preProcessProperties(data, layout));
@@ -58,6 +68,10 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
         injectBehaviors();
 
         setOnMoveListener(new OnMoveListener() {
+/**
+ * 「on Move」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onMove(int angle, int strength) {
                 mLastDirectionInt = mCurrentDirectionInt;
@@ -68,24 +82,33 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
                     sendDirectionalKeycode(mCurrentDirectionInt, true);
                 }
             }
-
+/**
+ * 「on Forward Lock」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onForwardLock(boolean isLocked) {
                 sendInput(mDirectionForwardLock, isLocked);
             }
         });
     }
-
+/**
+ * 「ControlView」の値を取得します。
+ */
     @Override
     public View getControlView() {
         return this;
     }
-
+/**
+ * 「Properties」の値を取得します。
+ */
     @Override
     public ControlData getProperties() {
         return mControlData;
     }
-
+/**
+ * 「Properties」の値を設定します。
+ */
     @Override
     public void setProperties(ControlData properties, boolean changePos) {
         mControlData = (ControlJoystickData) properties;
@@ -96,19 +119,27 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
             setFixedCenter(mControlData.absolute);
         }, 10);
     }
-
+/**
+ * 「remove Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void removeButton() {
         getControlLayoutParent().getLayout().mJoystickDataList.remove(getProperties());
         getControlLayoutParent().removeView(this);
     }
-
+/**
+ * 「clone Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void cloneButton() {
         ControlJoystickData data = new ControlJoystickData(mControlData);
         getControlLayoutParent().addJoystickButton(data);
     }
-
+/**
+ * 「Background」の値を設定します。
+ */
 
     @Override
     public void setBackground() {
@@ -116,20 +147,31 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
         setBorderColor(getProperties().strokeColor);
         setBackgroundColor(getProperties().bgColor);
     }
-
+/**
+ * 「send Key Presses」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void sendKeyPresses(boolean isDown) {/*STUB since non swipeable*/ }
-
+/**
+ * 「load Edit Values」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void loadEditValues(EditControlPopup editControlPopup) {
         editControlPopup.loadJoystickValues(mControlData);
     }
-
+/**
+ * 「DirectionInt」の値を取得します。
+ */
     private int getDirectionInt(int angle, int intensity) {
         if (intensity == 0) return DIRECTION_NONE;
         return (int) (((angle + 22.5) / 45) % 8);
     }
-
+/**
+ * 「send Directional Keycode」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void sendDirectionalKeycode(int direction, boolean isDown) {
         switch (direction) {
             case DIRECTION_NORTH:

@@ -6,28 +6,34 @@ import com.arata.yukarilauncher.feature.download.item.ModVersionItem
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 
 /**
- * 将搜索得到的信息缓存在内存中，下次加载时可直接从内存中拿到上次的搜索结果
+ * 検索結果をメモリにキャッシュし、次回読み込み時に前回の検索結果を直接取得できるようにする
  */
 class InfoCache {
     abstract class CacheBase<V> {
         private val cache: MutableMap<String, V> = HashMap()
 
         /**
-         * 根据ModId，将搜索到的值存入内存
+         * ModIdをキーにして、検索結果をメモリに保存する
+         * @param modId ModのID
+         * @param value 保存する値
          */
         fun put(modId: String, value: V) {
             cache[modId] = value
         }
 
         /**
-         * 根据ModId，拿到内存中存储的值，若没有，则返回空
+         * ModIdをキーにして、メモリに保存された値を取得する。存在しない場合はnullを返す
+         * @param modId ModのID
+         * @return 保存された値、またはnull
          */
         fun get(modId: String): V? {
             return cache[modId]
         }
 
         /**
-         * 检查内存中是否存在已经存入的ModId
+         * 指定されたModIdがメモリに存在するかどうかを確認する
+         * @param modId ModのID
+         * @return 存在する場合はtrue
          */
         fun containsKey(modId: String): Boolean {
             return cache.containsKey(modId)

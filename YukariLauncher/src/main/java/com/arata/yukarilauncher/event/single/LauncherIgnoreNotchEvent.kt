@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.event.single
 
 /**
- * 启动器全屏模式设置项变更事件
+ * ランチャーの全画面モード（ノッチ無視）設定変更イベント
  */
 class LauncherIgnoreNotchEvent

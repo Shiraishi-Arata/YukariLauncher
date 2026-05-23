@@ -9,6 +9,9 @@ class SearchResult {
     val infoItems: MutableList<InfoItem> = ArrayList()
     var isLastPage: Boolean = false
 
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "SearchResult(previousCount=$previousCount, totalResultCount=$totalResultCount, infoItems=$infoItems, isLastPage=$isLastPage)"
     }

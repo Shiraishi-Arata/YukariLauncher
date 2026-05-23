@@ -19,11 +19,19 @@ class CheckSponsor {
         private var isChecking = false
 
         @JvmStatic
+/**
+ * スポンサーデータを取得する
+ * @return スポンサーメタデータ。未取得の場合はnull
+ */
         fun getSponsorData(): SponsorMeta? {
             return sponsorMeta
         }
 
         @JvmStatic
+/**
+ * スポンサー情報のチェックを実行する
+ * @param listener チェック結果のコールバックリスナー
+ */
         fun check(listener: CheckListener) {
             if (isChecking) {
                 listener.onFailure()
@@ -38,12 +46,18 @@ class CheckSponsor {
             }
 
             CallUtils(object : CallbackListener {
+/**
+ * onFailureする
+ */
                 override fun onFailure(call: Call?) {
                     listener.onFailure()
                     isChecking = false
                 }
 
                 @Throws(IOException::class)
+/**
+ * onResponseする
+ */
                 override fun onResponse(call: Call?, response: Response?) {
                     if (!response!!.isSuccessful) {
                         Logging.e("CheckSponsor", "Unexpected code ${response.code}")
@@ -74,8 +88,14 @@ class CheckSponsor {
     }
 
     interface CheckListener {
+/**
+ * onFailureする
+ */
         fun onFailure()
 
+/**
+ * onSuccessfulする
+ */
         fun onSuccessful(data: SponsorMeta?)
     }
 }

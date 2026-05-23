@@ -43,6 +43,9 @@ class PlayitManager(private val context: Context) {
     /**
      * Prepares the binary (downloads if missing) and starts the tunnel.
      */
+/**
+ * startする
+ */
     fun start(localPort: Int = 25565) {
         if (isRunning.get()) {
             Log.w(TAG, "Already running")
@@ -64,6 +67,9 @@ class PlayitManager(private val context: Context) {
     /**
      * Ensures the playit binary exists. Downloads if necessary.
      */
+/**
+ * ensureBinaryする
+ */
     private suspend fun ensureBinary(): File = withContext(Dispatchers.IO) {
         val file = File(PathManager.DIR_DATA, playitBinary.fileName)
         if (file.exists() && file.canExecute()) {
@@ -86,6 +92,9 @@ class PlayitManager(private val context: Context) {
     /**
      * Downloads a file with progress tracking.
      */
+/**
+ * downloadFileする
+ */
     private suspend fun downloadFile(urlString: String, destination: File) {
         var connection: HttpURLConnection? = null
         try {
@@ -129,6 +138,9 @@ class PlayitManager(private val context: Context) {
     /**
      * Launches the playit process.
      */
+/**
+ * startProcessする
+ */
     private fun startProcess(binary: File, localPort: Int) {
         val dir = File(PathManager.DIR_DATA)
 
@@ -164,6 +176,9 @@ class PlayitManager(private val context: Context) {
         }
     }
 
+/**
+ * readStreamする
+ */
     private fun readStream(inputStream: InputStream, label: String) {
         val reader = BufferedReader(InputStreamReader(inputStream))
         var line: String?
@@ -182,6 +197,9 @@ class PlayitManager(private val context: Context) {
         }
     }
 
+/**
+ * processLineする
+ */
     private fun processLine(line: String, label: String) {
         Log.d("PLAYIT_RAW", "[$label] $line")
         // Claim URL (do not print to in-app console log)
@@ -216,6 +234,9 @@ class PlayitManager(private val context: Context) {
         }
     }
 
+/**
+ * stopする
+ */
     fun stop() {
         try {
             Log.d(TAG, "Stopping playit...")
@@ -237,8 +258,14 @@ class PlayitManager(private val context: Context) {
         }
     }
 
+/**
+ * isRunningする
+ */
     fun isRunning(): Boolean = isRunning.get()
 
+/**
+ * resolvePlayitBinaryする
+ */
     private fun resolvePlayitBinary(): PlayitBinary {
         val supportedAbis = Build.SUPPORTED_ABIS
         for (abi in supportedAbis) {

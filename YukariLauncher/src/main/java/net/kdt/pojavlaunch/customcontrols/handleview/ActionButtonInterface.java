@@ -18,7 +18,10 @@ public interface ActionButtonInterface extends View.OnClickListener {
 
     /** Whether the button should be shown, given the current contextual information that it has */
     boolean shouldBeVisible();
-
+/**
+ * 「on Click」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override  // Wrapper to remove the arg
     default void onClick(View v){onClick();}
 }

@@ -57,6 +57,9 @@ object BackgroundManager {
         }
 
     @JvmStatic
+/**
+ * setBackgroundImageする
+ */
     fun setBackgroundImage(
         context: Context,
         backgroundType: BackgroundType,
@@ -86,6 +89,9 @@ object BackgroundManager {
     }
 
     @JvmStatic
+/**
+ * clearBackgroundImageする
+ */
     fun clearBackgroundImage(
         backgroundView: ImageView
     ) {
@@ -94,12 +100,18 @@ object BackgroundManager {
     }
 
     @JvmStatic
+/**
+ * hasBackgroundImageする
+ */
     fun hasBackgroundImage(backgroundType: BackgroundType): Boolean {
         val pngName = properties[backgroundType.name] as String?
         return pngName != null && pngName != NULL
     }
 
     @JvmStatic
+/**
+ * getBackgroundImageする
+ */
     fun getBackgroundImage(backgroundType: BackgroundType): File? {
         if (!hasBackgroundImage(backgroundType)) return null
 
@@ -112,10 +124,16 @@ object BackgroundManager {
     }
 
     @JvmStatic
+/**
+ * isVideoする
+ */
     fun isVideo(file: File): Boolean {
         return file.extension.lowercase() in videoExtensions
     }
 
+/**
+ * savePropertiesする
+ */
     private fun saveProperties(properties: Properties) {
         PathManager.DIR_BACKGROUND.apply {
             if (!exists()) mkdirs(this)
@@ -129,6 +147,9 @@ object BackgroundManager {
         }.getOrElse { e -> Logging.e("saveProperties", Tools.printToString(e)) }
     }
 
+/**
+ * savePropertiesする
+ */
     fun saveProperties(map: Map<BackgroundType, String>) {
         val properties = Properties()
         properties.setProperty(

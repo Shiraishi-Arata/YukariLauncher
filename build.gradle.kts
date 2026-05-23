@@ -1,3 +1,7 @@
+/**
+ * ルートプロジェクトのビルド設定
+ * プラグインと依存関係のリポジトリを定義します。
+ */
 buildscript {
     repositories {
         google()

@@ -9,6 +9,9 @@ import com.arata.yukarilauncher.feature.version.VersionInfo
 import net.kdt.pojavlaunch.Tools
 import java.io.File
 
+/**
+ * バージョンJSONファイルからMinecraftバージョンやModLoader情報を解析するユーティリティクラス
+ */
 class VersionInfoUtils {
     companion object {
         private const val VERSION_PATTERN = """(\d+\.\d+\.\d+|\d{2}w\d{2}[a-z])"""
@@ -47,8 +50,9 @@ class VersionInfoUtils {
         )
 
         /**
-         * 在版本的json文件中，找到版本信息
-         * @return 版本号、ModLoader信息
+         * バージョンのJSONファイルからバージョン情報を解析する
+         * @param jsonFile バージョンJSONファイル
+         * @return バージョン情報とModLoader情報
          */
         fun parseJson(jsonFile: File): VersionInfo? {
             return runCatching {
@@ -62,6 +66,11 @@ class VersionInfoUtils {
             }
         }
 
+        /**
+         * MinecraftのバージョンとModLoader情報を検出する
+         * @param versionJson バージョンJSONオブジェクト
+         * @return バージョンIDとModLoader情報のペア
+         */
         private fun detectMinecraftAndLoader(versionJson: JsonObject): Pair<String, VersionInfo.LoaderInfo?> {
             val mcVersion = extractMinecraftVersion(versionJson).also {
                 Logging.i("VersionInfoUtils", "Detected Minecraft version: $it")
@@ -72,8 +81,14 @@ class VersionInfoUtils {
             return mcVersion to loaderInfo
         }
 
+        /**
+         * JSONからMinecraftのバージョンを抽出する
+         * HMCL形式、Minecraftライブラリ、IDからの解析を順に試行する
+         * @param json バージョンJSONオブジェクト
+         * @return 抽出されたMinecraftバージョン
+         */
         private fun extractMinecraftVersion(json: JsonObject): String {
-            //尝试识别HMCL版本
+            // HMCLバージョン形式を試行
             if (json.has("patches") && json.get("patches").isJsonArray) {
                 val patches = json.getAsJsonArray("patches")
                 if (patches.size() > 0) {
@@ -84,7 +99,7 @@ class VersionInfoUtils {
                 }
             }
 
-            //从minecraft库中获取
+            // Minecraftライブラリから取得
             json.getAsJsonArray("libraries")?.forEach { lib ->
                 val (group, artifact, version) = lib.asJsonObject["name"].asString.split(":").let {
                     Triple(it[0], it[1], it.getOrNull(2) ?: "")
@@ -96,13 +111,14 @@ class VersionInfoUtils {
 
             val id = json["id"].asString
             return if (json.has("inheritsFrom")) json["inheritsFrom"].asString
-            //尝试从ID中解析MC版本
+            // IDからMCバージョンを解析
             else LOADER_DETECTORS.firstNotNullOfOrNull { it(id) } ?: id
         }
 
         /**
-         * 通过库判断ModLoader信息：ModLoader名称、版本
-         * @param versionJson 版本json对象
+         * ライブラリ情報からModLoader情報（名前とバージョン）を検出する
+         * @param versionJson バージョンJSONオブジェクト
+         * @return ModLoader情報。見つからない場合はnull
          */
         private fun detectModLoader(versionJson: JsonObject): VersionInfo.LoaderInfo? {
             versionJson.getAsJsonArray("libraries")?.forEach { libElement ->
@@ -112,16 +128,16 @@ class VersionInfoUtils {
                 }
 
                 when {
-                    //Fabric
+                    // Fabric
                     group == "net.fabricmc" && artifact == "fabric-loader" ->
                         return VersionInfo.LoaderInfo("Fabric", version)
 
-                    //Forge
+                    // Forge
                     group == "net.minecraftforge" && (artifact == "forge" || artifact == "fmlloader") -> {
                         val forgeVersion = when {
-                            //新版：1.21.4-54.0.26                 -> 54.0.26
+                            // 新バージョン: 1.21.4-54.0.26                 -> 54.0.26
                             version.count { it == '-' } == 1 -> version.substringAfterLast('-')
-                            //旧版：1.7.10-10.13.4.1614-1.7.10     -> 10.13.4.1614
+                            // 旧バージョン: 1.7.10-10.13.4.1614-1.7.10     -> 10.13.4.1614
                             version.count { it == '-' } >= 2 -> version.split("-").let { parts ->
                                 when {
                                     parts.size >= 3 && parts[0] == parts.last() -> parts[1]
@@ -133,7 +149,7 @@ class VersionInfoUtils {
                         return VersionInfo.LoaderInfo("Forge", forgeVersion)
                     }
 
-                    //NeoForge
+                    // NeoForge
                     group == "net.neoforged.fancymodloader" && artifact == "loader" -> {
                         val neoVersion = versionJson.getAsJsonObject("arguments")
                             ?.getAsJsonArray("game")
@@ -142,15 +158,15 @@ class VersionInfoUtils {
                         return VersionInfo.LoaderInfo("NeoForge", neoVersion)
                     }
 
-                    //OptiFine
+                    // OptiFine
                     (group == "optifine" || group == "net.optifine") && artifact == "OptiFine" ->
                         return VersionInfo.LoaderInfo("OptiFine", version)
 
-                    //Quilt
+                    // Quilt
                     group == "org.quiltmc" && artifact == "quilt-loader" ->
                         return VersionInfo.LoaderInfo("Quilt", version)
 
-                    //LiteLoader
+                    // LiteLoader
                     group == "com.mumfrey" && artifact == "liteloader" ->
                         return VersionInfo.LoaderInfo("LiteLoader", version)
                 }
@@ -160,8 +176,10 @@ class VersionInfoUtils {
         }
 
         /**
-         * NeoForge会将版本号存放到游戏参数内
-         * 尝试在 arguments: { "game": [] } 中寻找NeoForge的版本
+         * NeoForgeはバージョン番号をゲーム引数内に格納する
+         * arguments: { "game": [] } 内からNeoForgeのバージョンを検索する
+         * @receiver ゲーム引数のJSON配列
+         * @return NeoForgeのバージョン文字列。見つからない場合はnull
          */
         private fun JsonArray.findNeoForgeVersion(): String? {
             val args = this.mapNotNull { it.takeIf(JsonElement::isJsonPrimitive)?.asString }

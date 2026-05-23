@@ -53,7 +53,7 @@ import fr.spse.gamepad_remapper.GamepadHandler;
 import fr.spse.gamepad_remapper.Settings;
 
 public class Gamepad implements GrabListener, GamepadHandler {
-    /* Sensitivity, adjusted according to screen size */
+    /* 感度。画面サイズに応じて調整されます */
     private final double mSensitivityFactor = (1.4 * (1080f/ currentDisplayMetrics.heightPixels));
 
     private final ImageView mPointerImageView;
@@ -86,7 +86,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
     private long mLastFrameTime;
 
     private final GamepadDataProvider mMapProvider;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public Gamepad(View contextView, InputDevice inputDevice, GamepadDataProvider mapProvider, boolean showCursor){
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -96,6 +99,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
 
         mScreenChoreographer = Choreographer.getInstance();
         Choreographer.FrameCallback frameCallback = new Choreographer.FrameCallback() {
+/**
+ * 「do Frame」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void doFrame(long frameTimeNanos) {
                 tick(frameTimeNanos);
@@ -134,7 +141,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
         reloadGamepadMaps();
         mMapProvider.attachGrabListener(this);
     }
-
+/**
+ * 「reload Gamepad Maps」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void reloadGamepadMaps() {
         if(mGameMap != null) mGameMap.resetPressedState();
         if(mMenuMap != null) mMenuMap.resetPressedState();
@@ -147,19 +157,29 @@ public class Gamepad implements GrabListener, GamepadHandler {
         isGrabbing = !currentGrab;
         onGrabState(currentGrab);
     }
-
+/**
+ * 「update Joysticks」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void updateJoysticks(){
         updateDirectionalJoystick();
         updateMouseJoystick();
     }
+/**
+ * 「event」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
 
     @Subscribe
     public void event(MCOptionChangeEvent event) {
         notifyGUISizeChange(MCOptions.INSTANCE.getMcScale());
     }
-
+/**
+ * 「notify Size Change」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void notifyGUISizeChange(int newSize){
-        //Change the pointer size to match UI
+        // UIに合わせてポインターサイズを変更
         int size = (int) ((22 * newSize) / AllStaticSettings.scaleFactor);
         mPointerImageView.post(() -> {
             mPointerImageView.setLayoutParams(new FrameLayout.LayoutParams(size, size));
@@ -167,8 +187,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
         });
 
     }
-
-
+/**
+ * 「send Input」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static void sendInput(short[] keycodes, boolean isDown){
         for(short keycode : keycodes){
             switch (keycode){
@@ -198,11 +220,15 @@ public class Gamepad implements GrabListener, GamepadHandler {
         }
 
     }
-
+/**
+ * このオブジェクトが「GamepadEvent」状態であるかを判定します。
+ */
     public static boolean isGamepadEvent(MotionEvent event){
         return isJoystickEvent(event);
     }
-
+/**
+ * このオブジェクトが「GamepadEvent」状態であるかを判定します。
+ */
     public static boolean isGamepadEvent(KeyEvent event){
         boolean isGamepad = ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
                 || ((event.getDevice() != null) && ((event.getDevice().getSources() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD));
@@ -211,8 +237,8 @@ public class Gamepad implements GrabListener, GamepadHandler {
     }
 
     /**
-     * Send the new mouse position, computing the delta
-     * @param frameTimeNanos The time to render the frame, used to compute mouse delta
+     * デルタを計算して新しいマウス位置を送信します
+     * @param frameTimeNanos フレームレンダリング時間。マウスデルタの計算に使用
      */
     private void tick(long frameTimeNanos){
         if (mLastCursorType != CallbackBridge.getCurrentCursorType()) {
@@ -242,14 +268,17 @@ public class Gamepad implements GrabListener, GamepadHandler {
                 placePointerView((int) (CallbackBridge.mouseX / AllStaticSettings.scaleFactor), (int) (CallbackBridge.mouseY/ AllStaticSettings.scaleFactor));
             }
 
-            //Send the mouse to the game
+            // マウス入力をゲームに送信
             CallbackBridge.sendCursorPos(CallbackBridge.mouseX, CallbackBridge.mouseY);
         }
 
         // Update last nano time
         mLastFrameTime = newFrameTime;
     }
-
+/**
+ * 「update Pointer Drawable」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void updatePointerDrawable() {
         mLastCursorType = CallbackBridge.getCurrentCursorType();
         mPointerImageView.setImageDrawable(YLTools.customMouse(mPointerImageView.getContext()));
@@ -267,14 +296,20 @@ public class Gamepad implements GrabListener, GamepadHandler {
             }
         }
     }
-
+/**
+ * 「update Pointer Hotspot」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updatePointerHotspot(int width, int height) {
         if (mPointerImageView.getDrawable() == null) return;
         int[] hotspot = CursorDrawableUtils.getScaledHotspot(mPointerImageView.getDrawable(), width, height);
         mPointerHotspotX = hotspot[0];
         mPointerHotspotY = hotspot[1];
     }
-
+/**
+ * 「update Mouse Joystick」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateMouseJoystick(){
         GamepadJoystick currentJoystick = isGrabbing ? mRightJoystick : mLeftJoystick;
         float horizontalValue = currentJoystick.getHorizontalAxis();
@@ -296,7 +331,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
         mMouseAngle = currentJoystick.getAngleRadian();
 
     }
-
+/**
+ * 「update Directional Joystick」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateDirectionalJoystick(){
         GamepadJoystick currentJoystick = isGrabbing ? mLeftJoystick : mRightJoystick;
 
@@ -308,12 +346,17 @@ public class Gamepad implements GrabListener, GamepadHandler {
         sendDirectionalKeycode(lastJoystickDirection, false, getCurrentMap());
         sendDirectionalKeycode(mCurrentJoystickDirection, true, getCurrentMap());
     }
-
+/**
+ * 「CurrentMap」の値を取得します。
+ */
 
     private GamepadMap getCurrentMap(){
         return mCurrentMap;
     }
-
+/**
+ * 「send Directional Keycode」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static void sendDirectionalKeycode(int direction, boolean isDown, GamepadMap map){
         switch (direction){
             case DIRECTION_NORTH:
@@ -347,13 +390,17 @@ public class Gamepad implements GrabListener, GamepadHandler {
         }
     }
 
-    /** Place the pointer on the screen, offsetting the image size */
+    /**
+     * 画像サイズをオフセットしてポインタを画面に配置します。
+     */
     private void placePointerView(int x, int y){
         mPointerImageView.setX(x - mPointerHotspotX);
         mPointerImageView.setY(y - mPointerHotspotY);
     }
 
-    /** Update the grabbing state, and change the currentMap, mouse position and sensibility */
+    /**
+     * グラブ状態を更新し、currentMap、マウス位置、感度を変更します。
+     */
     @Override
     public void onGrabState(boolean isGrabbing) {
         boolean lastGrabbingValue = this.isGrabbing;
@@ -378,7 +425,10 @@ public class Gamepad implements GrabListener, GamepadHandler {
         // Sensitivity in menu is MC and HARDWARE resolution dependent
         mMouseSensitivity = 19 * AllStaticSettings.scaleFactor / mSensitivityFactor;
     }
-
+/**
+ * 「handle Gamepad Input」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void handleGamepadInput(int keycode, float value) {
         boolean isKeyEventDown = value == 1f;
@@ -396,7 +446,7 @@ public class Gamepad implements GrabListener, GamepadHandler {
                 getCurrentMap().BUTTON_Y.update(isKeyEventDown);
                 break;
 
-            //Shoulders
+            //ショルダーボタン
             case KeyEvent.KEYCODE_BUTTON_L1:
                 getCurrentMap().SHOULDER_LEFT.update(isKeyEventDown);
                 break;
@@ -404,7 +454,7 @@ public class Gamepad implements GrabListener, GamepadHandler {
                 getCurrentMap().SHOULDER_RIGHT.update(isKeyEventDown);
                 break;
 
-            //Triggers
+            //トリガー
             case KeyEvent.KEYCODE_BUTTON_L2:
                 getCurrentMap().TRIGGER_LEFT.update(isKeyEventDown);
                 break;
@@ -420,7 +470,7 @@ public class Gamepad implements GrabListener, GamepadHandler {
                 getCurrentMap().THUMBSTICK_RIGHT.update(isKeyEventDown);
                 break;
 
-            //DPAD
+            //十字キー
             case KeyEvent.KEYCODE_DPAD_UP:
                 getCurrentMap().DPAD_UP.update(isKeyEventDown);
                 break;
@@ -440,7 +490,7 @@ public class Gamepad implements GrabListener, GamepadHandler {
                 getCurrentMap().DPAD_DOWN.update(false);
                 break;
 
-            //Start/select
+            //スタート/セレクト
             case KeyEvent.KEYCODE_BUTTON_START:
                 getCurrentMap().BUTTON_START.update(isKeyEventDown);
                 break;

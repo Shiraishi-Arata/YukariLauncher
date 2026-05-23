@@ -21,26 +21,44 @@ class ModVersionListAdapter(
     RecyclerView.Adapter<ModVersionListAdapter.ViewHolder>() {
     private var onItemClickListener: OnItemClickListener? = null
 
+/**
+ * onCreateViewHolderする
+ */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemFileListViewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
+/**
+ * onBindViewHolderする
+ */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setView(mData[position])
     }
 
+/**
+ * getItemCountする
+ */
     override fun getItemCount(): Int {
         return mData.size
     }
 
+/**
+ * setOnItemClickListenerする
+ */
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.onItemClickListener = listener
     }
 
+/**
+ * interfaceする
+ */
     fun interface OnItemClickListener {
         /**
          * @return 如果任务正在执行中，需要阻止这次的点击事件，则返回 false
          */
+/**
+ * onClickする
+ */
         fun onClick(version: Any): Boolean
     }
 
@@ -52,6 +70,9 @@ class ModVersionListAdapter(
             binding.check.visibility = View.GONE
         }
 
+/**
+ * setViewする
+ */
         fun setView(version: Any) {
             when (version) {
                 is OptiFineVersion -> binding.name.text = version.versionName

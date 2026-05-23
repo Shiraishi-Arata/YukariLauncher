@@ -14,7 +14,18 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
+/**
+ * ModLoaderインストーラーの起動引数を管理するユーティリティクラス
+ * @param mcVersion Minecraftのバージョン
+ * @param loaderVersion ModLoaderのバージョン
+ */
 class InstallArgsUtils(private val mcVersion: String, private val loaderVersion: String) {
+    /**
+     * Fabricインストーラーの起動引数をIntentに設定する
+     * @param intent 対象のIntent
+     * @param jarFile FabricインストーラーのJARファイル
+     * @param customName カスタムバージョン名
+     */
     fun setFabric(intent: Intent, jarFile: File, customName: String) {
         val args = "-DprofileName=\"$customName\" -javaagent:${LibPath.MIO_FABRIC_AGENT.absolutePath}" +
                 " -jar ${jarFile.absolutePath} client -mcversion \"$mcVersion\" -loader \"$loaderVersion\" -dir \"${ProfilePathHome.getGameHome()}\""
@@ -23,7 +34,14 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
         intent.putExtra(JavaGUILauncherActivity.FORCE_SHOW_LOG, true)
     }
 
-    @Deprecated("不支持JRE 8进行安装，更高的JRE环境安装时，不会自动退出，因此暂时不使用这个函数进行配置安装")
+    /**
+     * Quiltインストーラーの起動引数をIntentに設定する（非推奨）
+     * JRE 8でのインストールはサポートされていない。
+     * より新しいJRE環境では自動終了しないため、この関数は一時的に使用しない
+     * @param intent 対象のIntent
+     * @param jarFile QuiltインストーラーのJARファイル
+     */
+    @Deprecated("JRE 8でのインストールはサポート外。より高いJRE環境では自動終了しないため、この関数は一時的に使用しない")
     fun setQuilt(intent: Intent, jarFile: File) {
         val args = "-jar ${jarFile.absolutePath} install client \"$mcVersion\" \"$loaderVersion\" --install-dir=\"${ProfilePathHome.getGameHome()}\""
         intent.putExtra("javaArgs", args)
@@ -31,6 +49,12 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
         intent.putExtra(JavaGUILauncherActivity.FORCE_SHOW_LOG, true)
     }
 
+    /**
+     * Forgeインストーラーの起動引数をIntentに設定する
+     * @param intent 対象のIntent
+     * @param jarFile ForgeインストーラーのJARファイル
+     * @param customName カスタムバージョン名
+     */
     @Throws(Throwable::class)
     fun setForge(intent: Intent, jarFile: File, customName: String) {
         forgeLikeCustomVersionName(jarFile, customName)
@@ -39,6 +63,12 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
         intent.putExtra("javaArgs", args)
     }
 
+    /**
+     * NeoForgeインストーラーの起動引数をIntentに設定する
+     * @param intent 対象のIntent
+     * @param jarFile NeoForgeインストーラーのJARファイル
+     * @param customName カスタムバージョン名
+     */
     @Throws(Throwable::class)
     fun setNeoForge(intent: Intent, jarFile: File, customName: String) {
         forgeLikeCustomVersionName(jarFile, customName)
@@ -47,10 +77,16 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
         intent.putExtra("javaArgs", args)
         intent.putExtra(JavaGUILauncherActivity.SUBSCRIBE_JVM_EXIT_EVENT, true)
         intent.putExtra(JavaGUILauncherActivity.FORCE_SHOW_LOG, true)
-        // Add this flag to disable the security manager for NeoForge installer
+        // NeoForgeインストーラーのセキュリティマネージャーを無効化するフラグを追加
         intent.putExtra("disableSecurityManager", true)
     }
 
+    /**
+     * OptiFineインストーラーの起動引数をIntentに設定する
+     * @param intent 対象のIntent
+     * @param jarFile OptiFineインストーラーのJARファイル
+     * @param customName カスタムバージョン名
+     */
     fun setOptiFine(intent: Intent, jarFile: File, customName: String) {
         val args = "-javaagent:${LibPath.FORGE_INSTALLER.absolutePath}=OFNPS " +
                 "-javaagent:${LibPath.OPTIFINE_RENAMER.absolutePath}=\"$customName\" " +
@@ -59,9 +95,11 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
     }
 
     /**
-     * 将Forge或NeoForge安装器中的install_profile.json 文件中的 version 的键，修改为 customName
-     * Forge安装器会根据 version 这个值，来生成对应的版本文件夹
-     * 这样做是为了自定义版本 json 的安装位置
+     * Forge/NeoForgeインストーラー内のinstall_profile.jsonのversionキーをcustomNameに書き換える
+     * Forgeインストーラーはversionの値を使用してバージョンフォルダを生成する
+     * これにより、カスタムバージョンjsonのインストール位置を制御できる
+     * @param jarFile インストーラーのJARファイル
+     * @param customName カスタムバージョン名
      */
     @Throws(Throwable::class)
     private fun forgeLikeCustomVersionName(jarFile: File, customName: String) {
@@ -88,12 +126,18 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
         }
     }
 
+    /**
+     * 進捗状況を更新する
+     * @param progress 進捗値（0〜100）
+     */
     private fun updateProgress(progress: Int) {
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, progress, R.string.mod_forge_custom_version)
     }
 
     /**
-     * 解压出install_profile.json
+     * JARファイルからinstall_profile.jsonを抽出する
+     * @param jarFile インストーラーJARファイル
+     * @param profileJson 出力先のJSONファイル
      */
     @Throws(Throwable::class)
     private fun extractInstallProfile(jarFile: File, profileJson: File) {
@@ -108,30 +152,39 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
     }
 
     /**
-     * 通过修改install_profile.json文件中的值，来实现自定义版本名称的效果
+     * install_profile.jsonファイル内の値を変更して、カスタムバージョン名を適用する
+     * @param profileJson プロファイルJSONファイル
+     * @param customName カスタムバージョン名
      */
     @Throws(Throwable::class)
     private fun modifyJsonFile(profileJson: File, customName: String) {
         val jsonObject = JsonParser.parseString(profileJson.readText()).asJsonObject
-        //通过检查是否有spec这个键，来判断是否为新版本的Installer
-        if (jsonObject.has("spec")) { //新版安装器
+        // specキーの有無で新/旧インストーラーを判別
+        if (jsonObject.has("spec")) { // 新バージョンインストーラー
             if (!jsonObject.has("version")) throw IOException("Unable to find version key!")
-            //install_profile.json中，把version这个值改为customName，也就完成自定义版本名的效果
+            // install_profile.jsonのversion値をcustomNameに変更することで、カスタムバージョン名を実現
             jsonObject.addProperty("version", customName)
-        } else { //旧版安装器
+        } else { // 旧バージョンインストーラー
             if (!jsonObject.has("install")) throw IOException("Unable to find install key!")
             val install = jsonObject.get("install").asJsonObject
             if (!install.has("target")) throw IOException("Unable to find install-target key!")
-            //把target这个值改为customName，也就完成旧版自定义版本名的效果
+            // target値をcustomNameに変更することで、旧バージョンのカスタムバージョン名を実現
             install.addProperty("target", customName)
             jsonObject.add("install", install)
         }
         profileJson.writeText(jsonObject.toString())
     }
 
+    /**
+     * 変更を加えた一時JARファイルを書き出す
+     * META-INF内の.SF/.RSAファイルをスキップして、署名検証の問題を回避する
+     * @param jarFile 元のJARファイル
+     * @param tempJarFile 出力先の一時JARファイル
+     * @param profileJson 変更済みのinstall_profile.jsonファイル
+     */
     @Throws(Throwable::class)
     private fun writeTempJarFile(jarFile: File, tempJarFile: File, profileJson: File) {
-        //仅跳过META-INF中后缀为.SF或.RSA的文件，避免验证的时候发现install_profile.json被修改
+        // META-INF内の.SFまたは.RSAファイルをスキップし、install_profile.jsonが変更されても検証に失敗しないようにする
         fun needSkip(entryName: String) = entryName.startsWith("META-INF/") && (entryName.endsWith(".SF") || entryName.endsWith(".RSA"))
 
         ZipFile(jarFile).use { zipFile ->
@@ -142,7 +195,7 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
                         profileJson.inputStream().use { fis -> fis.copyTo(zos) }
                     } else {
                         if (!originalEntry.isDirectory && !needSkip(originalEntry.name)) {
-                            //写入原始文件
+                            // 元のファイルを書き込む
                             zipFile.getInputStream(originalEntry).use { it.copyTo(zos) }
                         }
                     }

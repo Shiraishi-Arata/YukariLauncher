@@ -5,28 +5,38 @@ import android.content.pm.ApplicationInfo
 import com.arata.yukarilauncher.setting.AllSettings
 
 /**
- * FCL 驱动器插件
+ * FCL ドライバープラグイン管理
  * [FCL DriverPlugin.kt](https://github.com/FCL-Team/FoldCraftLauncher/blob/main/FCLauncher/src/main/java/com/tungsten/fclauncher/plugins/DriverPlugin.kt)
  */
 object DriverPluginManager {
     private val driverList: MutableList<Driver> = mutableListOf()
 
+    /**
+     * ドライバー名の一覧を取得する
+     */
     @JvmStatic
     fun getDriverNameList(): List<String> = driverList.map { it.driver }
 
     private lateinit var currentDriver: Driver
 
+    /**
+     * 名前からドライバーを設定する
+     * @param driverName ドライバー名
+     */
     @JvmStatic
     fun setDriverByName(driverName: String) {
         currentDriver = driverList.find { it.driver == driverName } ?: driverList[0]
     }
 
+    /**
+     * 現在のドライバーを取得する
+     */
     @JvmStatic
     fun getDriver(): Driver = currentDriver
 
     /**
-     * 初始化驱动器
-     * @param reset 是否清除已有插件
+     * ドライバーを初期化する
+     * @param reset 既存のプラグインをクリアするかどうか
      */
     fun initDriver(context: Context, reset: Boolean) {
         if (reset) driverList.clear()
@@ -35,7 +45,7 @@ object DriverPluginManager {
     }
 
     /**
-     * 通用 FCL 插件
+     * FCLドライバープラグインを解析する
      */
     fun parsePlugin(info: ApplicationInfo) {
         if (info.flags and ApplicationInfo.FLAG_SYSTEM == 0) {

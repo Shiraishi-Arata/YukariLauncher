@@ -24,6 +24,9 @@ open class DependenciesInfoItem(
 ) : ModInfoItem (
     classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category, modloaders
 ), Comparable<DependenciesInfoItem> {
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "InfoItem(" +
                 "classify='$classify', " +
@@ -42,6 +45,9 @@ open class DependenciesInfoItem(
                 ")"
     }
 
+/**
+ * compareToする
+ */
     override fun compareTo(other: DependenciesInfoItem): Int {
         return dependencyType.compareTo(other.dependencyType)
     }

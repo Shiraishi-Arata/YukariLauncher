@@ -13,22 +13,27 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-// Android's OpenDocument contract is the basicmost crap that doesn't allow
-// you to specify practically anything. So i made this instead.
+/**
+ * AndroidのOpenDocumentコントラクトは基本的な最低限の機能しか提供せず、ほとんど何も指定できません。
+ * そこで、このクラスを作成しました。
+ */
 public class OpenDocumentWithExtension extends ActivityResultContract<Object, List<Uri>> {
     private final String mimeType;
     private final boolean allowMultiple;
 
+    /**
+     * 単一選択のコンストラクタ。
+     * @param extension フィルターする拡張子
+     */
     public OpenDocumentWithExtension(String extension) {
         this(extension, false);
     }
 
     /**
-     * Create a new OpenDocumentWithExtension contract.
-     * If the extension provided to the constructor is not available in the device's MIME
-     * type database, the filter will default to "all types"
-     * @param extension the extension to filter by
-     * @param allowMultiple whether or not to allow multiple file selections
+     * 拡張子でフィルターするドキュメント選択コントラクトを作成します。
+     * デバイスのMIMEタイプデータベースで拡張子が利用できない場合、フィルターは「すべてのタイプ」にデフォルト設定されます。
+     * @param extension フィルターする拡張子
+     * @param allowMultiple 複数ファイル選択を許可するかどうか
      */
     public OpenDocumentWithExtension(String extension, boolean allowMultiple) {
         String extensionMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
@@ -37,6 +42,9 @@ public class OpenDocumentWithExtension extends ActivityResultContract<Object, Li
         this.allowMultiple = allowMultiple;
     }
 
+    /**
+     * ドキュメント選択インテントを作成します。
+     */
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, @NonNull Object input) {
@@ -44,7 +52,7 @@ public class OpenDocumentWithExtension extends ActivityResultContract<Object, Li
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType(mimeType);
 
-        //根据构造函数参数决定是否允许多选
+        // コンストラクタのパラメータに基づいて複数選択を許可するかどうかを決定します
         if (allowMultiple) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -52,13 +60,19 @@ public class OpenDocumentWithExtension extends ActivityResultContract<Object, Li
         return intent;
     }
 
+    /**
+     * 同期的な結果はサポートしていません。
+     */
     @Nullable
     @Override
     public final SynchronousResult<List<Uri>> getSynchronousResult(@NonNull Context context,
-                                                                   @NonNull Object input) {
+                                                                    @NonNull Object input) {
         return null;
     }
 
+    /**
+     * 結果を解析し、選択されたURIのリストを返します。
+     */
     @Nullable
     @Override
     public final List<Uri> parseResult(int resultCode, @Nullable Intent intent) {
@@ -66,7 +80,7 @@ public class OpenDocumentWithExtension extends ActivityResultContract<Object, Li
 
         List<Uri> uris = new ArrayList<>();
         if (intent.getClipData() != null) {
-            //多个项目被选中
+            // 複数の項目が選択されました
             for (int i = 0; i < intent.getClipData().getItemCount(); i++) {
                 uris.add(intent.getClipData().getItemAt(i).getUri());
             }

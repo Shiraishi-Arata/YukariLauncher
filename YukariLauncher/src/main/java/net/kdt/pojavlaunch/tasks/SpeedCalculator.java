@@ -9,12 +9,21 @@ public class SpeedCalculator {
     private final long[] mPreviousInputs;
     private long mSum;
 
+/**
+ * SpeedCalculatorを構築します
+ */
     public SpeedCalculator() {
         this(64);
     }
+/**
+ * SpeedCalculatorを構築します
+ */
     public SpeedCalculator(int averageDepth) {
         mPreviousInputs = new long[averageDepth];
     }
+/**
+ * addToAverageメソッド
+ */
     private long addToAverage(long speed) {
         mSum -= mPreviousInputs[mIndex];
         mSum += speed;

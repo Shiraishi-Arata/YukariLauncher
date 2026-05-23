@@ -25,6 +25,9 @@ open class ModInfoItem(
 ) : InfoItem(
     classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category
 ) {
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "ModInfoItem(" +
                 "classify='$classify', " +

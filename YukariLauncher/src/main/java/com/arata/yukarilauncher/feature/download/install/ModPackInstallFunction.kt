@@ -4,7 +4,13 @@ import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import java.io.File
 import java.io.IOException
 
+/**
+ * interfaceする
+ */
 fun interface ModPackInstallFunction {
     @Throws(IOException::class)
+/**
+ * installする
+ */
     fun install(modpackFile: File, targetPath: File): ModLoaderWrapper?
 }

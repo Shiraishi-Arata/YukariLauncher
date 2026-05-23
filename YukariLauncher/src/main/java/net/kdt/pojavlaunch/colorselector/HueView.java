@@ -14,8 +14,9 @@ import androidx.annotation.Nullable;
 
 import net.kdt.pojavlaunch.Tools;
 
-
-
+/**
+ * 色相を選択するためのビュー。色相グラデーションを表示し、タッチで選択できます。
+ */
 public class HueView extends View {
     private final Paint blackPaint = new Paint();
     private Bitmap mGamma;
@@ -26,20 +27,34 @@ public class HueView extends View {
     private float mWidth;
     private float mHeight;
     private float mWidthThird;
+
+    /**
+     * コンストラクタ。ペイントを初期化します。
+     */
     public HueView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setColor(Color.BLACK);
         blackPaint.setStrokeWidth(Tools.dpToPx(3));
     }
 
+    /**
+     * 色相選択リスナーを設定します。
+     */
     public void setHueSelectionListener(HueSelectionListener listener) {
         mHueSelectionListener = listener;
     }
+
+    /**
+     * 色相を設定し、再描画します。
+     */
     public void setHue(float hue) {
         mSelectionHue = hue;
         invalidate();
     }
 
+    /**
+     * タッチイベントで色相を選択します。
+     */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -49,6 +64,9 @@ public class HueView extends View {
         return true;
     }
 
+    /**
+     * ビューを描画します。色相ビットマップと選択インジケーターを描画します。
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(mGamma, 0, 0 ,null);
@@ -57,6 +75,9 @@ public class HueView extends View {
         canvas.drawLine( mWidthThird * 2 ,linePos, mWidth, linePos, blackPaint);
     }
 
+    /**
+     * サイズ変更時に色相ビットマップを再生成します。
+     */
     @Override
     protected void onSizeChanged(int w, int h, int old_w, int old_h) {
         mWidth = w;
@@ -65,6 +86,9 @@ public class HueView extends View {
         regenerateGammaBitmap();
     }
 
+    /**
+     * 色相グラデーションのビットマップを生成します。
+     */
     protected void regenerateGammaBitmap() {
         if(mGamma != null)
             mGamma.recycle();

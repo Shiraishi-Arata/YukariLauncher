@@ -11,6 +11,9 @@ class ScreenshotItem(
     val title: String?,
     val description: String?
 ) {
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "ScreenshotItem(imageUrl='$imageUrl', title='$title', description='$description')"
     }

@@ -29,7 +29,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 上から落下しながらバウンスするアニメーション
+ * 透明度を0→1に変化させ、Y座標を-60→12→-6→0とバウンスさせる
+ */
 class BounceInDownAnimator: BaseAnimator() {
+    /** バウンス下降アニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 0f, 1f, 1f, 1f),

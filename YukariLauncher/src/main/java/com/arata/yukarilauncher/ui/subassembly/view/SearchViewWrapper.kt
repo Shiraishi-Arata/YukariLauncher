@@ -14,6 +14,9 @@ import com.petterp.floatingx.listener.IFxViewLifecycle
 import com.petterp.floatingx.listener.control.IFxScopeControl
 import com.petterp.floatingx.view.FxViewHolder
 
+/**
+ * 検索ビューのフローティングウィンドウをラップするクラス
+ */
 class SearchViewWrapper(private val fragment: Fragment) {
     private lateinit var mSearchEditText: EditText
     private var searchListener: SearchListener? = null
@@ -23,6 +26,9 @@ class SearchViewWrapper(private val fragment: Fragment) {
 
     private var scopeFx: IFxScopeControl? = null
 
+    /**
+     * フローティングウィンドウの制御インスタンスを取得する
+     */
     private fun getWindow(): IFxScopeControl {
         return FxScopeHelper.Builder().apply {
             setLayout(R.layout.view_search)
@@ -46,6 +52,9 @@ class SearchViewWrapper(private val fragment: Fragment) {
         }.build().toControl(fragment)
     }
 
+    /**
+     * 検索を実行し、結果件数を表示する
+     */
     private fun search(searchCountText: TextView, caseSensitive: Boolean) {
         val searchCount: Int
         val string = mSearchEditText.text.toString()
@@ -58,25 +67,41 @@ class SearchViewWrapper(private val fragment: Fragment) {
         searchAsynchronousUpdatesListener?.apply { onSearch(searchCountText, string, caseSensitive) }
     }
 
+    /**
+     * 検索リスナーを設定する
+     */
     fun setSearchListener(listener: SearchListener?) {
         this.searchListener = listener
     }
 
+    /**
+     * 非同期更新リスナーを設定する
+     */
     fun setAsynchronousUpdatesListener(listener: SearchAsynchronousUpdatesListener?) {
         this.searchAsynchronousUpdatesListener = listener
     }
 
+    /**
+     * 検索結果表示リスナーを設定する
+     */
     fun setShowSearchResultsListener(listener: ShowSearchResultsListener?) {
         this.showSearchResultsListener = listener
     }
 
+    /** 表示中かどうかを返す */
     fun isVisible() = isShow
 
+    /**
+     * 表示状態を切り替える
+     */
     fun setVisibility() {
         isShow = !isShow
         setVisibility(isShow)
     }
 
+    /**
+     * 指定された表示状態に設定する
+     */
     fun setVisibility(visible: Boolean) {
         if (visible) {
             scopeFx ?: run {
@@ -90,14 +115,23 @@ class SearchViewWrapper(private val fragment: Fragment) {
         }
     }
 
+    /**
+     * 検索処理のリスナーインターフェース
+     */
     interface SearchListener {
         fun onSearch(string: String?, caseSensitive: Boolean): Int
     }
 
+    /**
+     * 非同期検索更新のリスナーインターフェース
+     */
     interface SearchAsynchronousUpdatesListener {
         fun onSearch(searchCount: TextView?, string: String?, caseSensitive: Boolean)
     }
 
+    /**
+     * 検索結果表示のリスナーインターフェース
+     */
     interface ShowSearchResultsListener {
         fun onSearch(show: Boolean)
     }

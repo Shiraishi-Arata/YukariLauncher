@@ -29,7 +29,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * フェードインアニメーション（基本）
+ * 透明度を0から1へ変化させて表示する
+ */
 class FadeInAnimator: BaseAnimator() {
+    /** フェードインアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(ObjectAnimator.ofFloat(target, "alpha", 0f, 1f))
     }

@@ -12,11 +12,11 @@ import kotlin.math.min
 class ImageUtils {
     companion object {
         /**
-         * 通过 BitmapFactory 检查一个文件是否为一个图片
-         * @param file 文件
-         * @return 返回是否为图片
+         * BitmapFactoryを使用してファイルが画像かどうかをチェックする
+         * ソースコード: https://github.com/lamba92/KImageCheck/blob/master/src/androidMain/kotlin/com/github/lamba92/utils/KImageCheck.kt#L12
+         * @param file チェックするファイル
+         * @return 画像の場合はtrue、そうでない場合はfalse
          */
-        //使用源代码：https://github.com/lamba92/KImageCheck/blob/master/src/androidMain/kotlin/com/github/lamba92/utils/KImageCheck.kt#L12
         @JvmStatic
         fun isImage(file: File?): Boolean {
             file?.apply {
@@ -32,18 +32,18 @@ class ImageUtils {
         }
 
         /**
-         * 通过计算图片的长款比例来计算缩放后的长款数据
-         * @param imageWidth 原始图片的长
-         * @param imageHeight 原始图片的宽
-         * @param maxSize 需要限制在多大的空间
-         * @return 返回一个缩放后的长宽数据对象
+         * 画像のアスペクト比を維持しながら指定サイズに収まるようにリサイズする
+         * @param imageWidth 元の画像の幅
+         * @param imageHeight 元の画像の高さ
+         * @param maxSize 制限する最大サイズ
+         * @return リサイズ後の幅と高さを含むDimensionオブジェクト
          */
         @JvmStatic
         fun resizeWithRatio(imageWidth: Int, imageHeight: Int, maxSize: Int): Dimension {
             val widthRatio = maxSize.toDouble() / imageWidth
             val heightRatio = maxSize.toDouble() / imageHeight
 
-            //选择较小的缩放比例，确保长宽按比例缩小且不超过maxSize限制
+            // 小さい方の倍率を選択して、最大サイズを超えないようにする
             val ratio = min(widthRatio, heightRatio)
             val newWidth = (imageWidth * ratio).toInt()
             val newHeight = (imageHeight * ratio).toInt()
@@ -52,7 +52,7 @@ class ImageUtils {
         }
 
         /**
-         * 从一个 ImageView 中获取 Drawable，并将其转换为 Bitmap
+         * ImageViewからDrawableを取得し、Bitmapに変換する
          */
         @JvmStatic
         fun getBitmapFromImageView(imageView: ImageView): Bitmap? {

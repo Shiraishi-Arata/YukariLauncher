@@ -10,10 +10,17 @@ public class RightClickGesture extends ValidatorGesture{
     private boolean mGestureEnabled = true;
     private boolean mGestureValid = true;
     private float mGestureStartX, mGestureStartY, mGestureEndX, mGestureEndY;
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public RightClickGesture(Handler mHandler) {
         super(mHandler);
     }
-
+/**
+ * 「input Event」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public final void inputEvent() {
         if(!mGestureEnabled) return;
         if(submit()) {
@@ -23,17 +30,24 @@ public class RightClickGesture extends ValidatorGesture{
             mGestureValid = true;
         }
     }
-
+/**
+ * 「Motion」の値を設定します。
+ */
     public void setMotion(float deltaX, float deltaY) {
         mGestureEndX += deltaX;
         mGestureEndY += deltaY;
     }
-
+/**
+ * 「GestureDelay」の値を取得します。
+ */
     @Override
     protected int getGestureDelay() {
         return 150;
     }
-
+/**
+ * 「check And Trigger」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public boolean checkAndTrigger() {
         // If the validate() method was called, it means that the user held on for too long. The cancellation should be ignored.
@@ -43,7 +57,10 @@ public class RightClickGesture extends ValidatorGesture{
         // cancelled by turning on the grab)
         return true;
     }
-
+/**
+ * 「on Gesture Cancelled」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onGestureCancelled(boolean isSwitching) {
         mGestureEnabled = true;

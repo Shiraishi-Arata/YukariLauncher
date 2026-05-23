@@ -2,10 +2,21 @@ package com.arata.yukarilauncher.utils.mouse;
 
 import android.graphics.drawable.Drawable;
 
+/**
+ * カーソル描画に関するユーティリティクラス
+ * ホットスポットのスケーリング処理などを提供する
+ */
 public final class CursorDrawableUtils {
     private CursorDrawableUtils() {
     }
 
+    /**
+     * 指定されたサイズにスケーリングした際のホットスポット座標を計算する
+     * @param drawable カーソルDrawable（CursorHotspotAwareを実装している必要がある）
+     * @param scaledWidth スケーリング後の幅
+     * @param scaledHeight スケーリング後の高さ
+     * @return スケーリング後のホットスポット座標 {x, y}
+     */
     public static int[] getScaledHotspot(Drawable drawable, int scaledWidth, int scaledHeight) {
         if (!(drawable instanceof CursorHotspotAware)) {
             return new int[]{0, 0};
@@ -20,4 +31,3 @@ public final class CursorDrawableUtils {
         return new int[]{scaledHotspotX, scaledHotspotY};
     }
 }
-

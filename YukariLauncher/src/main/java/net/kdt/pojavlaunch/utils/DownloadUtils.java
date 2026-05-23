@@ -26,10 +26,16 @@ import java.util.concurrent.Callable;
 
 @SuppressWarnings("IOStreamConstructor")
 public class DownloadUtils {
+/**
+ * downloadメソッド
+ */
     public static void download(String url, OutputStream os) throws IOException {
         download(new URL(url), os);
     }
 
+/**
+ * downloadメソッド
+ */
     public static void download(URL url, OutputStream os) throws IOException {
         InputStream is = null;
         try {
@@ -57,6 +63,9 @@ public class DownloadUtils {
         }
     }
 
+/**
+ * downloadStringメソッド
+ */
     public static String downloadString(String url) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         download(url, bos);
@@ -64,6 +73,9 @@ public class DownloadUtils {
         return new String(bos.toByteArray(), StandardCharsets.UTF_8);
     }
 
+/**
+ * downloadFileメソッド
+ */
     public static void downloadFile(String url, File out) throws IOException {
         FileUtils.ensureParentDirectory(out);
         try (FileOutputStream fileOutputStream = new FileOutputStream(out)) {
@@ -71,6 +83,9 @@ public class DownloadUtils {
         }
     }
 
+/**
+ * downloadFileMonitoredメソッド
+ */
     public static void downloadFileMonitored(String urlInput, File outputFile, @Nullable byte[] buffer,
                                              Tools.DownloaderFeedback monitor) throws IOException {
         FileUtils.ensureParentDirectory(outputFile);
@@ -141,6 +156,9 @@ public class DownloadUtils {
         }
     }
 
+/**
+ * verifyFileメソッド
+ */
     private static boolean verifyFile(File file, String sha1) {
         return file.exists() && Tools.compareSHA1(file, sha1);
     }
@@ -182,16 +200,31 @@ public class DownloadUtils {
         return -1;
     }
 
+/**
+ * ParseCallbackインターフェース
+ */
     public interface ParseCallback<T> {
         T process(String input) throws ParseException;
     }
+/**
+ * ParseException内部クラス
+ */
     public static class ParseException extends Exception {
+/**
+ * ParseExceptionを構築します
+ */
         public ParseException(Exception e) {
             super(e);
         }
     }
 
+/**
+ * SHA1VerificationException内部クラス
+ */
     public static class SHA1VerificationException extends IOException {
+/**
+ * SHA1VerificationExceptionを構築します
+ */
         public SHA1VerificationException(String message) {
             super(message);
         }

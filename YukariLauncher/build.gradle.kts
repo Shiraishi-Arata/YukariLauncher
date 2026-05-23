@@ -9,6 +9,9 @@ plugins {
 }
 apply(plugin = "stringfog")
 
+/**
+ * CurseForge APIキーを環境変数またはファイルから取得します。
+ */
 val getCFApiKey = {
     System.getenv("CURSEFORGE_API_KEY") ?: run {
         val curseforgeKeyFile = File(rootDir, "curseforge_key.txt")
@@ -21,6 +24,9 @@ val getCFApiKey = {
     }
 }
 
+/**
+ * ビルドタイプを環境変数から取得します。
+ */
 val getBuildType = {
     val buildType = System.getenv("YL_BUILD_TYPE") ?: "DEBUG"
     logger.warn("BUILD: Build Type --> $buildType")
@@ -74,7 +80,7 @@ android {
         targetSdk = 35
         versionCode = launcherVersionCode
         versionName = launcherVersionName
-        multiDexEnabled = true //important
+        multiDexEnabled = true
         manifestPlaceholders["launcher_name"] = launcherAPPName
     }
 
@@ -99,7 +105,6 @@ android {
             isDebuggable = false
         }
         getByName("release") {
-            // Don't set to true or java.awt will be a.a or something similar.
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             resValue("string", "storageProviderAuthorities", storageProviderId)
@@ -189,6 +194,13 @@ android {
     }
 }
 
+/**
+ * 指定された定数マップからJavaクラスを生成します。
+ * @param sourceOutputDir 出力ディレクトリ
+ * @param packageName パッケージ名
+ * @param className クラス名
+ * @param constantMap 定数マップ
+ */
 fun generateJavaClass(sourceOutputDir: File, packageName: String, className: String, constantMap: Map<String, String>) {
     val outputDir = File(sourceOutputDir, packageName.replace(".", "/"))
     outputDir.mkdirs()
@@ -199,7 +211,7 @@ fun generateJavaClass(sourceOutputDir: File, packageName: String, className: Str
     javaFile.writeText(
         """
         |/**
-        | * Automatically generated file. DO NOT MODIFY
+        | * 自動生成ファイル。変更しないでください。
         | */
         |package $packageName;
         |
@@ -211,6 +223,9 @@ fun generateJavaClass(sourceOutputDir: File, packageName: String, className: Str
     println("Generated Java file: ${javaFile.absolutePath}")
 }
 
+/**
+ * ランチャー情報を保持するInfoDistributorクラスを生成するタスク
+ */
 tasks.register("generateInfoDistributor") {
     doLast {
         val constantMap = mapOf(
@@ -230,8 +245,6 @@ tasks.named("preBuild") {
 dependencies {
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation("commons-codec:commons-codec:1.17.1")
-    // implementation("org.apache.commons:commons-compress:1.27.1")
-    // implementation("com.wu-man:android-bsf-api:3.1.3")
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     implementation("androidx.annotation:annotation:1.7.0")
@@ -255,17 +268,9 @@ dependencies {
 
     implementation("jp.wasabeef:glide-transformations:4.3.0")
 
-
-    // implementation("com.intuit.sdp:sdp-android:1.0.5")
-    // implementation("com.intuit.ssp:ssp-android:1.0.5")
-
     implementation("org.tukaani:xz:1.9")
-    // Our version of exp4j can be built from source at
-    // https://github.com/PojavLauncherTeam/exp4j
     implementation("net.sourceforge.htmlcleaner:htmlcleaner:2.6.1")
     implementation("com.bytedance:bytehook:1.0.10")
-
-    // implementation("net.sourceforge.streamsupport:streamsupport-cfuture:1.7.0")
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
 

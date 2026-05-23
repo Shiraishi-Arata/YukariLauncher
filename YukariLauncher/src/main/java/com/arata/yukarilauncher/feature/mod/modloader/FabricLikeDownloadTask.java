@@ -20,16 +20,28 @@ public class FabricLikeDownloadTask implements InstallTask, Tools.DownloaderFeed
     private String mGameVersion = null;
     private String mLoaderVersion = null;
 
+/**
+ * FabricLikeDownloadTaskする
+ */
     public FabricLikeDownloadTask(FabricLikeUtils utils) {
         this.mUtils = utils;
     }
 
+/**
+ * FabricLikeDownloadTaskする
+ */
     public FabricLikeDownloadTask(FabricLikeUtils utils, String gameVersion, String loaderVersion) {
         this(utils);
         this.mGameVersion = gameVersion;
         this.mLoaderVersion = loaderVersion;
     }
 
+    /**
+     * インストールタスクを実行する
+     * @param customName カスタムインスタンス名
+     * @return インストーラーファイル、またはnull
+     * @throws Exception 実行エラー時
+     */
     @Override
     public File run(@NonNull String customName) throws Exception {
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.mod_download_progress, mUtils.getName());
@@ -45,6 +57,10 @@ public class FabricLikeDownloadTask implements InstallTask, Tools.DownloaderFeed
         return outputFile;
     }
 
+/**
+ * Fabricインストーラーをダウンロードする
+ * @return ダウンロードファイル
+ */
     private File downloadInstaller() throws Exception {
         File outputFile = new File(PathManager.DIR_CACHE, "fabric-installer.jar");
 
@@ -55,8 +71,12 @@ public class FabricLikeDownloadTask implements InstallTask, Tools.DownloaderFeed
         return outputFile;
     }
 
-    //因为Quilt要用Jre17去跑，跑完之后JVM不会自动退出
-    //为了自动化处理，所以暂时这么做
+    /**
+     * 従来の方式でFabricインストールを実行する
+     * バージョンJSONをダウンロードして保存する
+     * @param customName カスタムインスタンス名
+     * @throws Exception インストールエラー時
+     */
     private void legacyInstall(String customName) throws Exception {
         String jsonString = DownloadUtils.downloadString(mUtils.createJsonDownloadUrl(mGameVersion, mLoaderVersion));
 
@@ -66,6 +86,11 @@ public class FabricLikeDownloadTask implements InstallTask, Tools.DownloaderFeed
         Tools.write(versionJsonFile.getAbsolutePath(), jsonString);
     }
 
+    /**
+     * ダウンロード進捗を更新する
+     * @param curr 現在の進捗
+     * @param max 最大進捗
+     */
     @Override
     public void updateProgress(long curr, long max) {
         int progress100 = (int)(((float)curr / (float)max)*100f);

@@ -30,6 +30,9 @@ import com.arata.yukarilauncher.task.TaskExecutors
 import java.io.BufferedReader
 import java.io.FileReader
 
+/**
+ * サーバーコンソールフラグメント
+ */
 class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console) {
 
     companion object {
@@ -42,7 +45,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
     private lateinit var serverManager: McServerManager
     private var selectedType: McServerType = McServerType.PAPER
 
-    // Tunnel service (for tunnel address lines in log)
     private var tunnelService: HostServerService? = null
     private var tunnelBound = false
     private val tunnelConnection = object : ServiceConnection {
@@ -56,14 +58,11 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
-    // Log
     private val logLines = ArrayDeque<String>()
 
-    // CPU
     private var lastCpuIdle = 0L
     private var lastCpuTotal = 0L
 
-    // Stats
     private val statsHandler = Handler(Looper.getMainLooper())
     private val statsRunnable = object : Runnable {
         override fun run() {
@@ -71,13 +70,17 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
-
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentServerConsoleBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -96,32 +99,32 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         sysLog("[INFO] Console ready — configure and press START.")
     }
 
+    /**
+     * ビュー破棄時にハンドラーコールバックとサービス接続をクリーンアップします。
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         statsHandler.removeCallbacks(statsRunnable)
         if (tunnelBound) { requireContext().unbindService(tunnelConnection); tunnelBound = false }
     }
 
-    // ── UI wiring ─────────────────────────────────────────────────────────────
-
+    /**
+     * UIコールバックを設定する
+     */
     private fun wireUI() {
         binding.consoleBackButton.setOnClickListener { forceBack() }
         binding.consoleClearButton.setOnClickListener { clearLog() }
 
-        // Type tabs
         binding.consoleTabVanilla.setOnClickListener { setTab(McServerType.VANILLA) }
         binding.consoleTabPaper.setOnClickListener   { setTab(McServerType.PAPER)   }
         binding.consoleTabFabric.setOnClickListener  { setTab(McServerType.FABRIC)  }
 
-        // Fetch versions button
         binding.consoleVersionFetchBtn.setOnClickListener { fetchVersions() }
 
-        // Control buttons
         binding.consoleStartButton.setOnClickListener { startServer() }
         binding.consoleRestartButton.setOnClickListener { restartServer() }
         binding.consoleStopButton.setOnClickListener { stopServer() }
 
-        // Command input — send on keyboard action or button tap
         binding.consoleCommandInput.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEND ||
                 (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)) {
@@ -132,12 +135,12 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         binding.consoleSendButton.setOnClickListener { sendCommand() }
     }
 
-    // ── Tab selection ─────────────────────────────────────────────────────────
-
+    /**
+     * サーバー種別タブを設定する
+     */
     private fun setTab(type: McServerType) {
         selectedType = type
 
-        // Reset all tabs to unselected look
         listOf(binding.consoleTabVanilla, binding.consoleTabPaper, binding.consoleTabFabric)
             .forEach {
                 it.setBackgroundResource(android.R.color.transparent)
@@ -145,7 +148,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
                 it.typeface = android.graphics.Typeface.DEFAULT
             }
 
-        // Highlight selected
         val active = when (type) {
             McServerType.VANILLA -> binding.consoleTabVanilla
             McServerType.PAPER   -> binding.consoleTabPaper
@@ -155,13 +157,13 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         active.setTextColor(0xFF8D42EB.toInt())
         active.typeface = android.graphics.Typeface.DEFAULT_BOLD
 
-        // Clear version list when switching type
         binding.consoleVersionListContainer.removeAllViews()
         binding.consoleVersionListContainer.visibility = View.GONE
     }
 
-    // ── Version fetch ─────────────────────────────────────────────────────────
-
+    /**
+     * バージョン一覧を取得する
+     */
     private fun fetchVersions() {
         binding.consoleVersionFetchBtn.text = getString(R.string.console_fetching)
         binding.consoleVersionFetchBtn.isEnabled = false
@@ -187,7 +189,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
                 if (versions.isEmpty()) return@runInUIThread
 
                 binding.consoleVersionListContainer.removeAllViews()
-                // Show max 12 versions as tappable chips
                 versions.take(12).forEach { ver ->
                     val chip = TextView(requireContext()).apply {
                         text = ver
@@ -218,6 +219,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
+    /**
+     * Vanillaバージョン一覧を取得する
+     */
     private fun fetchVanillaVersions(): List<String> {
         val json = java.net.URL("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").readText()
         val arr = org.json.JSONObject(json).getJSONArray("versions")
@@ -227,6 +231,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
             .map { it.getString("id") }
     }
 
+    /**
+     * Paperバージョン一覧を取得する
+     */
     private fun fetchPaperVersions(): List<String> {
         val json = java.net.URL("https://api.papermc.io/v2/projects/paper").readText()
         val arr = org.json.JSONObject(json).getJSONArray("versions")
@@ -234,6 +241,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
             .map { arr.getString(it) }
     }
 
+    /**
+     * Fabricバージョン一覧を取得する
+     */
     private fun fetchFabricVersions(): List<String> {
         val json = java.net.URL("https://meta.fabricmc.net/v2/versions/game").readText()
         val arr = org.json.JSONArray(json)
@@ -243,8 +253,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
             .map { it.getString("version") }
     }
 
-    // ── Server control ────────────────────────────────────────────────────────
-
+    /**
+     * サーバーを起動する
+     */
     private fun startServer() {
         val config = buildConfig() ?: return
         setButtonState(running = false, transitioning = true)
@@ -252,19 +263,28 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         serverManager.start(config)
     }
 
+    /**
+     * サーバーを再起動する
+     */
     private fun restartServer() {
         val config = buildConfig() ?: return
         setButtonState(running = false, transitioning = true)
         sysLog("[INFO] Restarting…")
         serverManager.restart(config)
     }
-    
+
+    /**
+     * サーバーを停止する
+     */
     private fun stopServer() {
         setButtonState(running = false, transitioning = true)
         sysLog("[INFO] Stopping server…")
         serverManager.stop()
     }
 
+    /**
+     * サーバー設定を構築する
+     */
     private fun buildConfig(): McServerConfig? {
         val version = binding.consoleVersionInput.text.toString().trim()
         if (version.isBlank()) { sysLog("[ERROR] Enter a Minecraft version."); return null }
@@ -273,8 +293,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         return McServerConfig(type = selectedType, version = version, jvmArgs = jvm, port = port)
     }
 
-    // ── Command input ─────────────────────────────────────────────────────────
-
+    /**
+     * コマンドを送信する
+     */
     private fun sendCommand() {
         val cmd = binding.consoleCommandInput.text.toString().trim()
         if (cmd.isBlank()) return
@@ -284,13 +305,13 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
         serverManager.sendCommand(cmd)
         binding.consoleCommandInput.setText("")
-        // Hide keyboard
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.consoleCommandInput.windowToken, 0)
     }
 
-    // ── Button states ─────────────────────────────────────────────────────────
-
+    /**
+     * ボタンの状態を更新する
+     */
     private fun setButtonState(running: Boolean, transitioning: Boolean = false) {
         requireActivity().runOnUiThread {
             if (!isAdded) return@runOnUiThread
@@ -298,7 +319,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
             binding.consoleStartButton.isEnabled   = !running && !busy
             binding.consoleRestartButton.isEnabled =  running && !busy
             binding.consoleStopButton.isEnabled    =  running && !busy
-            // Lock setup fields while running
             binding.consoleVersionInput.isEnabled  = !running
             binding.consolePortInput.isEnabled     = !running
             binding.consoleJvmArgsInput.isEnabled  = !running
@@ -306,7 +326,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
             binding.consoleTabPaper.isEnabled      = !running
             binding.consoleTabFabric.isEnabled     = !running
 
-            // Status dot
             when {
                 running      -> {
                     binding.consoleStatusDot.setBackgroundResource(R.drawable.bg_status_dot_running)
@@ -324,8 +343,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
-    // ── McServerManager callbacks ─────────────────────────────────────────────
-
+    /**
+     * McServerManagerのコールバックを設定する
+     */
     private fun wireCallbacks() {
         serverManager.onLog     = { line -> appendLine(line) }
         serverManager.onStarted = { setButtonState(running = true) }
@@ -352,8 +372,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
-    // ── Tunnel observation ────────────────────────────────────────────────────
-
+    /**
+     * トンネル情報を監視する
+     */
     private fun observeTunnel() {
         tunnelService?.tunnelAddress?.observe(viewLifecycleOwner) { addr ->
             if (!addr.isNullOrEmpty()) sysLog("[TUNNEL] Public: $addr")
@@ -363,8 +384,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
-    // ── Log helpers ───────────────────────────────────────────────────────────
-
+    /**
+     * ログに行を追加する
+     */
     private fun appendLine(raw: String) {
         if (!isAdded) return
         requireActivity().runOnUiThread {
@@ -378,34 +400,42 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         }
     }
 
+    /**
+     * システムログメッセージを追加します。
+     */
     private fun sysLog(msg: String) = appendLine(msg)
 
+    /**
+     * ログをクリアする
+     */
     private fun clearLog() {
         logLines.clear()
         binding.consoleLogText.text = ""
     }
 
+    /**
+     * ログ行にタグを付ける
+     */
     private fun tag(line: String) = when {
         line.contains("ERROR", true) || line.contains("Exception") ||
         line.contains("FATAL", true)  -> "✗ $line"
         line.contains("WARN", true)   -> "⚠ $line"
-        line.startsWith(">")          -> line           // echoed command
+        line.startsWith(">")          -> line
         line.contains("[TUNNEL]") || line.contains("[INSTALL]") -> "► $line"
         else                          -> "  $line"
     }
 
-    // ── System stats ──────────────────────────────────────────────────────────
-
+    /**
+     * システム統計情報を更新する
+     */
     private fun updateStats() {
         if (!isAdded) return
-        // RAM
         val am   = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val mi   = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
         val tot  = mi.totalMem / (1024 * 1024)
         val used = tot - mi.availMem / (1024 * 1024)
         binding.consoleRamText.text    = "${fmt(used)}/${fmt(tot)}"
         binding.consoleRamBar.progress = if (tot > 0) (used * 100 / tot).toInt() else 0
-        // CPU
         readCpuCounters()?.let { (idle, total) ->
             val dt = total - lastCpuTotal; val di = idle - lastCpuIdle
             lastCpuIdle = idle; lastCpuTotal = total
@@ -415,7 +445,6 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
                 binding.consoleCpuBar.progress = pct
             }
         }
-        // Disk
         try {
             val st   = StatFs(Environment.getDataDirectory().path)
             val dtot = st.totalBytes / (1024 * 1024)
@@ -425,6 +454,9 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         } catch (_: Exception) {}
     }
 
+    /**
+     * CPUカウンターを読み取る
+     */
     private fun readCpuCounters(): Pair<Long, Long>? {
         return try {
             val line  = BufferedReader(FileReader("/proc/stat")).readLine()?.trim() ?: return null
@@ -436,14 +468,21 @@ class ServerConsoleFragment : FragmentWithAnim(R.layout.fragment_server_console)
         } catch (_: Exception) { null }
     }
 
+    /**
+     * メモリサイズを見やすくフォーマットする
+     */
     private fun fmt(mb: Long) = if (mb >= 1024) "${"%.1f".format(mb / 1024.0)}G" else "${mb}M"
 
-    // ── Animations ────────────────────────────────────────────────────────────
-
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.consoleRoot, Animations.BounceInDown))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.consoleRoot, Animations.FadeOutUp))
     }

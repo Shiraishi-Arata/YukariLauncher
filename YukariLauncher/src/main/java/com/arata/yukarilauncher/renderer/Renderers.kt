@@ -13,7 +13,8 @@ import net.kdt.pojavlaunch.Architecture
 import net.kdt.pojavlaunch.Tools
 
 /**
- * 启动器所有渲染器总管理者，启动器内置的渲染器与渲染器插件加载的渲染器，都会加载到这里
+ * ランチャーの全レンダラー管理
+ * 内蔵レンダラーとプラグインで読み込まれたレンダラーがここに集約される
  */
 object Renderers {
     private val renderers: MutableList<RendererInterface> = mutableListOf()
@@ -21,6 +22,11 @@ object Renderers {
     private var currentRenderer: RendererInterface? = null
     private var isInitialized: Boolean = false
 
+    /**
+     * レンダラーを初期化する
+     * 内蔵レンダラーを登録する
+     * @param reset 初期化するかどうか
+     */
     fun init(reset: Boolean = false) {
         if (isInitialized && !reset) return
         isInitialized = true
@@ -43,11 +49,14 @@ object Renderers {
     }
 
     /**
-     * 获取兼容当前设备的所有渲染器
+     * 現在のデバイスと互換性のあるレンダラー一覧を取得する
+     * Vulkan対応やZinkバイナリの有無などを考慮する
+     * @param context コンテキスト
+     * @return レンダラーリストとレンダラー情報のペア
      */
     fun getCompatibleRenderers(context: Context): Pair<RenderersList, List<RendererInterface>> = compatibleRenderers ?: run {
         val deviceHasVulkan = Tools.checkVulkanSupport(context.packageManager)
-        // Currently, only 32-bit x86 does not have the Zink binary
+        // 現在、32ビットx86のみZinkバイナリがない
         val deviceHasZinkBinary = !(Architecture.is32BitsDevice() && Architecture.isx86Device())
 
         val compatibleRenderers1: MutableList<RendererInterface> = mutableListOf()
@@ -70,7 +79,7 @@ object Renderers {
     }
 
     /**
-     * 加入一些渲染器
+     * 複数のレンダラーを追加する
      */
     @JvmStatic
     fun addRenderers(vararg renderers: RendererInterface) {
@@ -80,7 +89,8 @@ object Renderers {
     }
 
     /**
-     * 加入单个渲染器
+     * 単一のレンダラーを追加する
+     * @return 追加成功時はtrue（一意識別子が重複している場合はfalse）
      */
     @JvmStatic
     fun addRenderer(renderer: RendererInterface): Boolean {
@@ -96,10 +106,10 @@ object Renderers {
     }
 
     /**
-     * 设置当前的渲染器
-     * @param context 用于初始化适配当前设备的渲染器
-     * @param uniqueIdentifier 渲染器的唯一标识符，用于找到当前想要设置的渲染器
-     * @param retryToFirstOnFailure 如果未找到匹配的渲染器，是否跳回渲染器列表的首个渲染器
+     * 現在のレンダラーを設定する
+     * @param context デバイス互換性の初期化に使用
+     * @param uniqueIdentifier 設定したいレンダラーの一意識別子
+     * @param retryToFirstOnFailure 一致するレンダラーがない場合、先頭のレンダラーにフォールバックするかどうか
      */
     fun setCurrentRenderer(context: Context, uniqueIdentifier: String, retryToFirstOnFailure: Boolean = true) {
         if (!isInitialized) throw IllegalStateException("Uninitialized renderer!")
@@ -114,7 +124,8 @@ object Renderers {
     }
 
     /**
-     * 获取当前的渲染器
+     * 現在のレンダラーを取得する
+     * @throws IllegalStateException 初期化されていない場合
      */
     fun getCurrentRenderer(): RendererInterface {
         if (!isInitialized) throw IllegalStateException("Uninitialized renderer!")
@@ -122,7 +133,7 @@ object Renderers {
     }
 
     /**
-     * 当前是否设置了渲染器
+     * 現在有効なレンダラーが設定されているかどうかを返す
      */
     fun isCurrentRendererValid(): Boolean = isInitialized && this.currentRenderer != null
 }

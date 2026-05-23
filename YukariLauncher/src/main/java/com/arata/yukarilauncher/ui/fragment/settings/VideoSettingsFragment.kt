@@ -42,10 +42,16 @@ import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+/**
+ * 映像設定フラグメント
+ */
 class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment_video, SettingCategory.VIDEO) {
     private lateinit var binding: SettingsFragmentVideoBinding
     private lateinit var openDocumentLauncher: ActivityResultLauncher<Any>
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("zip", true)) { uris: List<Uri>? ->
@@ -98,6 +104,9 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -107,6 +116,9 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireActivity()
 
@@ -265,25 +277,43 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
         computeVisibility()
     }
 
+    /**
+     * 解像度比率のプレビューを更新する
+     */
+    /**
+     * 解像度比率のプレビューを更新します。
+     */
     private fun changeResolutionRatioPreview(progress: Int) {
         binding.resolutionRatioPreview.text = getResolutionRatioPreview(resources, progress)
     }
 
+    /**
+     * 設定変更時に表示/非表示を再計算します。
+     */
     override fun onChange() {
         super.onChange()
         computeVisibility()
     }
 
+    /**
+     * 設定変更に応じて表示/非表示を切り替えます。
+     */
     private fun computeVisibility() {
         binding.apply {
             binding.forceVsyncLayout.visibility = if (AllSettings.alternateSurface.getValue()) View.VISIBLE else View.GONE
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.root, Animations.BounceInDown))
     }
 
+    /**
+     * Vulkan非対応メッセージを構築します。
+     */
     private fun buildVulkanUnsupportedMessage(context: android.content.Context): String {
         val status = GameGraphicsApiHelper.getVulkanStatus(context)
         val supportText = { supported: Boolean -> if (supported) "Supported" else "Unsupported" }

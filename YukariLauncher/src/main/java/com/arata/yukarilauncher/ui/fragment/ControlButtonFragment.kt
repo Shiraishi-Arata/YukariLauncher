@@ -40,6 +40,9 @@ import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+/**
+ * カスタムコントロール管理フラグメント
+ */
 class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager) {
     companion object {
         const val TAG: String = "ControlButtonFragment"
@@ -52,6 +55,9 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
     private var mSelectControl = false
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("json", true)) { uris: List<Uri>? ->
@@ -73,6 +79,9 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,6 +93,9 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
@@ -136,20 +148,19 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
                 val suffix = ".json"
                 Toast.makeText(requireActivity(), String.format(getString(R.string.file_add_file_tip), suffix), Toast.LENGTH_SHORT).show()
                 openDocumentLauncher?.launch(suffix)
-            } //限制.json文件
+            }
 
             createFolderButton.setOnClickListener {
                 val editControlInfoDialog = EditControlInfoDialog(requireContext(), true, null, ControlInfoData())
                 editControlInfoDialog.setTitle(getString(R.string.controls_create_new))
                 editControlInfoDialog.setOnConfirmClickListener { fileName: String, controlInfoData: ControlInfoData ->
                     val file = File(File(PathManager.DIR_CTRLMAP_PATH).absolutePath, "$fileName.json")
-                    if (file.exists()) { //检查文件是否已经存在
+                    if (file.exists()) {
                         editControlInfoDialog.fileNameEditBox.error =
                             getString(R.string.file_rename_exitis)
                         return@setOnConfirmClickListener
                     }
 
-                    //创建布局文件
                     createNewControlFile(requireContext(), file, controlInfoData)
 
                     controlsListViewCreator.refresh()
@@ -167,10 +178,16 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         startNewbieGuide()
     }
 
+    /**
+     * ロックパス部分を取り除く
+     */
     private fun removeLockPath(path: String?): String {
         return path!!.replace(PathManager.DIR_CTRLMAP_PATH, ".")
     }
 
+    /**
+     * ファイル操作ダイアログを表示する
+     */
     private fun showDialog(file: File) {
         val filesButton = FilesButton()
         filesButton.setButtonVisibility(true, true, true, true, true, true)
@@ -198,15 +215,21 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
                 Toast.makeText(requireActivity(), getString(R.string.tasks_ongoing), Toast.LENGTH_SHORT).show()
             }
             filesDialog.dismiss()
-        } //加载
+        }
         filesDialog.show()
     }
 
+    /**
+     * バンドル引数を解析する
+     */
     private fun parseBundle() {
         val bundle = arguments ?: return
         mSelectControl = bundle.getBoolean(BUNDLE_SELECT_CONTROL, mSelectControl)
     }
 
+    /**
+     * ビューを初期化する
+     */
     private fun initViews() {
         mSearchViewWrapper.apply {
             setAsynchronousUpdatesListener(object : SearchViewWrapper.SearchAsynchronousUpdatesListener {
@@ -239,6 +262,9 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
     }
 
+    /**
+     * 初心者ガイドを開始する
+     */
     private fun startNewbieGuide() {
         if (NewbieGuideUtils.showOnlyOne(TAG)) return
         binding.operateView.apply {
@@ -254,14 +280,19 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.controlLayout, Animations.BounceInDown))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.BounceInLeft))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.controlLayout, Animations.FadeOutUp))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.FadeOutRight))
     }
 }
-

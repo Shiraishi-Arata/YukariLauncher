@@ -56,8 +56,6 @@ import com.arata.yukarilauncher.feature.mod.modpack.install.InstallExtra;
 import com.arata.yukarilauncher.feature.mod.modpack.install.InstallLocalModPack;
 import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackInfo;
 import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackUtils;
-// import com.arata.yukarilauncher.feature.notice.CheckNewNotice;
-// import com.arata.yukarilauncher.feature.notice.NoticeInfo;
 import com.arata.yukarilauncher.feature.update.UpdateUtils;
 import com.arata.yukarilauncher.feature.version.Version;
 import com.arata.yukarilauncher.feature.version.VersionsManager;
@@ -85,7 +83,6 @@ import com.arata.yukarilauncher.utils.YLTools;
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils;
 import com.arata.yukarilauncher.utils.file.FileTools;
 import com.arata.yukarilauncher.utils.image.ImageUtils;
-import com.arata.yukarilauncher.utils.stringutils.ShiftDirection;
 import com.arata.yukarilauncher.utils.stringutils.StringUtils;
 
 import net.kdt.pojavlaunch.authenticator.microsoft.MicrosoftBackgroundLogin;
@@ -111,6 +108,9 @@ import java.math.RoundingMode;
 import java.util.Random;
 import java.util.concurrent.Future;
 
+/**
+ * ランチャーのメインアクティビティ。フラグメント管理、ゲーム起動、アカウント管理、設定などを担当します。
+ */
 public class LauncherActivity extends BaseActivity {
     private final AnimPlayer noticeAnimPlayer = new AnimPlayer();
     public final ActivityResultLauncher<Object> modInstallerLauncher =
@@ -127,8 +127,10 @@ public class LauncherActivity extends BaseActivity {
     private Future<?> checkNotice;
     private boolean isVideoBackgroundPlaying;
 
-    /* Allows to switch from one button "type" to another */
     private final FragmentManager.FragmentLifecycleCallbacks mFragmentCallbackListener = new FragmentManager.FragmentLifecycleCallbacks() {
+        /**
+         * フラグメント再開時に設定ボタンの種類を更新します。
+         */
         @Override
         public void onFragmentResumed(@NonNull FragmentManager fm, @NonNull Fragment f) {
             if (f instanceof MainMenuFragment) {
@@ -140,8 +142,6 @@ public class LauncherActivity extends BaseActivity {
     };
 
     private final TaskCountListener mDoubleLaunchPreventionListener = taskCount -> {
-        // Hide the notification that starts the game if there are tasks executing.
-        // Prevents the user from trying to launch the game with tasks ongoing.
         if (taskCount > 0) {
             TaskExecutors.runInUIThread(() -> mNotificationManager.cancel(NotificationUtils.NOTIFICATION_ID_GAME_START));
         }
@@ -150,25 +150,36 @@ public class LauncherActivity extends BaseActivity {
     private ActivityResultLauncher<String> mRequestNotificationPermissionLauncher;
     private WeakReference<Runnable> mRequestNotificationPermissionRunnable;
 
+    /**
+     * ページ不透明度変更イベントを処理します。
+     */
     @Subscribe()
     public void event(PageOpacityChangeEvent event) {
         setPageOpacity(event.getProgress());
     }
 
+    /**
+     * メイン背景変更イベントを処理します。
+     */
     @Subscribe()
     public void event(MainBackgroundChangeEvent event) {
         refreshBackground();
         setPageOpacity(AllSettings.getPageOpacity().getValue());
     }
 
+    /**
+     * ログイン画面への切り替えイベントを処理します。
+     */
     @Subscribe()
     public void event(SwapToLoginEvent event) {
         Fragment currentFragment = getCurrentFragment();
-        //如果当前可见的Fragment不为空，则判断当前的Fragment是否为AccountFragment，不是就跳转至AccountFragment
         if (currentFragment == null || getVisibleFragment(AccountFragment.TAG) != null) return;
         YLTools.swapFragmentWithAnim(currentFragment, AccountFragment.class, AccountFragment.TAG, null);
     }
 
+    /**
+     * ゲーム起動イベントを処理します。バージョンとアカウントの確認後、ゲームを起動します。
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(LaunchGameEvent event) {
         if (binding.progressLayout.hasProcesses()) {
@@ -196,14 +207,9 @@ public class LauncherActivity extends BaseActivity {
                     getString(R.string.permissions_storage_for_renderer_config, rendererPlugin.getDisplayName(), InfoDistributor.APP_NAME),
                     new StoragePermissionsUtils.PermissionGranted() {
                         @Override
-                        public void granted() {
-                            launchGame(version);
-                        }
-
+                        public void granted() { launchGame(version); }
                         @Override
-                        public void cancelled() {
-                            launchGame(version);
-                        }
+                        public void cancelled() { launchGame(version); }
                     }
             );
             return;
@@ -212,6 +218,9 @@ public class LauncherActivity extends BaseActivity {
         launchGame(version);
     }
 
+    /**
+     * Microsoftログインのリダイレクトイベントを処理します。
+     */
     @Subscribe()
     public void event(MicrosoftLoginEvent event) {
         new MicrosoftBackgroundLogin(false, event.getUri().getQueryParameter("code")).performLogin(
@@ -221,6 +230,9 @@ public class LauncherActivity extends BaseActivity {
         );
     }
 
+    /**
+     * その他ログイン方式のイベントを処理します。
+     */
     @Subscribe()
     public void event(OtherLoginEvent event) {
         Task.runTask(() -> {
@@ -232,6 +244,9 @@ public class LauncherActivity extends BaseActivity {
                 .execute();
     }
 
+    /**
+     * ローカルアカウントログインイベントを処理します。
+     */
     @Subscribe()
     public void event(LocalLoginEvent event) {
         String userName = event.getUserName();
@@ -244,10 +259,12 @@ public class LauncherActivity extends BaseActivity {
         } catch (IOException e) {
             Logging.e("Account", "Failed to save the account : " + e);
         }
-
         AccountsManager.INSTANCE.getDoneListener().onLoginDone(localAccount);
     }
 
+    /**
+     * ローカルModパックのインストールイベントを処理します。
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(InstallLocalModpackEvent event) {
         InstallExtra installExtra = event.getInstallExtra();
@@ -272,53 +289,48 @@ public class LauncherActivity extends BaseActivity {
                 .setAsRequired()
                 .setConfirmListener((editText, checked) -> {
                     String customName = editText.getText().toString();
-
-                    if (FileTools.isFilenameInvalid(editText)) {
-                        return false;
-                    }
-
+                    if (FileTools.isFilenameInvalid(editText)) return false;
                     if (VersionsManager.INSTANCE.isVersionExists(customName, true)) {
                         editText.setError(getString(R.string.version_install_exists));
                         return false;
                     }
-
                     Task.runTask(() -> {
                         ModLoaderWrapper modLoaderWrapper = InstallLocalModPack.installModPack(this, info.getType(), dirGameModpackFile, customName);
                         if (modLoaderWrapper != null) {
                             InstallTask downloadTask = modLoaderWrapper.getDownloadTask();
-
                             if (downloadTask != null) {
                                 runOnUiThread(() -> Toast.makeText(this, getString(R.string.modpack_prepare_mod_loader_installation), Toast.LENGTH_SHORT).show());
-
                                 Logging.i("Install Version", "Installing ModLoader: " + modLoaderWrapper.getModLoaderVersion());
                                 File file = downloadTask.run(customName);
-                                if (file != null) {
-                                    return new kotlin.Pair<>(modLoaderWrapper, file);
-                                }
+                                if (file != null) return new kotlin.Pair<>(modLoaderWrapper, file);
                             }
                         }
                         return null;
-                    }).beforeStart(TaskExecutors.getAndroidUI(), () -> ProgressLayout.setProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.generic_waiting)).ended(filePair -> {
-                        if (filePair != null) {
-                            try {
-                                ModPackUtils.startModLoaderInstall(filePair.getFirst(), LauncherActivity.this, filePair.getSecond(), customName);
-                            } catch (Throwable e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }).onThrowable(TaskExecutors.getAndroidUI(), e -> Tools.showErrorRemote(this, R.string.modpack_install_download_failed, e))
-                    .finallyTask(TaskExecutors.getAndroidUI(), () -> ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE))
-                    .execute();
-
+                    }).beforeStart(TaskExecutors.getAndroidUI(), () -> ProgressLayout.setProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.generic_waiting))
+                            .ended(filePair -> {
+                                if (filePair != null) {
+                                    try {
+                                        ModPackUtils.startModLoaderInstall(filePair.getFirst(), LauncherActivity.this, filePair.getSecond(), customName);
+                                    } catch (Throwable e) { throw new RuntimeException(e); }
+                                }
+                            }).onThrowable(TaskExecutors.getAndroidUI(), e -> Tools.showErrorRemote(this, R.string.modpack_install_download_failed, e))
+                            .finallyTask(TaskExecutors.getAndroidUI(), () -> ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE))
+                            .execute();
                     return true;
                 }).showDialog();
     }
 
+    /**
+     * ゲームのインストールイベントを処理します。
+     */
     @Subscribe()
     public void event(InstallGameEvent event) {
         new GameInstaller(this, event).installGame();
     }
 
+    /**
+     * ダウンロード進捗キーの監視・監視解除イベントを処理します。
+     */
     @Subscribe()
     public void event(DownloadProgressKeyEvent event) {
         if (event.getObserve()) {
@@ -328,6 +340,9 @@ public class LauncherActivity extends BaseActivity {
         }
     }
 
+    /**
+     * フラグメント追加イベントを処理します。
+     */
     @Subscribe()
     public synchronized void event(AddFragmentEvent event) {
         Fragment currentFragment = getCurrentFragment();
@@ -349,6 +364,9 @@ public class LauncherActivity extends BaseActivity {
         }
     }
 
+    /**
+     * アクティビティ作成時に呼び出されます。レイアウトの初期化、フラグメント管理、通知権限の確認を行います。
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -381,26 +399,23 @@ public class LauncherActivity extends BaseActivity {
                 false
         );
 
-        // checkNotice();
-
-        //检查已经下载后的包，或者检查更新
         Task.runTask(() -> {
             UpdateUtils.checkDownloadedPackage(this, false, true);
             return null;
         }).execute();
     }
 
+    /**
+     * フラグメント管理の初期化を行います。戻るボタンの処理と初期フラグメントの設定を行います。
+     */
     private void processFragment() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 Fragment currentFragment = getCurrentFragment();
                 if (currentFragment instanceof BaseFragment && !((BaseFragment) currentFragment).onBackPressed()) {
-                    //Fragment那边拒绝了返回事件
                     return;
                 }
-
-                //如果栈中只剩下1个或没有Fragment，则直接退出启动器
                 if (getSupportFragmentManager().getBackStackEntryCount() <= 1) {
                     finish();
                 } else {
@@ -410,7 +425,6 @@ public class LauncherActivity extends BaseActivity {
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        //如果栈中没有Fragment，那么就将主Fragment添加进来
         if (fragmentManager.getBackStackEntryCount() < 1) {
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
@@ -419,6 +433,9 @@ public class LauncherActivity extends BaseActivity {
         }
     }
 
+    /**
+     * ビューの初期化を行います。背景、ボタン、進捗レイアウト、通知の設定を行います。
+     */
     private void processViews() {
         refreshBackground();
         setPageOpacity(AllSettings.getPageOpacity().getValue());
@@ -437,7 +454,6 @@ public class LauncherActivity extends BaseActivity {
             if (fragment instanceof MainMenuFragment) {
                 YLTools.swapFragmentWithAnim(fragment, SettingsFragment.class, SettingsFragment.TAG, null);
             } else {
-                // The setting button doubles as a home button now
                 Tools.backToMainMenu(this);
             }
         });
@@ -454,7 +470,6 @@ public class LauncherActivity extends BaseActivity {
         binding.progressLayout.observe(ProgressLayout.CHECKING_MODS);
 
         binding.noticeGotButton.setOnClickListener(v -> {
-            // setNotice(false);
             AllSettings.getNoticeDefault().put(false).save();
         });
         new DraggableViewWrapper(binding.noticeLayout, new DraggableViewWrapper.AttributesFetcher() {
@@ -465,13 +480,11 @@ public class LauncherActivity extends BaseActivity {
                         currentDisplayMetrics.widthPixels - binding.noticeLayout.getWidth(),
                         currentDisplayMetrics.heightPixels - binding.noticeLayout.getHeight());
             }
-
             @NonNull
             @Override
             public int[] get() {
                 return new int[]{(int) binding.noticeLayout.getX(), (int) binding.noticeLayout.getY()};
             }
-
             @Override
             public void set(int x, int y) {
                 binding.noticeLayout.setX(x);
@@ -479,21 +492,24 @@ public class LauncherActivity extends BaseActivity {
             }
         }).init();
 
-        //愚人节彩蛋
         if (YLTools.checkDate(4, 1)) binding.hair.setVisibility(View.VISIBLE);
         else binding.hair.setVisibility(View.GONE);
     }
 
+    /**
+     * アクティビティ再開時に呼び出されます。透明度の更新、バージョン一覧のリフレッシュ、ビデオ背景の再生を行います。
+     */
     @Override
     protected void onResume() {
         super.onResume();
         setPageOpacity(AllSettings.getPageOpacity().getValue());
         VersionsManager.INSTANCE.refresh("LauncherActivity:onResume", false);
-        if (isVideoBackgroundPlaying) {
-            binding.backgroundVideoView.start();
-        }
+        if (isVideoBackgroundPlaying) binding.backgroundVideoView.start();
     }
 
+    /**
+     * アクティビティ一時停止時にビデオ背景を一時停止します。
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -502,36 +518,44 @@ public class LauncherActivity extends BaseActivity {
         }
     }
 
+    /**
+     * アクティビティ開始時にフラグメントライフサイクルコールバックを登録します。
+     */
     @Override
     protected void onStart() {
         super.onStart();
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentCallbackListener, true);
     }
 
+    /**
+     * アクティビティ破棄時にリソースをクリーンアップします。
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         binding.progressLayout.cleanUpObservers();
         ProgressKeeper.removeTaskCountListener(binding.progressLayout);
         ProgressKeeper.removeTaskCountListener(mProgressServiceKeeper);
-
         getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(mFragmentCallbackListener);
         ContextExecutor.clearActivity();
         stopVideoBackground();
     }
 
+    /**
+     * ウィンドウへのアタッチ時にノッチサイズを計算します。
+     */
     @Override
     public void onAttachedToWindow() {
         LauncherPreferences.computeNotchSize(this);
     }
 
+    /**
+     * ゲームを起動します。ローカルアカウントの使用可否を確認してから起動します。
+     */
     private void launchGame(Version version) {
         LocalAccountUtils.checkUsageAllowed(new LocalAccountUtils.CheckResultListener() {
             @Override
-            public void onUsageAllowed() {
-                preLaunch(LauncherActivity.this, version);
-            }
-
+            public void onUsageAllowed() { preLaunch(LauncherActivity.this, version); }
             @Override
             public void onUsageDenied() {
                 if (!AllSettings.getLocalAccountReminders().getValue()) {
@@ -548,51 +572,9 @@ public class LauncherActivity extends BaseActivity {
         });
     }
 
-    // private void checkNotice() {
-        // checkNotice = TaskExecutors.getDefault().submit(() -> CheckNewNotice.checkNewNotice(noticeInfo -> {
-            // if (checkNotice.isCancelled() || noticeInfo == null) {
-                // return;
-            // }
-            // //当偏好设置内是开启通知栏 或者 检测到通知编号不为偏好设置里保存的值时，显示通知栏
-            // if (AllSettings.getNoticeDefault().getValue() ||
-                    // (noticeInfo.numbering != AllSettings.getNoticeNumbering().getValue())) {
-                // TaskExecutors.runInUIThread(() -> setNotice(true));
-                // AllSettings.getNoticeDefault().put(true)
-                        // .put(AllSettings.getNoticeNumbering(), noticeInfo.numbering)
-                        // .save();
-            // }
-        // }));
-    // }
-
-    // private void setNotice(boolean show) {
-        // if (show) {
-            // NoticeInfo noticeInfo = CheckNewNotice.getNoticeInfo();
-            // if (noticeInfo != null) {
-                // binding.noticeGotButton.setClickable(true);
-
-                // binding.noticeTitleView.setText(noticeInfo.title);
-                // binding.noticeMessageView.setText(noticeInfo.content);
-                // binding.noticeDateView.setText(noticeInfo.date);
-
-                // Linkify.addLinks(binding.noticeMessageView, Linkify.WEB_URLS);
-                // binding.noticeMessageView.setMovementMethod(LinkMovementMethod.getInstance());
-
-                // noticeAnimPlayer.clearEntries();
-                // noticeAnimPlayer.apply(new AnimPlayer.Entry(binding.noticeLayout, Animations.BounceEnlarge))
-                        // .setOnStart(() -> binding.noticeLayout.setVisibility(View.VISIBLE))
-                        // .start();
-            // }
-        // } else {
-            // binding.noticeGotButton.setClickable(false);
-
-            // noticeAnimPlayer.clearEntries();
-            // noticeAnimPlayer.apply(new AnimPlayer.Entry(binding.noticeLayout, Animations.BounceShrink))
-                    // .setOnStart(() -> binding.noticeLayout.setVisibility(View.VISIBLE))
-                    // .setOnEnd(() -> binding.noticeLayout.setVisibility(View.GONE))
-                    // .start();
-        // }
-    // }
-
+    /**
+     * メインメニューの背景画像またはビデオをリフレッシュして表示します。
+     */
     private void refreshBackground() {
         File mediaFile = BackgroundManager.getBackgroundImage(BackgroundType.MAIN_MENU);
         if (mediaFile != null && BackgroundManager.isVideo(mediaFile)) {
@@ -600,11 +582,14 @@ public class LauncherActivity extends BaseActivity {
             refreshTopBarColor(false);
             return;
         }
-
         stopVideoBackground();
         BackgroundManager.setBackgroundImage(this, BackgroundType.MAIN_MENU, binding.backgroundView, this::refreshTopBarColor);
     }
 
+    /**
+     * ビデオ背景を再生します。
+     * @param videoFile 再生するビデオファイル
+     */
     private void playVideoBackground(File videoFile) {
         binding.backgroundView.setImageDrawable(null);
         binding.backgroundView.setVisibility(View.GONE);
@@ -626,39 +611,33 @@ public class LauncherActivity extends BaseActivity {
         });
     }
 
+    /**
+     * ビデオ背景を停止し、静止画背景に切り替えます。
+     */
     private void stopVideoBackground() {
-        if (isVideoBackgroundPlaying) {
-            binding.backgroundVideoView.stopPlayback();
-        }
+        if (isVideoBackgroundPlaying) binding.backgroundVideoView.stopPlayback();
         isVideoBackgroundPlaying = false;
         binding.backgroundVideoView.setVisibility(View.GONE);
         binding.backgroundView.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * トップバーの背景色を更新します（背景画像からパレットを生成）。
+     */
     private void refreshTopBarColor(boolean loadFromBackground) {
         int backgroundMenuTop = ContextCompat.getColor(this, R.color.background_menu_top);
-
         if (loadFromBackground) {
             Bitmap bitmap = ImageUtils.getBitmapFromImageView(binding.backgroundView);
             if (bitmap != null) {
                 Palette palette = Palette.from(bitmap).generate();
-
                 boolean isDarkMode = YLTools.isDarkMode(this);
                 binding.topLayout.setBackgroundColor(
-                        isDarkMode ?
-                                palette.getDarkVibrantColor(backgroundMenuTop) :
-                                palette.getLightVibrantColor(backgroundMenuTop)
-                );
-
-                int mutedColor = isDarkMode ?
-                        palette.getLightMutedColor(0xFFFFFFFF) :
-                        palette.getDarkMutedColor(0xFFFFFFFF);
-
+                        isDarkMode ? palette.getDarkVibrantColor(backgroundMenuTop) : palette.getLightVibrantColor(backgroundMenuTop));
+                int mutedColor = isDarkMode ? palette.getLightMutedColor(0xFFFFFFFF) : palette.getDarkMutedColor(0xFFFFFFFF);
                 ColorStateList colorStateList = ColorStateList.valueOf(mutedColor);
                 binding.appTitleText.setTextColor(mutedColor);
                 binding.downloadButton.setImageTintList(colorStateList);
                 binding.settingButton.setImageTintList(colorStateList);
-
                 return;
             }
         }
@@ -669,31 +648,41 @@ public class LauncherActivity extends BaseActivity {
         binding.settingButton.setImageTintList(colorStateList);
     }
 
+    /**
+     * タグから表示可能なフラグメントを取得します。
+     */
     @SuppressWarnings("SameParameterValue")
     private Fragment getVisibleFragment(String tag) {
         return checkFragmentAvailability(getSupportFragmentManager().findFragmentByTag(tag));
     }
 
+    /**
+     * IDから表示可能なフラグメントを取得します。
+     */
     private Fragment getVisibleFragment(int id) {
         return checkFragmentAvailability(getSupportFragmentManager().findFragmentById(id));
     }
 
+    /**
+     * 現在のコンテナのフラグメントを取得します。
+     */
     private Fragment getCurrentFragment() {
         return getVisibleFragment(binding.containerFragment.getId());
     }
 
+    /**
+     * フラグメントが表示可能かどうかを確認します。
+     */
     private Fragment checkFragmentAvailability(Fragment fragment) {
-        if (fragment != null && fragment.isVisible()) {
-            return fragment;
-        }
+        if (fragment != null && fragment.isVisible()) return fragment;
         return null;
     }
 
+    /**
+     * 通知権限を確認し、必要に応じて許可を求めます。
+     */
     private void checkNotificationPermission() {
-        if (AllSettings.getSkipNotificationPermissionCheck().getValue() || YLTools.checkForNotificationPermission()) {
-            return;
-        }
-
+        if (AllSettings.getSkipNotificationPermissionCheck().getValue() || YLTools.checkForNotificationPermission()) return;
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
             showNotificationPermissionReasoning();
             return;
@@ -701,6 +690,9 @@ public class LauncherActivity extends BaseActivity {
         askForNotificationPermission(null);
     }
 
+    /**
+     * 通知権限が必要な理由を説明するダイアログを表示します。
+     */
     private void showNotificationPermissionReasoning() {
         new TipDialog.Builder(this)
                 .setTitle(R.string.notification_permission_dialog_title)
@@ -710,11 +702,18 @@ public class LauncherActivity extends BaseActivity {
                 .showDialog();
     }
 
+    /**
+     * 通知権限が得られなかった場合の処理を行います。
+     */
     private void handleNoNotificationPermission() {
         AllSettings.getSkipNotificationPermissionCheck().put(true).save();
         Toast.makeText(this, R.string.notification_permission_toast, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * 通知権限を要求します。
+     * @param onSuccessRunnable 権限が許可された場合に実行するRunnable
+     */
     public void askForNotificationPermission(Runnable onSuccessRunnable) {
         if (Build.VERSION.SDK_INT < 33) return;
         if (onSuccessRunnable != null) {
@@ -723,16 +722,16 @@ public class LauncherActivity extends BaseActivity {
         mRequestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
     }
 
+    /**
+     * ページの不透明度を設定します。
+     */
     private void setPageOpacity(int pageOpacity) {
         BigDecimal opacity = BigDecimal.valueOf(pageOpacity).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
         float v = opacity.floatValue();
-
         binding.containerFragment.setAlpha(v);
-
         BigDecimal adjustedOpacity = BackgroundManager.hasBackgroundImage(BackgroundType.MAIN_MENU)
                 ? opacity.subtract(BigDecimal.valueOf(0.1)).max(BigDecimal.ZERO)
                 : BigDecimal.ONE;
-
         binding.topLayout.setAlpha(adjustedOpacity.floatValue());
     }
 }

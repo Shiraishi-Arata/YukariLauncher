@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * ファイル一覧表示用のカスタムLinearLayout
+ */
 @SuppressLint("ViewConstructor")
 public class FileRecyclerView extends LinearLayout {
     private final AtomicInteger searchCount = new AtomicInteger(0);
@@ -48,6 +51,9 @@ public class FileRecyclerView extends LinearLayout {
         init(context);
     }
 
+    /**
+     * ビューを初期化する
+     */
     public void init(final Context context) {
         this.context = context;
 
@@ -81,38 +87,65 @@ public class FileRecyclerView extends LinearLayout {
         addView(mainLv, layParam);
     }
 
+    /**
+     * ファイル選択リスナーを設定する
+     */
     public void setFileSelectedListener(FileSelectedListener listener) {
         this.fileSelectedListener = listener;
     }
 
+    /**
+     * マルチ選択リスナーを設定する
+     */
     public void setOnMultiSelectListener(FileRecyclerAdapter.OnMultiSelectListener listener) {
         this.fileRecyclerViewCreator.setOnMultiSelectListener(listener);
     }
 
+    /**
+     * タイトルリスナーを設定する
+     */
     public void setTitleListener(SetTitleListener setTitleListener) {
         this.mSetTitleListener = setTitleListener;
     }
 
+    /**
+     * 更新リスナーを設定する
+     */
     public void setRefreshListener(RefreshListener listener) {
         this.mRefreshListener = listener;
     }
 
+    /**
+     * ファイル表示の有無を設定する
+     */
     public void setShowFiles(boolean showFiles) {
         this.showFiles = showFiles;
     }
 
+    /**
+     * フォルダ表示の有無を設定する
+     */
     public void setShowFolders(boolean showFolders) {
         this.showFolders = showFolders;
     }
 
+    /**
+     * ファイルアイコン種別を設定する
+     */
     public void setFileIcon(FileIcon fileIcon) {
         this.fileIcon = fileIcon;
     }
 
+    /**
+     * ファイルが存在しないかどうかを返す
+     */
     public boolean isNoFile() {
         return fileRecyclerViewCreator.isNoFile();
     }
 
+    /**
+     * ファイルを検索する
+     */
     public int searchFiles(String filterString, boolean caseSensitive) {
         searchCount.set(0);
         this.filterString = filterString;
@@ -121,23 +154,38 @@ public class FileRecyclerView extends LinearLayout {
         return searchCount.get();
     }
 
+    /**
+     * 検索結果のみ表示するかどうかを設定する
+     */
     public void setShowSearchResultsOnly(boolean showSearchResultsOnly) {
         this.showSearchResultsOnly = showSearchResultsOnly;
     }
 
+    /**
+     * アダプターを取得する
+     */
     public FileRecyclerAdapter getAdapter() {
         return fileRecyclerViewCreator.fileRecyclerAdapter;
     }
 
+    /**
+     * アイテム数を取得する
+     */
     public int getItemCount() {
         return fileRecyclerViewCreator.fileRecyclerAdapter.getItemCount();
     }
 
+    /**
+     * ロックパスを設定して指定パスのファイル一覧を表示する
+     */
     public void lockAndListAt(File lockPath, File listPath) {
         this.lockPath = lockPath;
         listFileAt(listPath);
     }
 
+    /**
+     * 指定パスのファイル一覧を表示する
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     public void listFileAt(final File path) {
         if (path != null && path.exists()) {
@@ -174,14 +222,23 @@ public class FileRecyclerView extends LinearLayout {
         }
     }
 
+    /**
+     * 現在のフルパスを取得する
+     */
     public File getFullPath() {
         return fullPath;
     }
 
+    /**
+     * 現在のパスを再表示する
+     */
     public void refreshPath() {
         listFileAt(getFullPath());
     }
 
+    /**
+     * 親ディレクトリに移動する
+     */
     public void parentDir() {
         if (!fullPath.getAbsolutePath().equals("/")) {
             listFileAt(fullPath.getParentFile());

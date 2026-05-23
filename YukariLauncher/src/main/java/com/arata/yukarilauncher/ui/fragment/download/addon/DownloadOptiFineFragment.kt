@@ -20,11 +20,18 @@ import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 import java.util.function.Consumer
 
+/**
+ * OptiFineをダウンロードするためのフラグメントです。
+ * OptiFineのバージョン一覧を取得し、選択してインストールできます。
+ */
 class DownloadOptiFineFragment : ModListFragment() {
     companion object {
         const val TAG: String = "DownloadOptiFineFragment"
     }
 
+    /**
+     * ビューの初期設定を行います。
+     */
     override fun refreshCreatedView() {
         setIcon(ContextCompat.getDrawable(fragmentActivity!!, R.drawable.ic_optifine))
         setTitleText("OptiFine")
@@ -33,14 +40,27 @@ class DownloadOptiFineFragment : ModListFragment() {
         setReleaseCheckBoxGone()
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     * @return 非同期タスクのFuture
+     */
     override fun initRefresh(): Future<*> {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     * @return 非同期タスクのFuture
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * 指定されたモードでOptiFineのバージョン一覧を取得します。
+     * @param force 強制更新するかどうか
+     * @return 非同期タスクのFuture
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -60,6 +80,9 @@ class DownloadOptiFineFragment : ModListFragment() {
         }
     }
 
+    /**
+     * 空の状態をUIに反映します。
+     */
     private fun empty() {
         TaskExecutors.runInUIThread {
             componentProcessing(false)
@@ -67,6 +90,10 @@ class DownloadOptiFineFragment : ModListFragment() {
         }
     }
 
+    /**
+     * OptiFineのバージョン情報を処理し、アダプターに設定します。
+     * @param optiFineVersions OptiFineのバージョン情報
+     */
     private fun processModDetails(optiFineVersions: OptiFineVersions?) {
         optiFineVersions ?: run {
             empty()
@@ -76,7 +103,7 @@ class DownloadOptiFineFragment : ModListFragment() {
         val mcVersion = arguments?.getString(BUNDLE_MC_VERSION) ?: throw IllegalArgumentException("The Minecraft version is not passed")
 
         val mOptiFineVersions: MutableMap<String, MutableList<OptiFineVersion>> = HashMap()
-        optiFineVersions.optifineVersions.forEach(Consumer<List<OptiFineVersion>> { optiFineVersionList: List<OptiFineVersion> ->  //通过版本列表一层层遍历并合成为 Minecraft版本 + Optifine版本的Map集合
+        optiFineVersions.optifineVersions.forEach(Consumer<List<OptiFineVersion>> { optiFineVersionList: List<OptiFineVersion> ->  // バージョンリストを階層的に走査し、Minecraftバージョン + OptiFineバージョンのMapに合成
             currentTask?.apply { if (isCancelled) return@Consumer }
 
             optiFineVersionList.forEach(Consumer Consumer2@{ optiFineVersion: OptiFineVersion ->

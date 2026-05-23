@@ -20,6 +20,9 @@ public class LauncherVersion {
     @SerializedName("pre_release")
     private final boolean isPreRelease;
 
+/**
+ * LauncherVersionを構築します
+ */
     public LauncherVersion(int versionCode, String versionName, WhatsNew title, WhatsNew description, String publishedAt, FileSize fileSize, DownloadLink downloadLink, boolean isPreRelease) {
         this.versionCode = versionCode;
         this.versionName = versionName;
@@ -31,34 +34,66 @@ public class LauncherVersion {
         this.isPreRelease = isPreRelease;
     }
 
+/**
+ * versionCodeを取得する
+ * @return versionCodeの値
+ */
     public int getVersionCode() {
         return versionCode;
     }
 
+/**
+ * versionNameを取得する
+ * @return versionNameの値
+ */
     public String getVersionName() {
         return versionName;
     }
 
+/**
+ * titleを取得する
+ * @return titleの値
+ */
     public WhatsNew getTitle() {
         return title;
     }
 
+/**
+ * descriptionを取得する
+ * @return descriptionの値
+ */
     public WhatsNew getDescription() {
         return description;
     }
 
+/**
+ * publishedAtを取得する
+ * @return publishedAtの値
+ */
     public String getPublishedAt() {
         return publishedAt;
     }
 
+/**
+ * fileSizeを取得する
+ * @return fileSizeの値
+ */
     public FileSize getFileSize() {
         return fileSize;
     }
 
+/**
+ * downloadLinkを取得する
+ * @return downloadLinkの値
+ */
     public DownloadLink getDownloadLink() {
         return downloadLink;
     }
 
+/**
+ * preReleaseを取得する
+ * @return preReleaseの値
+ */
     public boolean isPreRelease() {
         return isPreRelease;
     }
@@ -77,21 +112,35 @@ public class LauncherVersion {
                 '}';
     }
 
+/**
+ * WhatsNew内部クラス
+ */
     public static class WhatsNew {
         @SerializedName("en_us")
         private final String enUS;
         @SerializedName("ja_jp")
         private final String jaJP;
 
+/**
+ * WhatsNewを構築します
+ */
         public WhatsNew(String enUS, String jaJP) {
             this.enUS = enUS;
             this.jaJP = jaJP;
         }
 
+/**
+ * enUSを取得する
+ * @return enUSの値
+ */
         public String getEnUS() {
             return enUS;
         }
 
+/**
+ * jaJPを取得する
+ * @return jaJPの値
+ */
         public String getJaJP() {
             return jaJP;
         }
@@ -106,6 +155,9 @@ public class LauncherVersion {
         }
     }
 
+/**
+ * FileSize内部クラス
+ */
     public static class FileSize {
         private final long all;
         private final long arm;
@@ -113,6 +165,9 @@ public class LauncherVersion {
         private final long x86;
         private final long x86_64;
 
+/**
+ * FileSizeを構築します
+ */
         public FileSize(long all, long arm, long arm64, long x86, long x86_64) {
             this.all = all;
             this.arm = arm;
@@ -121,22 +176,42 @@ public class LauncherVersion {
             this.x86_64 = x86_64;
         }
 
+/**
+ * allを取得する
+ * @return allの値
+ */
         public long getAll() {
             return all;
         }
 
+/**
+ * armを取得する
+ * @return armの値
+ */
         public long getArm() {
             return arm;
         }
 
+/**
+ * arm64を取得する
+ * @return arm64の値
+ */
         public long getArm64() {
             return arm64;
         }
 
+/**
+ * x86を取得する
+ * @return x86の値
+ */
         public long getX86() {
             return x86;
         }
 
+/**
+ * x86_64を取得する
+ * @return x86_64の値
+ */
         public long getX86_64() {
             return x86_64;
         }
@@ -154,6 +229,9 @@ public class LauncherVersion {
         }
     }
 
+/**
+ * DownloadLink内部クラス
+ */
     public static class DownloadLink {
         private final String all;
         private final String arm;
@@ -161,6 +239,9 @@ public class LauncherVersion {
         private final String x86;
         private final String x86_64;
 
+/**
+ * DownloadLinkを構築します
+ */
         public DownloadLink(String all, String arm, String arm64, String x86, String x86_64) {
             this.all = all;
             this.arm = arm;
@@ -169,22 +250,42 @@ public class LauncherVersion {
             this.x86_64 = x86_64;
         }
 
+/**
+ * allを取得する
+ * @return allの値
+ */
         public String getAll() {
             return all;
         }
 
+/**
+ * armを取得する
+ * @return armの値
+ */
         public String getArm() {
             return arm;
         }
 
+/**
+ * arm64を取得する
+ * @return arm64の値
+ */
         public String getArm64() {
             return arm64;
         }
 
+/**
+ * x86を取得する
+ * @return x86の値
+ */
         public String getX86() {
             return x86;
         }
 
+/**
+ * x86_64を取得する
+ * @return x86_64の値
+ */
         public String getX86_64() {
             return x86_64;
         }

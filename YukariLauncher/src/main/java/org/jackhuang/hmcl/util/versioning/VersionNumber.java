@@ -25,29 +25,45 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Copied from org.apache.maven.artifact.versioning.ComparableVersion
+ * org.apache.maven.artifact.versioning.ComparableVersion からコピー
  * Apache License 2.0
  *
- * Maybe we can migrate to org.jenkins-ci:version-number:1.7?
- * @see <a href="http://maven.apache.org/pom.html#Version_Order_Specification">Specification</a>
+ * 将来 org.jenkins-ci:version-number:1.7 に移行する可能性があります
+ * @see <a href="http://maven.apache.org/pom.html#Version_Order_Specification">仕様</a>
  */
 public final class VersionNumber implements Comparable<VersionNumber> {
 
     public static final VersionNumber ZERO = asVersion("0");
 
+    /**
+     * 文字列からVersionNumberを作成します。
+     * @param version バージョン文字列
+     */
     public static VersionNumber asVersion(String version) {
         Objects.requireNonNull(version);
         return new VersionNumber(version);
     }
 
+    /**
+     * 2つのバージョン文字列を比較します。
+     * @param version1 最初のバージョン
+     * @param version2 2番目のバージョン
+     * @return 比較結果
+     */
     public static int compare(String version1, String version2) {
         return asVersion(version1).compareTo(asVersion(version2));
     }
 
+    /**
+     * バージョン文字列を正規化します。
+     */
     public static String normalize(String str) {
         return new VersionNumber(str).getCanonical();
     }
 
+    /**
+     * 文字列が整数のみのバージョン番号かどうかを判定します。
+     */
     public static boolean isIntVersionNumber(String version) {
         if (version.isEmpty()) {
             return false;
@@ -70,7 +86,7 @@ public final class VersionNumber implements Comparable<VersionNumber> {
             }
 
             if (endIndex - idx > 9)
-                // Numbers which are larger than 10^10 cannot be stored as integer
+                // 10^10より大きい数は整数として保存できない
                 return false;
 
             for (int i = idx; i < endIndex; i++) {
@@ -85,53 +101,86 @@ public final class VersionNumber implements Comparable<VersionNumber> {
         return true;
     }
 
+    /**
+     * 文字列範囲を使用してVersionRangeを作成します。
+     */
     public static VersionRange<VersionNumber> between(String minimum, String maximum) {
         return VersionRange.between(asVersion(minimum), asVersion(maximum));
     }
 
+    /**
+     * 最小値以上のVersionRangeを作成します。
+     */
     public static VersionRange<VersionNumber> atLeast(String minimum) {
         return VersionRange.atLeast(asVersion(minimum));
     }
 
+    /**
+     * 最大値以下のVersionRangeを作成します。
+     */
     public static VersionRange<VersionNumber> atMost(String maximum) {
         return VersionRange.atMost(asVersion(maximum));
     }
 
+    /**
+     * バージョンアイテムリスト内のアイテムを表すインターフェース
+     */
     private interface Item {
         int LONG_ITEM = 0;
         int BIGINTEGER_ITEM = 1;
         int STRING_ITEM = 2;
         int LIST_ITEM = 3;
 
+        /**
+         * このアイテムを指定されたアイテムと比較します。
+         */
         int compareTo(Item item);
 
+        /**
+         * アイテムのタイプを返します。
+         */
         int getType();
 
+        /**
+         * このアイテムがnullと見なされるかどうかを返します。
+         */
         boolean isNull();
 
+        /**
+         * アイテムの文字列表現をバッファに追加します。
+         */
         void appendTo(StringBuilder buffer);
     }
 
+    /**
+     * long値として表現可能な数値アイテム
+     */
     private static final class LongItem implements Item {
         private final long value;
 
         public static final LongItem ZERO = new LongItem(0L);
 
+        /**
+         * long値アイテムを構築します。
+         */
         LongItem(long value) {
             this.value = value;
         }
 
+        @Override
         public int getType() {
             return LONG_ITEM;
         }
 
+        @Override
         public boolean isNull() {
             return value == 0L;
         }
 
+        @Override
         public int compareTo(Item item) {
             if (item == null) {
-                return value == 0L ? 0 : 1; // 1.0 == 1, 1.1 > 1
+                return value == 0L ? 0 : 1;
             }
 
             switch (item.getType()) {
@@ -142,49 +191,56 @@ public final class VersionNumber implements Comparable<VersionNumber> {
                     return -1;
 
                 case STRING_ITEM:
-                    return 1; // 1.1 > 1-sp
+                    return 1;
 
                 case LIST_ITEM:
-                    return 1; // 1.1 > 1-1
+                    return 1;
 
                 default:
                     throw new AssertionError("invalid item: " + item.getClass());
             }
         }
 
+        /**
+         * 数値をバッファに追加します。
+         */
         @Override
         public void appendTo(StringBuilder buffer) {
             buffer.append(value);
         }
 
+        @Override
         public String toString() {
             return Long.toString(value);
         }
     }
 
     /**
-     * Represents a numeric item in the version item list.
+     * BigIntegerとして表現される数値アイテム（longの範囲を超える場合）
      */
     private static final class BigIntegerItem implements Item {
         private final BigInteger value;
 
+        /**
+         * BigInteger値アイテムを構築します。
+         */
         BigIntegerItem(String str) {
             this.value = new BigInteger(str);
         }
 
+        @Override
         public int getType() {
             return BIGINTEGER_ITEM;
         }
 
+        @Override
         public boolean isNull() {
-            // Never be 0
-            // return BigInteger.ZERO.equals(value);
             return false;
         }
 
+        @Override
         public int compareTo(Item item) {
             if (item == null) {
-                // return BigInteger.ZERO.equals(value) ? 0 : 1; // 1.0 == 1, 1.1 > 1
                 return 1;
             }
 
@@ -195,104 +251,127 @@ public final class VersionNumber implements Comparable<VersionNumber> {
                     return value.compareTo(((BigIntegerItem) item).value);
 
                 case STRING_ITEM:
-                    return 1; // 1.1 > 1-sp
+                    return 1;
 
                 case LIST_ITEM:
-                    return 1; // 1.1 > 1-1
+                    return 1;
 
                 default:
                     throw new AssertionError("invalid item: " + item.getClass());
             }
         }
 
+        /**
+         * BigInteger値をバッファに追加します。
+         */
         @Override
         public void appendTo(StringBuilder buffer) {
             buffer.append(value);
         }
 
+        @Override
         public String toString() {
             return value.toString();
         }
     }
 
     /**
-     * Represents a string in the version item list, usually a qualifier.
+     * バージョンアイテムリスト内の文字列（通常は修飾子）を表します。
      */
     private static final class StringItem implements Item {
         private final String value;
 
+        /**
+         * 文字列アイテムを構築します。
+         */
         StringItem(String value) {
             this.value = value;
         }
 
+        @Override
         public int getType() {
             return STRING_ITEM;
         }
 
+        @Override
         public boolean isNull() {
             return value.isEmpty();
         }
 
+        @Override
         public int compareTo(Item item) {
             if (item == null) {
-                // 1-string > 1
                 return 1;
             }
             switch (item.getType()) {
                 case LONG_ITEM:
                 case BIGINTEGER_ITEM:
-                    return -1; // 1.any < 1.1 ?
+                    return -1;
 
                 case STRING_ITEM:
                     return value.compareTo(((StringItem) item).value);
 
                 case LIST_ITEM:
-                    return -1; // 1.any < 1-1
+                    return -1;
 
                 default:
                     throw new AssertionError("invalid item: " + item.getClass());
             }
         }
 
+        /**
+         * 文字列値をバッファに追加します。
+         */
         @Override
         public void appendTo(StringBuilder buffer) {
             buffer.append(value);
         }
 
+        @Override
         public String toString() {
             return value;
         }
     }
 
     /**
-     * Represents a version list item. This class is used both for the global item list and for sub-lists (which start
-     * with '-(number)' in the version specification).
+     * バージョンリストアイテムを表します。グローバルアイテムリストとサブリスト（
+     * バージョン仕様で'-(number)'で始まるもの）の両方に使用されます。
      */
     private static final class ListItem extends ArrayList<Item> implements Item {
         private final Character separator;
 
+        /**
+         * 空のリストアイテムを構築します。
+         */
         ListItem() {
             this.separator = null;
         }
 
+        /**
+         * 指定されたセパレーター文字でリストアイテムを構築します。
+         */
         ListItem(char separator) {
             this.separator = separator;
         }
 
+        @Override
         public int getType() {
             return LIST_ITEM;
         }
 
+        @Override
         public boolean isNull() {
             return size() == 0;
         }
 
+        /**
+         * 末尾のnullアイテムを削除して正規化します。
+         */
         void normalize() {
             for (int i = size() - 1; i >= 0; i--) {
                 Item lastItem = get(i);
 
                 if (lastItem.isNull()) {
-                    // remove null trailing items: 0, "", empty list
                     remove(i);
                 } else if (!(lastItem instanceof ListItem)) {
                     break;
@@ -300,10 +379,11 @@ public final class VersionNumber implements Comparable<VersionNumber> {
             }
         }
 
+        @Override
         public int compareTo(Item item) {
             if (item == null) {
                 if (size() == 0) {
-                    return 0; // 1-0 = 1- (normalize) = 1
+                    return 0;
                 }
                 Item first = get(0);
                 return first.compareTo(null);
@@ -311,10 +391,10 @@ public final class VersionNumber implements Comparable<VersionNumber> {
             switch (item.getType()) {
                 case LONG_ITEM:
                 case BIGINTEGER_ITEM:
-                    return -1; // 1-1 < 1.0.x
+                    return -1;
 
                 case STRING_ITEM:
-                    return 1; // 1-1 > 1-sp
+                    return 1;
 
                 case LIST_ITEM:
                     Iterator<Item> left = iterator();
@@ -324,7 +404,6 @@ public final class VersionNumber implements Comparable<VersionNumber> {
                         Item l = left.hasNext() ? left.next() : null;
                         Item r = right.hasNext() ? right.next() : null;
 
-                        // if this is shorter, then invert the compare and mul with -1
                         int result = l == null ? (r == null ? 0 : -1 * r.compareTo(l)) : l.compareTo(r);
 
                         if (result != 0) {
@@ -339,6 +418,9 @@ public final class VersionNumber implements Comparable<VersionNumber> {
             }
         }
 
+        /**
+         * リスト内の全アイテムをバッファに追加します。
+         */
         @Override
         public void appendTo(StringBuilder buffer) {
             if (separator != null) {
@@ -356,6 +438,7 @@ public final class VersionNumber implements Comparable<VersionNumber> {
             }
         }
 
+        @Override
         public String toString() {
             StringBuilder buffer = new StringBuilder();
             appendTo(buffer);
@@ -369,6 +452,9 @@ public final class VersionNumber implements Comparable<VersionNumber> {
     private final ListItem items;
     private final String canonical;
 
+    /**
+     * バージョン文字列をパースします。
+     */
     private VersionNumber(String version) {
         this.value = version;
 
@@ -436,13 +522,18 @@ public final class VersionNumber implements Comparable<VersionNumber> {
         this.canonical = items.toString();
     }
 
-    // For simple version
+    /**
+     * 単純バージョン用のコンストラクタ
+     */
     private VersionNumber(String version, ListItem items) {
         this.value = version;
         this.items = items;
         this.canonical = version;
     }
 
+    /**
+     * 文字列を解析してItemを生成します。
+     */
     private static Item parseItem(String buf) {
         int numberLength = 0;
         boolean leadingZero = true;
@@ -464,36 +555,53 @@ public final class VersionNumber implements Comparable<VersionNumber> {
         if (numberLength == 0) {
             return LongItem.ZERO;
         } else if (numberLength <= MAX_LONGITEM_LENGTH) {
-            // Numbers which are larger than 10^19 cannot be stored as long
             return new LongItem(Long.parseLong(buf));
         } else {
             return new BigIntegerItem(buf);
         }
     }
 
+    /**
+     * 文字列と比較します。
+     */
     public int compareTo(String o) {
         return compareTo(VersionNumber.asVersion(o));
     }
 
+    /**
+     * このバージョンを指定されたバージョンと比較します。
+     */
     @Override
     public int compareTo(VersionNumber o) {
         return items.compareTo(o.items);
     }
 
+    /**
+     * 元のバージョン文字列を返します。
+     */
     @Override
     public String toString() {
         return value;
     }
 
+    /**
+     * 正規化されたバージョン文字列を返します。
+     */
     public String getCanonical() {
         return canonical;
     }
 
+    /**
+     * このバージョンが指定されたオブジェクトと等しいかどうかを判定します。
+     */
     @Override
     public boolean equals(Object o) {
         return o instanceof VersionNumber && canonical.equals(((VersionNumber) o).canonical);
     }
 
+    /**
+     * 正規化されたバージョン文字列のハッシュコードを返します。
+     */
     @Override
     public int hashCode() {
         return canonical.hashCode();

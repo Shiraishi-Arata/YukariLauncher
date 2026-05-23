@@ -35,6 +35,9 @@ object Logging {
         FILE_LAUNCHER_LOG = getLogFile()
     }
 
+/**
+ * getLogFileする
+ */
     private fun getLogFile(): File {
         val logPrefix = "log"
         val logSuffix = ".txt"
@@ -60,6 +63,9 @@ object Logging {
         return file
     }
 
+/**
+ * writeToFileする
+ */
     private fun writeToFile(log: String, tag: Tag, mark: String) {
         coroutineScope.launch {
             val date = Date(System.currentTimeMillis())
@@ -70,6 +76,9 @@ object Logging {
         }
     }
 
+/**
+ * appendToFileする
+ */
     private suspend fun appendToFile(string: String) {
         loggerMutex.withLock {
             runCatching {
@@ -93,6 +102,9 @@ object Logging {
         }
     }
 
+/**
+ * getLauncherInfoする
+ */
     private fun getLauncherInfo(): String = """
         =============== ${InfoDistributor.APP_NAME} ===============
         - Version Name : ${BuildConfig.VERSION_NAME}
@@ -101,64 +113,97 @@ object Logging {
         """.trimIndent()
 
     @JvmStatic
+/**
+ * vする
+ */
     fun v(mark: String, verbose: String) {
         Log.v(mark, verbose)
         writeToFile(verbose, Tag.VERBOSE, mark)
     }
 
     @JvmStatic
+/**
+ * vする
+ */
     fun v(mark: String, verbose: String, throwable: Throwable) {
         Log.v(mark, verbose, throwable)
         writeToFile("$verbose\n${Tools.printToString(throwable)}", Tag.VERBOSE, mark)
     }
 
     @JvmStatic
+/**
+ * dする
+ */
     fun d(mark: String, debug: String) {
         Log.d(mark, debug)
         writeToFile(debug, Tag.DEBUG, mark)
     }
 
     @JvmStatic
+/**
+ * dする
+ */
     fun d(mark: String, debug: String, throwable: Throwable) {
         Log.d(mark, debug, throwable)
         writeToFile("$debug\n${Tools.printToString(throwable)}", Tag.DEBUG, mark)
     }
 
     @JvmStatic
+/**
+ * iする
+ */
     fun i(mark: String, info: String) {
         Log.i(mark, info)
         writeToFile(info, Tag.INFO, mark)
     }
 
     @JvmStatic
+/**
+ * iする
+ */
     fun i(mark: String, info: String, throwable: Throwable) {
         Log.i(mark, info, throwable)
         writeToFile("$info\n${Tools.printToString(throwable)}", Tag.INFO, mark)
     }
 
     @JvmStatic
+/**
+ * wする
+ */
     fun w(mark: String, warn: String) {
         Log.w(mark, warn)
         writeToFile(warn, Tag.WARN, mark)
     }
 
     @JvmStatic
+/**
+ * wする
+ */
     fun w(mark: String, warn: String, throwable: Throwable) {
         Log.w(mark, warn, throwable)
         writeToFile("$warn\n${Tools.printToString(throwable)}", Tag.WARN, mark)
     }
 
     @JvmStatic
+/**
+ * eする
+ */
     fun e(mark: String, error: String) {
         Log.e(mark, error)
         writeToFile(error, Tag.ERROR, mark)
     }
 
     @JvmStatic
+/**
+ * eする
+ */
     fun e(mark: String, error: String, throwable: Throwable) {
         Log.e(mark, error, throwable)
         writeToFile("$error\n${Tools.printToString(throwable)}", Tag.ERROR, mark)
     }
 
+    /**
+     * ログレベルの列挙型
+     */
     enum class Tag { VERBOSE, DEBUG, INFO, WARN, ERROR }
 }

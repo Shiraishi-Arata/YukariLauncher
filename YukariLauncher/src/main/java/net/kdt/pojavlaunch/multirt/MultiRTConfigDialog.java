@@ -25,6 +25,9 @@ public class MultiRTConfigDialog {
 
     @SuppressLint("NotifyDataSetChanged")
     //only used to completely refresh the list, it is necessary
+/**
+ * refreshメソッド
+ */
     public void refresh() {
         RecyclerView.Adapter<?> adapter = mDialogView.getAdapter();
         if (adapter != null) adapter.notifyDataSetChanged();

@@ -35,12 +35,14 @@ import com.arata.yukarilauncher.utils.file.FileDeletionHandler
 import com.arata.yukarilauncher.utils.file.FileTools
 import net.kdt.pojavlaunch.Tools
 
+/**
+ * バージョン一覧のRecyclerViewアダプター
+ */
 class VersionAdapter(
     private val parentFragment: Fragment,
     private val listener: OnVersionItemClickListener
 ) : RecyclerView.Adapter<VersionAdapter.ViewHolder>() {
     private val versions: MutableList<Version> = ArrayList()
-    //所有的RadioButton的List，其记录了当前所代表的版本路径
     private val radioButtonList: MutableList<RadioButton> = mutableListOf()
     private var currentVersion: String? = null
     private var managerPopupWindow: PopupWindow = PopupWindow().apply {
@@ -48,6 +50,10 @@ class VersionAdapter(
         isOutsideTouchable = true
     }
 
+    /**
+     * バージョンリストを更新する
+     * @return 現在のバージョンのインデックス
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun refreshVersions(versions: List<Version>): Int {
         this.versions.clear()
@@ -57,29 +63,35 @@ class VersionAdapter(
             clear()
         }
         currentVersion = VersionsManager.getCurrentVersion()?.getVersionPath()?.absolutePath
-        //查找当前版本的索引
         val currentIndex = versions.indexOfFirst { it.getVersionPath().absolutePath == currentVersion }
         notifyDataSetChanged()
 
         return currentIndex
     }
 
+    /**
+     * ポップアップウィンドウを閉じる
+     */
     fun closePopupWindow() {
         managerPopupWindow.dismiss()
     }
 
+    /**
+     * アクティブなバージョンを設定する
+     */
     private fun setCurrentVersion(context: Context, version: Version) {
         if (version.isValid()) {
             VersionsManager.saveCurrentVersion(version.getVersionName())
             currentVersion = version.getVersionPath().absolutePath
         } else {
-            //版本无效时，不能设置版本，默认点击就会提示用户删除
             deleteVersion(version, context.getString(R.string.version_manager_delete_tip_invalid))
         }
         radioButtonList.forEach { radioButton -> radioButton.isChecked = radioButton.tag.toString() == currentVersion }
     }
 
-    //删除版本前提示用户，如果版本无效，那么默认点击事件就是删除版本
+    /**
+     * バージョン削除の確認ダイアログを表示する
+     */
     private fun deleteVersion(version: Version, deleteMessage: String) {
         val context = parentFragment.requireActivity()
 
@@ -99,30 +111,51 @@ class VersionAdapter(
             }.showDialog()
     }
 
+    /**
+     * ビューホルダーを生成します。
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemVersionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
+    /**
+     * ビューホルダーにバージョンデータをバインドします。
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(versions[position])
     }
 
+    /**
+     * ビューホルダーがリサイクルされるときにラジオボタンをリストから削除します。
+     */
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         radioButtonList.remove(holder.binding.radioButton)
     }
 
+    /**
+     * バージョン総数を返します。
+     */
     override fun getItemCount(): Int = versions.size
 
+    /**
+     * バージョンアイテムのビューホルダー
+     */
     inner class ViewHolder(val binding: ItemVersionBinding) : RecyclerView.ViewHolder(binding.root) {
         private val mContext = binding.root.context
 
+        /**
+         * 空でない文字列を情報テキストとして追加する
+         */
         private fun String.addInfoIfNotBlank(setRed: Boolean = false) {
             takeIf { it.isNotBlank() }?.let { string ->
                 binding.versionInfoLayout.addView(getInfoTextView(string, setRed))
             }
         }
 
+        /**
+         * バージョンデータをビューにバインドする
+         */
         fun bind(version: Version) {
             binding.apply {
                 versionInfoLayout.removeAllViews()
@@ -178,6 +211,9 @@ class VersionAdapter(
             }
         }
 
+        /**
+         * 情報表示用のTextViewを生成する
+         */
         private fun getInfoTextView(string: String, setRed: Boolean = false): TextView {
             val textView = TextView(mContext)
             textView.text = string
@@ -191,6 +227,9 @@ class VersionAdapter(
             return textView
         }
 
+        /**
+         * バージョン操作用のポップアップウィンドウを表示する
+         */
         private fun showPopupWindow(
             anchorView: View,
             version: Version
@@ -226,6 +265,9 @@ class VersionAdapter(
             }
         }
 
+        /**
+         * Modpack書き出しダイアログを表示する
+         */
         private fun showExportDialog(version: Version) {
             val context = parentFragment.requireActivity()
             val labels = arrayOf(
@@ -244,6 +286,9 @@ class VersionAdapter(
                 }.show()
         }
 
+        /**
+         * 書き出しフィルターダイアログを表示する
+         */
         private fun showExportFilterDialog(version: Version, exportType: ModPackExportHelper.ExportType) {
             val context = parentFragment.requireActivity()
             ExportPathPickerDialog(
@@ -260,6 +305,9 @@ class VersionAdapter(
             }.show()
         }
 
+        /**
+         * メタデータ入力ダイアログを表示する
+         */
         private fun showMetadataDialog(
             version: Version,
             exportType: ModPackExportHelper.ExportType,
@@ -304,6 +352,9 @@ class VersionAdapter(
                 }.showDialog()
         }
 
+        /**
+         * Modpackの書き出しを実行する
+         */
         private fun executeExport(
             version: Version,
             exportType: ModPackExportHelper.ExportType,
@@ -326,6 +377,9 @@ class VersionAdapter(
                 }.execute()
         }
 
+        /**
+         * ファイルブラウザで指定パスを開く
+         */
         private fun swapPath(path: String) {
             val bundle = Bundle()
             bundle.putString(FilesFragment.BUNDLE_LOCK_PATH, ProfilePathManager.getCurrentPath())
@@ -338,15 +392,13 @@ class VersionAdapter(
         }
     }
 
+    /**
+     * バージョンアイテムクリックのコールバックインターフェース
+     */
     interface OnVersionItemClickListener {
-        /**
-         * 用户点击了“收藏”按钮，检查并展示“收藏”弹窗
-         */
+        /** お気に入りダイアログを表示する */
         fun showFavoritesDialog(versionName: String)
-
-        /**
-         * 检查当前版本是否被收藏了
-         */
+        /** バージョンがお気に入りかどうかを確認する */
         fun isVersionFavorited(versionName: String): Boolean
     }
 }

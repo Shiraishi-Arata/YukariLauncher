@@ -46,6 +46,9 @@ import java.util.Objects
 import java.util.concurrent.Future
 import java.util.function.Consumer
 
+/**
+ * Mod詳細・バージョン選択フラグメント
+ */
 class DownloadModFragment : ModListFragment() {
     companion object {
         const val TAG: String = "DownloadModFragment"
@@ -55,11 +58,17 @@ class DownloadModFragment : ModListFragment() {
     private lateinit var mInfoItem: InfoItem
     private var linkGetSubmit: Future<*>? = null
 
+    /**
+     * 初期化処理を行います。
+     */
     override fun init() {
         parseViewModel()
         super.init()
     }
 
+    /**
+     * ビューの初期設定を行います。
+     */
     @SuppressLint("CheckResult")
     override fun refreshCreatedView() {
         linkGetSubmit = TaskExecutors.getDefault().submit {
@@ -96,14 +105,23 @@ class DownloadModFragment : ModListFragment() {
         }
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     */
     override fun initRefresh(): Future<*> {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * フラグメント破棄時にイベントを発行し、非同期タスクをキャンセルします。
+     */
     override fun onDestroy() {
         EventBus.getDefault().post(DownloadPageEvent.RecyclerEnableEvent(true))
         linkGetSubmit?.apply {
@@ -112,6 +130,9 @@ class DownloadModFragment : ModListFragment() {
         super.onDestroy()
     }
 
+    /**
+     * バージョン情報を更新する
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -131,11 +152,13 @@ class DownloadModFragment : ModListFragment() {
         }
     }
 
+    /**
+     * バージョン一覧をMCバージョンとModローダーで分類する
+     */
     private fun processDetails(versions: List<VersionItem>?) {
         val pattern = RELEASE_REGEX
 
         val releaseCheckBoxChecked = releaseCheckBox.isChecked
-        //在Key内同时记录MC版本，与Mod加载器信息，以便之后细分Mod加载器
         val mModVersionsByMinecraftVersion: MutableMap<Pair<String, ModLoader?>, MutableList<VersionItem>> = HashMap()
 
         versions?.forEach(Consumer { versionItem ->
@@ -147,7 +170,6 @@ class DownloadModFragment : ModListFragment() {
                 if (releaseCheckBoxChecked) {
                     val matcher = pattern.matcher(mcVersion)
                     if (!matcher.matches()) {
-                        //如果不是正式版本，将继续检测下一项
                         continue
                     }
                 }
@@ -158,9 +180,7 @@ class DownloadModFragment : ModListFragment() {
                         modloaders.forEach {
                             addIfAbsent(mModVersionsByMinecraftVersion, Pair(mcVersion, it), versionItem)
                         }
-                        //当这个版本是一个 ModVersionItem 的时候，则检查其Mod加载器是否不为空，如果不为空，则将版本支持的Mod加载器，放到不同的Mod加载器列表中
-                        //这样会让用户更容易找到匹配自己需要的Mod加载器的版本
-                        continue //已经分类完毕，没有必要再将这个版本加入进普通的版本列表中了
+                        continue
                     }
                 }
                 addIfAbsent(mModVersionsByMinecraftVersion, Pair(mcVersion, null), versionItem)
@@ -170,7 +190,6 @@ class DownloadModFragment : ModListFragment() {
         currentTask?.apply { if (isCancelled) return }
 
         val currentVersion = VersionsManager.getCurrentVersion()
-        //定位首次适配的版本，并记录其索引，在加载完成之后，RecyclerView 会滚动到这个索引处
         var firstAdaptIndex: Int? = null
 
         val mData: MutableList<ModListItemBean> = ArrayList()
@@ -182,7 +201,6 @@ class DownloadModFragment : ModListFragment() {
                 } else {
                     val name1 = entry1.key.second?.name ?: ""
                     val name2 = entry2.key.second?.name ?: ""
-                    //保证有ModLoader的版本在前
                     if (name1.isEmpty() && name2.isNotEmpty()) 1
                     else if (name1.isNotEmpty() && name2.isEmpty()) -1
                     else name1.compareTo(name2)
@@ -203,12 +221,8 @@ class DownloadModFragment : ModListFragment() {
                         val loaderInfo = version.getVersionInfo()?.loaderInfo
 
                         when {
-                            //资源没有模组加载器信息，直接判定适配
                             modloader == null -> true
-                            //资源有模组加载器，但当前版本没有模组加载器信息，不适配
-                            //（不装模组加载器你想装什么模组？）
                             loaderInfo == null -> false
-                            //匹配模组加载器
                             else -> loaderInfo.any { loader -> Objects.equals(modloader.loaderName, loader.name) }
                         }
                     } ?: false
@@ -252,7 +266,6 @@ class DownloadModFragment : ModListFragment() {
             firstAdaptIndex?.let {
                 recyclerView.postDelayed(
                     {
-                        //直接滚动到先前获取到的“首次适配”的索引，并且往下偏移两个索引
                         recyclerView.smoothScrollToPosition((it + 2).coerceAtMost(mData.size - 1))
                     },
                     500
@@ -261,6 +274,9 @@ class DownloadModFragment : ModListFragment() {
         }.execute()
     }
 
+    /**
+     * ViewModelからプラットフォーム情報を取得する
+     */
     private fun parseViewModel() {
         val viewModel = ViewModelProvider(fragmentActivity!!)[InfoViewModel::class.java]
         platformHelper = viewModel.platformHelper ?: run {
@@ -273,6 +289,9 @@ class DownloadModFragment : ModListFragment() {
         }
     }
 
+    /**
+     * スクリーンショットを読み込む
+     */
     private fun loadScreenshots() {
         val progressBar = createProgressView(fragmentActivity!!)
         addMoreView(progressBar)
@@ -283,7 +302,6 @@ class DownloadModFragment : ModListFragment() {
             screenshotItems?.let addButton@{ items ->
                 if (items.isEmpty()) return@addButton
                 fragmentActivity?.let { activity ->
-                    //添加一个按钮，通过点击这个按钮来加载屏幕截图数据
                     addMoreView(AnimButton(activity).apply {
                         layoutParams = RecyclerView.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                         setText(R.string.download_info_load_screenshot)
@@ -305,6 +323,9 @@ class DownloadModFragment : ModListFragment() {
         }.execute()
     }
 
+    /**
+     * スクリーンショットビューを設定します。
+     */
     @SuppressLint("CheckResult")
     private fun setScreenshotView(screenshotItems: List<ScreenshotItem>) {
         fragmentActivity?.let { activity ->
@@ -318,6 +339,9 @@ class DownloadModFragment : ModListFragment() {
         }
     }
 
+    /**
+     * プログレスバーを作成する
+     */
     private fun createProgressView(context: Context): ProgressBar {
         return ProgressBar(context).apply {
             layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {

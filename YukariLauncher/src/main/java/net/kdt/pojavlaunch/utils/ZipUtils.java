@@ -13,12 +13,11 @@ import java.util.zip.ZipFile;
 
 public class ZipUtils {
     /**
-     * Gets an InputStream for a given ZIP entry, throwing an IOException if the ZIP entry does not
-     * exist.
-     * @param zipFile The ZipFile to get the entry from
-     * @param entryPath The full path inside of the ZipFile
-     * @return The InputStream provided by the ZipFile
-     * @throws IOException if the entry was not found
+     * ZIPエントリのInputStreamを取得します。エントリが存在しない場合はIOExceptionをスローします。
+     * @param zipFile エントリを取得するZipFile
+     * @param entryPath ZipFile内のフルパス
+     * @return ZipFileによって提供されるInputStream
+     * @throws IOException エントリが見つからなかった場合
      */
     public static InputStream getEntryStream(ZipFile zipFile, String entryPath) throws IOException{
         ZipEntry entry = zipFile.getEntry(entryPath);
@@ -27,14 +26,14 @@ public class ZipUtils {
     }
 
     /**
-     * Extracts all files in a ZipFile inside of a given directory to a given destination directory
-     * How to specify dirName:
-     * If you want to extract all files in the ZipFile, specify ""
-     * If you want to extract a single directory, specify its full path followed by a trailing /
-     * @param zipFile The ZipFile to extract files from
-     * @param dirName The directory to extract the files from
-     * @param destination The destination directory to extract the files into
-     * @throws IOException if it was not possible to create a directory or file extraction failed
+     * ZipFile内の指定されたディレクトリにあるすべてのファイルを、指定された宛先ディレクトリに抽出します。
+     * dirNameの指定方法:
+     * ZipFile内のすべてのファイルを抽出する場合は""を指定
+     * 単一のディレクトリを抽出する場合は、そのフルパスに末尾の/を付けて指定
+     * @param zipFile ファイルを抽出するZipFile
+     * @param dirName ファイルを抽出するディレクトリ
+     * @param destination ファイルの抽出先ディレクトリ
+     * @throws IOException ディレクトリの作成またはファイルの抽出に失敗した場合
      */
     public static void zipExtract(ZipFile zipFile, String dirName, File destination) throws IOException {
         Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();

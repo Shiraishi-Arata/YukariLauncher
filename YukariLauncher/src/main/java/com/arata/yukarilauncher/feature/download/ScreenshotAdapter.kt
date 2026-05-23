@@ -17,19 +17,41 @@ import com.arata.yukarilauncher.databinding.ViewInfoScreenshotBinding
 import com.arata.yukarilauncher.feature.download.item.ScreenshotItem
 import com.arata.yukarilauncher.setting.AllSettings
 
+/**
+ * スクリーンショットギャラリー用のRecyclerViewアダプター。
+ * スクリーンショットの読み込み、表示、リトライ処理を担当する。
+ */
 class ScreenshotAdapter(private val screenshotItems: List<ScreenshotItem>) : RecyclerView.Adapter<ScreenshotAdapter.ViewHolder>() {
 
+    /**
+     * 新しいViewHolderを生成する。
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ViewInfoScreenshotBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
+    /**
+     * 指定位置のスクリーンショットデータをViewHolderにバインドする。
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setScreenshot(screenshotItems[position])
     }
 
+    /**
+     * スクリーンショット項目の総数を返す。
+     */
     override fun getItemCount(): Int = screenshotItems.size
 
+    /**
+     * スクリーンショット1項目分のViewHolder。
+     * 画像の読み込み状態管理と表示を担当する。
+     */
     class ViewHolder(val binding: ViewInfoScreenshotBinding) : RecyclerView.ViewHolder(binding.root) {
+        /**
+         * スクリーンショットアイテムのデータをビューに設定する。
+         * 画像を読み込み、タイトルと説明があれば表示する。
+         * @param item スクリーンショットアイテム
+         */
         fun setScreenshot(item: ScreenshotItem) {
             binding.apply {
                 retry.setOnClickListener { loadScreenshotImage(item.imageUrl) }
@@ -41,6 +63,11 @@ class ScreenshotAdapter(private val screenshotItems: List<ScreenshotItem>) : Rec
             }
         }
 
+        /**
+         * Glideを使用してスクリーンショット画像を非同期読み込みする。
+         * 読み込み中はローディング表示、失敗時はリトライボタンを表示する。
+         * @param imageUrl 画像のURL
+         */
         @SuppressLint("CheckResult")
         private fun loadScreenshotImage(imageUrl: String) {
             binding.apply {
@@ -75,14 +102,26 @@ class ScreenshotAdapter(private val screenshotItems: List<ScreenshotItem>) : Rec
             }
         }
 
+        /**
+         * ローディング表示のON/OFFを切り替える。
+         * @param loading trueの場合はローディング中表示
+         */
         private fun setLoading(loading: Boolean) {
             binding.loadingProgress.visibility = if (loading) View.VISIBLE else View.GONE
             if (loading) binding.retry.visibility = View.GONE
         }
+
+        /**
+         * 読み込み失敗時の表示に切り替える（リトライボタンを表示）。
+         */
         private fun setFailed() {
             binding.retry.visibility = View.VISIBLE
         }
 
+        /**
+         * テキストが空でない場合のみTextViewを表示する拡張関数。
+         * @param text 表示するテキスト
+         */
         private fun TextView.setVisibleIfNotBlank(text: String?) {
             visibility = if (text.isNullOrBlank()) View.GONE else View.VISIBLE
             this.text = text

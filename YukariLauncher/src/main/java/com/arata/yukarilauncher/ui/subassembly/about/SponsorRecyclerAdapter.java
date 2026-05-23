@@ -13,9 +13,15 @@ import com.bumptech.glide.Glide;
 import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.databinding.ItemSponsorViewBinding;
 
+/**
+ * スポンサー一覧のRecyclerViewアダプター
+ */
 public class SponsorRecyclerAdapter extends RecyclerView.Adapter<SponsorRecyclerAdapter.Holder> {
     private final SponsorMeta mMeta;
 
+    /**
+     * アダプターを構築する
+     */
     public SponsorRecyclerAdapter(SponsorMeta meta) {
         this.mMeta = meta;
     }
@@ -36,14 +42,23 @@ public class SponsorRecyclerAdapter extends RecyclerView.Adapter<SponsorRecycler
         return mMeta.sponsors.length;
     }
 
+    /**
+     * スポンサーアイテムのビューホルダー
+     */
     public static class Holder extends RecyclerView.ViewHolder {
         private final ItemSponsorViewBinding binding;
 
+        /**
+         * ホルダーを構築する
+         */
         public Holder(@NonNull ItemSponsorViewBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
+        /**
+         * スポンサーデータをビューにバインドする
+         */
         @SuppressLint("UseCompatLoadingForDrawables")
         public void bind(SponsorMeta.Sponsor sponsor) {
             float amount = sponsor.getAmount();

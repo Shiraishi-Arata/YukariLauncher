@@ -5,13 +5,18 @@ import net.kdt.pojavlaunch.Tools
 import java.io.File
 import java.io.FileWriter
 
+/**
+ * バージョンの詳細情報（MinecraftバージョンとModLoader情報）
+ * @param minecraftVersion Minecraftのバージョン文字列
+ * @param loaderInfo ModLoader情報の配列
+ */
 class VersionInfo(
     val minecraftVersion: String,
     val loaderInfo: Array<LoaderInfo>?
 ) {
     /**
-     * 拼接Minecraft的版本信息，包括ModLoader信息
-     * @return 用", "分割的信息字符串
+     * Minecraftのバージョン情報を、ModLoader情報を含めて連結する
+     * @return カンマ＋スペースで区切られた情報文字列
      */
     fun getInfoString(): String {
         val infoList = mutableListOf<String>().apply {
@@ -27,12 +32,18 @@ class VersionInfo(
         return infoList.joinToString(", ")
     }
 
+    /**
+     * ModLoaderの情報
+     * @param name ModLoaderの名前
+     * @param version ModLoaderのバージョン
+     */
     data class LoaderInfo(
         val name: String,
         val version: String
     ) {
         /**
-         * 通过加载器名称，获得对应的环境变量键名
+         * ローダー名から対応する環境変数キーを取得する
+         * @return 環境変数キー。該当なしの場合はnull
          */
         fun getLoaderEnvKey(): String? {
             return when(name) {
@@ -47,6 +58,10 @@ class VersionInfo(
         }
     }
 
+    /**
+     * VersionInfoを指定されたバージョンフォルダに保存する
+     * @param versionFolder 保存先のバージョンフォルダ
+     */
     fun save(versionFolder: File) {
         runCatching {
             val yukariVersionPath = VersionsManager.getYukariVersionPath(versionFolder)

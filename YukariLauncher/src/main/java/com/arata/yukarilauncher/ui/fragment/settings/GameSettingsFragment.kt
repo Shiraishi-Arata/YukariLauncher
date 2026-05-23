@@ -28,6 +28,9 @@ import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog
 import kotlin.math.min
 
+/**
+ * ゲーム設定フラグメント
+ */
 class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment_game, SettingCategory.GAME) {
     private lateinit var binding: SettingsFragmentGameBinding
     private val mVmInstallLauncher = registerForActivityResult(
@@ -40,6 +43,9 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +55,9 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
 
@@ -117,7 +126,7 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
             1024.0,
             deviceRam.toDouble()
         ).toInt()
-        else deviceRam - (if (deviceRam < 3064) 800 else 1024) //To have a minimum for the device to breathe
+        else deviceRam - (if (deviceRam < 3064) 800 else 1024)
 
         SeekBarSettingsWrapper(
             context,
@@ -217,10 +226,16 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
         setGameMenuAlpha(AllSettings.gameMenuAlpha.getValue().toFloat() / 100F)
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.root, Animations.BounceInDown))
     }
 
+    /**
+     * メモリ情報を更新します。
+     */
     private fun updateMemoryInfo(context: Context, seekValue: Long) {
         val value = seekValue * 1024 * 1024
         val freeDeviceMemory = getFreeDeviceMemory(context)
@@ -234,6 +249,12 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
         TaskExecutors.runInUIThread { binding.allocationMemory.text = summary }
     }
 
+    /**
+     * メモリ情報テキストを取得する
+     */
+    /**
+     * メモリ情報テキストを取得します。
+     */
     private fun getMemoryInfoText(context: Context, freeDeviceMemory: Long): String {
         return getString(
             R.string.setting_java_memory_info,
@@ -243,18 +264,42 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
         )
     }
 
+    /**
+     * ゲーム内メニューのメモリ表示を切り替える
+     */
+    /**
+     * ゲーム内メニューのメモリ表示を切り替えます。
+     */
     private fun openGameMenuMemory() {
         binding.gameMenuPreview.memoryText.visibility = if (AllSettings.gameMenuShowMemory.getValue()) View.VISIBLE else View.GONE
     }
 
+    /**
+     * ゲーム内メニューのFPS表示を切り替える
+     */
+    /**
+     * ゲーム内メニューのFPS表示を切り替えます。
+     */
     private fun openGameMenuFPS() {
         binding.gameMenuPreview.fpsText.visibility = if (AllSettings.gameMenuShowFPS.getValue()) View.VISIBLE else View.GONE
     }
 
+    /**
+     * ゲーム内メニューの透明度を設定する
+     */
+    /**
+     * ゲーム内メニューの透明度を設定します。
+     */
     private fun setGameMenuAlpha(alpha: Float) {
         binding.gameMenuPreview.root.alpha = alpha
     }
 
+    /**
+     * ゲーム内メニューのメモリテキストを更新する
+     */
+    /**
+     * ゲーム内メニューのメモリテキストを更新します。
+     */
     private fun updateGameMenuMemoryText() {
         val text = "${AllSettings.gameMenuMemoryText.getValue()} 0MB/0MB"
         binding.gameMenuPreview.memoryText.text = text.trim()

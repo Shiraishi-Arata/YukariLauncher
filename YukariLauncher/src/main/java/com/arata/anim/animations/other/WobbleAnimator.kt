@@ -30,7 +30,13 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * ぐらつき（ワブル）アニメーション
+ * X座標と回転を組み合わせて不安定な揺れを表現する
+ * 変位量はViewの幅を基準に計算される
+ */
 class WobbleAnimator: BaseAnimator() {
+    /** ワブルアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         val one = (target.width / 100.0).toFloat()
         return arrayOf(

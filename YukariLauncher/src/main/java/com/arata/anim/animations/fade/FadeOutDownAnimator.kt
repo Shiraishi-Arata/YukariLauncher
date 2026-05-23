@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 下方向へフェードアウトするアニメーション
+ * 透明度を1→0に変化させ、Y座標を0→画面高さの1/4へ移動する
+ */
 class FadeOutDownAnimator: BaseAnimator() {
+    /** 下方向フェードアウトアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 1f, 0f),

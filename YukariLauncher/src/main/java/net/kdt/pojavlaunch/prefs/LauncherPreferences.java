@@ -20,51 +20,55 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.utils.JREUtils;
 
+/**
+ * ランチャーの設定を読み込み、管理するクラス。
+ */
 public class LauncherPreferences {
+
+    /**
+     * 設定を読み込み、Java引数から不要なLWJGL引数を除去し、ランタイムを再読み込みします。
+     */
     public static void loadPreferences() {
         String argLwjglLibname = "-Dorg.lwjgl.opengl.libname=";
         String javaArgs = AllSettings.getJavaArgs().getValue();
         for (String arg : JREUtils.parseJavaArguments(javaArgs)) {
             if (arg.startsWith(argLwjglLibname)) {
-                // purge arg
                 AllSettings.getJavaArgs().put(javaArgs.replace(arg, "")).save();
             }
         }
-
         reloadRuntime();
     }
 
+    /**
+     * デフォルトのランタイム設定が存在しない場合に設定します。
+     */
     public static void reloadRuntime() {
         if (!Settings.Manager.contains("defaultRuntime") && !MultiRTUtils.getRuntimes().isEmpty()) {
-            //设置默认运行环境
             AllSettings.getDefaultRuntime().put(Jre.JRE_8.getJreName()).save();
         }
     }
 
     /**
-     * This functions aims at finding the best default RAM amount,
-     * according to the RAM amount of the physical device.
-     * Put not enough RAM ? Minecraft will lag and crash.
-     * Put too much RAM ?
-     * The GC will lag, android won't be able to breathe properly.
-     * @param ctx Context needed to get the total memory of the device.
-     * @return The best default value found.
+     * デバイスの物理RAM量に基づいて最適なデフォルトRAM割り当て量を見つけます。
+     * 少なすぎるとMinecraftがラグやクラッシュを起こし、多すぎるとGCが遅延しAndroidの動作に支障をきたします。
+     * @param ctx デバイスの総メモリを取得するために必要なコンテキスト
+     * @return 最適なデフォルトRAM値（MB）
      */
     public static int findBestRAMAllocation(Context ctx){
         int deviceRam = Tools.getTotalDeviceMemory(ctx);
         if (deviceRam < 1024) return 296;
         if (deviceRam < 1536) return 448;
         if (deviceRam < 2048) return 656;
-        // Limit the max for 32 bits devices more harshly
         if (is32BitsDevice()) return 696;
-
         if (deviceRam < 3064) return 936;
         if (deviceRam < 4096) return 1144;
         if (deviceRam < 6144) return 1536;
-        return 2048; //Default RAM allocation for 64 bits
+        return 2048;
     }
 
-    /** Compute the notch size to avoid being out of bounds */
+    /**
+     * ノッチサイズを計算し、画面の境界を超えないようにします。
+     */
     public static void computeNotchSize(BaseActivity activity) {
         if (Build.VERSION.SDK_INT < P) return;
         try {
@@ -74,13 +78,10 @@ public class LauncherPreferences {
             } else {
                 cutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout().getBoundingRects().get(0);
             }
-
-            // Notch values are rotation sensitive, handle all cases
             int orientation = activity.getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_PORTRAIT) AllStaticSettings.notchSize = cutout.height();
             else if (orientation == Configuration.ORIENTATION_LANDSCAPE) AllStaticSettings.notchSize = cutout.width();
             else AllStaticSettings.notchSize = Math.min(cutout.width(), cutout.height());
-
         }catch (Exception e){
             Logging.i("NOTCH DETECTION", "No notch detected, or the device if in split screen mode");
             AllStaticSettings.notchSize = -1;

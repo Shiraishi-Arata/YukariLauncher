@@ -23,6 +23,9 @@ import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils
 import com.arata.yukarilauncher.utils.YLTools
 
+/**
+ * プロファイルパス一覧のRecyclerViewアダプター
+ */
 class ProfilePathAdapter(
     private val fragment: FragmentWithAnim,
     private val view: RecyclerView
@@ -30,13 +33,15 @@ class ProfilePathAdapter(
     RecyclerView.Adapter<ProfilePathAdapter.ViewHolder>() {
     private val mData: MutableList<ProfileItem> = ArrayList()
     private val radioButtonList: MutableList<RadioButton> = mutableListOf()
-    //如果没有存储权限，那么旧设置为默认路径
     private var currentId: String? = if (StoragePermissionsUtils.checkPermissions()) launcherProfile.getValue() else "default"
     private val managerPopupWindow: PopupWindow = PopupWindow().apply {
         isFocusable = true
         isOutsideTouchable = true
     }
 
+    /**
+     * ビューホルダーを生成します。
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemProfilePathBinding.inflate(
@@ -47,17 +52,29 @@ class ProfilePathAdapter(
         )
     }
 
+    /**
+     * ビューホルダーにプロファイルデータをバインドします。
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setView(mData[position], position)
     }
 
+    /**
+     * ビューホルダーがリサイクルされるときにラジオボタンをリストから削除します。
+     */
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         radioButtonList.remove(holder.binding.radioButton)
     }
 
+    /**
+     * アイテム総数を返します。
+     */
     override fun getItemCount(): Int = mData.size
 
+    /**
+     * リストデータを更新する
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(data: MutableList<ProfileItem>) {
         this.mData.clear()
@@ -70,6 +87,9 @@ class ProfilePathAdapter(
         view.scheduleLayoutAnimation()
     }
 
+    /**
+     * データを保存して再描画する
+     */
     @SuppressLint("NotifyDataSetChanged")
     private fun refresh() {
         ProfilePathManager.save(mData)
@@ -78,19 +98,31 @@ class ProfilePathAdapter(
         view.scheduleLayoutAnimation()
     }
 
+    /**
+     * ポップアップウィンドウを閉じる
+     */
     fun closePopupWindow() {
         managerPopupWindow.dismiss()
     }
 
+    /**
+     * アクティブなパスIDを設定する
+     */
     private fun setPathId(id: String) {
         currentId = id
         setCurrentPathId(id)
         radioButtonList.forEach { radioButton -> radioButton.isChecked = radioButton.tag.toString() == id }
     }
 
+    /**
+     * プロファイルパスアイテムのビューホルダー
+     */
     inner class ViewHolder(val binding: ItemProfilePathBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * プロファイルデータをビューに設定する
+         */
         fun setView(profileItem: ProfileItem, position: Int) {
             binding.apply {
                 radioButtonList.add(
@@ -127,6 +159,9 @@ class ProfilePathAdapter(
             }
         }
 
+        /**
+         * プロファイル操作用のポップアップウィンドウを表示する
+         */
         private fun showPopupWindow(
             anchorView: View,
             isDefault: Boolean,
@@ -167,7 +202,6 @@ class ProfilePathAdapter(
                                 .setCancelable(false)
                                 .setConfirmClickListener {
                                     if (currentId == profileItem.id) {
-                                        //如果删除的是当前选中的路径，那么将自动选择为默认路径
                                         setPathId("default")
                                     }
                                     mData.removeAt(itemIndex)
@@ -182,7 +216,6 @@ class ProfilePathAdapter(
                 rename.setOnClickListener(onClickListener)
                 delete.setOnClickListener(onClickListener)
                 if (isDefault) {
-                    // Hide rename and delete buttons for the default profile
                     rename.visibility = View.GONE
                     delete.visibility = View.GONE
                 }

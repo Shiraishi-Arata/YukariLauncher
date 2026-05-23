@@ -61,11 +61,17 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
 public final class JREUtils {
+/**
+ * JREUtilsを構築します
+ */
     private JREUtils() {}
 
     public static String LD_LIBRARY_PATH;
     public static String jvmLibraryPath;
 
+/**
+ * findInLdLibPathメソッド
+ */
     public static String findInLdLibPath(String libName) {
         if (Os.getenv("LD_LIBRARY_PATH")==null) {
             try {
@@ -86,6 +92,9 @@ public final class JREUtils {
         return libName;
     }
 
+/**
+ * locateLibsメソッド
+ */
     public static ArrayList<File> locateLibs(File path) {
         ArrayList<File> returnValue = new ArrayList<>();
         File[] list = path.listFiles();
@@ -101,6 +110,9 @@ public final class JREUtils {
         return returnValue;
     }
 
+/**
+ * initJavaRuntimeメソッド
+ */
     public static void initJavaRuntime(String jreHome) {
         dlopen(findInLdLibPath("libjli.so"));
         if (!dlopen("libjvm.so")) {
@@ -121,6 +133,9 @@ public final class JREUtils {
         }
     }
 
+/**
+ * redirectAndPrintJRELogメソッド
+ */
     public static void redirectAndPrintJRELog() {
 
         Logging.v("jrelog","Log starts here");
@@ -166,6 +181,9 @@ public final class JREUtils {
 
     }
 
+/**
+ * relocateLibPathメソッド
+ */
     public static void relocateLibPath(Runtime runtime, String jreHome) {
         String JRE_ARCHITECTURE = runtime.arch;
         if (Architecture.archAsInt(JRE_ARCHITECTURE) == ARCH_X86){
@@ -206,6 +224,9 @@ public final class JREUtils {
         LD_LIBRARY_PATH = ldLibraryPath.toString();
     }
 
+/**
+ * initLdLibraryPathメソッド
+ */
     private static void initLdLibraryPath(String jreHome) {
         File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
         jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
@@ -214,6 +235,10 @@ public final class JREUtils {
         setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
     }
 
+/**
+ * javaEnvを設定する
+ * @param javaEnv 設定値
+ */
     private static void setJavaEnv(Map<String, String> envMap, String jreHome) {
         envMap.put("POJAV_NATIVEDIR", DIR_NATIVE_LIB);
         envMap.put("DRIVER_PATH", DriverPluginManager.getDriver().getPath());
@@ -240,6 +265,10 @@ public final class JREUtils {
             envMap.put("POJAV_FFMPEG_PATH", FFmpegPlugin.executablePath);
     }
 
+/**
+ * rendererEnvを設定する
+ * @param rendererEnv 設定値
+ */
     private static void setRendererEnv(Map<String, String> envMap) {
         RendererInterface currentRenderer = Renderers.INSTANCE.getCurrentRenderer();
         String rendererId = currentRenderer.getRendererId();
@@ -319,6 +348,10 @@ public final class JREUtils {
         }
     }
 
+/**
+ * customEnvを設定する
+ * @param customEnv 設定値
+ */
     private static void setCustomEnv(Map<String, String> envMap) throws Throwable {
         File customEnvFile = new File(PathManager.DIR_GAME_HOME, "custom_env.txt");
         if (customEnvFile.exists() && customEnvFile.isFile()) {
@@ -332,6 +365,9 @@ public final class JREUtils {
         }
     }
 
+/**
+ * checkAndUsedJSPHメソッド
+ */
     private static void checkAndUsedJSPH(Map<String, String> envMap, final Runtime runtime) {
         boolean onUseJSPH = runtime.javaVersion > 11;
         if (!onUseJSPH) return;
@@ -345,6 +381,10 @@ public final class JREUtils {
         }
     }
 
+/**
+ * envを設定する
+ * @param env 設定値
+ */
     private static void setEnv(String jreHome, final Runtime runtime, Version gameVersion) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
 
@@ -380,6 +420,9 @@ public final class JREUtils {
         }
     }
 
+/**
+ * initGraphicAndSoundEngineメソッド
+ */
     private static void initGraphicAndSoundEngine(boolean renderer) {
         dlopen(DIR_NATIVE_LIB + "/libopenal.so");
 
@@ -397,6 +440,9 @@ public final class JREUtils {
         }
     }
 
+/**
+ * launchJavaVMメソッド
+ */
     private static void launchJavaVM(
             final AppCompatActivity activity,
             String runtimeHome,
@@ -479,6 +525,9 @@ public final class JREUtils {
         EventBus.getDefault().post(new JvmExitEvent(exitCode));
     }
 
+/**
+ * launchWithUtilsメソッド
+ */
     public static void launchWithUtils(
             final AppCompatActivity activity,
             final Runtime runtime,
@@ -648,6 +697,9 @@ public final class JREUtils {
     private static final int EGL_OPENGL_ES2_BIT = 0x0004;
     private static final int EGL_OPENGL_ES3_BIT_KHR = 0x0040;
     @SuppressWarnings("SameParameterValue")
+/**
+ * hasExtensionメソッド
+ */
     private static boolean hasExtension(String extensions, String name) {
         int start = extensions.indexOf(name);
         while (start >= 0) {
@@ -661,6 +713,10 @@ public final class JREUtils {
         return false;
     }
 
+/**
+ * detectedVersionを取得する
+ * @return detectedVersionの値
+ */
     public static int getDetectedVersion() {
         /*
          * Get all the device configurations and check the EGL_RENDERABLE_TYPE attribute
@@ -718,14 +774,41 @@ public final class JREUtils {
             return -3;
         }
     }
+/**
+ * chdirメソッド
+ */
     public static native int chdir(String path);
+/**
+ * dlopenメソッド
+ */
     public static native boolean dlopen(String libPath);
+/**
+ * ldLibraryPathを設定する
+ * @param ldLibraryPath 設定値
+ */
     public static native void setLdLibraryPath(String ldLibraryPath);
+/**
+ * upBridgeWindowを設定する
+ * @param upBridgeWindow 設定値
+ */
     public static native void setupBridgeWindow(Object surface);
+/**
+ * releaseBridgeWindowメソッド
+ */
     public static native void releaseBridgeWindow();
+/**
+ * initializeGameExitHookメソッド
+ */
     public static native void initializeGameExitHook();
+/**
+ * upExitMethodを設定する
+ * @param upExitMethod 設定値
+ */
     public static native void setupExitMethod(Context context);
     // Obtain AWT screen pixels to render on Android SurfaceView
+/**
+ * renderAWTScreenFrameメソッド
+ */
     public static native int[] renderAWTScreenFrame(/* Object canvas, int width, int height */);
     static {
         System.loadLibrary("exithook");

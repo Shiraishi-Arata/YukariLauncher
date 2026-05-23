@@ -10,6 +10,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.arata.yukarilauncher.R
 
+/**
+ * アニメーション効果付きのConstraintLayout。
+ * タップ時のスケールアニメーションとリップルエフェクトを提供する。
+ */
 @SuppressLint("Recycle")
 class AnimConstraintLayout @JvmOverloads constructor(
     context: Context,
@@ -17,6 +21,9 @@ class AnimConstraintLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
+    /**
+     * 初期化時にスケールアニメーションとリップルエフェクトを設定する。
+     */
     init {
         stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.xml.anim_scale)
         if (context.obtainStyledAttributes(attrs, R.styleable.AnimConstraintLayout).getBoolean(R.styleable.AnimConstraintLayout_ripple_for_constraint, false)) {
@@ -24,6 +31,9 @@ class AnimConstraintLayout @JvmOverloads constructor(
         }
     }
 
+    /**
+     * レイアウト完了後にピボットを中心に設定する。
+     */
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         post {
@@ -32,6 +42,9 @@ class AnimConstraintLayout @JvmOverloads constructor(
         }
     }
 
+    /**
+     * リップルエフェクト（波紋効果）を背景に設定する。
+     */
     private fun setRipple() {
         val rippleDrawable = RippleDrawable(
             ColorStateList.valueOf(ContextCompat.getColor(context, R.color.background_ripple_effect)),

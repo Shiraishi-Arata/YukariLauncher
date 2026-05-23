@@ -7,7 +7,8 @@ import android.net.NetworkCapabilities
 class NetworkUtils {
     companion object {
         /**
-         * @return 当前网络是否已连接
+         * 現在のネットワークが接続されているかどうかを返す
+         * Wi-Fi、モバイルデータ、イーサネットのいずれかに接続している場合にtrueを返す
          */
         @JvmStatic
         fun isNetworkAvailable(context: Context): Boolean {

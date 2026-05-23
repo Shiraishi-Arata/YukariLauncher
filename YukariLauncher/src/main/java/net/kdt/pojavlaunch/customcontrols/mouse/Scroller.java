@@ -6,15 +6,18 @@ public class Scroller {
 
     private float mScrollOvershootH, mScrollOvershootV;
     private final float mScrollThreshold;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public Scroller(float mScrollThreshold) {
         this.mScrollThreshold = mScrollThreshold;
     }
 
     /**
-     * Perform a scrolling gesture.
-     * @param dx the X coordinate of the primary pointer's vector
-     * @param dy the Y coordinate of the primary pointer's vector
+     * スクロールジェスチャーを実行します。
+     * @param dx プライマリポインターのベクターX座標
+     * @param dy プライマリポインターのベクターY座標
      */
     public void performScroll(float dx, float dy) {
         float hScroll = (dx / mScrollThreshold) + mScrollOvershootH;
@@ -26,16 +29,16 @@ public class Scroller {
     }
 
     /**
-     * Perform a scrolling gesture.
-     * @param vector a 2-component vector that stores the relative position of the primary pointer.
+     * スクロールジェスチャーを実行します。
+     * @param vector プライマリポインターの相対位置を格納する2成分ベクター
      */
     public void performScroll(float[] vector) {
         performScroll(vector[0], vector[1]);
     }
 
     /**
-     * Reset scroll overshoot values. Scroll overshoot makes the scrolling feel less
-     * choppy, but will cause anomailes if not reset on the end of a scrolling gesture.
+     * スクロールオーバーシュート値をリセットします。スクロールオーバーシュートによりスクロールが
+     * ぎこちなくなりますが、スクロールジェスチャーの終了時にリセットしないと異常が発生します。
      */
     public void resetScrollOvershoot() {
         mScrollOvershootH = mScrollOvershootV = 0f;

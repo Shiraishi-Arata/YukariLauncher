@@ -37,6 +37,9 @@ import java.io.File
 import java.util.Objects
 import java.util.function.Consumer
 
+/**
+ * ファイル管理フラグメント
+ */
 class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
     companion object {
         const val TAG: String = "FilesFragment"
@@ -64,6 +67,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
     private var mLockPath: String? = null
     private var mListPath: String? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension(null, true)) { uris: List<Uri>? ->
@@ -85,6 +91,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,6 +104,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         parseBundle()
@@ -121,7 +133,6 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
                 setOnMultiSelectListener { itemBeans: List<FileItemBean> ->
                     if (itemBeans.isNotEmpty()) {
                         Task.runTask {
-                            //取出全部文件
                             val selectedFiles: MutableList<File> = ArrayList()
                             itemBeans.forEach(Consumer { value: FileItemBean ->
                                 val file = value.file
@@ -154,7 +165,6 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
 
                 setRefreshListener {
                     setVisibilityAnim(nothingText, isNoFile)
-                    // 如果目录变更到了外部存储，则会检查权限
                     if (Objects.equals(fullPath.absolutePath, storageDirectory.absolutePath)) {
                         StoragePermissionsUtils.checkPermissions(
                             activity = requireActivity(),
@@ -174,7 +184,6 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
                         val path = editBox.text.toString()
 
                         val file = File(path)
-                        //检查路径是否符合要求：最少为最顶部路径、路径是一个文件夹、这个路径存在
                         if (!path.contains(mLockPath!!) || !file.isDirectory || !file.exists()) {
                             editBox.error = getString(R.string.file_does_not_exist)
                             return@setConfirmListener false
@@ -223,7 +232,7 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
             operateView.addFileButton.setOnClickListener {
                 closeMultiSelect()
                 openDocumentLauncher?.launch(null)
-            } //不限制文件类型
+            }
             operateView.createFolderButton.setOnClickListener {
                 closeMultiSelect()
                 EditTextDialog.Builder(requireContext())
@@ -301,6 +310,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         startNewbieGuide()
     }
 
+    /**
+     * 初心者ガイドを開始する
+     */
     private fun startNewbieGuide() {
         if (NewbieGuideUtils.showOnlyOne("${TAG}${if (mSelectFolderMode) "_select" else ""}")) return
         binding.operateView.apply {
@@ -324,12 +336,17 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         }
     }
 
+    /**
+     * マルチセレクトモードを解除する
+     */
     private fun closeMultiSelect() {
-        //点击其它控件时关闭多选模式
         binding.multiSelectFiles.isChecked = false
         binding.selectAll.visibility = View.GONE
     }
 
+    /**
+     * ファイル操作ダイアログを表示する
+     */
     private fun showDialog(file: File) {
         val filesButton = FilesButton()
         filesButton.setButtonVisibility(true, true, true, true, true, false)
@@ -349,6 +366,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         filesDialog.show()
     }
 
+    /**
+     * パスからロックパス部分を取り除く
+     */
     private fun removeLockPath(path: String, remove: Boolean): String {
         var string = path
         if (remove) {
@@ -357,6 +377,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         return string
     }
 
+    /**
+     * ビューを初期化します。
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun initViews() {
         binding.apply {
@@ -402,6 +425,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         }
     }
 
+    /**
+     * バンドル引数を解析する
+     */
     private fun parseBundle() {
         val bundle = arguments ?: return
         mLockPath = bundle.getString(BUNDLE_LOCK_PATH, Environment.getExternalStorageDirectory().absolutePath)
@@ -415,6 +441,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         mTitleRemoveLockPath = bundle.getBoolean(BUNDLE_TITLE_REMOVE_LOCK_PATH, true)
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(filesLayout, Animations.BounceInDown))
@@ -422,6 +451,9 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(filesLayout, Animations.FadeOutUp))
@@ -429,4 +461,3 @@ class FilesFragment : FragmentWithAnim(R.layout.fragment_files) {
         }
     }
 }
-

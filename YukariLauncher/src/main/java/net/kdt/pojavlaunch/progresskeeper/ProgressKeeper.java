@@ -6,11 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 進行状況を管理し、リスナーに通知するクラス。
+ * 複数のタスクの進行状況を追跡し、タスク数の変更をリスナーに通知します。
+ */
 public class ProgressKeeper {
     private static final HashMap<String, List<ProgressListener>> sProgressListeners = new HashMap<>();
     private static final HashMap<String, ProgressState> sProgressStates = new HashMap<>();
     private static final List<TaskCountListener> sTaskCountListeners = new ArrayList<>();
 
+    /**
+     * 進行状況を送信します。進行状況が-1、residが-1の場合は終了を示します。
+     */
     public static synchronized void submitProgress(String progressRecord, int progress, int resid, Object... va) {
         ProgressState progressState = sProgressStates.get(progressRecord);
         boolean shouldCallStarted = progressState == null;
@@ -38,6 +45,9 @@ public class ProgressKeeper {
             }
     }
 
+    /**
+     * タスク数を更新し、リスナーに通知します。
+     */
     private static synchronized void updateTaskCount() {
         int count = sProgressStates.size();
         for(TaskCountListener listener : sTaskCountListeners) {
@@ -45,6 +55,9 @@ public class ProgressKeeper {
         }
     }
 
+    /**
+     * 特定の進行状況レコードにリスナーを追加します。
+     */
     public static synchronized void addListener(String progressRecord, ProgressListener listener) {
         ProgressState state = sProgressStates.get(progressRecord);
         if(state != null && (state.resid != -1 || state.progress != -1)) {
@@ -57,38 +70,51 @@ public class ProgressKeeper {
         listenerWeakReferenceList.add(listener);
     }
 
+    /**
+     * 特定の進行状況レコードからリスナーを削除します。
+     */
     public static synchronized void removeListener(String progressRecord, ProgressListener listener) {
         List<ProgressListener> listenerWeakReferenceList = sProgressListeners.get(progressRecord);
         if(listenerWeakReferenceList != null) listenerWeakReferenceList.remove(listener);
     }
 
+    /**
+     * タスク数変更リスナーを追加します。
+     */
     public static synchronized void addTaskCountListener(TaskCountListener listener) {
         listener.onUpdateTaskCount(sProgressStates.size());
         if(!sTaskCountListeners.contains(listener)) sTaskCountListeners.add(listener);
     }
+
+    /**
+     * タスク数変更リスナーを追加します（初回更新の制御付き）。
+     */
     public static synchronized void addTaskCountListener(TaskCountListener listener, boolean runUpdate) {
         if(runUpdate) listener.onUpdateTaskCount(sProgressStates.size());
         if(!sTaskCountListeners.contains(listener)) sTaskCountListeners.add(listener);
     }
+
+    /**
+     * タスク数変更リスナーを削除します。
+     */
     public static synchronized void removeTaskCountListener(TaskCountListener listener) {
         sTaskCountListeners.remove(listener);
     }
 
     /**
-     * @return 当前任务集合内是否存在任务key
+     * @return 現在のタスクセット内に指定されたキーが存在するかどうか
      */
     public static boolean containsProgress(String progressKey) {
         return sProgressStates.containsKey(progressKey);
     }
 
     /**
-     * Waits until all tasks are done and runs the runnable, or if there were no pending process remaining
-     * The runnable runs from the thread that updated the task count last, and it might be the UI thread,
-     * so don't put long running processes in it
-     * @param runnable the runnable to run when no tasks are remaining
+     * すべてのタスクが完了するまで待機し、その後Runnableを実行します。
+     * 保留中のプロセスがない場合も同様に実行します。
+     * Runnableは最後にタスク数を更新したスレッドから実行されるため、長時間の処理は避けてください。
+     * @param runnable タスクがなくなった時に実行するRunnable
      */
     public static void waitUntilDone(final Runnable runnable) {
-        // If we do it the other way the listener would be removed before it was added, which will cause a listener object leak
         if(getTaskCount() == 0) {
             runnable.run();
             return;
@@ -105,14 +131,23 @@ public class ProgressKeeper {
         addTaskCountListener(listener);
     }
 
+    /**
+     * @return 現在のタスク数
+     */
     public static synchronized int getTaskCount() {
         return sProgressStates.size();
     }
 
+    /**
+     * @return 実行中のタスクがあるかどうか
+     */
     public static boolean hasOngoingTasks() {
         return getTaskCount() > 0;
     }
 
+    /**
+     * 進行状況レコードを保持する内部クラス。
+     */
     public static class ProgressRecord {
         public final String key;
         public final int progress;
@@ -127,6 +162,9 @@ public class ProgressKeeper {
         }
     }
 
+    /**
+     * @return 現在のすべての進行状況レコードのリスト
+     */
     public static synchronized List<ProgressRecord> getProgressRecords() {
         if (sProgressStates.isEmpty()) return Collections.emptyList();
         List<ProgressRecord> records = new ArrayList<>();

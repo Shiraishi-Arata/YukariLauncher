@@ -10,7 +10,8 @@ import com.arata.yukarilauncher.feature.version.VersionsManager
 import org.apache.commons.io.FileUtils
 
 /**
- * 用于自动设置版本的图标，或者重置对应版本的自定义图标
+ * バージョンのアイコンを自動設定、またはカスタムアイコンをリセットするためのクラス
+ * @property version 対象のVersion
  */
 class VersionIconUtils(
     private val version: Version
@@ -18,8 +19,9 @@ class VersionIconUtils(
     private val iconFile = VersionsManager.getVersionIconFile(version)
 
     /**
-     * 通过版本来识别其默认的图标，比如原版、模组加载器封面图，如果有自定义图标，那么会优先设置自定义图标
-     * @return 返回是否设置为了自定义图标，便于使用重置图标的操作
+     * バージョンに応じたデフォルトアイコンを識別して設定する（バニラ、ModLoaderのカバー画像など）
+     * カスタムアイコンが存在する場合は優先的に設定される
+     * @return カスタムアイコンが設定されているかどうか（リセット操作に使用）
      */
     fun start(imageView: ImageView): Boolean {
         val context = imageView.context
@@ -56,18 +58,23 @@ class VersionIconUtils(
     }
 
     /**
-     * 通过删除自定义图标文件，来达成重置的目的
-     * **这个操作不可逆**
+     * カスタムアイコンファイルを削除して、デフォルトアイコンにリセットする
+     * **この操作は元に戻せません**
      */
     fun resetIcon() {
         FileUtils.deleteQuietly(iconFile)
     }
 
     /**
-     * @return 获取当前版本的封面图标
+     * @return 現在のバージョンのカバーアイコンファイル
      */
     fun getIconFile() = iconFile
 
+    /**
+     * ModLoaderの名前に対応するアイコンリソースIDを取得する
+     * @param name ModLoaderの名前
+     * @return アイコンのリソースID。該当なしの場合はnull
+     */
     private fun getLoaderIcon(name: String): Int? {
         return when(name.lowercase()) {
             "fabric" -> R.drawable.ic_fabric

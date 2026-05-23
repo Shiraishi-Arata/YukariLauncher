@@ -3,6 +3,10 @@ package com.arata.yukarilauncher.ui.fragment.download.addon
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.version.install.Addon
 
+/**
+ * Quilt Standard Libraries（QSL）をダウンロードするためのフラグメントです。
+ * ModrinthからQSLのバージョン情報を取得してインストールします。
+ */
 class DownloadQuiltApiFragment: DownloadFabricLikeApiModFragment(
     Addon.QSL,
     "qvIfYCYJ",

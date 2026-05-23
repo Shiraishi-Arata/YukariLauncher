@@ -21,6 +21,9 @@ import com.arata.yukarilauncher.ui.fragment.settings.LauncherSettingsFragment
 import com.arata.yukarilauncher.ui.fragment.settings.VideoSettingsFragment
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * 設定管理フラグメント
+ */
 class SettingsFragment : FragmentWithAnim(R.layout.fragment_settings) {
     companion object {
         const val TAG: String = "SettingsFragment"
@@ -28,6 +31,9 @@ class SettingsFragment : FragmentWithAnim(R.layout.fragment_settings) {
 
     private lateinit var binding: FragmentSettingsBinding
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +43,9 @@ class SettingsFragment : FragmentWithAnim(R.layout.fragment_settings) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViewPager()
 
@@ -46,11 +55,17 @@ class SettingsFragment : FragmentWithAnim(R.layout.fragment_settings) {
         }
     }
 
+    /**
+     * フラグメント再開時に設定を更新します。
+     */
     override fun onResume() {
         super.onResume()
         Settings.refreshSettings()
     }
 
+    /**
+     * ViewPager2を初期化する
+     */
     private fun initViewPager() {
         binding.settingsViewpager.apply {
             adapter = ViewPagerAdapter(this@SettingsFragment)
@@ -67,20 +82,32 @@ class SettingsFragment : FragmentWithAnim(R.layout.fragment_settings) {
         }
     }
 
+    /**
+     * フラグメント選択時にタブを更新する
+     */
     private fun onFragmentSelect(position: Int) {
         binding.settingsTab.onPageSelected(position)
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.settingsLayout, Animations.BounceInRight))
             .apply(AnimPlayer.Entry(binding.settingsViewpager, Animations.BounceInDown))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.settingsLayout, Animations.FadeOutLeft))
             .apply(AnimPlayer.Entry(binding.settingsViewpager, Animations.FadeOutUp))
     }
 
+    /**
+     * ViewPager2のアダプター
+     */
     private class ViewPagerAdapter(val fragment: FragmentWithAnim): FragmentStateAdapter(fragment.requireActivity()) {
         override fun getItemCount(): Int = 5
         override fun createFragment(position: Int): Fragment {

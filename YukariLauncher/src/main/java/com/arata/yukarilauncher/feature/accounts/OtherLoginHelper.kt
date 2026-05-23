@@ -21,11 +21,17 @@ class OtherLoginHelper(
     private val password: String,
     private val listener: OnLoginListener
 ) {
+/**
+ * loginする
+ */
     private fun login(context: Context, loginListener: LoginAccountListener) {
         Task.runTask {
             OtherLoginApi.setBaseUrl(baseUrl)
             OtherLoginApi.login(context, email, password,
                 object : OtherLoginApi.Listener {
+/**
+ * onSuccessする
+ */
                     override fun onSuccess(authResult: AuthResult) {
                         if (!Objects.isNull(authResult.selectedProfile)) {
                             loginListener.onlyOneRole(authResult)
@@ -34,6 +40,9 @@ class OtherLoginHelper(
                         }
                     }
 
+/**
+ * onFailedする
+ */
                     override fun onFailed(error: String) {
                         TaskExecutors.runInUIThread {
                             listener.unLoading()
@@ -56,6 +65,9 @@ class OtherLoginHelper(
      * 将账号信息写入到账号对象中（单独区分出来是为了适配仅登录的情况，刷新账号信息）
      * @param account 需要写入的账号
      */
+/**
+ * writeAccountする
+ */
     private fun writeAccount(
         account: MinecraftAccount,
         authResult: AuthResult,
@@ -79,8 +91,14 @@ class OtherLoginHelper(
     /**
      * 通过账号密码，登录一个新的账号
      */
+/**
+ * createNewAccountする
+ */
     fun createNewAccount(context: Context) {
         login(context, object : LoginAccountListener {
+/**
+ * onlyOneRoleする
+ */
             override fun onlyOneRole(authResult: AuthResult) {
                 val profileId = authResult.selectedProfile.id
                 val account: MinecraftAccount = MinecraftAccount.loadFromProfileID(profileId) ?: MinecraftAccount()
@@ -91,6 +109,9 @@ class OtherLoginHelper(
                 }
             }
 
+/**
+ * hasMultipleRolesする
+ */
             override fun hasMultipleRoles(authResult: AuthResult) {
                 TaskExecutors.runInUIThread {
                     val selectRoleDialog = SelectRoleDialog(
@@ -113,8 +134,14 @@ class OtherLoginHelper(
      * 仅仅只是登录外置账号（使用账号密码登录）
      * JUST DO IT!!!
      */
+/**
+ * justLoginする
+ */
     fun justLogin(context: Context, account: MinecraftAccount) {
         //未找到匹配的ID
+/**
+ * roleNotFoundする
+ */
         fun roleNotFound() {
             TaskExecutors.runInUIThread {
                 listener.onFailed(context.getString(R.string.other_login_role_not_found))
@@ -122,6 +149,9 @@ class OtherLoginHelper(
         }
 
         login(context, object : LoginAccountListener {
+/**
+ * onlyOneRoleする
+ */
             override fun onlyOneRole(authResult: AuthResult) {
                 if (authResult.selectedProfile.id != account.profileId) {
                     roleNotFound()
@@ -134,6 +164,9 @@ class OtherLoginHelper(
                 }
             }
 
+/**
+ * hasMultipleRolesする
+ */
             override fun hasMultipleRoles(authResult: AuthResult) {
                 authResult.availableProfiles.forEach { profile ->
                     if (profile.id == account.profileId) {
@@ -151,10 +184,16 @@ class OtherLoginHelper(
         })
     }
 
+/**
+ * refreshする
+ */
     private fun refresh(context: Context, account: MinecraftAccount) {
         Task.runTask {
             OtherLoginApi.setBaseUrl(baseUrl)
             OtherLoginApi.refresh(context, account, true, object : OtherLoginApi.Listener {
+/**
+ * onSuccessする
+ */
                 override fun onSuccess(authResult: AuthResult) {
                     account.accessToken = authResult.accessToken
                     account.updateOtherSkin()
@@ -164,6 +203,9 @@ class OtherLoginHelper(
                     }
                 }
 
+/**
+ * onFailedする
+ */
                 override fun onFailed(error: String) {
                     TaskExecutors.runInUIThread {
                         listener.unLoading()
@@ -183,9 +225,21 @@ class OtherLoginHelper(
     }
 
     interface OnLoginListener {
+/**
+ * onLoadingする
+ */
         fun onLoading()
+/**
+ * unLoadingする
+ */
         fun unLoading()
+/**
+ * onSuccessする
+ */
         fun onSuccess(account: MinecraftAccount)
+/**
+ * onFailedする
+ */
         fun onFailed(error: String)
     }
 
@@ -193,8 +247,14 @@ class OtherLoginHelper(
      * 账号拥有的角色数量不同时，所做出的登陆决策
      */
     private interface LoginAccountListener {
+/**
+ * onlyOneRoleする
+ */
         fun onlyOneRole(authResult: AuthResult)
 
+/**
+ * hasMultipleRolesする
+ */
         fun hasMultipleRoles(authResult: AuthResult)
     }
 }

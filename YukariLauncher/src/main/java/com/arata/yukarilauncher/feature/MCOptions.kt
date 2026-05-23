@@ -22,6 +22,10 @@ object MCOptions {
      * 初始化 MCOptions
      * 检查 options.txt 是否存在，如果不存在，将会复制一份默认的 options.txt 文件
      */
+/**
+ * MCOptionsを初期化する
+ * options.txtが存在しない場合はデフォルトファイルをコピーする
+ */
     fun setup(context: Context, versionGetter: MinecraftVersionGetter) {
         this.versionGetter = versionGetter
         parameterMap.clear()
@@ -46,6 +50,9 @@ object MCOptions {
         load()
     }
 
+/**
+ * options.txtファイルから設定を読み込む
+ */
     private fun load() {
         val optionFile = getOptionsFile().apply {
             if (!exists()) {
@@ -74,14 +81,28 @@ object MCOptions {
         }
     }
 
+/**
+ * setする
+ */
     fun set(key: String, value: String) {
         parameterMap[key] = value
     }
 
+/**
+ * getする
+ */
     fun get(key: String): String? = parameterMap[key]
 
+/**
+ * 指定されたキーが存在するかを確認する
+ * @param key 設定キー
+ * @return 存在する場合はtrue
+ */
     fun containsKey(key: String): Boolean = key in parameterMap
 
+/**
+ * saveする
+ */
     fun save() {
         getOptionsFile().takeIf { it.exists() }?.let { optionsFile ->
             val optionsString = parameterMap.entries.joinToString("\n") { "${it.key}:${it.value}" }
@@ -96,6 +117,10 @@ object MCOptions {
         }
     }
 
+    /**
+     * MinecraftのGUIスケールを取得する
+     * guiScale設定と画面サイズから適切なスケール値を計算する
+     */
     val mcScale: Int
         get() {
             val guiScale = get("guiScale")?.toIntOrNull() ?: 0
@@ -103,23 +128,41 @@ object MCOptions {
             return if (guiScale == 0 || scale < guiScale) scale else guiScale
         }
 
+/**
+ * options.txtのFileオブジェクトを取得する
+ * @return options.txtファイル
+ */
     private fun getOptionsFile() = File(versionGetter.getVersion().getGameDir(), "options.txt")
 
+/**
+ * ファイル変更監視を設定する
+ */
     private fun setupFileObserver() {
         fileObserver = createFileObserver(getOptionsFile()).apply {
             startWatching()
         }
     }
 
+/**
+ * FileObserverを作成する
+ * @param file 監視対象ファイル
+ * @return FileObserver
+ */
     private fun createFileObserver(file: File): FileObserver {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             object : FileObserver(file, MODIFY) {
+/**
+ * onEventする
+ */
                 override fun onEvent(event: Int, path: String?) {
                     handleFileChange()
                 }
             }
         } else {
             object : FileObserver(file.absolutePath, MODIFY) {
+/**
+ * onEventする
+ */
                 override fun onEvent(event: Int, path: String?) {
                     handleFileChange()
                 }
@@ -127,6 +170,9 @@ object MCOptions {
         }
     }
 
+/**
+ * ファイル変更時に設定を再読み込みしてイベントを発行する
+ */
     private fun handleFileChange() {
         load()
         EventBus.getDefault().post(MCOptionChangeEvent())
@@ -135,7 +181,14 @@ object MCOptions {
     /**
      * 这个接口用于获取 Minecraft 版本信息
      */
+/**
+ * interfaceする
+ */
     fun interface MinecraftVersionGetter {
+/**
+ * Minecraftバージョン情報を取得する
+ * @return バージョン情報
+ */
         fun getVersion(): Version
     }
 }

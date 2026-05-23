@@ -30,7 +30,19 @@ import java.util.TreeSet
 
 class CurseForgeModHelper {
     companion object {
+        /**
+         * Mod/Modパックの検索を実行する
+         * @param api APIハンドラー
+         * @param lastResult 前回の検索結果
+         * @param filters 検索フィルター
+         * @param type CurseForgeのクラスタイプID
+         * @param classify 分類タイプ
+         * @return 検索結果
+         */
         @Throws(Throwable::class)
+/**
+ * modLikeSearchする
+ */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: Int, classify: Classify): SearchResult? {
             if (filters.category != Category.ALL && filters.category.curseforgeID == null) {
                 throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
@@ -74,6 +86,15 @@ class CurseForgeModHelper {
             return CurseForgeCommonUtils.returnResults(lastResult, infoItems, dataArray, response)
         }
 
+        /**
+         * Mod/Modパックのバージョン一覧を取得する（キャッシュ対応、ジェネリック版）
+         * @param api APIハンドラー
+         * @param infoItem 対象のInfoItem
+         * @param force キャッシュを無視するかどうか
+         * @param cache 使用するキャッシュ
+         * @param createVersionItem バージョンアイテムを生成するラムダ
+         * @return バージョンアイテムのリスト
+         */
         @Throws(Throwable::class)
         internal fun <T : VersionItem> getModOrModPackVersions(
             api: ApiHandler,
@@ -102,7 +123,7 @@ class CurseForgeModHelper {
             val invalidDependencies: MutableList<String> = ArrayList()
             for (modData in allModData) {
                 try {
-                    // 获取版本信息
+                    // バージョン情報の取得
                     val mcVersions: MutableSet<String> = TreeSet()
                     for (gameVersionElement in modData.getAsJsonArray("gameVersions")) {
                         val gameVersion = gameVersionElement.asString
@@ -112,7 +133,7 @@ class CurseForgeModHelper {
                     val modloaders: MutableList<ModLoader> = ArrayList()
                     mcVersions.forEach { ModLoaderUtils.addModLoaderToList(modloaders, it) }
 
-                    // 过滤非MC版本的元素
+                    // MCバージョンではない要素をフィルタリング
                     val releaseRegex = RELEASE_REGEX
                     val nonMCVersion: MutableSet<String> = TreeSet()
                     mcVersions.forEach { string: String ->
@@ -184,7 +205,17 @@ class CurseForgeModHelper {
             return versionItems
         }
 
+        /**
+         * Modのバージョン一覧を取得する
+         * @param api APIハンドラー
+         * @param infoItem 対象のInfoItem
+         * @param force キャッシュを無視するかどうか
+         * @return ModVersionItemのリスト
+         */
         @Throws(Throwable::class)
+/**
+ * getModVersionsする
+ */
         internal fun getModVersions(api: ApiHandler, infoItem: InfoItem, force: Boolean): List<ModVersionItem>? {
             return getModOrModPackVersions(
                 api,
@@ -208,7 +239,17 @@ class CurseForgeModHelper {
             }
         }
 
+        /**
+         * Modパックのバージョン一覧を取得する
+         * @param api APIハンドラー
+         * @param infoItem 対象のInfoItem
+         * @param force キャッシュを無視するかどうか
+         * @return ModLikeVersionItemのリスト
+         */
         @Throws(Throwable::class)
+/**
+ * getModPackVersionsする
+ */
         internal fun getModPackVersions(api: ApiHandler, infoItem: InfoItem, force: Boolean): List<ModLikeVersionItem>? {
             return getModOrModPackVersions(
                 api,
@@ -231,6 +272,14 @@ class CurseForgeModHelper {
             }
         }
 
+        /**
+         * JSON配列からModLoaderのリストを取得する
+         * @param data latestFilesIndexesのJSON配列
+         * @return ModLoaderのリスト
+         */
+/**
+ * getModLoadersする
+ */
         private fun getModLoaders(data: JsonArray): List<ModLoader> {
             val modLoaders: MutableSet<ModLoader> = HashSet()
             for (element in data) {

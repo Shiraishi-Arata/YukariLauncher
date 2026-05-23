@@ -3,7 +3,18 @@ package com.arata.yukarilauncher.feature.download.platform.update
 import com.arata.yukarilauncher.feature.log.Logging
 import java.io.File
 
+/**
+ * インストール済みModをスキャンしてメタデータを収集するオブジェクト
+ */
 object InstalledModsScanner {
+    /**
+     * 指定されたディレクトリ内のJARファイルをスキャンし、各Modのメタデータを解析する
+     * @param modsDir Modが格納されているディレクトリ
+     * @return 解析されたModInfoのリスト
+     */
+/**
+ * scanする
+ */
     fun scan(modsDir: File): List<ModMetadataReader.ModInfo> {
         val mods = mutableListOf<ModMetadataReader.ModInfo>()
         if (!modsDir.exists()) {

@@ -22,6 +22,9 @@ import com.arata.yukarilauncher.ui.fragment.download.resource.ShaderPackDownload
 import com.arata.yukarilauncher.ui.fragment.download.resource.WorldDownloadFragment
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * ダウンロード管理フラグメント
+ */
 class DownloadFragment : FragmentWithAnim(R.layout.fragment_download) {
     companion object {
         const val TAG = "DownloadFragment"
@@ -29,6 +32,9 @@ class DownloadFragment : FragmentWithAnim(R.layout.fragment_download) {
 
     private lateinit var binding: FragmentDownloadBinding
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +44,9 @@ class DownloadFragment : FragmentWithAnim(R.layout.fragment_download) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViewPager()
 
@@ -47,6 +56,9 @@ class DownloadFragment : FragmentWithAnim(R.layout.fragment_download) {
         }
     }
 
+    /**
+     * ViewPager2を初期化する
+     */
     private fun initViewPager() {
         binding.downloadViewpager.apply {
             adapter = ViewPagerAdapter(this@DownloadFragment)
@@ -63,24 +75,39 @@ class DownloadFragment : FragmentWithAnim(R.layout.fragment_download) {
         }
     }
 
+    /**
+     * フラグメント選択時にタブを更新する
+     */
     private fun onFragmentSelect(position: Int) {
         binding.classifyTab.onPageSelected(position)
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.classifyLayout, Animations.BounceInRight))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.classifyLayout, Animations.FadeOutLeft))
         EventBus.getDefault().post(DownloadPageEvent.PageSwapEvent(binding.classifyTab.currentItemIndex, OUT))
     }
 
+    /**
+     * ビュー破棄時にページ破棄イベントを発行します。
+     */
     override fun onDestroyView() {
         EventBus.getDefault().post(DownloadPageEvent.PageDestroyEvent())
         super.onDestroyView()
     }
 
+    /**
+     * ViewPager2のアダプター
+     */
     private class ViewPagerAdapter(private val fragment: Fragment): FragmentStateAdapter(fragment.requireActivity()) {
         override fun getItemCount(): Int = 5
         override fun createFragment(position: Int): Fragment {

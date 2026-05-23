@@ -32,23 +32,35 @@ public class CallbackBridge {
     public volatile static boolean holdingAlt, holdingCapslock, holdingCtrl,
             holdingNumlock, holdingShift;
 
+/**
+ * putMouseEventWithCoordsメソッド
+ */
     public static void putMouseEventWithCoords(int button, float x, float y) {
         putMouseEventWithCoords(button, true, x, y);
         sChoreographer.postFrameCallbackDelayed(l -> putMouseEventWithCoords(button, false, x, y), 33);
     }
     
+/**
+ * putMouseEventWithCoordsメソッド
+ */
     public static void putMouseEventWithCoords(int button, boolean isDown, float x, float y /* , int dz, long nanos */) {
         sendCursorPos(x, y);
         sendMouseKeycode(button, CallbackBridge.getCurrentMods(), isDown);
     }
 
 
+/**
+ * sendCursorPosメソッド
+ */
     public static void sendCursorPos(float x, float y) {
         mouseX = x;
         mouseY = y;
         nativeSendCursorPos(mouseX, mouseY);
     }
 
+/**
+ * sendKeycodeメソッド
+ */
     public static void sendKeycode(int keycode, char keychar, int scancode, int modifiers, boolean isDown) {
         // TODO CHECK: This may cause input issue, not receive input!
         if(keycode != 0)  nativeSendKey(keycode,scancode,isDown ? 1 : 0, modifiers);
@@ -58,55 +70,93 @@ public class CallbackBridge {
         }
     }
 
+/**
+ * sendCharメソッド
+ */
     public static void sendChar(char keychar, int modifiers){
         nativeSendCharMods(keychar,modifiers);
         nativeSendChar(keychar);
     }
 
+/**
+ * sendKeyPressメソッド
+ */
     public static void sendKeyPress(int keyCode, int modifiers, boolean status) {
         sendKeyPress(keyCode, 0, modifiers, status);
     }
 
+/**
+ * sendKeyPressメソッド
+ */
     public static void sendKeyPress(int keyCode, int scancode, int modifiers, boolean status) {
         sendKeyPress(keyCode, '\u0000', scancode, modifiers, status);
     }
 
+/**
+ * sendKeyPressメソッド
+ */
     public static void sendKeyPress(int keyCode, char keyChar, int scancode, int modifiers, boolean status) {
         CallbackBridge.sendKeycode(keyCode, keyChar, scancode, modifiers, status);
     }
 
+/**
+ * sendKeyPressメソッド
+ */
     public static void sendKeyPress(int keyCode) {
         sendKeyPress(keyCode, CallbackBridge.getCurrentMods(), true);
         sendKeyPress(keyCode, CallbackBridge.getCurrentMods(), false);
     }
 
+/**
+ * sendMouseButtonメソッド
+ */
     public static void sendMouseButton(int button, boolean status) {
         CallbackBridge.sendMouseKeycode(button, CallbackBridge.getCurrentMods(), status);
     }
 
+/**
+ * sendMouseKeycodeメソッド
+ */
     public static void sendMouseKeycode(int button, int modifiers, boolean isDown) {
         // if (isGrabbing()) DEBUG_STRING.append("MouseGrabStrace: " + android.util.Log.getStackTraceString(new Throwable()) + "\n");
         nativeSendMouseButton(button, isDown ? 1 : 0, modifiers);
     }
 
+/**
+ * sendMouseKeycodeメソッド
+ */
     public static void sendMouseKeycode(int keycode) {
         sendMouseKeycode(keycode, CallbackBridge.getCurrentMods(), true);
         sendMouseKeycode(keycode, CallbackBridge.getCurrentMods(), false);
     }
     
+/**
+ * sendScrollメソッド
+ */
     public static void sendScroll(double xoffset, double yoffset) {
         nativeSendScroll(xoffset, yoffset);
     }
 
+/**
+ * sendUpdateWindowSizeメソッド
+ */
     public static void sendUpdateWindowSize(int w, int h) {
         nativeSendScreenSize(w, h);
     }
 
+/**
+ * grabbingを取得する
+ * @return grabbingの値
+ */
     public static boolean isGrabbing() {
         // Avoid going through the JNI each time.
         return isGrabbing;
     }
 
+/**
+ * currentCursorTypeを取得する
+ * @return currentCursorTypeの値
+ */
     public static int getCurrentCursorType() {
         return currentCursorType;
     }
@@ -134,6 +184,10 @@ public class CallbackBridge {
     }
 
 
+/**
+ * currentModsを取得する
+ * @return currentModsの値
+ */
     public static int getCurrentMods() {
         int currMods = 0;
         if (holdingAlt) {
@@ -150,6 +204,10 @@ public class CallbackBridge {
         return currMods;
     }
 
+/**
+ * modifiersを設定する
+ * @param modifiers 設定値
+ */
     public static void setModifiers(int keyCode, boolean isDown){
         switch (keyCode){
             case LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT:
@@ -175,6 +233,9 @@ public class CallbackBridge {
 
     //Called from JRE side
     @SuppressWarnings("unused")
+/**
+ * onGrabStateChangedメソッド
+ */
     private static void onGrabStateChanged(final boolean grabbing) {
         isGrabbing = grabbing;
         sChoreographer.postFrameCallbackDelayed((time) -> {
@@ -192,15 +253,24 @@ public class CallbackBridge {
 
     // Called from JRE side
     @SuppressWarnings("unused")
+/**
+ * onCursorTypeChangedメソッド
+ */
     private static void onCursorTypeChanged(int cursorType) {
         currentCursorType = cursorType;
     }
+/**
+ * addGrabListenerメソッド
+ */
     public static void addGrabListener(GrabListener listener) {
         synchronized (grabListeners) {
             listener.onGrabState(isGrabbing);
             grabListeners.add(listener);
         }
     }
+/**
+ * removeGrabListenerメソッド
+ */
     public static void removeGrabListener(GrabListener listener) {
         synchronized (grabListeners) {
             grabListeners.remove(listener);

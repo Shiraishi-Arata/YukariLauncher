@@ -14,12 +14,18 @@ import com.arata.yukarilauncher.databinding.DialogBatchModDownloadBinding
 import com.arata.yukarilauncher.feature.download.item.InfoItem
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 
+/**
+ * 一括Modダウンロード確認ダイアログ
+ */
 class BatchModDownloadConfirmDialog(
     context: Context,
     private val items: List<ResolvedDownloadItem>,
     private val onConfirm: (List<ResolvedDownloadItem>) -> Unit
 ) : FullScreenDialog(context) {
 
+    /**
+     * 解決済みダウンロードアイテム
+     */
     data class ResolvedDownloadItem(
         val info: InfoItem,
         val version: VersionItem,
@@ -46,6 +52,9 @@ class BatchModDownloadConfirmDialog(
         }
     }
 
+    /**
+     * ダイアログのコンテンツを構築する
+     */
     private fun buildContent() {
         binding.contentLayout.removeAllViews()
         items.forEach { item ->
@@ -76,6 +85,9 @@ class BatchModDownloadConfirmDialog(
         }
     }
 
+    /**
+     * アイテム行のビューを生成する
+     */
     private fun createItemRow(item: ResolvedDownloadItem, dependency: Boolean): View {
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -97,6 +109,9 @@ class BatchModDownloadConfirmDialog(
         }
     }
 
+    /**
+     * 依存関係アイテムの行ビューを生成する
+     */
     private fun createDependencyRow(item: ResolvedDownloadItem): View {
         val row = createItemRow(item, true) as LinearLayout
         if (item.selectedDirectly) return row

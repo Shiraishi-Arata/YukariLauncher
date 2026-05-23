@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 上へスライドアウトするアニメーション
+ * 透明度を1→0に変化させ、Y座標を0→-100へ移動する
+ */
 class SlideOutUpAnimator: BaseAnimator() {
+    /** スライドアウト（上）アニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 1f, 0f),

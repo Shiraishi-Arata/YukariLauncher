@@ -19,6 +19,9 @@ import net.kdt.pojavlaunch.Tools;
 
 import top.defaults.checkerboarddrawable.CheckerboardDrawable;
 
+/**
+ * アルファ（透明度）値を選択するためのビュー。チェッカーボードの上に透明度グラデーションを表示します。
+ */
 public class AlphaView extends View {
     private final Drawable mCheckerboardDrawable = CheckerboardDrawable.create();
     private final Paint mShaderPaint = new Paint();
@@ -26,9 +29,13 @@ public class AlphaView extends View {
     private final RectF mViewSize = new RectF(0,0,0,0);
     private AlphaSelectionListener mAlphaSelectionListener;
     private int mSelectedAlpha;
-    private float mAlphaDiv; // for quick pos->alpha multiplication
-    private float mScreenDiv; // for quick alpha->pos multiplication
-    private float mWidthThird; // 1/3 of the view size for cursor
+    private float mAlphaDiv; // 高速な位置→アルファ値変換用
+    private float mScreenDiv; // 高速なアルファ値→位置変換用
+    private float mWidthThird; // カーソル表示用のビュー幅の1/3
+
+    /**
+     * コンストラクタ。ペイントオブジェクトを初期化します。
+     */
     public AlphaView(Context ctx, AttributeSet attrs) {
         super(ctx,attrs);
         mBlackPaint = new Paint();
@@ -36,15 +43,24 @@ public class AlphaView extends View {
         mBlackPaint.setColor(Color.BLACK);
     }
 
+    /**
+     * アルファ選択リスナーを設定します。
+     */
     public void setAlphaSelectionListener(AlphaSelectionListener alphaSelectionListener) {
         mAlphaSelectionListener = alphaSelectionListener;
     }
 
+    /**
+     * アルファ値を設定し、再描画します。
+     */
     public void setAlpha(int alpha) {
         mSelectedAlpha = alpha;
         invalidate();
     }
 
+    /**
+     * タッチイベントを処理し、アルファ値を計算します。
+     */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -54,6 +70,9 @@ public class AlphaView extends View {
         return true;
     }
 
+    /**
+     * サイズ変更時にグラデーションと変換値を再計算します。
+     */
     @Override
     protected void onSizeChanged(int w, int h, int old_w, int old_h) {
         mViewSize.right = w;
@@ -64,6 +83,9 @@ public class AlphaView extends View {
         mWidthThird = mViewSize.right / 3f;
     }
 
+    /**
+     * ビューを描画します。チェッカーボード、アルファグラデーション、選択インジケーターを描画します。
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         mCheckerboardDrawable.draw(canvas);

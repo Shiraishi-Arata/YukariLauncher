@@ -35,6 +35,10 @@ class PathManager {
         lateinit var FILE_VERSION_LIST: String
         lateinit var FILE_NEWBIE_GUIDE: File
 
+        /**
+         * コンテキストから各種パス定数を初期化する
+         * アプリケーションのデータディレクトリ、キャッシュ、ゲーム関連のパスなどを設定する
+         */
         @JvmStatic
         fun initContextConstants(context: Context) {
             DIR_NATIVE_LIB = context.applicationInfo.nativeLibraryDir
@@ -65,12 +69,16 @@ class PathManager {
             FILE_SETTINGS = File(DIR_FILE, "/launcher_settings.json")
 
             runCatching {
-                //此处的账号文件已不再使用，需要检查并清除
+                // このアカウントファイルはもう使用されていないので、チェックして削除する
                 FileUtils.deleteQuietly(File("$DIR_DATA/accounts"))
                 FileUtils.deleteQuietly(File(DIR_DATA, "/user_skin"))
             }
         }
 
+        /**
+         * 外部ストレージのルートパスを取得する
+         * Android 10（API 29）以降はgetExternalFilesDirを使用し、それ以前は従来の外部ストレージを使用する
+         */
         @JvmStatic
         fun getExternalStorageRoot(ctx: Context): File {
             return if (VERSION.SDK_INT >= 29) {

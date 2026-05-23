@@ -6,13 +6,13 @@ import com.google.gson.JsonObject;
 
 public class GsonJsonUtils {
     /**
-     * Safely converts a JsonElement into a JsonObject.
-     * @param element the input JsonElement
-     * @return the JsonObject if:
-     *         the JsonElement is not null
-     *         the JsonElement is not Json null
-     *         the JsonElement is a JsonObjet
-     *         null otherwise
+     * JsonElementを安全にJsonObjectに変換します。
+     * @param element 入力のJsonElement
+     * @return 以下の条件を満たす場合にJsonObjectを返します:
+     *         JsonElementがnullでない
+     *         JsonElementがJson nullでない
+     *         JsonElementがJsonObjectである
+     *         それ以外の場合はnull
      */
     public static JsonObject getJsonObjectSafe(JsonElement element) {
         if(element == null) return null;
@@ -21,14 +21,14 @@ public class GsonJsonUtils {
     }
 
     /**
-     * Safely gets a JsonElement from a JsonObject
-     * @param jsonObject the input JsonObject
-     * @param memberName the member name of the JsonElement
-     * @return the JsonElement if:
-     *         the input JsonObject is not null
-     *         the input JsonObject contains an element with the specified memberName
-     *         the JsonElement is not Json null
-     *         null otherwise
+     * JsonObjectからJsonElementを安全に取得します。
+     * @param jsonObject 入力のJsonObject
+     * @param memberName JsonElementのメンバー名
+     * @return 以下の条件を満たす場合にJsonElementを返します:
+     *         入力のJsonObjectがnullでない
+     *         入力のJsonObjectが指定されたmemberNameの要素を含む
+     *         JsonElementがJson nullでない
+     *         それ以外の場合はnull
      */
     public static JsonElement getElementSafe(JsonObject jsonObject, String memberName) {
         if(jsonObject == null) return null;
@@ -39,30 +39,30 @@ public class GsonJsonUtils {
     }
 
     /**
-     * Safely gets a JsonObject from a JsonObject
-     * @param jsonObject the input JsonObject
-     * @param memberName the member name of the output JsonObject
-     * @return the output JsonObject if:
-     *         the input JsonObject is not null
-     *         the input JsonObject contains an element with the specified memberName
-     *         the output JsonObject is not Json null
-     *         the output JsonObject is a JsonObjet
-     *         null otherwise
+     * JsonObjectから子JsonObjectを安全に取得します。
+     * @param jsonObject 入力のJsonObject
+     * @param memberName 出力JsonObjectのメンバー名
+     * @return 以下の条件を満たす場合に出力JsonObjectを返します:
+     *         入力のJsonObjectがnullでない
+     *         入力のJsonObjectが指定されたmemberNameの要素を含む
+     *         出力JsonObjectがJson nullでない
+     *         出力JsonObjectがJsonObjectである
+     *         それ以外の場合はnull
      */
     public static JsonObject getJsonObjectSafe(JsonObject jsonObject, String memberName) {
         return getJsonObjectSafe(getElementSafe(jsonObject, memberName));
     }
 
     /**
-     * Safely gets a JsonArray from a JsonObject
-     * @param jsonObject the input JsonObject
-     * @param memberName the member name of the JsonArray
-     * @return the JsonArray if:
-     *         the input JsonObject is not null
-     *         the input JsonObject contains an element with the specified memberName
-     *         the JsonArray is not Json null
-     *         the JsonArray is a JsonArray
-     *         null otherwise
+     * JsonObjectからJsonArrayを安全に取得します。
+     * @param jsonObject 入力のJsonObject
+     * @param memberName JsonArrayのメンバー名
+     * @return 以下の条件を満たす場合にJsonArrayを返します:
+     *         入力のJsonObjectがnullでない
+     *         入力のJsonObjectが指定されたmemberNameの要素を含む
+     *         JsonArrayがJson nullでない
+     *         JsonArrayがJsonArrayである
+     *         それ以外の場合はnull
      */
     public static JsonArray getJsonArraySafe(JsonObject jsonObject, String memberName) {
         JsonElement jsonElement = getElementSafe(jsonObject, memberName);
@@ -71,16 +71,16 @@ public class GsonJsonUtils {
     }
 
     /**
-     * Safely gets an int from a JsonObject
-     * @param jsonObject the input JsonObject
-     * @param memberName the member name of the int
-     * @param onNullValue the value that will be returned if any of the checks fail
-     * @return the int if:
-     *         the input JsonObject is not null
-     *         the input JsonObject contains an element with the specified memberName
-     *         the int is not Json null
-     *         the int is an actual integer
-     *         onNullValue otherwise
+     * JsonObjectからint値を安全に取得します。
+     * @param jsonObject 入力のJsonObject
+     * @param memberName int値のメンバー名
+     * @param onNullValue チェックに失敗した場合に返される値
+     * @return 以下の条件を満たす場合にint値を返します:
+     *         入力のJsonObjectがnullでない
+     *         入力のJsonObjectが指定されたmemberNameの要素を含む
+     *         int値がJson nullでない
+     *         int値が実際の整数である
+     *         それ以外の場合はonNullValue
      */
     public static int getIntSafe(JsonObject jsonObject, String memberName, int onNullValue) {
         JsonElement jsonElement = getElementSafe(jsonObject, memberName);
@@ -93,15 +93,15 @@ public class GsonJsonUtils {
     }
 
     /**
-     * Safely gets a String from a JsonObject
-     * @param jsonObject the input JsonObject
-     * @param memberName the member name of the int
-     * @return the String if:
-     *         the input JsonObject is not null
-     *         the input JsonObject contains an element with the specified memberName
-     *         the String is not a Json null
-     *         the String is an actual String
-     *         null otherwise
+     * JsonObjectからStringを安全に取得します。
+     * @param jsonObject 入力のJsonObject
+     * @param memberName int値のメンバー名
+     * @return 以下の条件を満たす場合にStringを返します:
+     *         入力のJsonObjectがnullでない
+     *         入力のJsonObjectが指定されたmemberNameの要素を含む
+     *         StringがJson nullでない
+     *         Stringが実際の文字列である
+     *         それ以外の場合はnull
      */
     public static String getStringSafe(JsonObject jsonObject, String memberName) {
         JsonElement jsonElement = getElementSafe(jsonObject, memberName);

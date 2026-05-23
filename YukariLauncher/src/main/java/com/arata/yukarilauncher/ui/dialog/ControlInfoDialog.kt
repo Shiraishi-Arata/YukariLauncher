@@ -14,6 +14,9 @@ import com.arata.yukarilauncher.ui.subassembly.customcontrols.EditControlData.Co
 import com.arata.yukarilauncher.utils.path.PathManager
 import java.io.File
 
+/**
+ * コントロール設定情報表示ダイアログ
+ */
 class ControlInfoDialog(
     context: Context,
     private val controlInfoData: ControlInfoData,
@@ -31,10 +34,16 @@ class ControlInfoDialog(
         DraggableDialog.initDialog(this)
     }
 
+    /**
+     * TextViewに値を設定する。値が空の場合は「不明」を表示する
+     */
     private fun TextView.setTextOrDefault(value: String?) {
         this.text = value?.takeIf { it.isNotEmpty() && it != "null" } ?: context.getString(R.string.generic_unknown)
     }
 
+    /**
+     * ダイアログを初期化する
+     */
     private fun init(context: Context, task: Task<*>) {
         binding.apply {
             closeButton.setOnClickListener { dismiss() }

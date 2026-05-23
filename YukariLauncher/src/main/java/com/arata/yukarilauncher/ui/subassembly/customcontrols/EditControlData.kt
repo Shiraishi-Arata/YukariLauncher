@@ -8,8 +8,14 @@ import net.kdt.pojavlaunch.customcontrols.LayoutConverter
 import org.json.JSONObject
 import java.io.File
 
+/**
+ * コントロール設定ファイルの読み書きを行うユーティリティクラス
+ */
 class EditControlData {
     companion object {
+        /**
+         * ファイルからコントロール情報を読み込む
+         */
         @JvmStatic
         fun loadFormFile(context: Context?, file: File): ControlInfoData? {
             val customControls = loadCustomControlsFromFile(context, file)
@@ -21,6 +27,9 @@ class EditControlData {
             return null
         }
 
+        /**
+         * ファイルからCustomControlsオブジェクトを読み込む
+         */
         @JvmStatic
         fun loadCustomControlsFromFile(context: Context?, file: File): CustomControls? {
             runCatching {
@@ -33,6 +42,9 @@ class EditControlData {
             }
         }
 
+        /**
+         * コントロール設定をファイルに保存する
+         */
         @JvmStatic
         fun saveToFile(context: Context?, customControls: CustomControls?, file: File) {
             runCatching {
@@ -42,6 +54,9 @@ class EditControlData {
             }
         }
 
+        /**
+         * 新しいコントロール設定ファイルを作成する
+         */
         @JvmStatic
         fun createNewControlFile(context: Context?, jsonFile: File, mControlInfoDataList: ControlInfoData?) {
             val customControls =

@@ -22,13 +22,18 @@ object ModMetadataReader {
         val loader: String,
         val supportedLoaders: Set<String>,
         val file: File,
-        val sha1: String? = null   // SHA-1 hash of the JAR for reliable Modrinth lookup
+        val sha1: String? = null   // 信頼性の高いModrinth検索のためのJARのSHA-1ハッシュ
     )
 
     /**
-     * Computes the SHA-1 hex digest of [file].
-     * Returns null if the file cannot be read.
+     * ファイルのSHA-1ハッシュを計算する
+     * ファイルが読み取れない場合はnullを返す
+     * @param file ハッシュを計算するファイル
+     * @return SHA-1ハッシュの16進文字列。失敗時はnull
      */
+/**
+ * computeSha1する
+ */
     private fun computeSha1(file: File): String? {
         return try {
             val digest = MessageDigest.getInstance("SHA-1")
@@ -46,6 +51,14 @@ object ModMetadataReader {
         }
     }
 
+    /**
+     * Fabric Modのメタデータを解析する
+     * @param jar 解析するJARファイル
+     * @return 解析されたModInfo。Fabric Modでない場合はnull
+     */
+/**
+ * parseFabricする
+ */
     private fun parseFabric(jar: File): ModInfo? {
         return try {
             JarFile(jar).use { jarFile ->
@@ -73,6 +86,14 @@ object ModMetadataReader {
         }
     }
 
+    /**
+     * Quilt Modのメタデータを解析する
+     * @param jar 解析するJARファイル
+     * @return 解析されたModInfo。Quilt Modでない場合はnull
+     */
+/**
+ * parseQuiltする
+ */
     private fun parseQuilt(jar: File): ModInfo? {
         return try {
             JarFile(jar).use { jarFile ->
@@ -103,6 +124,14 @@ object ModMetadataReader {
         }
     }
 
+    /**
+     * Forge/NeoForge Modのメタデータを解析する
+     * @param jar 解析するJARファイル
+     * @return 解析されたModInfo。Forge Modでない場合はnull
+     */
+/**
+ * parseForgeする
+ */
     private fun parseForge(jar: File): ModInfo? {
         return try {
             JarFile(jar).use { jarFile ->
@@ -135,6 +164,15 @@ object ModMetadataReader {
         }
     }
 
+    /**
+     * JARファイルからModのメタデータを解析する
+     * Fabric/Quilt/Forgeの各パーサーを順に試行し、最初に成功した結果を使用する
+     * @param jar 解析するJARファイル
+     * @return 解析されたModInfo。どのModタイプにも該当しない場合はnull
+     */
+/**
+ * parseModする
+ */
     fun parseMod(jar: File): ModInfo? {
         val quiltInfo = parseQuilt(jar)
         val fabricInfo = parseFabric(jar)
@@ -150,14 +188,14 @@ object ModMetadataReader {
             forgeInfo?.supportedLoaders?.let(::addAll)
         }
 
-        // Prefer Forge/NeoForge metadata when present so dual-loader mods
-        // containing both fabric.mod.json and neoforge.mods.toml resolve
-        // correctly for Forge-like instances.
+        // Forge/NeoForgeのメタデータを優先する
+        // これにより、fabric.mod.jsonとneoforge.mods.tomlの両方を含む
+        // デュアルローダーModがForge系インスタンスで正しく解決される
         val primary = forgeInfo ?: quiltInfo ?: fabricInfo ?: return null
 
         return primary.copy(
             supportedLoaders = supportedLoaders,
-            // Attach SHA-1 so update helpers can do a reliable hash-based lookup
+            // アップデートヘルパーが信頼性の高いハッシュ検索を行えるようにSHA-1を付加
             sha1 = computeSha1(jar)
         )
     }

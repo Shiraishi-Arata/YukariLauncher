@@ -7,6 +7,9 @@ import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.utils.file.FileDeletionHandler
 import java.io.File
 
+/**
+ * ファイル/フォルダ削除確認ダイアログ
+ */
 @SuppressLint("CheckResult")
 class DeleteDialog(private val context: Context, endTask: Task<*>, files: List<File>) {
     private val mDialog: TipDialog = TipDialog.Builder(context).apply {
@@ -38,6 +41,7 @@ class DeleteDialog(private val context: Context, endTask: Task<*>, files: List<F
         }
     }.buildDialog()
 
+    /** 削除確認ダイアログを表示する */
     fun show() {
         mDialog.show()
     }

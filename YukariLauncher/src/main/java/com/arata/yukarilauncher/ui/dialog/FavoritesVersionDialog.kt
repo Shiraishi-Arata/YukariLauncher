@@ -9,6 +9,9 @@ import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.subassembly.version.FavoritesVersionAdapter
 
+/**
+ * お気に入りバージョン選択ダイアログ
+ */
 class FavoritesVersionDialog(
     context: Context,
     private val versionName: String,

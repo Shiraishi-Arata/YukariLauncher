@@ -8,6 +8,10 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 
+/**
+ * ファイルのコピー・移動処理を非同期で実行するハンドラクラス
+ * 選択されたファイルを再帰的に処理し、進捗状況を報告する
+ */
 class FileCopyHandler(
     mContext: Context,
     private val mPasteType: PasteFile.PasteType,
@@ -22,17 +26,26 @@ class FileCopyHandler(
     private val fileSize = AtomicLong(0)
     private val fileCount = AtomicLong(0)
 
+    /**
+     * ファイル処理を開始する
+     */
     fun start() {
         super.start(this)
     }
 
+    /**
+     * 単一ファイルを処理リストに追加する
+     */
     private fun addFile(file: File) {
         fileCount.incrementAndGet()
         fileSize.addAndGet(FileUtils.sizeOf(file))
-        //当前文件 - 目标文件
+        // 現在のファイル → ターゲットファイル
         foundFiles [file] = getNewDestination(file, getTargetFile(file), mFileExtensionGetter?.onGet(file))
     }
 
+    /**
+     * ディレクトリ内のファイルを再帰的に処理リストに追加する
+     */
     private fun addDirectory(directory: File) {
         if (directory.isFile) {
             addFile(directory)
@@ -50,11 +63,16 @@ class FileCopyHandler(
         }
     }
 
+    /**
+     * ファイルの移動先ディレクトリを計算する
+     */
     private fun getTargetFile(file: File): File {
         return File(file.absolutePath.replace(mRoot.absolutePath, mTarget.absolutePath).removeSuffix(file.name))
     }
 
-    //如果目标地点已存在同名文件，就将目标文件的文件名加上数字标识，防止文件被覆盖
+    /**
+     * コピー先に同名ファイルが存在する場合、ファイル名に数字を付けて上書きを防ぐ
+     */
     private fun getNewDestination(sourceFile: File, targetDir: File, fileExtension: String?): File {
         var extension: String? = fileExtension
         var destFile = File(targetDir, sourceFile.name)
@@ -75,6 +93,9 @@ class FileCopyHandler(
         return destFile
     }
 
+    /**
+     * 処理対象のファイル一覧を収集する
+     */
     override fun searchFilesToProcess() {
         mSelectedFiles.forEach {
             currentTask?.let { task -> if (task.isCancelled) return@forEach }
@@ -86,6 +107,9 @@ class FileCopyHandler(
         totalFileSize.set(fileSize.get())
     }
 
+    /**
+     * ファイルのコピー・移動を並列実行する
+     */
     override fun processFile() {
         Logging.i("FileCopyHandler", "Copy files (total files: $fileCount, to ${mTarget.absolutePath})")
         foundFiles.entries.parallelStream().forEach { (currentFile, targetFile) ->
@@ -109,10 +133,16 @@ class FileCopyHandler(
 
     override fun getPendingSize() = fileSize.get()
 
+    /**
+     * 処理終了時に終了タスクを実行する
+     */
     override fun onEnd() {
         endTask.execute()
     }
 
+    /**
+     * ファイル拡張子を取得するためのコールバックインターフェース
+     */
     interface FileExtensionGetter {
         fun onGet(file: File?): String?
     }

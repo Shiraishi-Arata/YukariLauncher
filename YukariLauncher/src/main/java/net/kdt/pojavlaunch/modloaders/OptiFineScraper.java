@@ -13,12 +13,21 @@ public class OptiFineScraper implements DownloadUtils.ParseCallback<OptiFineUtil
     private List<OptiFineUtils.OptiFineVersion> mListInProgress;
     private String mMinecraftVersion;
 
+    /**
+     * OptiFineScraperを構築します。
+     */
     public OptiFineScraper() {
         mOptiFineVersions = new OptiFineUtils.OptiFineVersions();
         mOptiFineVersions.minecraftVersions = new ArrayList<>();
         mOptiFineVersions.optifineVersions = new ArrayList<>();
     }
 
+    /**
+     * OptiFineのダウンロードページをパースしてバージョン情報を取得します。
+     * @param input HTMLページの内容
+     * @return パースされたOptiFineバージョン情報
+     * @throws DownloadUtils.ParseException パースに失敗した場合
+     */
     @Override
     public OptiFineUtils.OptiFineVersions process(String input) throws DownloadUtils.ParseException {
         HtmlCleaner htmlCleaner = new HtmlCleaner();
@@ -29,6 +38,9 @@ public class OptiFineScraper implements DownloadUtils.ParseCallback<OptiFineUtil
         return mOptiFineVersions;
     }
 
+    /**
+     * HTMLタグノードを再帰的に走査します。
+     */
     public void traverseTagNode(TagNode tagNode) {
         if(isDownloadLine(tagNode) && mMinecraftVersion != null) {
             traverseDownloadLine(tagNode);
@@ -41,17 +53,26 @@ public class OptiFineScraper implements DownloadUtils.ParseCallback<OptiFineUtil
         }
     }
 
+    /**
+     * ダウンロード行のタグかどうかを判定します。
+     */
     private boolean isDownloadLine(TagNode tagNode) {
         return tagNode.getName().equals("tr") &&
                 tagNode.hasAttribute("class") &&
                 tagNode.getAttributeByName("class").startsWith("downloadLine");
     }
 
+    /**
+     * Minecraftバージョンタグかどうかを判定します。
+     */
     private boolean isMinecraftVersionTag(TagNode tagNode) {
         return tagNode.getName().equals("h2") &&
                 tagNode.getText().toString().startsWith("Minecraft ");
     }
 
+    /**
+     * ダウンロード行を走査してOptiFineバージョン情報を抽出します。
+     */
     private void traverseDownloadLine(TagNode tagNode) {
         OptiFineUtils.OptiFineVersion optiFineVersion = new OptiFineUtils.OptiFineVersion();
         optiFineVersion.minecraftVersion = mMinecraftVersion;
@@ -67,6 +88,10 @@ public class OptiFineScraper implements DownloadUtils.ParseCallback<OptiFineUtil
         }
         mListInProgress.add(optiFineVersion);
     }
+
+    /**
+     * 親ノードからリンク先のhref属性を取得します。
+     */
     private String getLinkHref(TagNode parent) {
         for(TagNode subNode : parent.getChildTags()) {
             if(subNode.getName().equals("a") && subNode.hasAttribute("href")) {
@@ -76,6 +101,9 @@ public class OptiFineScraper implements DownloadUtils.ParseCallback<OptiFineUtil
         return null;
     }
 
+    /**
+     * 現在のMinecraftバージョンの内容をリストに追加し、新しいバージョンの処理を開始します。
+     */
     private void insertVersionContent(TagNode tagNode) {
         if(mListInProgress != null && mMinecraftVersion != null) {
             mOptiFineVersions.minecraftVersions.add(mMinecraftVersion);

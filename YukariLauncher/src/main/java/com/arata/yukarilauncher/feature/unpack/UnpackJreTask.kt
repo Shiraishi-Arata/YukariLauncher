@@ -21,8 +21,14 @@ class UnpackJreTask(val context: Context, val jre: Jre) : AbstractUnpackTask() {
         }
     }
 
+/**
+ * isCheckFailedする
+ */
     fun isCheckFailed() = isCheckFailed
 
+/**
+ * isNeedUnpackする
+ */
     override fun isNeedUnpack(): Boolean {
         if (isCheckFailed) return false
 
@@ -35,6 +41,9 @@ class UnpackJreTask(val context: Context, val jre: Jre) : AbstractUnpackTask() {
         }
     }
 
+/**
+ * runする
+ */
     override fun run() {
         listener?.onTaskStart()
         runCatching {

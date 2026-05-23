@@ -19,6 +19,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.formatFileSize
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
 
+/**
+ * アップデート情報表示ダイアログ
+ */
 class UpdateDialog(context: Context, private val launcherVersion: LauncherVersion) :
     FullScreenDialog(context), DialogInitializationListener {
     private val binding = DialogUpdateBinding.inflate(
@@ -35,6 +38,9 @@ class UpdateDialog(context: Context, private val launcherVersion: LauncherVersio
         DraggableDialog.initDialog(this)
     }
 
+    /**
+     * ダイアログを初期化する
+     */
     @SuppressLint("SetJavaScriptEnabled")
     private fun init() {
         binding.apply {
@@ -69,10 +75,16 @@ class UpdateDialog(context: Context, private val launcherVersion: LauncherVersio
         }
     }
 
+    /**
+     * バージョン種別のテキストを取得する
+     */
     private fun getVersionType(): String {
         return context.getString(if (launcherVersion.isPreRelease) R.string.generic_pre_release else R.string.generic_release)
     }
 
+    /**
+     * 言語設定に基づいて表示テキストを取得する
+     */
     private fun getLanguageText(whatsNew: WhatsNew): String {
         val text = when (YLTools.getSystemLanguage()) {
             "ja_jp" -> whatsNew.jaJP

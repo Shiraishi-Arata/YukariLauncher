@@ -6,11 +6,11 @@ import java.util.regex.Pattern
 class StringFilter {
     companion object {
         /**
-         * 检查输入字符串是否包含指定的子字符串。
-         * @param input 输入字符串
-         * @param substring 检查子字符串
-         * @param caseSensitive 是否区分大小写
-         * @return 如果输入字符串包含指定的子字符串，返回true；否则返回false
+         * 入力文字列が指定された部分文字列を含むかどうかをチェックする
+         * @param input 入力文字列
+         * @param substring 検索する部分文字列
+         * @param caseSensitive 大文字と小文字を区別する場合はtrue
+         * @return 部分文字列が含まれていればtrue、そうでなければfalse
          */
         @JvmStatic
         fun containsSubstring(input: String, substring: String, caseSensitive: Boolean): Boolean {

@@ -20,11 +20,17 @@ public class InGUIEventProcessor implements TouchEventProcessor {
     private boolean mIsMouseDown = false;
     private float mStartX, mStartY;
     private final Scroller mScroller = new Scroller(FINGER_SCROLL_THRESHOLD);
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public InGUIEventProcessor() {
         mSingleTapDetector = new TapDetector(1, TapDetector.DETECTION_METHOD_BOTH);
     }
-
+/**
+ * 「process Touch Event」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public boolean processTouchEvent(MotionEvent motionEvent) {
         boolean singleTap = mSingleTapDetector.onTouchEvent(motionEvent);
@@ -37,6 +43,9 @@ public class InGUIEventProcessor implements TouchEventProcessor {
 
                     // disabled gestures means no scrolling possible, send gesture early
                     if (AllSettings.getDisableGestures().getValue()) enableMouse();
+/**
+ * 「GestureStart」の値を設定します。
+ */
                     else setGestureStart(motionEvent);
                 }
                 break;
@@ -79,42 +88,66 @@ public class InGUIEventProcessor implements TouchEventProcessor {
 
         return true;
     }
-
+/**
+ * 「touchpad Displayed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private boolean touchpadDisplayed() {
         return mTouchpad != null && mTouchpad.getDisplayState();
     }
-
+/**
+ * 「AbstractTouchpad」の値を設定します。
+ */
     public void setAbstractTouchpad(AbstractTouchpad touchpad) {
         mTouchpad = touchpad;
     }
-
+/**
+ * 「send Touch Coordinates」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void sendTouchCoordinates(float x, float y) {
         CallbackBridge.sendCursorPos( x * AllStaticSettings.scaleFactor, y * AllStaticSettings.scaleFactor);
     }
-
+/**
+ * 「enable Mouse」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void enableMouse() {
         CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT, true);
         mIsMouseDown = true;
     }
-
+/**
+ * 「disable Mouse」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void disableMouse() {
         CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT, false);
         mIsMouseDown = false;
     }
-
+/**
+ * 「GestureStart」の値を設定します。
+ */
     private void setGestureStart(MotionEvent event) {
         mStartX = event.getX() * AllStaticSettings.scaleFactor;
         mStartY = event.getY() * AllStaticSettings.scaleFactor;
     }
-
+/**
+ * 「reset Gesture」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void resetGesture() {
         mStartX = mStartY = -1;
     }
-
+/**
+ * 「GestureStarted」を持っているかを確認します。
+ */
     private boolean hasGestureStarted() {
         return mStartX != -1 || mStartY != -1;
     }
-
+/**
+ * 「cancel Pending Actions」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void cancelPendingActions() {
         mScroller.resetScrollOvershoot();

@@ -28,15 +28,14 @@ import net.kdt.pojavlaunch.progresskeeper.TaskCountListener;
 import net.kdt.pojavlaunch.utils.NotificationUtils;
 
 /**
- * Lazy service which allows the process not to get killed.
- * Can be created from context, can be killed statically
+ * プロセスが強制終了されるのを防ぐレイジーサービス。コンテキストから作成可能、静的に停止可能。
  */
 public class ProgressService extends Service implements TaskCountListener {
 
     private NotificationManagerCompat notificationManagerCompat;
 
     /**
-     * Simple wrapper to start the service
+     * サービスを開始するためのシンプルなラッパー。
      */
     public static void startService(Context context) {
         Intent intent = new Intent(context, ProgressService.class);
@@ -65,7 +64,7 @@ public class ProgressService extends Service implements TaskCountListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getBooleanExtra("kill", false)) {
-                stopSelf(); // otherwise Android tries to restart the service since it "crashed"
+                stopSelf();
                 Process.killProcess(Process.myPid());
                 return START_NOT_STICKY;
             }
@@ -95,6 +94,9 @@ public class ProgressService extends Service implements TaskCountListener {
         ProgressKeeper.removeTaskCountListener(this);
     }
 
+    /**
+     * タスク数が変更されたときに通知を更新します。
+     */
     @Override
     public void onUpdateTaskCount(int taskCount) {
         if (YLTools.checkForNotificationPermission()) {

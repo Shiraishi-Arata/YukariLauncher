@@ -23,18 +23,27 @@ public class AndroidPointerCapture implements ViewTreeObserver.OnWindowFocusChan
 
     private int mInputDeviceIdentifier;
     private boolean mDeviceSupportsRelativeAxis;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public AndroidPointerCapture(AbstractTouchpad touchpad, View hostView) {
         this.mTouchpad = touchpad;
         this.mHostView = hostView;
         hostView.setOnCapturedPointerListener(this);
         hostView.getViewTreeObserver().addOnWindowFocusChangeListener(this);
     }
-
+/**
+ * 「enable Touchpad If Necessary」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void enableTouchpadIfNecessary() {
         if(!mTouchpad.getDisplayState()) mTouchpad.enable(true);
     }
-
+/**
+ * 「handle Automatic Capture」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void handleAutomaticCapture() {
         if(!mHostView.hasWindowFocus()) {
             mHostView.requestFocus();
@@ -42,7 +51,10 @@ public class AndroidPointerCapture implements ViewTreeObserver.OnWindowFocusChan
             mHostView.requestPointerCapture();
         }
     }
-
+/**
+ * 「on Captured Pointer」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public boolean onCapturedPointer(View view, MotionEvent event) {
         checkSameDevice(event.getDevice());
@@ -107,7 +119,10 @@ public class AndroidPointerCapture implements ViewTreeObserver.OnWindowFocusChan
                 return false;
         }
     }
-
+/**
+ * 「check Same Device」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void checkSameDevice(InputDevice inputDevice) {
         if (inputDevice == null) return;
         int newIdentifier = inputDevice.getId();
@@ -116,19 +131,28 @@ public class AndroidPointerCapture implements ViewTreeObserver.OnWindowFocusChan
             mInputDeviceIdentifier = newIdentifier;
         }
     }
-
+/**
+ * 「reinitialize Device Specific Properties」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void reinitializeDeviceSpecificProperties(InputDevice inputDevice) {
         mPointerTracker.cancelTracking();
         boolean relativeXSupported = inputDevice.getMotionRange(MotionEvent.AXIS_RELATIVE_X) != null;
         boolean relativeYSupported = inputDevice.getMotionRange(MotionEvent.AXIS_RELATIVE_Y) != null;
         mDeviceSupportsRelativeAxis = relativeXSupported && relativeYSupported;
     }
-
+/**
+ * 「on Window Focus Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus) mHostView.requestPointerCapture();
     }
-
+/**
+ * 「detach」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void detach() {
         mHostView.setOnCapturedPointerListener(null);
         mHostView.getViewTreeObserver().removeOnWindowFocusChangeListener(this);

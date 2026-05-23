@@ -20,6 +20,10 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     private var mLoaderVersion: String? = neoforgeVersion
     private var mGameVersion: String? = null
 
+    /**
+     * NeoForgeのダウンロードタスクを初期化する
+     * バージョン情報とダウンロードURLを設定する
+     */
     init {
         mGameVersion = NeoForgeUtils.formatGameVersion(neoforgeVersion)
         if (neoforgeVersion.contains("1.20.1")) {
@@ -31,6 +35,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     }
 
     @Throws(Exception::class)
+/**
+ * runする
+ */
     override fun run(customName: String): File? {
         var outputFile: File? = null
         if (if (mLoaderVersion!!.contains("1.20.1")) determineNeoForgedForgeDownloadUrl() else determineNeoForgeDownloadUrl()) {
@@ -40,6 +47,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
         return outputFile
     }
 
+/**
+ * updateProgressする
+ */
     override fun updateProgress(curr: Long, max: Long) {
         val progress100 = ((curr.toFloat() / max.toFloat()) * 100f).toInt()
         ProgressKeeper.submitProgress(
@@ -51,6 +61,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     }
 
     @Throws(Exception::class)
+/**
+ * downloadNeoForgeする
+ */
     private fun downloadNeoForge(): File {
         ProgressKeeper.submitProgress(
             ProgressLayout.INSTALL_RESOURCE,
@@ -64,6 +77,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
         return destinationFile
     }
 
+/**
+ * determineDownloadUrlする
+ */
     private fun determineDownloadUrl(findVersion: Boolean): Boolean {
         if (mDownloadUrl != null && mLoaderVersion != null) return true
         ProgressKeeper.submitProgress(
@@ -78,6 +94,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     }
 
     @Throws(Exception::class)
+/**
+ * determineNeoForgeDownloadUrlする
+ */
     fun determineNeoForgeDownloadUrl(): Boolean {
         return if (findNeoForgeVersion()) {
             true
@@ -88,6 +107,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     }
 
     @Throws(Exception::class)
+/**
+ * determineNeoForgedForgeDownloadUrlする
+ */
     fun determineNeoForgedForgeDownloadUrl(): Boolean {
         return if (findNeoForgedForgeVersion()) {
             true
@@ -96,6 +118,9 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
         }
     }
 
+/**
+ * findVersionする
+ */
     private fun findVersion(neoForgeUtils: List<String>?, installerUrl: String): Boolean {
         if (neoForgeUtils == null) return false
         val versionStart = "$mGameVersion-$mLoaderVersion"
@@ -112,11 +137,17 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
     }
 
     @Throws(Exception::class)
+/**
+ * findNeoForgeVersionする
+ */
     fun findNeoForgeVersion(): Boolean {
         return findVersion(downloadNeoForgeVersions(false), getNeoForgeInstallerUrl(mLoaderVersion))
     }
 
     @Throws(Exception::class)
+/**
+ * findNeoForgedForgeVersionする
+ */
     fun findNeoForgedForgeVersion(): Boolean {
         return findVersion(
             downloadNeoForgedForgeVersions(false),

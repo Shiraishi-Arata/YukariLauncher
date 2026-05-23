@@ -6,16 +6,25 @@ import com.arata.yukarilauncher.feature.download.enums.DependencyType
 
 class DependencyUtils {
     companion object {
+/**
+ * getDependencyTypeFromModrinthする
+ */
         fun getDependencyTypeFromModrinth(type: String?): DependencyType {
             return DependencyType.entries.find { it.modrinth != null && it.modrinth == type }
                 ?: DependencyType.REQUIRED
         }
 
+/**
+ * getDependencyTypeFromCurseForgeする
+ */
         fun getDependencyTypeFromCurseForge(type: String?): DependencyType {
             return DependencyType.entries.find { it.curseforge != null && it.curseforge == type }
                 ?: DependencyType.REQUIRED
         }
 
+/**
+ * getTextFromTypeする
+ */
         fun getTextFromType(context: Context, type: DependencyType?): String {
             return when (type) {
                 DependencyType.OPTIONAL -> context.getString(R.string.download_install_dependencies_optional)

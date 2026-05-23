@@ -14,7 +14,8 @@ class SkinFileDownloader {
     private val mClient = UrlManager.createOkHttpClient()
 
     /**
-     * 尝试下载yggdrasil皮肤
+     * Yggdrasil認証システムからスキンをダウンロードする
+     * UUIDからプロフィール情報を取得し、テクスチャURLを解決してスキンファイルをダウンロードする
      */
     @Throws(Exception::class)
     fun yggdrasil(url: String, skinFile: File, uuid: String) {
@@ -31,6 +32,9 @@ class SkinFileDownloader {
         downloadSkin(skinUrl, skinFile)
     }
 
+    /**
+     * 指定されたURLからスキンファイルをダウンロードする
+     */
     private fun downloadSkin(url: String, skinFile: File) {
         skinFile.parentFile?.apply {
             if (!exists()) mkdirs()

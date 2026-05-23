@@ -30,7 +30,12 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.arata.anim.animations.BaseAnimator
 
+/**
+ * 上方向からフェードインするアニメーション
+ * 透明度を0→1に変化させ、Y座標を画面高さの1/4から0へ移動する
+ */
 class FadeInUpAnimator: BaseAnimator() {
+    /** 上方向フェードインアニメーターを生成する */
     override fun getAnimators(target: View): Array<Animator> {
         return arrayOf(
             ObjectAnimator.ofFloat(target, "alpha", 0f, 1f),

@@ -2,18 +2,24 @@ package net.kdt.pojavlaunch.customcontrols;
 
 public class ControlJoystickData extends ControlData {
 
-    /* Whether the joystick can stay forward */
+    /* ジョイスティックが前方に固定可能かどうか */
     public boolean forwardLock = false;
     /*
-     * Whether the finger tracking is absolute (joystick jumps to where you touched)
-     * or relative (joystick stays in the center)
+     * 指の追跡が絶対方式（タッチした位置にジョイスティックが移動）か
+     * 相対方式（ジョイスティックは中央に留まる）かどうか
      */
     public boolean absolute = false;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlJoystickData(){
         super();
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlJoystickData(ControlJoystickData properties) {
         super(properties);
         forwardLock = properties.forwardLock;

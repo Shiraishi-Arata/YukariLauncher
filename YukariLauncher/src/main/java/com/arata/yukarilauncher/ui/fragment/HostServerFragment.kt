@@ -20,6 +20,9 @@ import com.arata.yukarilauncher.databinding.FragmentHostServerBinding
 import com.arata.yukarilauncher.feature.network.HostServerService
 import com.arata.yukarilauncher.task.TaskExecutors
 
+/**
+ * サーバーホスティングフラグメント（playit.ggトンネル）
+ */
 class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
 
     companion object {
@@ -46,6 +49,9 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,21 +61,20 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        // Bind to service (if already running)
         Intent(requireContext(), HostServerService::class.java).also { intent ->
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 
-        // Back button – close activity, service stays alive
         binding.hostServerBackButton.setOnClickListener {
             requireActivity().finish()
         }
 
-        // Start / Stop toggle
         binding.hostServerToggleButton.setOnClickListener {
             val portText = binding.hostServerPortInput.text.toString().trim()
             val port = portText.toIntOrNull()
@@ -87,7 +92,6 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
             }
         }
 
-        // Copy tunnel address to clipboard
         binding.hostServerCopyButton.setOnClickListener {
             val address = binding.hostServerTunnelAddress.text.toString()
             if (address.isNotBlank() && address != getString(R.string.host_server_address_unknown)) {
@@ -97,7 +101,6 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
             }
         }
 
-        // Open auth URL in browser
         binding.hostServerOpenAuthButton.setOnClickListener {
             service?.authUrl?.value?.let { url ->
                 try {
@@ -108,18 +111,18 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
             }
         }
 
-        // Hide console entry point
         binding.hostServerOpenConsoleButton.visibility = View.GONE
 
-        // Open dashboard
         binding.hostServerOpenDashboardButton.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://playit.gg/account/tunnels")))
         }
 
-        // Initially hide status and log until service reports
         binding.hostServerStatusCard.visibility = View.GONE
     }
 
+    /**
+     * 通知権限を確認する
+     */
     private fun checkNotificationPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
@@ -134,6 +137,9 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * 権限リクエストの結果を処理します。
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -150,9 +156,11 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * サービスからのLiveDataを監視する
+     */
     private fun observeServiceLiveData() {
         service?.let { srv ->
-            // Running state
             srv.isRunning.observe(viewLifecycleOwner) { running ->
                 binding.hostServerToggleButton.text = if (running == true) {
                     getString(R.string.host_server_stop)
@@ -166,7 +174,6 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
                 }
             }
 
-            // Auth URL
             srv.authUrl.observe(viewLifecycleOwner) { url ->
                 if (url != null) {
                     binding.hostServerStatusText.setText(R.string.host_server_status_auth)
@@ -177,23 +184,19 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
                 }
             }
 
-            // Tunnel address
             srv.tunnelAddress.observe(viewLifecycleOwner) { address ->
                 when {
                     address == null -> {
-                        // Stopped or not ready
                         binding.hostServerTunnelLayout.visibility = View.GONE
                         binding.hostServerStatusText.setText(R.string.host_server_status_idle)
                     }
                     address.isEmpty() -> {
-                        // Running but address unknown
                         binding.hostServerStatusText.setText(R.string.host_server_status_running)
                         binding.hostServerTunnelLayout.visibility = View.VISIBLE
                         binding.hostServerTunnelAddress.text = getString(R.string.host_server_address_unknown)
                         binding.hostServerOpenDashboardButton.visibility = View.VISIBLE
                     }
                     else -> {
-                        // Address known
                         binding.hostServerStatusText.setText(R.string.host_server_status_running)
                         binding.hostServerTunnelLayout.visibility = View.VISIBLE
                         binding.hostServerTunnelAddress.text = address
@@ -204,6 +207,9 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * トンネルを開始する
+     */
     private fun startTunnel(port: Int) {
         Intent(requireContext(), HostServerService::class.java).apply {
             action = HostServerService.ACTION_START
@@ -214,6 +220,9 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         binding.hostServerStatusText.setText(R.string.host_server_status_starting)
     }
 
+    /**
+     * トンネルを停止する
+     */
     private fun stopTunnel() {
         Intent(requireContext(), HostServerService::class.java).apply {
             action = HostServerService.ACTION_STOP
@@ -222,6 +231,9 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * ビュー破棄時にサービスとのバインドを解除します。
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         if (bound) {
@@ -230,10 +242,16 @@ class HostServerFragment : FragmentWithAnim(R.layout.fragment_host_server) {
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.hostServerRoot, Animations.BounceInDown))
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.hostServerRoot, Animations.FadeOutUp))
     }

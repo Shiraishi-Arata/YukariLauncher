@@ -40,6 +40,10 @@ public class ControlButton extends TextView implements ControlInterface {
     protected boolean mIsPointerOutOfBounds = false;
     private final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
     private final Runnable mRepeatRunnable = new Runnable() {
+/**
+ * 「run」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
         @Override
         public void run() {
             if (!mProperties.repeatedlyEnabled) return;
@@ -48,7 +52,10 @@ public class ControlButton extends TextView implements ControlInterface {
             mRepeatHandler.postDelayed(this, getRepeatIntervalMs());
         }
     };
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlButton(ControlLayout layout, ControlData properties) {
         super(layout.getContext());
         mControlLayout = layout;
@@ -61,26 +68,32 @@ public class ControlButton extends TextView implements ControlInterface {
 
         //setOnLongClickListener(this);
 
-        //When a button is created, the width/height has yet to be processed to fit the scaling.
+        //ボタン作成時、幅/高さはスケーリングに合わせてまだ処理されていません。
         setProperties(preProcessProperties(properties, layout));
 
         injectBehaviors();
     }
-
+/**
+ * 「ControlView」の値を取得します。
+ */
     @Override
     public View getControlView() {return this;}
-
+/**
+ * 「Properties」の値を取得します。
+ */
     public ControlData getProperties() {
         return mProperties;
     }
-
+/**
+ * 「Properties」の値を設定します。
+ */
     public void setProperties(ControlData properties, boolean changePos) {
         mProperties = properties;
         ControlInterface.super.setProperties(properties, changePos);
         mComputedRadius = ControlInterface.super.computeCornerRadius(mProperties.cornerRadius);
 
         if (mProperties.isToggle) {
-            //For the toggle layer
+            //トグルレイヤー用
             final TypedValue value = new TypedValue();
             getContext().getTheme().resolveAttribute(R.attr.colorAccent, value, true);
             mRectPaint.setColor(value.data);
@@ -92,26 +105,36 @@ public class ControlButton extends TextView implements ControlInterface {
 
         setText(properties.name);
     }
-
+/**
+ * Viewの描画処理を行います。
+ * このメソッドはシステムによって自動的に呼び出されます。
+ */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mIsToggled || (!mProperties.isToggle && isActivated()))
             canvas.drawRoundRect(0, 0, getWidth(), getHeight(), mComputedRadius, mComputedRadius, mRectPaint);
     }
-
+/**
+ * 「on Detached From Window」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     protected void onDetachedFromWindow() {
         stopButtonRepeat();
         super.onDetachedFromWindow();
     }
-
-
+/**
+ * 「load Edit Values」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void loadEditValues(EditControlPopup editControlPopup){
         editControlPopup.loadValues(getProperties());
     }
 
-    /** Add another instance of the ControlButton to the parent layout */
+    /**
+     * ControlButtonの別のインスタンスを親レイアウトに追加します。
+     */
     public void cloneButton(){
         ControlData cloneData = new ControlData(getProperties());
         cloneData.dynamicX = "0.5 * ${screen_width}";
@@ -119,11 +142,17 @@ public class ControlButton extends TextView implements ControlInterface {
         ((ControlLayout) getParent()).addControlButton(cloneData);
     }
 
-    /** Remove any trace of this button from the layout */
+    /**
+     * レイアウトからこのボタンの痕跡をすべて削除します。
+     */
     public void removeButton() {
         getControlLayoutParent().getLayout().mControlDataList.remove(getProperties());
         getControlLayoutParent().removeView(this);
     }
+/**
+ * タッチイベントを処理します。
+ * ユーザーからのタッチ入力を検出し、適切なアクションを実行します。
+ */
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -131,17 +160,17 @@ public class ControlButton extends TextView implements ControlInterface {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getActionMasked()){
             case MotionEvent.ACTION_MOVE:
-                //Send the event to be taken as a mouse action
+                //マウスアクションとして扱われるようにイベントを送信
                 if(getProperties().passThruEnabled && CallbackBridge.isGrabbing()){
                     View gameSurface = getControlLayoutParent().getGameSurface();
                     if(gameSurface != null) gameSurface.dispatchTouchEvent(event);
                 }
 
-                //If out of bounds
+                //範囲外の場合
                 if(event.getX() < getControlView().getLeft() || event.getX() > getControlView().getRight() ||
                         event.getY() < getControlView().getTop()  || event.getY() > getControlView().getBottom()){
                     if(getProperties().isSwipeable && !mIsPointerOutOfBounds){
-                        //Remove keys
+                        //キーを削除
                         if(!triggerToggle()) {
                             sendKeyPresses(false);
                         }
@@ -151,10 +180,10 @@ public class ControlButton extends TextView implements ControlInterface {
                     break;
                 }
 
-                //Else if we now are in bounds
+                //現在範囲内にある場合
                 if(mIsPointerOutOfBounds) {
                     getControlLayoutParent().onTouch(this, event);
-                    //RE-press the button
+                    //ボタンを再押下
                     if(getProperties().isSwipeable && !getProperties().isToggle){
                         sendKeyPresses(true);
                     }
@@ -202,6 +231,10 @@ public class ControlButton extends TextView implements ControlInterface {
 
         return super.onTouchEvent(event);
     }
+/**
+ * 「trigger Toggle」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
 
 
@@ -216,12 +249,18 @@ public class ControlButton extends TextView implements ControlInterface {
         }
         return false;
     }
-
+/**
+ * 「send Key Presses」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void sendKeyPresses(boolean isDown){
         setActivated(isDown);
         sendKeyPressesWithoutActivation(isDown);
     }
-
+/**
+ * 「send Key Presses Without Activation」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void sendKeyPressesWithoutActivation(boolean isDown){
         for(int keycode : mProperties.keycodes){
             if(keycode >= GLFW_KEY_UNKNOWN){
@@ -232,22 +271,33 @@ public class ControlButton extends TextView implements ControlInterface {
             }
         }
     }
-
+/**
+ * 「RepeatIntervalMs」の値を取得します。
+ */
 
     private int getRepeatIntervalMs() {
         int cps = Math.max(1, mProperties.repeatCps);
         return Math.max(1, 1000 / cps);
     }
-
+/**
+ * 「start Button Repeat」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void startButtonRepeat() {
         stopButtonRepeat();
         mRepeatHandler.postDelayed(mRepeatRunnable, Math.max(0, mProperties.repeatLongPressDelayMs));
     }
-
+/**
+ * 「stop Button Repeat」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void stopButtonRepeat() {
         mRepeatHandler.removeCallbacks(mRepeatRunnable);
     }
-
+/**
+ * 「send Special Key」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void sendSpecialKey(int keycode, boolean isDown){
         switch (keycode) {
             case ControlData.SPECIALBTN_KEYBOARD:
@@ -286,7 +336,9 @@ public class ControlButton extends TextView implements ControlInterface {
                 break;
         }
     }
-
+/**
+ * 「OverlappingRendering」を持っているかを確認します。
+ */
     @Override
     public boolean hasOverlappingRendering() {
         return false;

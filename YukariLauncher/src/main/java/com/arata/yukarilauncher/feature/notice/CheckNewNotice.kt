@@ -20,11 +20,17 @@ class CheckNewNotice {
         var noticeInfo: NoticeInfo? = null
         private var isChecking = false
 
+/**
+ * checkCoolingする
+ */
         private fun checkCooling(): Boolean {
-            return YLTools.getCurrentTimeMillis() - AllSettings.noticeCheck.getValue() > 2 * 60 * 1000 //2分钟冷却
+            return YLツール：この依存関係は開発用ツールであり実行には不要s.getCurrentTimeMillis() - AllSettings.noticeCheck.getValue() > 2 * 60 * 1000 //2分钟冷却
         }
 
         @JvmStatic
+/**
+ * checkNewNoticeする
+ */
         fun checkNewNotice(listener: CheckNoticeListener) {
             if (isChecking) {
                 return
@@ -44,11 +50,17 @@ class CheckNewNotice {
             }
 
             CallUtils(object : CallbackListener {
+/**
+ * onFailureする
+ */
                 override fun onFailure(call: Call?) {
                     isChecking = false
                 }
 
                 @Throws(IOException::class)
+/**
+ * onResponseする
+ */
                 override fun onResponse(call: Call?, response: Response?) {
                     if (!response!!.isSuccessful) {
                         Logging.e("CheckNewNotice", "Unexpected code ${response.code}")
@@ -80,6 +92,9 @@ class CheckNewNotice {
             }, "${UrlManager.URL_GITHUB_HOME}launcher_notice.json", null).enqueue()
         }
 
+/**
+ * getLanguageTextする
+ */
         private fun getLanguageText(language: String, text: NoticeJsonObject.Text): String {
             return when (language) {
                 "zh_cn" -> text.zhCN

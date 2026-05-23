@@ -9,6 +9,10 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.Future
 
+/**
+ * ファイル操作の抽象基底クラス
+ * 進捗ダイアログを表示しながら、ファイル操作（コピー・削除など）を非同期で実行する
+ */
 abstract class FileHandler(
     protected val context: Context,
 ) {
@@ -17,6 +21,10 @@ abstract class FileHandler(
     private var lastSize: Long = 0
     private var lastTime: Long = YLTools.getCurrentTimeMillis()
 
+    /**
+     * ファイル操作を開始する
+     * 進捗ダイアログを表示し、定期的に進捗を更新しながら非同期でファイル処理を実行する
+     */
     protected fun start(progress: FileSearchProgress) {
         TaskExecutors.runInUIThread {
             val dialog = ProgressDialog(context) {
@@ -73,12 +81,24 @@ abstract class FileHandler(
         }
     }
 
+    /**
+     * 処理するファイル一覧を収集する
+     */
     abstract fun searchFilesToProcess()
 
+    /**
+     * ファイル処理を実行する
+     */
     abstract fun processFile()
 
+    /**
+     * 処理終了時のコールバック
+     */
     abstract fun onEnd()
 
+    /**
+     * 現在のタスクをキャンセルする
+     */
     private fun cancelTask() {
         currentTask?.let {
             if (!currentTask!!.isDone) {

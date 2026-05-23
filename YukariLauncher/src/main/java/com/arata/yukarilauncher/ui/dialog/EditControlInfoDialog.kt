@@ -9,6 +9,9 @@ import com.arata.yukarilauncher.databinding.DialogEditControlInfoBinding
 import com.arata.yukarilauncher.ui.dialog.DraggableDialog.DialogInitializationListener
 import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlInfoData
 
+/**
+ * コントロール情報編集ダイアログ
+ */
 class EditControlInfoDialog(
     context: Context,
     private val editFileName: Boolean,
@@ -27,9 +30,8 @@ class EditControlInfoDialog(
 
         binding.apply {
             fileNameEdit.isEnabled = editFileName
-            //设置hint
-            fileNameEdit.setHint(R.string.generic_required) //必填
-            nameEdit.setHint(R.string.generic_optional) //选填
+            fileNameEdit.setHint(R.string.generic_required)
+            nameEdit.setHint(R.string.generic_optional)
             versionEdit.setHint(R.string.generic_optional)
             authorEdit.setHint(R.string.generic_optional)
             descEdit.setHint(R.string.generic_optional)
@@ -48,6 +50,9 @@ class EditControlInfoDialog(
         DraggableDialog.initDialog(this)
     }
 
+    /**
+     * 確認ボタンがクリックされた際の処理
+     */
     private fun confirmClick() {
         val fileNameText = binding.fileNameEdit.text.toString()
 
@@ -63,6 +68,9 @@ class EditControlInfoDialog(
         )
     }
 
+    /**
+     * 編集内容をControlInfoDataに反映する
+     */
     private fun updateControlInfoData() {
         controlInfoData.name = getValueOrDefault(binding.nameEdit)
         controlInfoData.version = getValueOrDefault(binding.versionEdit)
@@ -70,22 +78,31 @@ class EditControlInfoDialog(
         controlInfoData.desc = getValueOrDefault(binding.descEdit)
     }
 
+    /**
+     * EditTextの値を取得し、空文字の場合はデフォルト値"null"を返す
+     */
     private fun getValueOrDefault(editText: EditText): String {
         val value = editText.text.toString()
         return value.ifEmpty { "null" }
     }
 
+    /**
+     * 値が有効な場合にEditTextに設定する
+     */
     private fun setValueIfNotNull(value: String?, editText: EditText) {
         if (!value.isNullOrEmpty() && value != "null") editText.setText(value)
     }
 
+    /** 確認ボタンクリックリスナーを設定する */
     fun setOnConfirmClickListener(listener: OnConfirmClickListener) {
         this.mOnConfirmClickListener = listener
     }
 
+    /** ファイル名入力ボックスを取得する */
     val fileNameEditBox: EditText
         get() = binding.fileNameEdit
 
+    /** タイトルを設定する */
     fun setTitle(title: String?) {
         this.title = title
     }
@@ -99,6 +116,9 @@ class EditControlInfoDialog(
         return window
     }
 
+    /**
+     * 確認ボタンクリックのコールバックインターフェース
+     */
     fun interface OnConfirmClickListener {
         fun onClick(fileName: String, controlInfoData: ControlInfoData)
     }

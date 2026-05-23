@@ -100,6 +100,9 @@ import org.lwjgl.glfw.CallbackBridge;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * ゲームプレイ中のメインアクティビティ。ゲームのレンダリング、入力処理、設定メニューを管理します。
+ */
 public class MainActivity extends BaseActivity implements ControlButtonMenuListener, EditorExitable, ServiceConnection, ViewTreeObserver.OnGlobalLayoutListener {
     public static volatile ClipboardManager GLOBAL_CLIPBOARD;
     public static final String INTENT_VERSION = "intent_version";
@@ -125,9 +128,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     boolean isKeyboardVisible = false;
     private boolean isVideoBackgroundPlaying;
 
-    // Floating logger
     private FloatingLoggerWindow floatingLogger;
 
+    /**
+     * アクティビティ作成時に呼び出されます。ゲームバージョンの取得、レイアウト初期化、サービス起動を行います。
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +145,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
 
         Intent gameServiceIntent = new Intent(this, GameService.class);
-        // Start the service a bit early
         ContextCompat.startForegroundService(this, gameServiceIntent);
         initLayout();
         CallbackBridge.addGrabListener(binding.mainTouchpad);
@@ -148,14 +152,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGyroControl = new GyroControl(this);
 
         Window window = getWindow();
-        // Enabling this on TextureView results in a broken white result
         if(AllSettings.getAlternateSurface().getValue()) window.setBackgroundDrawable(null);
         else window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
-        // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
 
-        // 防止系统息屏
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ControlLayout controlLayout = binding.mainControlLayout;
@@ -165,28 +166,26 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setModifiable(false);
 
-        //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
-        //初始化输入监听器，当输入法遮挡了游戏画面时，将设置这个监听器
         mInputWatcher = s -> binding.inputPreview.setText(s.toString().trim());
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
 
-        // Register log listener
         Logger.setLogListener(text -> {
             runOnUiThread(() -> {
-                if (floatingLogger != null) {
-                    floatingLogger.appendLog(text + "\n");
-                }
+                if (floatingLogger != null) floatingLogger.appendLog(text + "\n");
             });
         });
     }
 
+    /**
+     * レイアウトの初期化を行います。バインディングの設定、背景、コントロール、ゲームレンダリングの準備を行います。
+     */
     protected void initLayout() {
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         floatingLogger = new FloatingLoggerWindow(this);
-        floatingLogger.hide();   // start hidden
+        floatingLogger.hide();
 
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
@@ -205,7 +204,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
-            // FIXME: is it safe for multi thread?
             GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             binding.mainTouchCharInput.setCharacterSender(new LwjglCharSender());
 
@@ -215,7 +213,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             setTitle("Minecraft " + minecraftVersion.getVersionName());
 
-            // Minecraft 1.13+
             JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(minecraftVersion);
             isInputStackCall = mVersionInfo.arguments != null;
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall);
@@ -224,7 +221,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, 1f);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, 1f);
 
-            // Menu
             mGameMenuBinding = ViewGameMenuBinding.inflate(getLayoutInflater());
             mMenuSettingsInitListener = new MenuSettingsInitListener(mGameMenuBinding);
 
@@ -236,7 +232,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             binding.mainGameRenderView.setSurfaceReadyListener(() -> {
                 try {
-                    // Setup virtual mouse right before launching
                     if (AllSettings.getVirtualMouseStart().getValue()) {
                         binding.mainTouchpad.post(() -> binding.mainTouchpad.switchState());
                     }
@@ -247,14 +242,12 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
-                //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 stopVideoBackground();
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
                 Logging.i("Rendering Game", "The game rendering has started, " +
                         "and the background image has been cleared to prevent certain issues from occurring.");
             });
 
-            // Optionally auto-show floating logger based on setting
             if (AllSettings.getEnableLogOutput().getValue()) {
                 floatingLogger.show();
             }
@@ -283,9 +276,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    /**
+     * コントロールレイアウトを読み込みます。
+     */
     private void loadControls() {
         try {
-            // Load keys
             binding.mainControlLayout.loadLayout(minecraftVersion.getControl());
         } catch(IOException e) {
             try {
@@ -301,23 +296,30 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         binding.mainControlLayout.toggleControlVisible();
     }
 
+    /**
+     * ウィンドウにアタッチされたときに呼び出されます。ノッチサイズの計算とコントロールの読み込みを行います。
+     */
     @Override
     public void onAttachedToWindow() {
         LauncherPreferences.computeNotchSize(this);
         loadControls();
     }
 
+    /**
+     * アクティビティ再開時に呼び出されます。ビデオ背景の再生、ジャイロの有効化、ウィンドウフォーカスの設定を行います。
+     */
     @Override
     public void onResume() {
         super.onResume();
-        if (isVideoBackgroundPlaying) {
-            binding.backgroundVideoView.start();
-        }
+        if (isVideoBackgroundPlaying) binding.backgroundVideoView.start();
         if (AllStaticSettings.enableGyro) mGyroControl.enable();
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, 1);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
     }
 
+    /**
+     * アクティビティ一時停止時に呼び出されます。ジャイロの無効化、フォーカス解除、ビデオ背景の一時停止を行います。
+     */
     @Override
     protected void onPause() {
         mGyroControl.disable();
@@ -332,24 +334,36 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         super.onPause();
     }
 
+    /**
+     * ウィンドウフォーカス変更時に呼び出されます。
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, hasFocus ? 1 : 0);
     }
 
+    /**
+     * アクティビティ開始時にウィンドウを可視状態に設定します。
+     */
     @Override
     protected void onStart() {
         super.onStart();
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 1);
     }
 
+    /**
+     * アクティビティ停止時にウィンドウを非可視状態に設定します。
+     */
     @Override
     protected void onStop() {
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 0);
         super.onStop();
     }
 
+    /**
+     * アクティビティ破棄時にリソースをクリーンアップします。リスナーの解除、背景の停止、ロガーの解放を行います。
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -360,7 +374,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         stopVideoBackground();
         ContextExecutor.clearActivity();
 
-        // Clean up floating logger
         Logger.setLogListener(null);
         if (floatingLogger != null) {
             floatingLogger.hide();
@@ -368,17 +381,23 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    /**
+     * ゲーム内の背景画像またはビデオをリフレッシュして表示します。
+     */
     private void refreshBackground() {
         File mediaFile = BackgroundManager.getBackgroundImage(BackgroundType.IN_GAME);
         if (mediaFile != null && BackgroundManager.isVideo(mediaFile)) {
             playVideoBackground(mediaFile);
             return;
         }
-
         stopVideoBackground();
         BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
     }
 
+    /**
+     * ビデオ背景を再生します。
+     * @param videoFile 再生するビデオファイル
+     */
     private void playVideoBackground(File videoFile) {
         binding.backgroundView.setImageDrawable(null);
         binding.backgroundView.setVisibility(View.GONE);
@@ -400,35 +419,43 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         });
     }
 
+    /**
+     * ビデオ背景を停止し、静止画背景に切り替えます。
+     */
     private void stopVideoBackground() {
-        if (isVideoBackgroundPlaying) {
-            binding.backgroundVideoView.stopPlayback();
-        }
+        if (isVideoBackgroundPlaying) binding.backgroundVideoView.stopPlayback();
         isVideoBackgroundPlaying = false;
         binding.backgroundVideoView.setVisibility(View.GONE);
         binding.backgroundView.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 設定変更時（画面回転など）に呼び出されます。ジャイロの更新、ウィンドウサイズの再計算を行います。
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         mGyroControl.updateOrientation();
         Tools.updateWindowSize(this);
         binding.mainGameRenderView.refreshSize();
         runOnUiThread(() -> binding.mainControlLayout.refreshControlButtonPositions());
     }
 
+    /**
+     * onResume完了後に呼び出されます。レンダリングサイズを遅延更新します。
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
         TaskExecutors.getUIHandler().postDelayed(() -> binding.mainGameRenderView.refreshSize(), 500);
     }
 
+    /**
+     * アクティビティ結果を受け取ります（コントロール選択ダイアログなど）。
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             try {
                 binding.mainControlLayout.loadLayout((String) null);
@@ -438,11 +465,17 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    /**
+     * ノッチを無視するかどうかを返します。
+     */
     @Override
     public boolean shouldIgnoreNotch() {
         return AllSettings.getIgnoreNotch().getValue();
     }
 
+    /**
+     * グローバルレイアウト変更時にキーボードの表示状態を検出し、入力プレビューの表示を切り替えます。
+     */
     @Override
     public void onGlobalLayout() {
         Rect rect = new Rect();
@@ -463,7 +496,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
-    //使用一个输入预览框来展示用户输入的内容
+    /**
+     * 入力プレビューの表示/非表示をアニメーションで切り替えます。
+     */
     private void setInputPreview(boolean show) {
         mInputPreviewAnim.clearEntries();
         mInputPreviewAnim.apply(new AnimPlayer.Entry(binding.inputPreviewLayout, show ? Animations.FadeIn : Animations.FadeOut))
@@ -472,9 +507,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 .start();
     }
 
+    /**
+     * 仮想マウスのオン/オフを切り替えます。
+     */
     public static void toggleMouse(Context ctx) {
         if (CallbackBridge.isGrabbing()) return;
-
         if (binding != null) {
             Toast.makeText(ctx, binding.mainTouchpad.switchState()
                             ? R.string.control_mouseon : R.string.control_mouseoff,
@@ -482,6 +519,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    /**
+     * キーイベントをディスパッチします。エディタモードとゲームモードで動作が異なります。
+     */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(isInEditor) {
@@ -494,7 +534,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         boolean handleEvent;
         if(!(handleEvent = binding.mainGameRenderView.processKeyEvent(event))) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !binding.mainTouchCharInput.isEnabled()) {
-                if(event.getAction() != KeyEvent.ACTION_UP) return true; // We eat it anyway
+                if(event.getAction() != KeyEvent.ACTION_UP) return true;
                 sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE);
                 return true;
             }
@@ -502,9 +542,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         return handleEvent;
     }
 
+    /**
+     * 戻るボタン押下時にフローティングログを非表示にします。
+     */
     @Override
     public void onBackPressed() {
-        // If floating logger is visible, hide it first instead of going back
         if (floatingLogger != null && floatingLogger.isVisible()) {
             floatingLogger.hide();
             return;
@@ -512,17 +554,22 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         super.onBackPressed();
     }
 
+    /**
+     * キーボードの表示状態を切り替えます。
+     */
     public static void switchKeyboardState() {
         if (binding != null) binding.mainTouchCharInput.switchKeyboardState();
     }
 
+    /**
+     * URIを処理してファイル共有またはリンクを開きます。
+     */
     private static void setUri(Context context, String input) {
         if(input.startsWith("file:")) {
             int truncLength = 5;
             if(input.startsWith("file://")) truncLength = 7;
             input = input.substring(truncLength);
             Logging.i("MainActivity", input);
-
             File inputFile = new File(input);
             FileTools.shareFile(context, inputFile);
             Logging.i("In-game Share File/Folder", "Start!");
@@ -531,8 +578,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    /**
+     * ゲーム内からのリンクを開きます（ファイル共有またはURL）。
+     */
     public static void openLink(String link) {
-        Context ctx = binding.mainTouchpad.getContext(); // no more better way to obtain a context statically
+        Context ctx = binding.mainTouchpad.getContext();
         ((Activity)ctx).runOnUiThread(() -> {
             try {
                 setUri(ctx, link);
@@ -542,6 +592,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         });
     }
 
+    /**
+     * システムクリップボードの内容を取得します。
+     */
     public static void querySystemClipboard() {
         TaskExecutors.runInUIThread(()->{
             ClipData clipData = GLOBAL_CLIPBOARD.getPrimaryClip();
@@ -550,7 +603,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 return;
             }
             ClipData.Item firstClipItem = clipData.getItemAt(0);
-            //TODO: coerce to HTML if the clip item is styled
             CharSequence clipItemText = firstClipItem.getText();
             if(clipItemText == null) {
                 AWTInputBridge.nativeClipboardReceived(null, null);
@@ -560,6 +612,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         });
     }
 
+    /**
+     * クリップボードにデータを設定します。
+     */
     public static void putClipboardData(String data, String mimeType) {
         TaskExecutors.runInUIThread(()-> {
             ClipData clipData = null;
@@ -574,6 +629,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         });
     }
 
+    /**
+     * メニューボタンクリック時にドロワーを開閉します。
+     */
     @Override
     public void onClickedMenu() {
         DrawerLayout drawerLayout = binding.mainDrawerOptions;
@@ -586,6 +644,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         navigationView.requestLayout();
     }
 
+    /**
+     * エディタを終了し、コントロールレイアウトを再読み込みします。
+     */
     @Override
     public void exitEditor() {
         try {
@@ -602,6 +663,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         isInEditor = false;
     }
 
+    /**
+     * サービス接続時にレンダリングを開始します。
+     */
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         MinecraftGLSurface.setCurrentVersionName(minecraftVersion.getVersionName());
@@ -609,11 +673,16 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         GameService.setActive(true);
     }
 
+    /**
+     * サービス切断時に呼び出されます。
+     */
     @Override
     public void onServiceDisconnected(ComponentName name) {
-
     }
 
+    /**
+     * JVM終了イベントを処理し、サービスを停止してアクティビティを終了します。
+     */
     @Subscribe
     public void event(JvmExitEvent event) {
         runOnUiThread(() -> {
@@ -627,20 +696,18 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         });
     }
 
-    /*
-     * Android 14 (or some devices, at least) seems to dispatch the the captured mouse events as trackball events
-     * due to a bug(?) somewhere(????)
+    /**
+     * モーションイベントがマウスキャプチャ対象かどうかを判定します。
      */
     private boolean checkCaptureDispatchConditions(MotionEvent event) {
         int eventSource = event.getSource();
-        // On my device, the mouse sends events as a relative mouse device.
-        // Not comparing with == here because apparently `eventSource` is a mask that can
-        // sometimes indicate multiple sources, like in the case of InputDevice.SOURCE_TOUCHPAD
-        // (which is *also* an InputDevice.SOURCE_MOUSE when controlling a cursor)
         return (eventSource & InputDevice.SOURCE_MOUSE_RELATIVE) != 0 ||
                 (eventSource & InputDevice.SOURCE_MOUSE) != 0;
     }
 
+    /**
+     * トラックボールイベントをマウスキャプチャとしてディスパッチします。
+     */
     @Override
     public boolean dispatchTrackballEvent(MotionEvent ev) {
         if(checkCaptureDispatchConditions(ev))
@@ -648,16 +715,20 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         else return super.dispatchTrackballEvent(ev);
     }
 
+    /**
+     * ゲーム内設定メニューの初期化とイベントハンドリングを行う内部クラス。
+     */
     private class MenuSettingsInitListener implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener, OnSpinnerItemSelectedListener<HotbarType>, DrawerLayout.DrawerListener {
         private final ViewGameMenuBinding binding;
 
+        /**
+         * メニュー設定リスナーを初期化します。すべてのシークバー、スイッチ、ボタンの初期値を設定します。
+         */
         public MenuSettingsInitListener(ViewGameMenuBinding binding) {
             this.binding = binding;
-            //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
-            //初始化Seekbar的值
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
             MenuUtils.initSeekBarValue(this.binding.timeLongPressTrigger, AllSettings.getTimeLongPressTrigger().getValue(), this.binding.timeLongPressTriggerValue, "ms");
@@ -666,7 +737,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             MenuUtils.initSeekBarValue(this.binding.hotbarHeight, AllSettings.getHotbarHeight().getValue().getValue(), this.binding.hotbarHeightValue, "px");
             MenuUtils.initSeekBarValue(this.binding.hotbarWidth, AllSettings.getHotbarWidth().getValue().getValue(), this.binding.hotbarWidthValue, "px");
 
-            //初始化Switch的状态
             this.binding.openMemoryInfo.setChecked(AllSettings.getGameMenuShowMemory().getValue());
             this.binding.openFpsInfo.setChecked(AllSettings.getGameMenuShowFPS().getValue());
             this.binding.disableGestures.setChecked(AllSettings.getDisableGestures().getValue());
@@ -678,13 +748,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             refreshLayoutVisible(this.binding.timeLongPressTriggerLayout, !AllSettings.getDisableGestures().getValue());
             refreshLayoutVisible(this.binding.gyroLayout, AllSettings.getEnableGyro().getValue());
 
-            //初始化点击事件
             this.binding.forceClose.setOnClickListener(this);
             this.binding.logOutput.setOnClickListener(this);
             this.binding.sendCustomKey.setOnClickListener(this);
-            
             this.binding.hostServer.setOnClickListener(this);
-            
             this.binding.openMemoryInfo.setOnCheckedChangeListener(this);
             this.binding.openMemoryInfoLayout.setOnClickListener(this);
             this.binding.openFpsInfo.setOnCheckedChangeListener(this);
@@ -696,7 +763,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             this.binding.disableGestures.setOnCheckedChangeListener(this);
             this.binding.disableGesturesLayout.setOnClickListener(this);
-
             this.binding.disableDoubleTap.setOnCheckedChangeListener(this);
             this.binding.disableDoubleTapLayout.setOnClickListener(this);
 
@@ -721,7 +787,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             this.binding.gyroInvertX.setOnCheckedChangeListener(this);
             this.binding.gyroInvertXLayout.setOnClickListener(this);
-
             this.binding.gyroInvertY.setOnCheckedChangeListener(this);
             this.binding.gyroInvertYLayout.setOnClickListener(this);
 
@@ -738,28 +803,29 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding.hotbarHeight.setOnSeekBarChangeListener(this);
             this.binding.hotbarHeightRemove.setOnClickListener(this);
             this.binding.hotbarHeightAdd.setOnClickListener(this);
-
             this.binding.hotbarWidth.setOnSeekBarChangeListener(this);
             this.binding.hotbarWidthRemove.setOnClickListener(this);
             this.binding.hotbarWidthAdd.setOnClickListener(this);
         }
 
+        /**
+         * カスタムキー送信ダイアログを表示します。
+         */
         private void dialogSendCustomKey() {
             keyboardDialog.setOnMultiKeycodeSelectListener(selectedKeycodes -> {
-                //模拟同时按下，同时松开按键
                 Task.runTask(() -> {
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, true));
                     return null;
                 }).ended(a -> {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException ignore) {
-                    }
+                    try { Thread.sleep(50); } catch (InterruptedException ignore) {}
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, false));
                 }).execute();
             }).show();
         }
 
+        /**
+         * LWJGLキーコードに変換してキー入力を送信します。
+         */
         private void sendKeyPress(int keycode, boolean isDown) {
             System.out.println("Test keycode: " + keycode);
             int lwjglKeycode = EfficientAndroidLWJGLKeycode.getValueByIndex(keycode);
@@ -770,11 +836,13 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             }
         }
 
+        /**
+         * コントロール置き換えダイアログを表示します。
+         */
         private void replacementCustomControls() {
             SelectControlsDialog dialog = new SelectControlsDialog(MainActivity.this, file -> {
                 try {
                     MainActivity.binding.mainControlLayout.loadLayout(file.getAbsolutePath());
-                    //刷新：是否隐藏菜单按钮
                     mGameMenuWrapper.setVisibility(!MainActivity.binding.mainControlLayout.hasMenuButton());
                 } catch (IOException ignored) {}
             });
@@ -782,6 +850,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             dialog.show();
         }
 
+        /**
+         * コントロールエディタを開きます。
+         */
         private void openCustomControls() {
             MainActivity.binding.mainControlLayout.setModifiable(true);
             MainActivity.binding.mainNavigationView.removeAllViews();
@@ -790,11 +861,12 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             isInEditor = true;
         }
 
+        /**
+         * 各種ボタンのクリックイベントを処理します。
+         */
         @Override public void onClick(View v) {
             if (v == binding.forceClose) YLTools.dialogForceClose(MainActivity.this);
-            else if (v == binding.logOutput) {
-                floatingLogger.toggle();
-            }
+            else if (v == binding.logOutput) floatingLogger.toggle();
             else if (v == binding.sendCustomKey) dialogSendCustomKey();
             else if (v == binding.hostServer) {
                 Intent intent = new Intent(MainActivity.this, HostServerActivity.class);
@@ -828,54 +900,62 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             else if (v == binding.hotbarHeightAdd) MenuUtils.adjustSeekbar(binding.hotbarHeight, 1);
         }
 
+        /**
+         * シークバーの進捗が変更されたときに呼び出されます。
+         */
         @Override
         @SuppressLint("SetTextI18n")
         public void onProgressChanged(SeekBar s, int progress, boolean fromUser) {
             updateSeekbarValue(s, !fromUser);
         }
-        @Override public void onStartTrackingTouch(SeekBar s) {}
-        @Override public void onStopTrackingTouch(SeekBar s) {
-            updateSeekbarValue(s, true);
-        }
 
+        /**
+         * シークバーのトラッキング開始時に呼び出されます。
+         */
+        @Override public void onStartTrackingTouch(SeekBar s) {}
+
+        /**
+         * シークバーのトラッキング終了時に呼び出され、値を保存します。
+         */
+        @Override public void onStopTrackingTouch(SeekBar s) { updateSeekbarValue(s, true); }
+
+        /**
+         * シークバーの値を更新し、必要に応じて設定を保存します。
+         */
         private void updateSeekbarValue(SeekBar seekbar, boolean saveValue) {
             int progress = seekbar == null ? 0 : seekbar.getProgress();
 
             if (seekbar == binding.resolutionScaler) {
                 if (saveValue) AllSettings.getResolutionRatio().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.resolutionScalerValue, "%");
                 binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), progress));
-
                 AllStaticSettings.scaleFactor = progress / 100f;
                 MainActivity.binding.mainGameRenderView.refreshSize();
             } else if (seekbar == binding.timeLongPressTrigger) {
                 if (saveValue) AllSettings.getTimeLongPressTrigger().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.timeLongPressTriggerValue, "ms");
                 AllStaticSettings.timeLongPressTrigger = progress;
             } else if (seekbar == binding.mouseSpeed) {
                 if (saveValue) AllSettings.getMouseSpeed().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.mouseSpeedValue, "%");
             } else if (seekbar == binding.gyroSensitivity) {
                 if (saveValue) AllSettings.getGyroSensitivity().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.gyroSensitivityValue, "%");
                 AllStaticSettings.gyroSensitivity = progress;
             } else if (seekbar == binding.hotbarWidth) {
                 if (saveValue) AllSettings.getHotbarWidth().getValue().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.hotbarWidthValue, "px");
                 EventBus.getDefault().post(new HotbarChangeEvent(progress, binding.hotbarHeight.getProgress()));
             } else if (seekbar == binding.hotbarHeight) {
                 if (saveValue) AllSettings.getHotbarHeight().getValue().put(progress).save();
-
                 MenuUtils.updateSeekbarValue(progress, binding.hotbarHeightValue, "px");
                 EventBus.getDefault().post(new HotbarChangeEvent(binding.hotbarWidth.getProgress(), progress));
             }
         }
 
+        /**
+         * チェックボックスの状態変更を処理し、対応する設定を保存します。
+         */
         @Override public void onCheckedChanged(CompoundButton v, boolean isChecked) {
             if (v == binding.openMemoryInfo) {
                 AllSettings.getGameMenuShowMemory().put(isChecked).save();
@@ -892,7 +972,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             } else if (v == binding.enableGyro) {
                 refreshLayoutVisible(binding.gyroLayout, isChecked);
                 AllSettings.getEnableGyro().put(isChecked).save();
-                //刷新陀螺仪的启用状态
                 AllStaticSettings.enableGyro = isChecked;
                 mGyroControl.updateOrientation();
                 if (isChecked) mGyroControl.enable();
@@ -907,12 +986,15 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
 
         /**
-         * 刷新View的可见状态
+         * レイアウトの表示/非表示を切り替えます。
          */
         private void refreshLayoutVisible(View view, boolean visible) {
             view.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
+        /**
+         * ホットバータイプの選択が変更されたときに呼び出されます。
+         */
         @Override public void onItemSelected(int i, @Nullable HotbarType t, int i1, HotbarType t1) {
             if (t1 == HotbarType.AUTO) {
                 binding.hotbarWidthLayout.setVisibility(View.GONE);
@@ -923,19 +1005,35 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 binding.hotbarWidth.setProgress(AllSettings.getHotbarWidth().getValue().getValue());
                 binding.hotbarHeight.setProgress(AllSettings.getHotbarHeight().getValue().getValue());
             }
-
             AllSettings.getHotbarType().put(t1.getValueName()).save();
             EventBus.getDefault().post(new RefreshHotbarEvent());
         }
+
+        /**
+         * ドロワーがスライドされたときに呼び出されます。
+         */
         @Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+
+        /**
+         * ドロワーが開かれたときに呼び出されます。
+         */
         @Override public void onDrawerOpened(@NonNull View drawerView) {}
+
+        /**
+         * ドロワーが閉じられたときに呼び出されます。
+         */
         @Override public void onDrawerClosed(@NonNull View drawerView) {}
+
+        /**
+         * ドロワーの状態が変更されたときに呼び出されます。
+         */
         @Override public void onDrawerStateChanged(int newState) {
-            //需要在菜单状态改变的时候，关闭Hotbar类型的Spinner，这个库并没有自动关闭的功能，所以需要这么做
-            //关掉！关掉！一定要关掉！
             closeSpinner();
         }
 
+        /**
+         * ホットバータイプのスピナーを閉じます。
+         */
         public void closeSpinner() {
             binding.hotbarType.dismiss();
         }

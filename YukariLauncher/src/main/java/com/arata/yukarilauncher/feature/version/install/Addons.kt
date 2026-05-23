@@ -1,5 +1,9 @@
 package com.arata.yukarilauncher.feature.version.install
 
+/**
+ * インストール可能なアドオン（ModLoaderやMod）を定義する列挙型
+ * @property addonName アドオンの表示名
+ */
 enum class Addon(val addonName: String) {
     OPTIFINE("OptiFine"),
     FORGE("Forge"),
@@ -20,6 +24,11 @@ enum class Addon(val addonName: String) {
             QSL to setOf(QUILT, QSL)
         )
 
+        /**
+         * 指定されたアドオンと互換性のあるアドオンのセットを取得する
+         * @param addon 対象のアドオン
+         * @return 互換性のあるアドオンのセット
+         */
         fun getCompatibles(addon: Addon) = compatibleMap[addon]
     }
 }

@@ -41,6 +41,9 @@ class ModPackExportHelper {
         )
 
         @JvmStatic
+/**
+ * exportする
+ */
         fun export(version: Version, exportType: ExportType, options: ExportOptions = ExportOptions()): File {
             val gameDir = version.getGameDir()
             val exportDir = File(File(ProfilePathHome.getGameHome()).parentFile, "exported").apply { mkdirs() }
@@ -76,6 +79,9 @@ class ModPackExportHelper {
             return exportFile
         }
 
+/**
+ * shouldIncludeする
+ */
         private fun shouldInclude(relativePath: String, options: ExportOptions): Boolean {
             if (relativePath.isBlank()) return false
             val normalizedPath = relativePath.trim('/')
@@ -84,6 +90,9 @@ class ModPackExportHelper {
             return include.any { normalizedPath == it || normalizedPath.startsWith("$it/") }
         }
 
+/**
+ * collectIncludedFilesする
+ */
         private fun collectIncludedFiles(gameDir: File, options: ExportOptions): List<Pair<String, File>> {
             return gameDir.walkTopDown()
                 .filter { it.isFile }
@@ -94,18 +103,27 @@ class ModPackExportHelper {
                 .toList()
         }
 
+/**
+ * zipOverridesする
+ */
         private fun zipOverrides(zos: ZipOutputStream, overrideFiles: List<Pair<String, File>>) {
             overrideFiles.forEach { (path, file) ->
                 FileTools.zipFile(file, "overrides/$path", zos)
             }
         }
 
+/**
+ * selectCurseManifestFilesする
+ */
         private fun selectCurseManifestFiles(includedFiles: List<Pair<String, File>>): List<Pair<String, File>> {
             return includedFiles.filter { (path, file) ->
                 path.startsWith("mods/") && file.extension.equals("jar", ignoreCase = true)
             }
         }
 
+/**
+ * buildDependenciesする
+ */
         private fun buildDependencies(version: Version): MutableMap<String, String> {
             val dependencies = mutableMapOf<String, String>()
             version.getVersionInfo()?.let { info ->
@@ -124,6 +142,9 @@ class ModPackExportHelper {
             return dependencies
         }
 
+/**
+ * buildModrinthIndexする
+ */
         private fun buildModrinthIndex(
             version: Version,
             dependencies: Map<String, String>,
@@ -157,6 +178,9 @@ class ModPackExportHelper {
             )
         }
 
+/**
+ * buildCurseManifestする
+ */
         private fun buildCurseManifest(
             versionObj: Version,
             dependencies: Map<String, String>,
@@ -201,23 +225,35 @@ class ModPackExportHelper {
             )
         }
 
+/**
+ * writeJsonEntryする
+ */
         private fun writeJsonEntry(zos: ZipOutputStream, entryName: String, obj: Any) {
             zos.putNextEntry(ZipEntry(entryName))
             zos.write(Tools.GLOBAL_GSON.toJson(obj).toByteArray())
             zos.closeEntry()
         }
 
+/**
+ * writeHtmlEntryする
+ */
         private fun writeHtmlEntry(zos: ZipOutputStream, entryName: String, html: String) {
             zos.putNextEntry(ZipEntry(entryName))
             zos.write(html.toByteArray())
             zos.closeEntry()
         }
 
+/**
+ * parseCurseIdsする
+ */
         private fun parseCurseIds(fileName: String): Pair<Long, Long> {
             val numbers = Regex("(\\d+)").findAll(fileName).map { it.value.toLong() }.toList()
             return if (numbers.size >= 2) numbers[numbers.size - 2] to numbers.last() else 0L to 0L
         }
 
+/**
+ * buildModListHtmlする
+ */
         private fun buildModListHtml(
             includedFiles: List<Pair<String, File>>,
             resolvedProjects: Map<String, ResolvedProject>
@@ -234,6 +270,9 @@ class ModPackExportHelper {
             return "<ul>\n$listItems\n</ul>"
         }
 
+/**
+ * resolveModrinthProjectsする
+ */
         private fun resolveModrinthProjects(candidateFiles: List<Pair<String, File>>): Map<String, ResolvedProject> {
             if (candidateFiles.isEmpty()) return emptyMap()
             return runCatching {
@@ -261,6 +300,9 @@ class ModPackExportHelper {
             }.getOrDefault(emptyMap())
         }
 
+/**
+ * resolveCurseForgeProjectsする
+ */
         private fun resolveCurseForgeProjects(manifestFiles: List<Pair<String, File>>): Map<String, ResolvedProject> {
             if (manifestFiles.isEmpty()) return emptyMap()
             if (InfoDistributor.CURSEFORGE_API_KEY.isBlank()) return emptyMap()
@@ -299,6 +341,9 @@ class ModPackExportHelper {
             }.getOrDefault(emptyMap())
         }
 
+/**
+ * resolveCurseForgeModInfoする
+ */
         private fun resolveCurseForgeModInfo(headers: Map<String, String>, modId: Long): ResolvedProject {
             return runCatching {
                 val response = ApiHandler.getRaw(headers, "$CURSEFORGE_API/mods/$modId") ?: return ResolvedProject()
@@ -313,11 +358,17 @@ class ModPackExportHelper {
             }.getOrDefault(ResolvedProject())
         }
 
+/**
+ * calcCurseFingerprintする
+ */
         private fun calcCurseFingerprint(file: File): Long {
             val hash = murmur2(file.readBytes(), 1)
             return hash.toLong() and 0xffffffffL
         }
 
+/**
+ * murmur2する
+ */
         private fun murmur2(data: ByteArray, seed: Int): Int {
             val m = 0x5bd1e995
             val r = 24

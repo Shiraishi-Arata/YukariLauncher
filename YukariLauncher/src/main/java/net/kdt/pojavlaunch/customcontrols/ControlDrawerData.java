@@ -30,7 +30,9 @@ public class ControlDrawerData {
         RIGHT,
         FREE
     }
-
+/**
+ * 「Orientations」の値を取得します。
+ */
     public static String[] getOrientations(Context context) {
         return new String[]{
                 context.getString(R.string.controls_orientation_down),
@@ -40,7 +42,10 @@ public class ControlDrawerData {
                 context.getString(R.string.controls_orientation_free)
         };
     }
-
+/**
+ * 「orientation To Int」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static int orientationToInt(Orientation orientation){
         switch (orientation){
             case DOWN: return 0;
@@ -51,7 +56,10 @@ public class ControlDrawerData {
         }
         return -1;
     }
-
+/**
+ * 「int To Orientation」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public static Orientation intToOrientation(int by){
         switch (by){
             case 0: return DOWN;
@@ -62,26 +70,40 @@ public class ControlDrawerData {
         }
         return null;
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawerData(){
         this(new ArrayList<>());
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawerData(ArrayList<ControlData> buttonProperties){
         this(buttonProperties, new ControlData(ContextExecutor.getString(R.string.controls_add_control_drawer), new int[] {}, Tools.currentDisplayMetrics.widthPixels/2f, Tools.currentDisplayMetrics.heightPixels/2f));
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawerData(ArrayList<ControlData> buttonProperties, ControlData properties){
         this(buttonProperties, properties, Orientation.LEFT);
     }
-
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawerData(ArrayList<ControlData> buttonProperties, ControlData properties, Orientation orientation){
         this.buttonProperties = buttonProperties;
         this.properties = properties;
         this.orientation = orientation;
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawerData(ControlDrawerData drawerData){
         buttonProperties = new ArrayList<>(drawerData.buttonProperties.size());
         for(ControlData controlData : drawerData.buttonProperties){

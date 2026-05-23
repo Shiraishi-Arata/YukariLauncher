@@ -50,6 +50,10 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.Future
 
+/**
+ * リソースダウンロード用の抽象フラグメントです。
+ * プラットフォームからの検索、フィルタリング、バッチダウンロード機能を提供します。
+ */
 abstract class AbstractResourceDownloadFragment(
     parentFragment: Fragment?,
     private val classify: Classify,
@@ -83,8 +87,15 @@ abstract class AbstractResourceDownloadFragment(
     private var selectMode = false
     private val selectedMods: MutableMap<String, InfoItem> = LinkedHashMap()
 
+    /**
+     * インストールボタンの初期化を行います。
+     * @param installButton インストールボタン
+     */
     abstract fun initInstallButton(installButton: Button)
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -103,6 +114,10 @@ abstract class AbstractResourceDownloadFragment(
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     * スピナーの設定、検索ボタン、フィルターの初期化を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
             recyclerView.apply {
@@ -132,7 +147,7 @@ abstract class AbstractResourceDownloadFragment(
                 false
             }
 
-            // 打开版本选择弹窗
+            // バージョン選択ダイアログを開く
             selectedMcVersionView.setOnClickListener {
                 val selectVersionDialog = SelectVersionDialog(requireContext())
                 selectVersionDialog.setOnVersionSelectedListener(object : VersionSelectedListener() {
@@ -150,7 +165,7 @@ abstract class AbstractResourceDownloadFragment(
             }
         }
 
-        // 初始化 Spinner
+        // スピナーを初期化
         mPlatformAdapter.setItems(Platform.entries)
         mSortAdapter.setItems(Sort.entries)
         mCategoryAdapter.setItems(categoryList)
@@ -214,6 +229,11 @@ abstract class AbstractResourceDownloadFragment(
         applySelectionState()
     }
 
+    /**
+     * スピナーの設定を行います。
+     * @param spinner スピナービュー
+     * @param adapter スピナーアダプター
+     */
     private fun setSpinner(spinner: PowerSpinnerView, adapter: ObjectSpinnerAdapter<*>) {
         spinner.apply {
             setSpinnerAdapter(adapter)
@@ -222,6 +242,9 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * スピナーの初期インデックスを設定します。
+     */
     private fun initSpinnerIndex() {
         binding.apply {
             platformSpinner.selectItemByIndex(recommendedPlatform.ordinal)
@@ -231,6 +254,9 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * 現在のMinecraftバージョンをフィルターに適用します。
+     */
     private fun applyCurrentVersionFilter() {
         val versionInfo = VersionsManager.getCurrentVersion()?.getVersionInfo() ?: return
         val mcVersion = versionInfo.minecraftVersion
@@ -249,17 +275,26 @@ abstract class AbstractResourceDownloadFragment(
         binding.modloaderSpinner.selectItemByIndex(matchedLoader.ordinal)
     }
 
+    /**
+     * フラグメント開始時にEventBusを登録します。
+     */
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
 
+    /**
+     * フラグメント停止時にスピナーを閉じ、EventBusの登録を解除します。
+     */
     override fun onStop() {
         closeSpinner()
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
+    /**
+     * 検索完了時のUI更新処理を行います。
+     */
     private fun onSearchFinished() {
         binding.apply {
             setStatusText(false)
@@ -268,6 +303,10 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * 検索エラー時のUI更新処理を行います。
+     * @param error エラーコード
+     */
     private fun onSearchError(error: Int) {
         binding.apply {
             statusText.text = when (error) {
@@ -281,6 +320,10 @@ abstract class AbstractResourceDownloadFragment(
         setStatusText(true)
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     * @param animPlayer アニメーションプレイヤー
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operateLayout, Animations.BounceInLeft))
@@ -288,6 +331,10 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     * @param animPlayer アニメーションプレイヤー
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operateLayout, Animations.FadeOutRight))
@@ -295,14 +342,26 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * ステータステキストの表示を切り替えます。
+     * @param shouldShow 表示するかどうか
+     */
     private fun setStatusText(shouldShow: Boolean) {
         setVisibilityAnim(binding.statusText, shouldShow)
     }
 
+    /**
+     * ローディングレイアウトの表示を切り替えます。
+     * @param shouldShow 表示するかどうか
+     */
     private fun setLoadingLayout(shouldShow: Boolean) {
         setVisibilityAnim(binding.loadingLayout, shouldShow)
     }
 
+    /**
+     * RecyclerViewの表示を切り替えます。
+     * @param shouldShow 表示するかどうか
+     */
     private fun setRecyclerView(shouldShow: Boolean) {
         binding.apply {
             recyclerView.visibility = if (shouldShow) View.VISIBLE else View.GONE
@@ -310,10 +369,18 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * スピナーのアイテム選択リスナーを設定します。
+     * @param spinnerView スピナービュー
+     * @param func 選択時のコールバック
+     */
     private fun <E> setSpinnerListener(spinnerView: PowerSpinnerView, func: (E) -> Unit) {
         spinnerView.setOnSpinnerItemSelectedListener<E> { _, _, _, newItem -> func(newItem) }
     }
 
+    /**
+     * 全てのスピナーを閉じます。
+     */
     private fun closeSpinner() {
         binding.platformSpinner.dismiss()
         binding.sortSpinner.dismiss()
@@ -322,7 +389,7 @@ abstract class AbstractResourceDownloadFragment(
     }
 
     /**
-     * 清除上一次的搜索状态，然后执行搜索
+     * 前回の検索状態をクリアしてから検索を実行します。
      */
     private fun search() {
         setStatusText(false)
@@ -340,12 +407,15 @@ abstract class AbstractResourceDownloadFragment(
     }
 
     /**
-     * 检查当前适配器内的item数量是否为0，如果是，那么执行搜索
+     * アダプター内のアイテム数が0の場合に検索を実行します。
      */
     private fun checkSearch() {
         if (mInfoAdapter.itemCount == 0) search()
     }
 
+    /**
+     * 選択状態をUIに反映します。
+     */
     private fun applySelectionState() {
         mInfoAdapter.setSelectMode(selectMode) { item ->
             if (selectedMods.containsKey(item.projectId)) selectedMods.remove(item.projectId)
@@ -363,6 +433,9 @@ abstract class AbstractResourceDownloadFragment(
         binding.resetSelectedModsButton.visibility = if (selectedMods.isEmpty()) View.GONE else View.VISIBLE
     }
 
+    /**
+     * 選択されたModの依存関係を解決し、確認ダイアログを表示します。
+     */
     private fun resolveAndConfirmSelectedMods() {
         val currentVersion = VersionsManager.getCurrentVersion()?.getVersionInfo()
         val currentMcVersion = currentVersion?.minecraftVersion
@@ -412,6 +485,13 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * 指定されたバージョンの依存関係を解決します。
+     * @param version バージョン情報
+     * @param mcVersion Minecraftバージョン
+     * @param loaderNames ローダー名のセット
+     * @return 解決されたダウンロードアイテムのリスト
+     */
     private fun resolveDependencies(version: VersionItem, mcVersion: String, loaderNames: Set<String>): List<BatchModDownloadConfirmDialog.ResolvedDownloadItem> {
         if (version !is ModVersionItem) return emptyList()
         return version.dependencies.mapNotNull { dependency ->
@@ -426,6 +506,13 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * 互換性のある最新バージョンを選択します。
+     * @param versions バージョンリスト
+     * @param mcVersion Minecraftバージョン
+     * @param loaderNames ローダー名のセット
+     * @return 互換性のある最新バージョン、見つからない場合はnull
+     */
     private fun pickLatestCompatibleVersion(
         versions: List<VersionItem>,
         mcVersion: String,
@@ -441,6 +528,10 @@ abstract class AbstractResourceDownloadFragment(
             .maxByOrNull { it.uploadDate.time }
     }
 
+    /**
+     * バッチダウンロードの保存先ディレクトリを取得します。
+     * @return 保存先ディレクトリ
+     */
     private fun getBatchDownloadTargetDir(): java.io.File {
         return when (classify) {
             Classify.MOD -> com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.getModsPath()
@@ -451,6 +542,12 @@ abstract class AbstractResourceDownloadFragment(
         }.apply { mkdirs() }
     }
 
+    /**
+     * 選択されたアイテムをインストールします。
+     * @param info アイテム情報
+     * @param version バージョン情報
+     * @param target インストール先ファイル
+     */
     private fun installSelectedItem(info: InfoItem, version: VersionItem, target: java.io.File) {
         when (classify) {
             Classify.MOD -> info.platform.helper.installMod(info, version, target, target.absolutePath)
@@ -461,12 +558,20 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * RecyclerViewの有効/無効を切り替えるイベントを処理します。
+     * @param event RecyclerView有効化イベント
+     */
     @Subscribe
     fun event(event: DownloadPageEvent.RecyclerEnableEvent) {
         binding.recyclerView.isEnabled = event.enable
         closeSpinner()
     }
 
+    /**
+     * ページ切り替えイベントを処理し、対応するアニメーションを実行します。
+     * @param event ページ切り替えイベント
+     */
     @Subscribe
     fun event(event: DownloadPageEvent.PageSwapEvent) {
         closeSpinner()
@@ -480,15 +585,26 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
+    /**
+     * ページ破棄イベントを処理し、スピナーを閉じます。
+     * @param event ページ破棄イベント
+     */
     @Subscribe
     fun event(event: DownloadPageEvent.PageDestroyEvent) {
         closeSpinner()
     }
 
+    /**
+     * 検索APIを呼び出す内部タスククラスです。
+     */
     private inner class SearchApiTask(
         private val mPreviousResult: SearchResult?
     ) : SelfReferencingFuture.FutureInterface {
 
+        /**
+         * 非同期で検索を実行します。
+         * @param myFuture 自身のFuture
+         */
         override fun run(myFuture: Future<*>) {
             runCatching {
                 val result: SearchResult? = mCurrentPlatform.helper.search(classify, mFilters, mPreviousResult ?: SearchResult())
@@ -539,6 +655,9 @@ abstract class AbstractResourceDownloadFragment(
     }
 
     companion object {
+        /**
+         * 空のアイテムリストです。
+         */
         private val MOD_ITEMS_EMPTY: MutableList<InfoItem> = ArrayList()
 
         const val ERROR_INTERNAL: Int = 0

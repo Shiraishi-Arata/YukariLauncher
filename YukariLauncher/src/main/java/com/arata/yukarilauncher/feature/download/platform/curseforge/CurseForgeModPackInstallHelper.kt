@@ -29,14 +29,34 @@ import kotlin.math.max
 
 class CurseForgeModPackInstallHelper {
     companion object {
+        /**
+         * CurseForgeのModパックインストールを開始する
+         * @param api APIハンドラー
+         * @param versionItem インストールするバージョン情報
+         * @param customName カスタムバージョン名
+         * @return ModLoaderのラッパー情報
+         */
         @Throws(Exception::class)
+/**
+ * startInstallする
+ */
         fun startInstall(api: ApiHandler, versionItem: VersionItem, customName: String): ModLoaderWrapper? {
             return InstallHelper.installModPack(versionItem, customName) { modpackFile, targetPath ->
                 installZip(api, modpackFile, targetPath)
             }
         }
 
+        /**
+         * ModパックのZIPファイルを解析してインストールを実行する
+         * @param api APIハンドラー
+         * @param zipFile ModパックのZIPファイル
+         * @param targetPath インストール先のパス
+         * @return ModLoaderのラッパー情報
+         */
         @Throws(Exception::class)
+/**
+ * installZipする
+ */
         fun installZip(api: ApiHandler, zipFile: File, targetPath: File): ModLoaderWrapper? {
             ZipFile(zipFile).use { modpackZipFile ->
                 val curseManifest = Tools.GLOBAL_GSON.fromJson(
@@ -71,7 +91,17 @@ class CurseForgeModPackInstallHelper {
             }
         }
 
+        /**
+         * Modのダウンローダーを生成し、マニフェストに従ってダウンロードタスクを設定する
+         * @param api APIハンドラー
+         * @param instanceDestination インスタンスの出力先ディレクトリ
+         * @param curseManifest CurseForgeのマニフェスト
+         * @return 設定済みのModDownloader
+         */
         @Throws(Exception::class)
+/**
+ * getModDownloaderする
+ */
         private fun getModDownloader(
             api: ApiHandler,
             instanceDestination: File,
@@ -93,6 +123,14 @@ class CurseForgeModPackInstallHelper {
             return modDownloader
         }
 
+        /**
+         * CurseManifestのMinecraft情報からModLoaderWrapperを生成する
+         * @param minecraft CurseManifestのMinecraft情報
+         * @return ModLoaderのラッパー情報、またはnull
+         */
+/**
+ * createInfoする
+ */
         private fun createInfo(minecraft: CurseMinecraft): ModLoaderWrapper? {
             var primaryModLoader: CurseModLoader? = null
             for (modLoader in minecraft.modLoaders) {

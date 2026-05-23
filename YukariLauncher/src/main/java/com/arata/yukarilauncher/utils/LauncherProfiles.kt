@@ -9,7 +9,8 @@ import java.io.IOException
 class LauncherProfiles {
     companion object {
         /**
-         * 写入一个默认的 launcher_profiles.json 文件，不存在将会导致 Forge、NeoForge 等无法正常安装
+         * デフォルトの launcher_profiles.json ファイルを生成する
+         * このファイルが存在しない場合、ForgeやNeoForgeなどが正常にインストールできない
          */
         @JvmStatic
         fun generateLauncherProfiles() {
@@ -18,7 +19,7 @@ class LauncherProfiles {
                     if (!exists()) {
                         if (parentFile?.exists() == false) parentFile?.mkdirs()
                         if (!createNewFile()) throw IOException("Failed to create launcher_profiles.json file!")
-                        //开始写入内容
+                        // ファイル内容を書き込む
                         val profilesJsonString = """{"profiles":{"default":{"lastVersionId":"latest-release"}},"selectedProfile":"default"}""".trimIndent()
                         FileUtils.write(this, profilesJsonString)
                         Logging.i(

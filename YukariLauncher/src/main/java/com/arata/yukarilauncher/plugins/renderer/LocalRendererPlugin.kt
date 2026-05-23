@@ -2,6 +2,10 @@ package com.arata.yukarilauncher.plugins.renderer
 
 import java.io.File
 
+/**
+ * ローカルファイルシステムから読み込まれたレンダラープラグイン
+ * @param folderPath プラグインが格納されているフォルダのパス
+ */
 class LocalRendererPlugin(
     id: String,
     displayName: String,

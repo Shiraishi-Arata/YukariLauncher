@@ -14,6 +14,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import net.kdt.pojavlaunch.Tools
 import java.io.File
 
+/**
+ * エラー表示アクティビティ
+ */
 class ErrorActivity : BaseActivity() {
     private lateinit var binding: ActivityErrorBinding
 
@@ -50,6 +53,9 @@ class ErrorActivity : BaseActivity() {
         finish()
     }
 
+    /**
+     * ランチャークラッシュ情報を表示する
+     */
     private fun showLauncherCrash(extras: Bundle) {
         val context = this
 
@@ -67,6 +73,9 @@ class ErrorActivity : BaseActivity() {
         }
     }
 
+    /**
+     * ゲームクラッシュ情報を表示する
+     */
     private fun showGameCrash(extras: Bundle) {
         val code = extras.getInt(BUNDLE_CODE, 0)
         if (code == 0) {
@@ -93,6 +102,9 @@ class ErrorActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 最新のログファイルを読み込む
+     */
     private fun loadLatestLog(): String? {
         return runCatching {
             val latestLogFile = File(PathManager.DIR_GAME_HOME, "latestlog.txt")
@@ -103,6 +115,9 @@ class ErrorActivity : BaseActivity() {
         }.getOrNull()
     }
 
+    /**
+     * イースターエッグを表示する
+     */
     private fun showEasterEgg() {
         val context = this
 
@@ -128,6 +143,9 @@ class ErrorActivity : BaseActivity() {
         private const val BUNDLE_SAVE_PATH = "save_path"
         private const val BUNDLE_EASTER_EGG = "easter_egg"
 
+        /**
+         * ランチャークラッシュ画面を表示する
+         */
         @JvmStatic
         fun showLauncherCrash(ctx: Context, savePath: String?, th: Throwable?) {
             val intent = Intent(ctx, ErrorActivity::class.java)
@@ -139,6 +157,9 @@ class ErrorActivity : BaseActivity() {
             ctx.startActivity(intent)
         }
 
+        /**
+         * 終了コード表示画面を表示する
+         */
         @JvmStatic
         fun showExitMessage(
             ctx: Context,
@@ -155,6 +176,9 @@ class ErrorActivity : BaseActivity() {
             ctx.startActivity(intent)
         }
 
+        /**
+         * イースターエッグ画面を表示する
+         */
         @JvmStatic
         fun showEasterEgg(ctx: Context) {
             val intent = Intent(ctx, ErrorActivity::class.java)

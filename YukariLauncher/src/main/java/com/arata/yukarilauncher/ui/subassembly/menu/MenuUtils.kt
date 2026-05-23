@@ -4,12 +4,15 @@ import android.widget.SeekBar
 import android.widget.CompoundButton
 import android.widget.TextView
 
+/**
+ * メニュー操作用のユーティリティクラス
+ */
 class MenuUtils {
     companion object {
         /**
-         * 调整滑动条的值
-         * @param seekBar 滑动条
-         * @param v 需要调整的值的大小
+         * シークバーの値を調整する
+         * @param seekBar シークバー
+         * @param v 調整する値
          */
         @JvmStatic
         fun adjustSeekbar(seekBar: SeekBar, v: Int) {
@@ -17,7 +20,7 @@ class MenuUtils {
         }
 
         /**
-         * 反转Switch当前的选中状态
+         * Switchの選択状態を反転する
          */
         @JvmStatic
         fun toggleSwitchState(switchView: CompoundButton) {
@@ -25,7 +28,7 @@ class MenuUtils {
         }
 
         /**
-         * 初始化Seekbar的值
+         * シークバーの値を初期化する
          */
         @JvmStatic
         fun initSeekBarValue(seek: SeekBar, value: Int, valueView: TextView, suffix: String) {
@@ -34,7 +37,7 @@ class MenuUtils {
         }
 
         /**
-         * 更新Seekbar旁边数值的文本值
+         * シークバーの横に表示する数値テキストを更新する
          */
         @JvmStatic
         fun updateSeekbarValue(value: Int, valueView: TextView, suffix: String) {

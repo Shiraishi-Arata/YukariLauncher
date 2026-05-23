@@ -18,6 +18,9 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 
+/**
+ * シェーダーパックをダウンロードするためのフラグメントです。
+ */
 class ShaderPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.SHADER_PACK,
@@ -27,6 +30,9 @@ class ShaderPackDownloadFragment(parentFragment: Fragment? = null) : AbstractRes
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("zip", true)) { uris: List<Uri>? ->
@@ -45,6 +51,9 @@ class ShaderPackDownloadFragment(parentFragment: Fragment? = null) : AbstractRes
         }
     }
 
+    /**
+     * インストールボタンを初期化し、ローカルシェーダーパックファイルの選択を開始します。
+     */
     override fun initInstallButton(installButton: Button) {
         installButton.setOnClickListener {
             val suffix = ".zip"

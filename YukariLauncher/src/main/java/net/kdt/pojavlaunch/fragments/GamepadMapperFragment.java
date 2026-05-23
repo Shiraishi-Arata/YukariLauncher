@@ -58,6 +58,9 @@ public class GamepadMapperFragment extends FragmentWithAnim implements
     private GamepadMapperAdapter mMapperAdapter;
     private Gamepad mGamepad;
 
+/**
+ * GamepadMapperFragmentを構築します
+ */
     public GamepadMapperFragment() {
         super(R.layout.fragment_controller_remapper);
     }
@@ -90,6 +93,9 @@ public class GamepadMapperFragment extends FragmentWithAnim implements
         binding.gamepadRemapperModeSpinner.setOnItemSelectedListener(this);
     }
 
+/**
+ * createGamepadメソッド
+ */
     private void createGamepad(View mainView, InputDevice inputDevice) {
         mGamepad = new Gamepad(mainView, inputDevice, mMapperAdapter, false) {
             @Override
@@ -102,6 +108,9 @@ public class GamepadMapperFragment extends FragmentWithAnim implements
         };
     }
 
+/**
+ * handleExitButtonメソッド
+ */
     private void handleExitButton(boolean isPressed) {
         if(isPressed) mExitHandler.postDelayed(mExitRunnable, 400);
         else mExitHandler.removeCallbacks(mExitRunnable);

@@ -7,17 +7,26 @@ import top.fifthlight.touchcontroller.proxy.client.LauncherProxyClient
 import top.fifthlight.touchcontroller.proxy.data.Offset
 
 /**
- * 单独在这里处理触点，为TouchController模组的控制代理提供信息
+ * タッチ操作の触点処理を行う
+ * TouchController Modの制御プロキシに情報を提供する
  */
 object ContactHandler {
     private val pointerIdMap = SparseIntArray()
     private var nextPointerId = 1
 
+    /**
+     * MotionEventからViewに対する相対座標オフセットを取得する
+     */
     private fun MotionEvent.getOffset(index: Int, view: View) = Offset(
         getX(index) / view.width,
         getY(index) / view.height
     )
 
+    /**
+     * タッチイベントを処理し、制御プロキシに通知する
+     * @param event モーションイベント
+     * @param view タッチされたビュー
+     */
     fun progressEvent(event: MotionEvent, view: View) {
         val client = ControllerProxy.getProxyClient() ?: return
 
@@ -49,6 +58,10 @@ object ContactHandler {
         }
     }
 
+    /**
+     * ポインターダウンイベントを処理する
+     * 新しいポインターIDを割り当ててプロキシに追加する
+     */
     private fun handlePointerDown(event: MotionEvent, client: LauncherProxyClient, index: Int, view: View) {
         val pointerId = nextPointerId++
         pointerIdMap.put(event.getPointerId(index), pointerId)

@@ -38,6 +38,10 @@ public class MultiRTUtils {
     private static final String JAVA_VERSION_STR = "JAVA_VERSION=\"";
     private static final String OS_ARCH_STR = "OS_ARCH=\"";
 
+/**
+ * runtimesを取得する
+ * @return runtimesの値
+ */
     public static List<Runtime> getRuntimes() {
         if (!RUNTIME_FOLDER.exists() && !RUNTIME_FOLDER.mkdirs()) {
             throw new RuntimeException("Failed to create runtime directory");
@@ -74,6 +78,10 @@ public class MultiRTUtils {
         return runtimes;
     }
 
+/**
+ * exactJreNameを取得する
+ * @return exactJreNameの値
+ */
     public static String getExactJreName(int majorVersion) {
         List<Runtime> runtimes = getRuntimes();
         for(Runtime r : runtimes)
@@ -82,6 +90,10 @@ public class MultiRTUtils {
         return null;
     }
 
+/**
+ * nearestJreNameを取得する
+ * @return nearestJreNameの値
+ */
     public static String getNearestJreName(int majorVersion) {
         List<Runtime> runtimes = getRuntimes();
         MathUtils.RankedValue<Runtime> nearestRankedRuntime = MathUtils.findNearestPositive(majorVersion, runtimes, (runtime)->runtime.javaVersion);
@@ -91,6 +103,9 @@ public class MultiRTUtils {
         return nearestRuntime.name;
     }
 
+/**
+ * installRuntimeNamedメソッド
+ */
     public static void installRuntimeNamed(String nativeLibDir, InputStream runtimeInputStream, String name) throws IOException {
         File dest = new File(RUNTIME_FOLDER,"/"+name);
         if(dest.exists()) FileUtils.deleteDirectory(dest);
@@ -101,6 +116,9 @@ public class MultiRTUtils {
         read(name);
     }
 
+/**
+ * postPrepareメソッド
+ */
     public static void postPrepare(String name) throws IOException {
         File dest = new File(RUNTIME_FOLDER,"/" + name);
         if(!dest.exists()) return;
@@ -117,6 +135,9 @@ public class MultiRTUtils {
         copyDummyNativeLib("libawt_xawt.so", dest, libFolder);
     }
 
+/**
+ * installRuntimeNamedBinpackメソッド
+ */
     public static void installRuntimeNamedBinpack(InputStream universalFileInputStream, InputStream platformBinsInputStream, String name, String binpackVersion) throws IOException {
         File dest = new File(RUNTIME_FOLDER,"/"+name);
         if(dest.exists()) FileUtils.deleteDirectory(dest);
@@ -136,6 +157,9 @@ public class MultiRTUtils {
     }
 
 
+/**
+ * readInternalRuntimeVersionメソッド
+ */
     public static String readInternalRuntimeVersion(String name) {
         File versionFile = new File(RUNTIME_FOLDER,"/" + name + "/pojav_version");
         try {
@@ -150,6 +174,9 @@ public class MultiRTUtils {
         }
     }
 
+/**
+ * removeRuntimeNamedメソッド
+ */
     public static void removeRuntimeNamed(String name) throws IOException {
         File dest = new File(RUNTIME_FOLDER, name);
         if(dest.exists()) {
@@ -158,6 +185,10 @@ public class MultiRTUtils {
         }
     }
 
+/**
+ * runtimeHomeを取得する
+ * @return runtimeHomeの値
+ */
     public static File getRuntimeHome(String name) {
         File dest = new File(RUNTIME_FOLDER, name);
         Logging.i("MiltiRTUitls", "Dest exists? "+dest.exists());
@@ -165,11 +196,17 @@ public class MultiRTUtils {
         return dest;
     }
 
+/**
+ * forceRereadメソッド
+ */
     public static Runtime forceReread(String name) {
         sCache.remove(name);
         return read(name);
     }
 
+/**
+ * readメソッド
+ */
     public static Runtime read(String name) {
         Runtime returnRuntime = sCache.get(name);
         if(returnRuntime != null) return returnRuntime;
@@ -224,6 +261,9 @@ public class MultiRTUtils {
     }
 
     @SuppressWarnings("SameParameterValue")
+/**
+ * copyDummyNativeLibメソッド
+ */
     private static void copyDummyNativeLib(String name, File dest, String libFolder) throws IOException {
         File fileLib = new File(dest, "/"+libFolder + "/" + name);
         FileInputStream is = new FileInputStream(new File(PathManager.DIR_NATIVE_LIB, name));
@@ -233,11 +273,17 @@ public class MultiRTUtils {
         os.close();
     }
 
+/**
+ * installRuntimeNamedNoRemoveメソッド
+ */
     private static void installRuntimeNamedNoRemove(InputStream runtimeInputStream, File dest) throws IOException {
         uncompressTarXZ(runtimeInputStream,dest);
         runtimeInputStream.close();
     }
 
+/**
+ * uncompressTarXZメソッド
+ */
     private static void uncompressTarXZ(final InputStream tarFileInputStream, final File dest) throws IOException {
         net.kdt.pojavlaunch.utils.FileUtils.ensureDirectory(dest);
 

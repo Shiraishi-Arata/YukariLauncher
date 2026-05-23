@@ -11,6 +11,9 @@ class CallbackDrawableImageViewTarget(
     private val imageView: ImageView,
     private val callback: Callback?
 ) : DrawableImageViewTarget(imageView) {
+/**
+ * setResourceする
+ */
     override fun setResource(resource: Drawable?) {
         imageView.post {
             super.setResource(resource)
@@ -19,7 +22,13 @@ class CallbackDrawableImageViewTarget(
         }
     }
 
+/**
+ * interfaceする
+ */
     fun interface Callback {
+/**
+ * callbackする
+ */
         fun callback(loaded: Boolean)
     }
 }

@@ -7,17 +7,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.arata.yukarilauncher.task.TaskExecutors
 import java.util.concurrent.atomic.AtomicBoolean
 
+/**
+ * ライフサイクル対応のTipダイアログ
+ */
 abstract class LifecycleAwareTipDialog: LifecycleEventObserver {
     private var mLifecycle: Lifecycle? = null
     private var mDialog: TipDialog? = null
     private var mLifecycleEnded = false
 
     /**
-     * Show the lifecycle-aware dialog.
-     * Note that the DialogCreator may not be always invoked.
-     * @param lifecycle the lifecycle to follow
-     * Note that any dismiss listeners added to the dialog must be wrapped
-     * with wrapDismissListener().
+     * ライフサイクル対応ダイアログを表示する
+     * @param lifecycle 追跡するライフサイクル
      */
     @SuppressLint("CheckResult")
     fun show(lifecycle: Lifecycle, builder: TipDialog.Builder) {
@@ -40,18 +40,26 @@ abstract class LifecycleAwareTipDialog: LifecycleEventObserver {
     }
 
     /**
-     * Invoked when the dialog gets hidden either by cancel()/dismiss(), or if a lifecycle event
-     * happens.
-     * @param lifecycleEnded if the dialog was hidden due to a lifecycle event
+     * ダイアログが非表示になった際に呼ばれる
+     * @param lifecycleEnded ライフサイクルイベントによる非表示かどうか
      */
     protected abstract fun dialogHidden(lifecycleEnded: Boolean)
 
+    /**
+     * ダイアログ非表示イベントをディスパッチする
+     */
     private fun dispatchDialogHidden() {
         Exception().printStackTrace()
         dialogHidden(mLifecycleEnded)
         mLifecycle!!.removeObserver(this)
     }
 
+    /**
+     * ライフサイクル状態変更時に呼ばれる
+     * ON_DESTROYイベントでダイアログを破棄する
+     * @param source ライフサイクル所有者
+     * @param event ライフサイクルイベント
+     */
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (event == Lifecycle.Event.ON_DESTROY) {
             mDialog?.dismiss()
@@ -60,12 +68,14 @@ abstract class LifecycleAwareTipDialog: LifecycleEventObserver {
     }
 
     companion object {
+        /**
+         * ダイアログ表示を待機する
+         */
         @JvmStatic
         fun haltOnDialog(lifecycle: Lifecycle, builder: TipDialog.Builder): Boolean {
             val waitLock = Object()
             val hasLifecycleEnded = AtomicBoolean(false)
 
-            // This runnable is moved here in order to reduce bracket/lambda hell
             val showDialogRunnable = Runnable {
                 val dialogBuilder: LifecycleAwareTipDialog =
                     object : LifecycleAwareTipDialog() {
@@ -78,9 +88,6 @@ abstract class LifecycleAwareTipDialog: LifecycleEventObserver {
             }
             synchronized(waitLock) {
                 TaskExecutors.runInUIThread(showDialogRunnable)
-                // the wait() method makes the thread wait on the end of the synchronized block.
-                // so we put it here to make sure that the thread won't get notified before wait()
-                // is called
                 waitLock.wait()
             }
             return hasLifecycleEnded.get()

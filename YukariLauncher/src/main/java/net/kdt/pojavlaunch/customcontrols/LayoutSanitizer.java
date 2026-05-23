@@ -4,18 +4,25 @@ import java.util.Iterator;
 import java.util.List;
 
 public class LayoutSanitizer {
+/**
+ * このオブジェクトが「InvalidFormula」状態であるかを判定します。
+ */
 
     // Maybe add more conditions here later?
     private static boolean isInvalidFormula(String formula) {
         return formula.contains("Infinity");
     }
-
+/**
+ * このオブジェクトが「SaneData」状態であるかを判定します。
+ */
     private static boolean isSaneData(ControlData controlData) {
         if(controlData.getWidth() == 0 || controlData.getHeight() == 0) return false;
         if(isInvalidFormula(controlData.dynamicX) || isInvalidFormula(controlData.dynamicY)) return false;
         return true;
     }
-
+/**
+ * 「ControlData」の値を取得します。
+ */
     private static ControlData getControlData(Object dataEntry) {
         if(dataEntry instanceof ControlData) {
             return (ControlData) dataEntry;
@@ -23,7 +30,10 @@ public class LayoutSanitizer {
             return ((ControlDrawerData) dataEntry).properties;
         }else throw new RuntimeException("Encountered wrong type during ControlData sanitization");
     }
-
+/**
+ * 「sanitize List」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private static boolean sanitizeList(List<?> controlDataList) {
         boolean madeChanges = false;
         Iterator<?> iterator = controlDataList.iterator();
@@ -38,7 +48,7 @@ public class LayoutSanitizer {
     }
 
     /**
-     * Check all buttons in a control layout and ensure they're sane (contain values valid enough
+     * コントロールレイアウト内のすべてのボタンをチェックし、適切な値を持つことを確認します
      * to be displayed properly). Removes any buttons deemed not sane.
      * @param controls the original control layout.
      * @return whether the sanitization process made any changes to the layout

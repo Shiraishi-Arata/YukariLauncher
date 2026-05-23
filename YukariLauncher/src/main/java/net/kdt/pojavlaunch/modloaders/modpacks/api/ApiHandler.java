@@ -28,36 +28,78 @@ public class ApiHandler {
     public final String baseUrl;
     public final Map<String, String> additionalHeaders = new ArrayMap<>();
 
+    /**
+     * APIハンドラーを構築します。
+     * @param url ベースURL
+     */
     public ApiHandler(String url) {
         baseUrl = url;
     }
 
+    /**
+     * APIキー付きでAPIハンドラーを構築します。
+     * @param url ベースURL
+     * @param apiKey APIキー
+     */
     public ApiHandler(String url, String apiKey) {
         this(url);
         additionalHeaders.put("x-api-key", apiKey);
     }
 
+    /**
+     * GETリクエストを実行します。
+     * @param endpoint APIエンドポイント
+     * @param tClass レスポンスの型
+     * @return デシリアライズされたレスポンス
+     */
     public <T> T get(String endpoint, Class<T> tClass) {
         return getFullUrl(additionalHeaders, baseUrl + "/" + endpoint, tClass);
     }
 
+    /**
+     * クエリパラメータ付きのGETリクエストを実行します。
+     * @param endpoint APIエンドポイント
+     * @param query クエリパラメータ
+     * @param tClass レスポンスの型
+     * @return デシリアライズされたレスポンス
+     */
     public <T> T get(String endpoint, HashMap<String, Object> query, Class<T> tClass) {
         return getFullUrl(additionalHeaders, baseUrl + "/" + endpoint, query, tClass);
     }
 
+    /**
+     * POSTリクエストを実行します。
+     * @param endpoint APIエンドポイント
+     * @param body リクエストボディ
+     * @param tClass レスポンスの型
+     * @return デシリアライズされたレスポンス
+     */
     public <T> T post(String endpoint, T body, Class<T> tClass) {
         return postFullUrl(additionalHeaders, baseUrl + "/" + endpoint, body, tClass);
     }
 
+    /**
+     * クエリパラメータ付きのPOSTリクエストを実行します。
+     * @param endpoint APIエンドポイント
+     * @param query クエリパラメータ
+     * @param body リクエストボディ
+     * @param tClass レスポンスの型
+     * @return デシリアライズされたレスポンス
+     */
     public <T> T post(String endpoint, HashMap<String, Object> query, T body, Class<T> tClass) {
         return postFullUrl(additionalHeaders, baseUrl + "/" + endpoint, query, body, tClass);
     }
 
-    //Make a get request and return the response as a raw string;
+    /**
+     * 指定されたURLにGETリクエストを送信し、生の文字列を返します。
+     */
     public static String getRaw(String url) {
         return getRaw(null, url);
     }
 
+    /**
+     * カスタムヘッダー付きでGETリクエストを送信し、生の文字列を返します。
+     */
     public static String getRaw(Map<String, String> headers, String url) {
         Logging.d("ApiHandler", url);
         HttpURLConnection conn = null;
@@ -85,10 +127,16 @@ public class ApiHandler {
         }
     }
 
+    /**
+     * POSTリクエストを送信し、生の文字列を返します。
+     */
     public static String postRaw(String url, String body) {
         return postRaw(null, url, body);
     }
 
+    /**
+     * カスタムヘッダー付きでPOSTリクエストを送信し、生の文字列を返します。
+     */
     public static String postRaw(Map<String, String> headers, String url, String body) {
         try {
             HttpURLConnection conn = UrlManager.createHttpConnection(new URL(url));
@@ -115,6 +163,9 @@ public class ApiHandler {
         return null;
     }
 
+    /**
+     * HttpURLConnectionにヘッダーを追加します。
+     */
     private static void addHeaders(HttpURLConnection connection, Map<String, String> headers) {
         if(headers != null) {
             for(String key : headers.keySet())
@@ -122,6 +173,9 @@ public class ApiHandler {
         }
     }
 
+    /**
+     * クエリパラメータをURLエンコードして文字列に変換します。
+     */
     private static String parseQueries(HashMap<String, Object> query) {
         StringBuilder params = new StringBuilder("?");
         for (String param : query.keySet()) {
@@ -134,38 +188,65 @@ public class ApiHandler {
         return params.substring(0, params.length() - 1);
     }
 
+    /**
+     * 完全なURLに対してGETリクエストを実行します。
+     */
     public static <T> T getFullUrl(String url, Class<T> tClass) {
         return getFullUrl(null, url, tClass);
     }
 
+    /**
+     * クエリ付きで完全なURLに対してGETリクエストを実行します。
+     */
     public static <T> T getFullUrl(String url, HashMap<String, Object> query, Class<T> tClass) {
         return getFullUrl(null, url, query, tClass);
     }
 
+    /**
+     * 完全なURLに対してPOSTリクエストを実行します。
+     */
     public static <T> T postFullUrl(String url, T body, Class<T> tClass) {
         return postFullUrl(null, url, body, tClass);
     }
 
+    /**
+     * クエリ付きで完全なURLに対してPOSTリクエストを実行します。
+     */
     public static <T> T postFullUrl(String url, HashMap<String, Object> query, T body, Class<T> tClass) {
         return postFullUrl(null, url, query, body, tClass);
     }
 
+    /**
+     * ヘッダー付きで完全なURLに対してGETリクエストを実行し、JSONをパースします。
+     */
     public static <T> T getFullUrl(Map<String, String> headers, String url, Class<T> tClass) {
         return new Gson().fromJson(getRaw(headers, url), tClass);
     }
 
+    /**
+     * ヘッダーとクエリ付きで完全なURLに対してGETリクエストを実行し、JSONをパースします。
+     */
     public static <T> T getFullUrl(Map<String, String> headers, String url, HashMap<String, Object> query, Class<T> tClass) {
         return getFullUrl(headers, url + parseQueries(query), tClass);
     }
 
+    /**
+     * ヘッダー付きで完全なURLに対してPOSTリクエストを実行し、JSONをパースします。
+     */
     public static <T> T postFullUrl(Map<String, String> headers, String url, T body, Class<T> tClass) {
         return new Gson().fromJson(postRaw(headers, url, body.toString()), tClass);
     }
 
+    /**
+     * ヘッダーとクエリ付きで完全なURLに対してPOSTリクエストを実行し、JSONをパースします。
+     */
     public static <T> T postFullUrl(Map<String, String> headers, String url, HashMap<String, Object> query, T body, Class<T> tClass) {
         return new Gson().fromJson(postRaw(headers, url + parseQueries(query), body.toString()), tClass);
     }
 
+    /**
+     * 文字列をUTF-8でURLエンコードします。
+     */
     private static String urlEncodeUTF8(String input) {
         try {
             return URLEncoder.encode(input, "UTF-8");

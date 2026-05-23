@@ -1,63 +1,66 @@
 package com.arata.yukarilauncher.feature.download.enums
 
 /**
- * Mod的依赖类型，并且为每一个类型单独指定一个代表色，便于区分
- * @param curseforge 类型在 CurseForge 上的代称
- * @param modrinth 类型在 Modrinth 上的代称
- * @param color 该类型的代表色
+ * Modの依存タイプを定義する列挙型。
+ * 各タイプに識別用の色を割り当て、視覚的な区別を容易にする。
+ * @param curseforge CurseForge上のタイプ識別子
+ * @param modrinth Modrinth上のタイプ識別子
+ * @param color 当該タイプの識別色
  */
 enum class DependencyType(val curseforge: String?, val modrinth: String?, val color: Int) {
     /**
-     * 需装：这种依赖对项目来说是必须的，如果缺少这种依赖，项目将无法正常运行
+     * 必須：この依存はプロジェクトに必須であり、欠けると正常に動作しない。
      *
      * CurseForge: "3"
      * Modrinth: "required"
-     * 颜色：0x4CFF9800（橙色，Alpha 30%）
+     * 色：0x4CFF9800（オレンジ、Alpha 30%）
      */
     REQUIRED("3", "required", 0x4CFF9800),
 
     /**
-     * 可选：这些依赖不是必须的，但可以为项目添加额外的功能或特性
+     * 任意：必須ではないが、追加機能や特徴を提供する。
      *
      * CurseForge: "2"
      * Modrinth: "optional"
-     * 颜色：0x4C34C759（浅绿色，Alpha 30%）
+     * 色：0x4C34C759（薄緑、Alpha 30%）
      */
     OPTIONAL("2", "optional", 0x4C34C759),
 
     /**
-     * 不兼容：这种依赖表示项目与其他特定的项目或依赖有冲突，不建议同时使用，如果尝试同时使用这些依赖，可能会导致错误或故障
+     * 互換性なし：この依存は他のプロジェクトと競合する。
+     * 同時に使用するとエラーや障害が発生する可能性がある。
      *
      * CurseForge: "5"
      * Modrinth: "incompatible"
-     * 颜色：0x4CEF5350（浅红色，Alpha 30%）
+     * 色：0x4CEF5350（薄赤、Alpha 30%）
      */
     INCOMPATIBLE("5", "incompatible", 0x4CEF5350),
 
     /**
-     * 嵌入式：这些依赖已经包含在项目内，用户不需要单独安装，它们是项目的一部分，用于确保项目正常运行
+     * 内蔵：これらの依存はプロジェクトに既に含まれており、ユーザーが個別にインストールする必要はない。
      *
      * CurseForge: "1"
      * Modrinth: "embedded"
-     * 颜色：0x4CFFD54F（浅黄色，Alpha 30%）
+     * 色：0x4CFFD54F（薄黄、Alpha 30%）
      */
     EMBEDDED("1", "embedded", 0x4CFFD54F),
 
     /**
-     * 工具：这类依赖是用于开发或操作项目的工具，它们本身并不是项目运行所必需的
+     * ツール：プロジェクトの開発や操作に使用されるツールであり、実行には必須ではない。
      *
      * CurseForge: "4"
      * Modrinth: null
-     * 颜色：0x4CBDBDBD（灰色，Alpha 30%）
+     * 色：0x4CBDBDBD（灰色、Alpha 30%）
      */
     TOOL("4", null, 0x4CBDBDBD),
 
     /**
-     * 包含：这种依赖是指项目所包含的文件或资源，虽然它们不是项目的核心功能，但可以为项目提供额外的支持或功能
+     * 包含：プロジェクトに含まれるファイルやリソース。
+     * コア機能ではないが、追加のサポートを提供する。
      *
      * CurseForge: "6"
      * Modrinth: null
-     * 颜色：0x4C9575CD（紫色，Alpha 30%）
+     * 色：0x4C9575CD（紫、Alpha 30%）
      */
     INCLUDE("6", null, 0x4C9575CD)
 }

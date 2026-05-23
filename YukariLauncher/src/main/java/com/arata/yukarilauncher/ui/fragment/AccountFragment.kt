@@ -69,6 +69,9 @@ import java.io.File
 import java.util.regex.Pattern
 
 
+/**
+ * アカウント管理フラグメント
+ */
 class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClickListener {
     companion object {
         const val TAG = "AccountFragment"
@@ -108,6 +111,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
 
     private lateinit var mProgressDialog: AlertDialog
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -119,6 +125,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化処理を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireActivity()
 
@@ -196,26 +205,23 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
                     })
                 }
 
-                if (fromUser) { //需要判断是否为用户手动点击的，否则会一直进入微软登录界面
+                if (fromUser) {
                     when (toIndex) {
-                        //微软账户
                         0 -> YLTools.swapFragmentWithAnim(
                             this@AccountFragment,
                             MicrosoftLoginFragment::class.java,
                             MicrosoftLoginFragment.TAG,
                             null
                         )
-                        //离线账户
                         1 -> {
                             nonMicrosoftLogin(
                                 R.string.account_no_microsoft_account_local
                             ) { localLogin() }
                         }
-                        //外置账户
                         else -> {
                             nonMicrosoftLogin(
                                 R.string.account_no_microsoft_account_other
-                            ) { otherLogin(toIndex - 2) /* Server索引需要从0开始 */ }
+                            ) { otherLogin(toIndex - 2) }
                         }
                     }
                 }
@@ -229,6 +235,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         refreshOtherServer()
     }
 
+    /**
+     * RecyclerViewのデータを再読み込みします。
+     */
     @SuppressLint("NotifyDataSetChanged")
     private fun reloadRecyclerView() {
         this.mAccountsData.clear()
@@ -238,6 +247,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         binding.accountsRecycler.scheduleLayoutAnimation()
     }
 
+    /**
+     * アカウント情報を再読み込みする
+     */
     private fun reloadAccounts() {
         Task.runTask {
             AccountsManager.reload()
@@ -247,10 +259,16 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }.execute()
     }
 
+    /**
+     * SpannableStringにスタイルを適用する
+     */
     private fun SpannableString.spanText(start: Int, end: Int, what: Any) {
         this.setSpan(what, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
+    /**
+     * ローカル（オフライン）ログインを実行する
+     */
     private fun localLogin() {
         fun startLogin(name: String) {
             EventBus.getDefault().post(LocalLoginEvent(name.trim()))
@@ -299,6 +317,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
             }.showDialog()
     }
 
+    /**
+     * 外部認証サーバーでログインする
+     */
     private fun otherLogin(index: Int) {
         val server = mOtherServerList[index]
         OtherLoginDialog(requireActivity(), server,
@@ -335,6 +356,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
             }).show()
     }
 
+    /**
+     * 外部サーバー一覧を更新する
+     */
     private fun refreshOtherServer() {
         Task.runTask {
             mOtherServerList.clear()
@@ -351,7 +375,6 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
                 }
             }
         }.ended(TaskExecutors.getAndroidUI()) {
-            //将外置服务器添加到账号类别选择栏上
             mOtherServerViewList.forEach { view ->
                 binding.accountTypeTab.removeView(view)
             }
@@ -394,6 +417,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }.execute()
     }
 
+    /**
+     * サーバー種別選択ダイアログを表示する
+     */
     private fun showServerTypeSelectDialog(stringId: Int, type: Int) {
         EditTextDialog.Builder(requireActivity())
             .setTitle(stringId)
@@ -404,6 +430,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
             }.showDialog()
     }
 
+    /**
+     * サーバー設定の初期化を確認する
+     */
     private fun checkServerConfig() {
         mOtherServerConfig ?: run {
             val servers = Servers()
@@ -412,6 +441,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }
     }
 
+    /**
+     * 外部サーバーを追加する
+     */
     private fun addOtherServer(editText: EditText, type: Int) {
         Task.runTask {
             val editString = editText.text.toString()
@@ -435,7 +467,6 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
                     checkServerConfig()
                     mOtherServerConfig?.server?.apply addServer@{
                         forEach {
-                            //确保服务器不重复
                             if (it.baseUrl == server.baseUrl) return@addServer
                         }
                         add(server)
@@ -456,6 +487,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }.execute()
     }
 
+    /**
+     * 外部サーバーを削除する
+     */
     private fun deleteOtherServer(server: Server) {
         TipDialog.Builder(requireActivity())
             .setTitle(getString(R.string.account_remove_login_type_title, server.serverName))
@@ -472,6 +506,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
             }.showDialog()
     }
 
+    /**
+     * アクションポップアップウィンドウを表示する
+     */
     private fun refreshActionPopupWindow(anchorView: View, binding: ViewBinding) {
         mServerActionPopupWindow.apply {
             binding.root.measure(0, 0)
@@ -482,22 +519,34 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }
     }
 
+    /**
+     * フラグメント開始時にEventBusを登録します。
+     */
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
 
+    /**
+     * フラグメント停止時にEventBusの登録を解除します。
+     */
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
+    /**
+     * アカウント更新イベントを処理します。
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun event(event: AccountUpdateEvent) {
         mAccountViewWrapper.refreshAccountInfo()
         reloadRecyclerView()
     }
 
+    /**
+     * クリックイベントを処理します。
+     */
     override fun onClick(v: View) {
         val activity = requireActivity()
         binding.apply {
@@ -521,6 +570,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }
     }
 
+    /**
+     * スライドインアニメーションを実行します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operationLayout, Animations.BounceInLeft))
@@ -529,6 +581,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
         }
     }
 
+    /**
+     * スライドアウトアニメーションを実行します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operationLayout, Animations.FadeOutRight))

@@ -14,6 +14,9 @@ import com.arata.yukarilauncher.plugins.renderer.RendererPluginManager
 import com.arata.yukarilauncher.renderer.Renderers
 import org.apache.commons.io.FileUtils
 
+/**
+ * ローカルレンダラープラグイン管理ダイアログ
+ */
 class LocalRendererPluginDialog(
     private val context: Context
 ) : AbstractSelectDialog(context) {
@@ -26,6 +29,9 @@ class LocalRendererPluginDialog(
         }
     }
 
+    /**
+     * ローカルレンダラープラグイン一覧のアダプター
+     */
     private class LocalRendererPluginAdapter(
         private val onNoPlugin: () -> Unit
     ) : RecyclerView.Adapter<LocalRendererPluginAdapter.ViewHolder>() {

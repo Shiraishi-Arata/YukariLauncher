@@ -14,6 +14,10 @@ public class AuthRequest {
     @SerializedName("requestUser")
     private Boolean requestUser;
 
+/**
+ * Agentを取得する
+ * @return 取得結果
+ */
     public Agent getAgent() {
         return agent;
     }
@@ -46,6 +50,10 @@ public class AuthRequest {
         this.clientToken = clientToken;
     }
 
+/**
+ * RequestUserを取得する
+ * @return 取得結果
+ */
     public Boolean getRequestUser() {
         return requestUser;
     }
@@ -68,6 +76,10 @@ public class AuthRequest {
             this.name = name;
         }
 
+/**
+ * Minecraftバージョン情報を返す
+ * @return バージョン情報
+ */
         public Integer getVersion() {
             return version;
         }

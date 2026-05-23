@@ -9,6 +9,9 @@ import net.kdt.pojavlaunch.prefs.LauncherPreferences
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+/**
+ * 設定フラグメントの抽象基底クラス
+ */
 abstract class AbstractSettingsFragment(layoutId: Int, private val category: SettingCategory) : FragmentWithAnim(layoutId) {
     @Subscribe
     fun event(event: SettingsChangeEvent) {

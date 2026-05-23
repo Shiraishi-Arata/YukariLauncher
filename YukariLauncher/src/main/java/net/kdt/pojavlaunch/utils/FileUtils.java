@@ -5,18 +5,18 @@ import java.io.IOException;
 
 public class FileUtils {
     /**
-     * Check if a file denoted by a String path exists.
-     * @param filePath the path to check
-     * @return whether it exists (same as File.exists()
+     * 文字列パスで指定されたファイルが存在するか確認する。
+     * @param filePath 確認するファイルパス
+     * @return ファイルが存在する場合はtrue（File.exists()と同じ）
      */
     public static boolean exists(String filePath){
         return new File(filePath).exists();
     }
 
     /**
-     * Get the file name from a path/URL string.
-     * @param pathOrUrl the path or the URL of the file
-     * @return the file's name
+     * パスまたはURL文字列からファイル名を取得する。
+     * @param pathOrUrl ファイルのパスまたはURL
+     * @return ファイル名。スラッシュがない場合はnull
      */
     public static String getFileName(String pathOrUrl) {
         int lastSlashIndex = pathOrUrl.lastIndexOf('/');
@@ -25,9 +25,9 @@ public class FileUtils {
     }
 
     /**
-     * Remove the extension (all text after the last dot) from a path/URL string.
-     * @param pathOrUrl the path or the URL of the file
-     * @return the input with the extension removed
+     * パスまたはURL文字列から拡張子（最後のドット以降）を削除する。
+     * @param pathOrUrl ファイルのパスまたはURL
+     * @return 拡張子が削除された文字列
      */
     public static String removeExtension(String pathOrUrl) {
         int lastDotIndex = pathOrUrl.lastIndexOf('.');
@@ -36,9 +36,9 @@ public class FileUtils {
     }
 
     /**
-     * Ensure that a directory exists, is a directory and is writable.
-     * @param targetFile the directory to check
-     * @return if the check has succeeded
+     * ディレクトリが存在し、ディレクトリであり、書き込み可能であることを確認する。
+     * @param targetFile 確認するディレクトリ
+     * @return 確認に成功した場合はtrue
      */
     public static boolean ensureDirectorySilently(File targetFile) {
         if(targetFile.isFile()) return false;
@@ -48,9 +48,9 @@ public class FileUtils {
     }
 
     /**
-     * Ensure that the parent directory of a file exists and is writable
-     * @param targetFile the File whose parent should be checked
-     * @return if the check as succeeded
+     * ファイルの親ディレクトリが存在し、書き込み可能であることを確認する。
+     * @param targetFile 親ディレクトリを確認するファイル
+     * @return 確認に成功した場合はtrue
      */
     public static boolean ensureParentDirectorySilently(File targetFile) {
         File parentFile = targetFile.getParentFile();
@@ -59,9 +59,9 @@ public class FileUtils {
     }
 
     /**
-     * Same as ensureDirectorySilently(), but throws an IOException telling why the check failed.
-     * @param targetFile the directory to check
-     * @throws IOException when the checks fail
+     * ensureDirectorySilently()と同じだが、失敗時にIOExceptionをスローする。
+     * @param targetFile 確認するディレクトリ
+     * @throws IOException 確認に失敗した場合
      */
     public static void ensureDirectory(File targetFile) throws IOException{
         if(targetFile.isFile()) throw new IOException("Target directory is a file");
@@ -71,9 +71,9 @@ public class FileUtils {
     }
 
     /**
-     * Same as ensureParentDirectorySilently(), but throws an IOException telling why the check failed.
-     * @param targetFile the File whose parent should be checked
-     * @throws IOException when the checks fail
+     * ensureParentDirectorySilently()と同じだが、失敗時にIOExceptionをスローする。
+     * @param targetFile 親ディレクトリを確認するファイル
+     * @throws IOException 確認に失敗した場合
      */
     public static void ensureParentDirectory(File targetFile) throws IOException{
         File parentFile = targetFile.getParentFile();

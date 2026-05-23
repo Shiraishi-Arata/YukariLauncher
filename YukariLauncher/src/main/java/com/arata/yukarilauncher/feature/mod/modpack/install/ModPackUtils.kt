@@ -17,6 +17,9 @@ import java.util.zip.ZipFile
 class ModPackUtils {
     companion object {
         @JvmStatic
+/**
+ * determineModpackする
+ */
         fun determineModpack(modpack: File): ModPackInfo {
             val zipName = modpack.name
             val suffix = zipName.substring(zipName.lastIndexOf('.'))
@@ -57,6 +60,9 @@ class ModPackUtils {
         }
 
         @JvmStatic
+/**
+ * verifyManifestする
+ */
         fun verifyManifest(manifest: CurseManifest): Boolean { //检测是否为curseforge整合包(通过manifest.json内的数据进行判断)
             if ("minecraftModpack" != manifest.manifestType) return false
             if (manifest.manifestVersion != 1) return false
@@ -67,12 +73,18 @@ class ModPackUtils {
         }
 
         @JvmStatic
+/**
+ * verifyModrinthIndexする
+ */
         fun verifyModrinthIndex(modrinthIndex: ModrinthIndex): Boolean { //检测是否为modrinth整合包(通过modrinth.index.json内的数据进行判断)
             if ("minecraft" != modrinthIndex.game) return false
             if (modrinthIndex.formatVersion != 1) return false
             return modrinthIndex.dependencies != null
         }
 
+/**
+ * verifyMCBBSPackMetaする
+ */
         fun verifyMCBBSPackMeta(mcbbsPackMeta: MCBBSPackMeta): Boolean { //检测是否为MCBBS整合包(通过mcbbs.packmeta内的数据进行判断)
             if ("minecraftModpack" != mcbbsPackMeta.manifestType) return false
             if (mcbbsPackMeta.manifestVersion != 2) return false
@@ -83,6 +95,9 @@ class ModPackUtils {
 
         @JvmStatic
         @Throws(Throwable::class)
+/**
+ * startModLoaderInstallする
+ */
         fun startModLoaderInstall(modLoader: ModLoaderWrapper, activity: Activity, modInstallFile: File, customName: String) {
             modLoader.getInstallationIntent(activity, modInstallFile, customName)?.let { installIntent ->
                 SelectRuntimeUtils.selectRuntime(activity, activity.getString(R.string.version_install_new_modloader, modLoader.modLoader.loaderName)) { jreName ->

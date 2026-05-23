@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
 import net.kdt.pojavlaunch.progresskeeper.TaskCountListener
 
+/**
+ * すべてのフラグメントの基底クラス
+ */
 abstract class BaseFragment : Fragment, TaskCountListener {
     private var mIsTaskRunning: Boolean = false
 
@@ -11,10 +14,19 @@ abstract class BaseFragment : Fragment, TaskCountListener {
 
     constructor(contentLayoutId: Int) : super(contentLayoutId)
 
+    /**
+     * 戻るボタン処理
+     */
     open fun onBackPressed(): Boolean = true
 
+    /**
+     * タスク実行中かどうかを返す
+     */
     fun isTaskRunning() = mIsTaskRunning
 
+    /**
+     * 強制的に前の画面に戻る
+     */
     fun forceBack() {
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }

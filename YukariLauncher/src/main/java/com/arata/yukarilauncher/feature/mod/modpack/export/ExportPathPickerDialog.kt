@@ -37,6 +37,9 @@ class ExportPathPickerDialog(
     private val nodes = mutableListOf<Node>()
     private val visibleNodes = mutableListOf<Node>()
 
+/**
+ * showする
+ */
     fun show() {
         buildNodes()
         refreshVisibleNodes()
@@ -67,11 +70,17 @@ class ExportPathPickerDialog(
             .show()
     }
 
+/**
+ * buildNodesする
+ */
     private fun buildNodes() {
         nodes.clear()
         addChildren(rootDir, 0)
     }
 
+/**
+ * addChildrenする
+ */
     private fun addChildren(parent: File, depth: Int) {
         parent.listFiles()
             ?.sortedWith(compareBy<File> { !it.isDirectory }.thenBy { it.name.lowercase() })
@@ -93,6 +102,9 @@ class ExportPathPickerDialog(
             }
     }
 
+/**
+ * refreshVisibleNodesする
+ */
     private fun refreshVisibleNodes() {
         visibleNodes.clear()
         val expandedDirectories = mutableSetOf<String>()
@@ -115,12 +127,21 @@ class ExportPathPickerDialog(
     private inner class PathAdapter : RecyclerView.Adapter<PathAdapter.PathViewHolder>() {
         inner class PathViewHolder(val binding: ItemExportPathPickerBinding) : RecyclerView.ViewHolder(binding.root)
 
+/**
+ * onCreateViewHolderする
+ */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PathViewHolder {
             return PathViewHolder(ItemExportPathPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
 
+/**
+ * getItemCountする
+ */
         override fun getItemCount(): Int = visibleNodes.size
 
+/**
+ * onBindViewHolderする
+ */
         override fun onBindViewHolder(holder: PathViewHolder, position: Int) {
             val node = visibleNodes[position]
             holder.binding.apply {
@@ -153,6 +174,9 @@ class ExportPathPickerDialog(
         }
     }
 
+/**
+ * applyCheckedする
+ */
     private fun applyChecked(target: Node, checked: Boolean) {
         target.checked = checked
         if (target.isDirectory) {

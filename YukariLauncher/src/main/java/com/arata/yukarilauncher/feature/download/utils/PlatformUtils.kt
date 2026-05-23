@@ -11,6 +11,9 @@ import org.jackhuang.hmcl.util.StringUtils
 
 class PlatformUtils {
     companion object {
+/**
+ * createCurseForgeApiする
+ */
         fun createCurseForgeApi() = ApiHandler(
             "https://api.curseforge.com/v1",
             InfoDistributor.CURSEFORGE_API_KEY
@@ -20,6 +23,9 @@ class PlatformUtils {
          * 修改自源代码：[HMCL Github](https://github.com/HMCL-dev/HMCL/blob/main/HMCL/src/main/java/org/jackhuang/hmcl/game/LocalizedRemoteModRepository.java#L44-#L104)
          * 原项目版权归原作者所有，遵循GPL v3协议
          */
+/**
+ * searchModLikeWithChineseする
+ */
         fun searchModLikeWithChinese(
             filters: Filters,
             isMod: Boolean

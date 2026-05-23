@@ -18,6 +18,9 @@ class OptiFineDownloadTask(
     private val mDestinationFile = File(PathManager.DIR_CACHE, "optifine-installer.jar")
 
     @Throws(IOException::class)
+/**
+ * runする
+ */
     override fun run(customName: String): File? {
         ProgressKeeper.submitProgress(
             ProgressLayout.INSTALL_RESOURCE,
@@ -35,6 +38,9 @@ class OptiFineDownloadTask(
         return mDestinationFile
     }
 
+/**
+ * updateProgressする
+ */
     override fun updateProgress(curr: Long, max: Long) {
         val progress100 = ((curr.toFloat() / max.toFloat()) * 100f).toInt()
         ProgressKeeper.submitProgress(

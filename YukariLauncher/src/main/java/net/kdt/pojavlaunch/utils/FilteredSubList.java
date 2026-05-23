@@ -21,11 +21,17 @@ public class FilteredSubList<E> extends AbstractList<E> implements List<E> {
 
     private final ArrayList<E> mArrayList;
 
+/**
+ * FilteredSubListを構築します
+ */
     public FilteredSubList(E[] motherList, BasicPredicate<E> filter){
         mArrayList = new ArrayList<>();
         refresh(motherList, filter);
     }
 
+/**
+ * refreshメソッド
+ */
     public void refresh(E[] motherArray, BasicPredicate<E> filter){
         if(!mArrayList.isEmpty()) mArrayList.clear();
 
@@ -100,6 +106,9 @@ public class FilteredSubList<E> extends AbstractList<E> implements List<E> {
 
 
     // Predicate is API 24+, so micro backport
+/**
+ * BasicPredicateインターフェース
+ */
     public interface BasicPredicate<E> {
         boolean test(E item);
     }

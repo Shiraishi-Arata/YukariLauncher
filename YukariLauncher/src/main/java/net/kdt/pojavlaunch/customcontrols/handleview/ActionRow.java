@@ -17,7 +17,7 @@ import com.arata.yukarilauncher.R;
 import net.kdt.pojavlaunch.customcontrols.buttons.ControlInterface;
 
 /**
- * Layout floating around a Control Button, displaying contextual actions
+ * コントロールボタンの周囲にフローティング表示され、コンテキストアクションを表示するレイアウト
  */
 public class ActionRow extends LinearLayout {
 
@@ -26,15 +26,26 @@ public class ActionRow extends LinearLayout {
     public static final int SIDE_RIGHT = 0x2;
     public static final int SIDE_BOTTOM = 0x3;
     public static final int SIDE_AUTO = 0x4;
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ActionRow(Context context) {
         super(context); init();
     }
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ActionRow(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs); init();
     }
 
     public final ViewTreeObserver.OnPreDrawListener mFollowedViewListener = new ViewTreeObserver.OnPreDrawListener() {
+/**
+ * 「on Pre Draw」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public boolean onPreDraw() {
             if(mFollowedView == null || !mFollowedView.isShown()){
@@ -72,7 +83,9 @@ public class ActionRow extends LinearLayout {
 
         setElevation(5F);
     }
-
+/**
+ * 「FollowedButton」の値を設定します。
+ */
     public void setFollowedButton(ControlInterface controlInterface){
         if(mFollowedView != null)
             mFollowedView.getViewTreeObserver().removeOnPreDrawListener(mFollowedViewListener);
@@ -87,7 +100,9 @@ public class ActionRow extends LinearLayout {
         if(mFollowedView != null)
             mFollowedView.getViewTreeObserver().addOnPreDrawListener(mFollowedViewListener);
     }
-
+/**
+ * 「XPosition」の値を取得します。
+ */
     private float getXPosition(int side){
         if(side == SIDE_LEFT){
             return mFollowedView.getX() - getWidth();
@@ -97,7 +112,9 @@ public class ActionRow extends LinearLayout {
             return mFollowedView.getX() + mFollowedView.getWidth()/2f - getWidth()/2f;
         }
     }
-
+/**
+ * 「YPosition」の値を取得します。
+ */
     private float getYPosition(int side){
         if(side == SIDE_TOP){
             return mFollowedView.getY() - getHeight();
@@ -107,7 +124,9 @@ public class ActionRow extends LinearLayout {
             return mFollowedView.getY() + mFollowedView.getHeight()/2f - getHeight()/2f;
         }
     }
-
+/**
+ * 「NewPosition」の値を設定します。
+ */
     private void setNewPosition(){
         if(mFollowedView == null) return;
         int side = pickSide();
@@ -115,14 +134,17 @@ public class ActionRow extends LinearLayout {
         setX(MathUtils.clamp(getXPosition(side), 0, currentDisplayMetrics.widthPixels - getWidth()));
         setY(getYPosition(side));
     }
-
+/**
+ * 「pick Side」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private int pickSide(){
-        if(mFollowedView == null) return mSide; //Value should not matter
+        if(mFollowedView == null) return mSide; // 値は重要ではない
 
         if(mSide != SIDE_AUTO) return mSide;
-        //TODO improve the "algo"
+        // TODO: アルゴリズムを改善
         ViewGroup parent = ((ViewGroup) mFollowedView.getParent());
-        if(parent == null) return mSide;//Value should not matter
+        if(parent == null) return mSide;// 値は重要ではない
 
         int side = SIDE_TOP;
         float futurePos = getYPosition(side);
@@ -134,7 +156,10 @@ public class ActionRow extends LinearLayout {
 
         return side;
     }
-
+/**
+ * 「hide」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void hide(){
         if(mFollowedView != null)
             mFollowedView.getViewTreeObserver().removeOnPreDrawListener(mFollowedViewListener);

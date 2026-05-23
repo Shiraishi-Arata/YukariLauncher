@@ -4,12 +4,16 @@ import kotlin.math.min
 
 class SortStrings {
     companion object {
+        /**
+         * 二つの文字列を文字単位で比較する
+         * 大文字小文字を区別せずに比較し、先に異なる文字の差を返す
+         */
         @JvmStatic
         fun compareChar(thisName: String, otherName: String): Int {
             val firstLength = thisName.length
             val secondLength = otherName.length
 
-            //遍历两个字符串的字符
+            // 両方の文字列の文字を走査する
             for (i in 0 until min(firstLength.toDouble(), secondLength.toDouble()).toInt()) {
                 val firstChar = thisName[i].lowercaseChar()
                 val secondChar = otherName[i].lowercaseChar()
@@ -24,7 +28,9 @@ class SortStrings {
         }
 
         /**
-         * [FCL JavaManageDialog.kt](https://github.com/FCL-Team/FoldCraftLauncher/blob/47aa35e/FCL/src/main/java/com/mio/ui/dialog/JavaManageDialog.kt#L196-L204)
+         * クラスバージョン文字列を比較する
+         * ドット区切りの数値として解釈し、各部分を数値比較する
+         * [FCL JavaManageDialog.kt](https://github.com/FCL-Team/FoldCraftLauncher/blob/47aa35e/FCL/src/main/java/com/mio/ui/dialog/JavaManageDialog.kt#L196-L204) を参考に実装
          */
         @JvmStatic
         fun compareClassVersions(thisName: String, otherName: String): Int {

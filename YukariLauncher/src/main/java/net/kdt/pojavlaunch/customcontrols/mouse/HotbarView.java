@@ -41,6 +41,10 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
             LwjglGlfwKeycode.GLFW_KEY_7, LwjglGlfwKeycode.GLFW_KEY_8, LwjglGlfwKeycode.GLFW_KEY_9};
     private final DropGesture mDropGesture = new DropGesture(new Handler(Looper.getMainLooper()));
     private final GrabListener mGrabListener = new GrabListener() {
+/**
+ * 「on Grab State」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public void onGrabState(boolean isGrabbing) {
             mLastIndex = -1;
@@ -54,35 +58,54 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
 
     //调整判定框宽高时，用这个动画播放器播放一个淡化动画，来给用户一个当前判定框范围的反馈
     private final AnimPlayer adjustAnimPlayer = new AnimPlayer();
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public HotbarView(Context context) {
         super(context);
         init();
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public HotbarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public HotbarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
 
     @SuppressWarnings("unused") // You suggested me this constructor, Android
     public HotbarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
-
+/**
+ * 「init」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     private void init() {
         setAlpha(0);
         setBackgroundColor(Color.parseColor("#80E64242"));
         adjustAnimPlayer.duration(800);
         adjustAnimPlayer.apply(new AnimPlayer.Entry(this, Animations.FadeOut));
     }
-
+/**
+ * 「on Attached To Window」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -96,7 +119,10 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
         adaptiveReset();
         CallbackBridge.addGrabListener(mGrabListener);
     }
-
+/**
+ * 「on Detached From Window」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -105,8 +131,8 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
     }
 
     /**
-     * 在Hotbar刷新事件被监听到时，会刷新判定
-     * @param event 刷新事件
+     * Hotbar更新イベントを受信したときに判定領域を更新します。
+     * @param event 更新イベント
      */
     @Subscribe
     public void event(RefreshHotbarEvent event) {
@@ -114,8 +140,9 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
     }
 
     /**
-     * 当options.txt文件变更时，会刷新判定，因为需要检查gui尺寸
-     * @param event 刷新事件
+     * options.txtファイルが変更されたときに判定領域を更新します。
+     * GUIサイズを確認する必要があります。
+     * @param event 更新イベント
      */
     @Subscribe
     public void event(MCOptionChangeEvent event) {
@@ -124,21 +151,27 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
     }
 
     /**
-     * 监听手动调整判定框宽高的事件
-     * @param event 变更事件
+     * 判定枠の幅と高さを手動で調整するイベントを監視します。
+     * @param event 変更イベント
      */
     @Subscribe
     public void event(HotbarChangeEvent event) {
         manualReset(event.getWidth(), event.getHeight(), true);
     }
 
+    /**
+     * マージンレイアウトパラメータを取得します。
+     */
     private ViewGroup.MarginLayoutParams getMarginLayoutParams() {
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (!(layoutParams instanceof ViewGroup.MarginLayoutParams))
             throw new RuntimeException("Incorrect LayoutParams type, expected ViewGroup.MarginLayoutParams");
         return (ViewGroup.MarginLayoutParams) layoutParams;
     }
-
+/**
+ * 「adaptive Reset」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void adaptiveReset() {
         ViewGroup.MarginLayoutParams marginLayoutParams = getMarginLayoutParams();
         int height;
@@ -148,7 +181,10 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
         marginLayoutParams.topMargin = CallbackBridge.physicalHeight - height;
         setLayoutParams(marginLayoutParams);
     }
-
+/**
+ * 「manual Reset」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void manualReset(int width, int height, boolean playAnim) {
         ViewGroup.MarginLayoutParams marginLayoutParams = getMarginLayoutParams();
         marginLayoutParams.width = mWidth = width;
@@ -158,6 +194,10 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
         setLayoutParams(marginLayoutParams);
         if (playAnim) adjustAnimPlayer.start();
     }
+/**
+ * タッチイベントを処理します。
+ * ユーザーからのタッチ入力を検出し、適切なアクションを実行します。
+ */
 
     @SuppressWarnings("ClickableViewAccessibility") // performClick does not report coordinates.
     @Override
@@ -193,15 +233,23 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
         if(!isLastEventInGesture(actionMasked)) mDropGesture.submit();
         return true;
     }
-
+/**
+ * このオブジェクトが「LastEventInGesture」状態であるかを判定します。
+ */
     private boolean isLastEventInGesture(int actionMasked) {
         return actionMasked == MotionEvent.ACTION_UP || actionMasked == MotionEvent.ACTION_CANCEL;
     }
-
+/**
+ * 「mc Scale」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private int mcScale(int input) {
         return (int)((mGuiScale * input)/ AllStaticSettings.scaleFactor);
     }
-
+/**
+ * 「run」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     @Override
     public void run() {
         if (getParent() == null) return;
@@ -213,7 +261,10 @@ public class HotbarView extends View implements View.OnLayoutChangeListener, Run
             manualReset(AllSettings.getHotbarWidth().getValue().getValue(), AllSettings.getHotbarHeight().getValue().getValue(), false);
         }
     }
-
+/**
+ * 「on Layout Change」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         // We need to check whether dimensions match or not because here we are looking specifically for changes of dimensions

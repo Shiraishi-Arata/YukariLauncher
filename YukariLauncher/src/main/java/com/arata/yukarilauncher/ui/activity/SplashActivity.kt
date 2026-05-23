@@ -23,6 +23,9 @@ import net.kdt.pojavlaunch.LauncherActivity
 import net.kdt.pojavlaunch.MissingStorageActivity
 import net.kdt.pojavlaunch.Tools
 
+/**
+ * スプラッシュ/初期セットアップアクティビティ
+ */
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity() {
     private var isStarted: Boolean = false
@@ -30,6 +33,11 @@ class SplashActivity : BaseActivity() {
     private lateinit var installableAdapter: InstallableAdapter
     private val items: MutableList<InstallableItem> = ArrayList()
 
+    /**
+     * アクティビティ作成時に初期化処理を行う
+     * インストールアイテムの準備、UIの設定、ストレージ権限のチェックを実行する
+     * @param savedInstanceState 保存されたインスタンス状態
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,21 +68,22 @@ class SplashActivity : BaseActivity() {
             return
         }
 
-        //如果安卓版本小于等于9，则检查存储权限（不是管理所有文件权限），拥有存储权限会保证文件、文件夹正常创建
-        //但是并不强制要求用户必须授予权限，如果用户拒绝，那么之后产生的问题将由用户承担
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P && !StoragePermissionsUtils.hasStoragePermissions(this)) {
             TipDialog.Builder(this)
                 .setTitle(R.string.generic_warning)
                 .setMessage(InfoCenter.replaceName(this, R.string.permissions_write_external_storage))
                 .setWarning()
                 .setConfirmClickListener { requestStoragePermissions() }
-                .setCancelClickListener { checkEnd() } //用户取消，那就跟随用户的意愿
+                .setCancelClickListener { checkEnd() }
                 .showDialog()
         } else {
             checkEnd()
         }
     }
 
+    /**
+     * ストレージ権限をリクエストする
+     */
     private fun requestStoragePermissions() {
         ActivityCompat.requestPermissions(
             this,
@@ -83,6 +92,13 @@ class SplashActivity : BaseActivity() {
         )
     }
 
+    /**
+     * 権限リクエストの結果を処理する
+     * ストレージ権限リクエストの場合はチェックを完了する
+     * @param requestCode リクエストコード
+     * @param permissions 権限の配列
+     * @param grantResults 許可結果の配列
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -90,12 +106,13 @@ class SplashActivity : BaseActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == STORAGE_PERMISSION_REQUEST_CODE) {
-            //无论用户是否授予了权限，都会完成检查，因为启动器并不强制要求权限
-            //但是一旦因为存储权限出现了问题，那么将由用户自行承担后果
             checkEnd()
         }
     }
 
+    /**
+     * インストールアイテムを初期化する
+     */
     private fun initItems() {
         Components.entries.forEach {
             val unpackComponentsTask = UnpackComponentsTask(this, it)
@@ -126,7 +143,10 @@ class SplashActivity : BaseActivity() {
             toMain()
         }
     }
-    
+
+    /**
+     * 初期チェックを完了する
+     */
     private fun checkEnd() {
         installableAdapter.checkAllTask()
         Task.runTask {
@@ -136,6 +156,9 @@ class SplashActivity : BaseActivity() {
         binding.startButton.isClickable = true
     }
 
+    /**
+     * メインアクティビティに遷移する
+     */
     private fun toMain() {
         startActivity(Intent(this, LauncherActivity::class.java))
         finish()

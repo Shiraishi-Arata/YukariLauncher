@@ -17,6 +17,10 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 
+/**
+ * Modをダウンロードするためのフラグメントです。
+ * ModrinthやCurseForgeからModを検索し、インストールできます。
+ */
 class ModDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.MOD,
@@ -25,6 +29,9 @@ class ModDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDo
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
+    /**
+     * フラグメント作成時にファイル選択ランチャーを初期化します。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("jar", true)) { uris: List<Uri>? ->
@@ -43,6 +50,9 @@ class ModDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDo
         }
     }
 
+    /**
+     * インストールボタンを初期化し、ローカルファイル選択を開始します。
+     */
     override fun initInstallButton(installButton: Button) {
         installButton.setOnClickListener {
             val suffix = ".jar"

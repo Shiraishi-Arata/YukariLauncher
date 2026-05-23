@@ -15,6 +15,9 @@ import com.arata.yukarilauncher.feature.download.enums.ModLoader
 import com.arata.yukarilauncher.feature.version.utils.VersionIconUtils
 import com.arata.yukarilauncher.feature.version.VersionsManager
 
+/**
+ * Modダウンロード一覧のアダプター。
+ */
 class ModListAdapter(
     private val fragment: ModListFragment,
     private val mData: MutableList<ModListItemBean>?
@@ -22,18 +25,30 @@ class ModListAdapter(
     private val mCurrentVersion = VersionsManager.getCurrentVersion()
     private val mIconUtils = lazy { mCurrentVersion?.run { VersionIconUtils(mCurrentVersion) } }
 
+    /**
+     * ビューホルダーを生成します。
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerHolder {
         return InnerHolder(ItemModDownloadBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
+    /**
+     * ビューホルダーにModデータをバインドします。
+     */
     override fun onBindViewHolder(holder: InnerHolder, position: Int) {
         holder.setData(mData!![position])
     }
 
+    /**
+     * アイテム総数を返します。
+     */
     override fun getItemCount(): Int {
         return mData?.size ?: 0
     }
 
+    /**
+     * データを更新する
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newData: List<ModListItemBean>?) {
         mData?.clear()
@@ -41,14 +56,21 @@ class ModListAdapter(
         super.notifyDataSetChanged()
     }
 
+    /** データリストを取得する */
     val data: List<ModListItemBean>?
         get() = mData
 
+    /**
+     * Modリストアイテムのビューホルダー
+     */
     inner class InnerHolder(private val binding: ItemModDownloadBinding) : RecyclerView.ViewHolder(
         binding.root
     ) {
         private val mContext = binding.root.context
 
+        /**
+         * Modアイテムデータをビューに設定する
+         */
         fun setData(item: ModListItemBean) {
             itemView.setOnClickListener {
                 fragment.switchToChild(
@@ -92,7 +114,8 @@ class ModListAdapter(
         }
 
         /**
-         * @return Mod加载器的图标、名称，若没有，则为原版草方块，以及空字符串
+         * Modローダーに対応するアイコンと名称を取得する
+         * @return Modローダーのアイコンと名前。該当なしの場合は草ブロックとnull
          */
         private fun getModLoaderInfo(context: Context, modLoader: ModLoader?): Pair<Drawable?, String?> {
             val loaderInfo: Pair<Int, String?> = when (modLoader) {

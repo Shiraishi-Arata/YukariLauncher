@@ -58,6 +58,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * Java GUIアプリケーション（Modインストーラなど）を起動するためのアクティビティ。
+ * Caciocavalloを使用したAWTベースのGUIを提供します。
+ */
 public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouchListener {
     public static final String EXTRAS_JRE_NAME = "jre_name";
     public static final String SUBSCRIBE_JVM_EXIT_EVENT = "subscribe_jvm_exit_event";
@@ -72,6 +76,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
     private float mMouseHotspotX;
     private float mMouseHotspotY;
 
+    /**
+     * アクティビティ作成時に呼び出されます。レイアウトの初期化、ログ設定、マウス・タッチイベントの設定を行います。
+     */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +107,6 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             });
         });
 
-        // 防止系统息屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         MainActivity.GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -141,12 +147,7 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             float prevX = 0, prevY = 0;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // MotionEvent reports input details from the touch screen
-                // and other input controls. In this case, you are only
-                // interested in events where the touch position changed.
-                // int index = event.getActionIndex();
                 int action = event.getActionMasked();
-
                 float x = event.getX();
                 float y = event.getY();
                 float mouseX, mouseY;
@@ -158,7 +159,7 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                     sendScaledMousePosition(mouseX,mouseY);
                     AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                 } else {
-                    if (action == MotionEvent.ACTION_MOVE) { // 2
+                    if (action == MotionEvent.ACTION_MOVE) {
                         mouseX = Math.max(0, Math.min(CallbackBridge.physicalWidth, mouseX + x - prevX));
                         mouseY = Math.max(0, Math.min(CallbackBridge.physicalHeight, mouseY + y - prevY));
                         placeMouseAt(mouseX, mouseY);
@@ -182,11 +183,11 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             }
 
             switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_UP: // 1
-                case MotionEvent.ACTION_CANCEL: // 3
-                case MotionEvent.ACTION_POINTER_UP: // 6
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_POINTER_UP:
                     break;
-                case MotionEvent.ACTION_MOVE: // 2
+                case MotionEvent.ACTION_MOVE:
                     sendScaledMousePosition(x + binding.textureView.getX(), y);
                     break;
             }
@@ -236,6 +237,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         });
     }
 
+    /**
+     * アクティビティ破棄時にログリスナーをクリーンアップします。
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -246,6 +250,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }
     }
 
+    /**
+     * JVM終了イベントを処理します。
+     */
     @Subscribe()
     public void event(JvmExitEvent event) {
         if (mSubscribeJvmExitEvent) {
@@ -253,6 +260,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }
     }
 
+    /**
+     * ログ出力が多すぎる場合の警告を表示します。
+     */
     private void showLogFloodWarning() {
         if (NewbieGuideUtils.showOnlyOne("LogFloodWarning")) return;
         TapTargetView.showFor(this,
@@ -262,6 +272,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         );
     }
 
+    /**
+     * URIからModインストーラを起動します（一時ファイルにキャッシュしてから実行）。
+     */
     private void startModInstallerWithUri(Uri uri, String jreName) {
         try {
             File cacheFile = new File(getCacheDir(), "mod-installer-temp");
@@ -277,6 +290,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }
     }
 
+    /**
+     * ModファイルのJavaバージョン要件に基づいて適切なランタイムを選択します。
+     */
     public Runtime selectRuntime(File modFile) {
         int javaVersion = getJavaVersion(modFile);
         if(javaVersion == -1) {
@@ -290,7 +306,6 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }
         Runtime selectedRuntime = MultiRTUtils.forceReread(nearestRuntime);
         int selectedJavaVersion = Math.max(javaVersion, selectedRuntime.javaVersion);
-        // Don't allow versions higher than Java 17 because our caciocavallo implementation does not allow for it
         if(selectedJavaVersion > 17) {
             finalErrorDialog(getString(R.string.execute_jar_incompatible_runtime, selectedJavaVersion));
             return null;
@@ -298,20 +313,23 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         return selectedRuntime;
     }
 
+    /**
+     * 引数リストから-jarオプションで指定されたパスを抽出します。
+     */
     private File findModPath(List<String> argList) {
         int argsSize = argList.size();
         for(int i = 0; i < argsSize; i++) {
-            // Look for the -jar argument
             if(!argList.get(i).equals("-jar")) continue;
             int pathIndex = i+1;
-            // Check if the supposed path is out of the argument bounds
             if(pathIndex >= argsSize) return null;
-            // Use the path as a file
             return new File(argList.get(pathIndex));
         }
         return null;
     }
 
+    /**
+     * 引用符を保持したまま文字列を分割します。
+     */
     private List<String> splitPreservingQuotes(String str) {
         List<String> result = new ArrayList<>();
         StringBuilder currentPart = new StringBuilder();
@@ -321,21 +339,17 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             char c = str.charAt(i);
 
             if (c == '"' && (i == 0 || str.charAt(i - 1) != '\\')) {
-                // 切换引号状态（忽略转义引号）
                 inQuotes = !inQuotes;
             } else if (Character.isWhitespace(c) && !inQuotes) {
-                // 如果不在引号内且遇到空格，则结束当前部分并添加到结果中
                 if (currentPart.length() > 0) {
                     result.add(currentPart.toString());
-                    currentPart.setLength(0); // 清空当前部分
+                    currentPart.setLength(0);
                 }
             } else {
-                // 将字符添加到当前部分
                 currentPart.append(c);
             }
         }
 
-        // 添加最后一部分（如果有的话）
         if (currentPart.length() > 0) {
             result.add(currentPart.toString());
         }
@@ -343,24 +357,22 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         return result;
     }
 
+    /**
+     * Modインストーラを起動します。
+     */
     private void startModInstaller(File modFile, String javaArgs, String jreName) {
         new Thread(() -> {
-            // Maybe replace with more advanced arg parsing logic later
             List<String> argList = javaArgs != null ? splitPreservingQuotes(javaArgs) : null;
             File selectedMod = modFile;
             if (selectedMod == null && argList != null) {
-                // If modFile is not specified directly, try to extract the -jar argument from the javaArgs
                 selectedMod = findModPath(argList);
             }
             Runtime selectedRuntime;
             if (jreName == null) {
                 if (selectedMod == null) {
-                    // We were unable to find out the path to the mod. In that case, use the default runtime.
                     selectedRuntime = MultiRTUtils.forceReread(AllSettings.getDefaultRuntime().getValue());
                 } else {
-                    // Autoselect it properly in the other case.
                     selectedRuntime = selectRuntime(selectedMod);
-                    // If the selection failed, just return. The autoselect function has already shown the dialog.
                     if (selectedRuntime == null) return;
                 }
             } else {
@@ -370,6 +382,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }, "JREMainThread").start();
     }
 
+    /**
+     * エラーダイアログを表示し、アクティビティを終了します。
+     */
     private void finalErrorDialog(CharSequence msg) {
         runOnUiThread(()-> new TipDialog.Builder(this)
                 .setTitle(R.string.generic_error)
@@ -381,6 +396,9 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                 .showDialog());
     }
 
+    /**
+     * アクティビティ再開時にシステムUIのナビゲーションバーを非表示にします。
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -389,29 +407,31 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    /**
+     * 仮想マウスボタンおよびウィンドウ移動のタッチイベントを処理します。
+     */
     @SuppressLint({"ClickableViewAccessibility", "NonConstantResourceId"})
     @Override
     public boolean onTouch(View v, MotionEvent e) {
         boolean isDown;
         switch (e.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN: // 0
-            case MotionEvent.ACTION_POINTER_DOWN: // 5
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
                 isDown = true;
                 break;
-            case MotionEvent.ACTION_UP: // 1
-            case MotionEvent.ACTION_CANCEL: // 3
-            case MotionEvent.ACTION_POINTER_UP: // 6
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_POINTER_UP:
                 isDown = false;
                 break;
             default:
                 return false;
         }
-        
+
         switch (v.getId()) {
             case R.id.installmod_mouse_pri:
                 AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK, isDown);
                 break;
-                
             case R.id.installmod_mouse_sec:
                 AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON3_DOWN_MASK, isDown);
                 break;
@@ -433,14 +453,19 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         return true;
     }
 
+    /**
+     * マウスカーソルを指定された位置に配置します。
+     */
     public void placeMouseAt(float x, float y) {
         binding.mousePointer.setX(x - mMouseHotspotX);
         binding.mousePointer.setY(y - mMouseHotspotY);
     }
 
+    /**
+     * スケーリングされたマウス位置をAWT入力ブリッジに送信します。
+     */
     @SuppressWarnings("SuspiciousNameCombination")
     void sendScaledMousePosition(float x, float y){
-        // Clamp positions to the borders of the usable view, then scale them
         x = androidx.core.math.MathUtils.clamp(x, binding.textureView.getX(), binding.textureView.getX() + binding.textureView.getWidth());
         y = androidx.core.math.MathUtils.clamp(y, binding.textureView.getY(), binding.textureView.getY() + binding.textureView.getHeight());
 
@@ -450,18 +475,30 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                 );
     }
 
+    /**
+     * 強制終了ボタンのクリックハンドラ。
+     */
     public void forceClose(View v) {
         forceClose();
     }
 
+    /**
+     * 強制終了ダイアログを表示します。
+     */
     public void forceClose() {
         YLTools.dialogForceClose(this);
     }
 
+    /**
+     * ログ出力の表示/非表示を切り替えます。
+     */
     public void openLogOutput(View v) {
         floatingLogger.toggle();
     }
 
+    /**
+     * 仮想マウスの有効/無効を切り替えます。
+     */
     public void toggleVirtualMouse(View v) {
         mIsVirtualMouseEnabled = !mIsVirtualMouseEnabled;
         binding.mainTouchpad.setVisibility(mIsVirtualMouseEnabled ? View.VISIBLE : View.GONE);
@@ -470,10 +507,12 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                 Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Javaランタイムを起動し、指定された引数でJARを実行します。
+     */
     public void launchJavaRuntime(Runtime runtime, File modFile, List<String> javaArgs) {
         JREUtils.redirectAndPrintJRELog();
         try {
-            // Enable Caciocavallo
             List<String> javaArgList = new ArrayList<>(LaunchArgs.getCacioJavaArgs(runtime.javaVersion == 8));
             if(javaArgs != null) {
                 javaArgList.addAll(javaArgs);
@@ -484,7 +523,7 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             }
 
             boolean disableSecurityManager = getIntent().getBooleanExtra("disableSecurityManager", false);
-    
+
             if (AllSettings.getJavaSandbox().getValue() && !disableSecurityManager) {
                 Collections.reverse(javaArgList);
                 javaArgList.add("-Xbootclasspath/a:" + LibPath.PRO_GRADE.getAbsolutePath());
@@ -492,31 +531,43 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                 javaArgList.add("-Djava.security.policy=" + LibPath.JAVA_SANDBOX_POLICY.getAbsolutePath());
                 Collections.reverse(javaArgList);
             }
-    
+
             Logger.appendToLog("Info: Java arguments: " + Arrays.toString(javaArgList.toArray(new String[0])));
-    
+
             JREUtils.launchWithUtils(this, runtime, null, javaArgList, AllSettings.getJavaArgs().getValue());
         } catch (Throwable th) {
             Tools.showError(this, th, true);
         }
     }
 
+    /**
+     * キーボードの表示/非表示を切り替えます。
+     */
     public void toggleKeyboard(View view) {
         binding.awtTouchChar.switchKeyboardState();
     }
 
+    /**
+     * クリップボードにコピー（Ctrl+C）を実行します。
+     */
     public void performCopy(View view) {
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_CONTROL, 1);
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_C);
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_CONTROL, 0);
     }
 
+    /**
+     * クリップボードから貼り付け（Ctrl+V）を実行します。
+     */
     public void performPaste(View view) {
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_CONTROL, 1);
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_V);
         AWTInputBridge.sendKey(' ', AWTInputEvent.VK_CONTROL, 0);
     }
 
+    /**
+     * JARファイルのメインクラスのJavaバージョンを取得します。
+     */
     public int getJavaVersion(File modFile) {
         try (ZipFile zipFile = new ZipFile(modFile)){
             ZipEntry manifest = zipFile.getEntry("META-INF/MANIFEST.MF");
@@ -538,9 +589,8 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
 
             ByteBuffer byteBuffer = ByteBuffer.wrap(bytesWeNeed);
             if(byteBuffer.getInt() != 0xCAFEBABE) return -1;
-            short minorVersion = byteBuffer.getShort();
             short majorVersion = byteBuffer.getShort();
-            Logging.i("JavaGUILauncher", majorVersion+","+minorVersion);
+            Logging.i("JavaGUILauncher", majorVersion+","+byteBuffer.getShort());
             return classVersionToJavaVersion(majorVersion);
         }catch (Exception e) {
             Logging.e("JavaVersion", "Exception thrown", e);
@@ -548,8 +598,11 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         }
     }
 
+    /**
+     * クラスファイルのメジャーバージョンをJavaバージョン番号に変換します。
+     */
     public static int classVersionToJavaVersion(int majorVersion) {
-        if(majorVersion < 46) return 2; // there isn't even an arm64 port of jre 1.1 (or anything before 1.8 in fact)
+        if(majorVersion < 46) return 2;
         return majorVersion - 44;
     }
 }

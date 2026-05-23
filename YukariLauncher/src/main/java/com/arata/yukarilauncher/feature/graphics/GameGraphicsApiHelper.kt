@@ -29,6 +29,9 @@ object GameGraphicsApiHelper {
     )
 
     @JvmStatic
+/**
+ * applyPreferredGraphicsBackendする
+ */
     fun applyPreferredGraphicsBackend(context: Context, currentVersionName: String?) {
         when (AllSettings.gameGraphicsApi.getValue()) {
             SETTING_OPENGL -> MCOptions.set("preferredGraphicsBackend", SETTING_OPENGL)
@@ -52,6 +55,9 @@ object GameGraphicsApiHelper {
      * so Vulkan 1.2.0 = 0x00402000.
      */
     @JvmStatic
+/**
+ * isVulkan12Supportedする
+ */
     fun isVulkan12Supported(context: Context): Boolean {
         return try {
             val pm = context.packageManager
@@ -62,6 +68,15 @@ object GameGraphicsApiHelper {
         }
     }
 
+/**
+ * applyAutoPreferredGraphicsBackendする
+ */
+    /**
+     * 自動設定で優先グラフィックスバックエンドを選択する
+     * Minecraftバージョンが1.26.2以降でVulkan 1.2対応の場合はVulkanを選択する
+     * @param context コンテキスト
+     * @param currentVersionName 現在のMinecraftバージョン名
+     */
     private fun applyAutoPreferredGraphicsBackend(context: Context, currentVersionName: String?) {
         try {
             var versionName = currentVersionName
@@ -103,6 +118,9 @@ object GameGraphicsApiHelper {
     }
 
     @JvmStatic
+/**
+ * getVulkanStatusする
+ */
     fun getVulkanStatus(context: Context): VulkanStatus {
         val version = getDetectedVulkanVersion(context)
         val isVulkan12 = isVulkan12Supported(context)
@@ -118,6 +136,14 @@ object GameGraphicsApiHelper {
         )
     }
 
+/**
+ * getDetectedVulkanVersionする
+ */
+    /**
+     * デバイスがサポートするVulkanバージョンを検出する
+     * @param context コンテキスト
+     * @return 検出されたVulkanバージョン文字列
+     */
     private fun getDetectedVulkanVersion(context: Context): String {
         return when {
             isFeatureVersionSupported(context, VULKAN_1_3_VERSION) -> "1.3"
@@ -128,9 +154,23 @@ object GameGraphicsApiHelper {
         }
     }
 
+/**
+ * isVulkan13Supportedする
+ */
+    /**
+     * Vulkan 1.3がサポートされているかを確認する
+     * @param context コンテキスト
+     * @return サポートされている場合はtrue
+     */
     private fun isVulkan13Supported(context: Context): Boolean =
         isFeatureVersionSupported(context, VULKAN_1_3_VERSION)
 
+    /**
+     * 指定されたVulkanバージョンがサポートされているかを確認する
+     * @param context コンテキスト
+     * @param version 確認するバージョンコード
+     * @return サポートされている場合はtrue
+     */
     private fun isFeatureVersionSupported(context: Context, version: Int): Boolean {
         return try {
             context.packageManager.hasSystemFeature(

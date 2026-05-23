@@ -34,6 +34,9 @@ import java.util.Set;
 
 import kotlin.Pair;
 
+/**
+ * Minecraftバージョン一覧表示用のカスタムLinearLayout
+ */
 public class VersionListView extends LinearLayout {
     private static final Set<String> APRIL_FOOLS_IDS = new HashSet<>(Arrays.asList(
             "2.0_purple",
@@ -68,7 +71,9 @@ public class VersionListView extends LinearLayout {
         init(context);
     }
 
-
+    /**
+     * ビューを初期化する
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void init(Context context) {
         this.context = context;
@@ -106,6 +111,9 @@ public class VersionListView extends LinearLayout {
         addView(mainListView, layParam);
     }
 
+    /**
+     * バージョンリストから日付付きのペア配列を生成する
+     */
     private Pair<String, Date>[] getVersionPair(List<JMinecraftVersionList.Version> versions) {
         List<Pair<String, Date>> pairList = new ArrayList<>();
         for (int i = 0; i < versions.size(); i++) {
@@ -124,18 +132,30 @@ public class VersionListView extends LinearLayout {
         return pairList.toArray(new Pair[0]);
     }
 
+    /**
+     * バージョン選択リスナーを設定する
+     */
     public void setVersionSelectedListener(VersionSelectedListener versionSelectedListener) {
         this.versionSelectedListener = versionSelectedListener;
     }
 
+    /**
+     * 表示するバージョン種別を設定する
+     */
     public void setVersionType(VersionType versionType) {
         showVersions(versionType);
     }
 
+    /**
+     * フィルター文字列を設定する
+     */
     public void setFilterString(String filterString) {
         this.fileRecyclerViewCreator.setFilterString(filterString);
     }
 
+    /**
+     * 指定されたバージョン種別のリストを表示する
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private List<FileItemBean> showVersions(VersionType versionType) {
         switch (versionType) {
@@ -153,12 +173,18 @@ public class VersionListView extends LinearLayout {
         }
     }
 
+    /**
+     * エイプリルフールバージョンかどうかを判定する
+     */
     private boolean isAprilFoolsVersion(String id, String type) {
         if (type != null && type.toLowerCase(Locale.ROOT).contains("april")) return true;
         if (id == null) return false;
         return APRIL_FOOLS_IDS.contains(id.toLowerCase(Locale.ROOT));
     }
 
+    /**
+     * アイコン付きバージョン一覧を取得する
+     */
     private List<FileItemBean> getVersion(Drawable icon, Pair<String, Date>[] namesPair) {
         List<FileItemBean> itemBeans = FileRecyclerViewCreator.loadItemBean(icon, namesPair);
         TaskExecutors.runInUIThread(() -> fileRecyclerViewCreator.loadData(itemBeans));

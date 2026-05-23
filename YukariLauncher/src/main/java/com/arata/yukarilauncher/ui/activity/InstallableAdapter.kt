@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arata.yukarilauncher.databinding.ItemInstallableBinding
 import com.arata.yukarilauncher.feature.unpack.OnTaskRunningListener
 
+/**
+ * インストール可能アイテム一覧のRecyclerViewアダプター
+ */
 class InstallableAdapter(
     private val items: List<InstallableItem>,
     private val listener: TaskCompletionListener
@@ -31,6 +34,9 @@ class InstallableAdapter(
         return items.size
     }
 
+    /**
+     * 全てのタスクの完了状態を確認する
+     */
     fun checkAllTask() {
         items.forEachIndexed { index, item ->
             if (!item.task.isNeedUnpack()) {
@@ -40,6 +46,9 @@ class InstallableAdapter(
         }
     }
 
+    /**
+     * 全てのタスクを開始する
+     */
     fun startAllTasks() {
         items.forEachIndexed { index, item ->
             if (!item.isFinished) {
@@ -64,6 +73,9 @@ class InstallableAdapter(
         }
     }
 
+    /**
+     * タスク完了数を更新する
+     */
     @Synchronized
     private fun updateTaskCount(index: Int) {
         completedTasksCount++
@@ -74,6 +86,9 @@ class InstallableAdapter(
         }
     }
 
+    /**
+     * UIスレッドでアクションを実行する
+     */
     private fun updateUI(action: () -> Unit) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             action()
@@ -82,9 +97,15 @@ class InstallableAdapter(
         }
     }
 
+    /**
+     * インストールアイテムのビューホルダー
+     */
     class ViewHolder(
         private val binding: ItemInstallableBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        /**
+         * アイテムデータをビューに設定する
+         */
         fun setData(item: InstallableItem) {
             binding.name.text = item.name
 
@@ -100,6 +121,9 @@ class InstallableAdapter(
         }
     }
 
+    /**
+     * 全てのタスク完了時のコールバック
+     */
     fun interface TaskCompletionListener {
         fun onAllTasksCompleted()
     }

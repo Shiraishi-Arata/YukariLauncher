@@ -10,6 +10,11 @@ import org.jackhuang.hmcl.util.versioning.VersionRange
 
 class ProfileLanguageSelector {
     companion object {
+/**
+ * 古いMCバージョンの言語コード形式に変換する
+ * @param lang 言語コード
+ * @return 変換後のコード
+ */
         private fun getOlderLanguage(lang: String): String {
             val underscoreIndex = lang.indexOf('_')
             return if (underscoreIndex != -1) {
@@ -20,6 +25,9 @@ class ProfileLanguageSelector {
             } else lang
         }
 
+/**
+ * getLanguageする
+ */
         private fun getLanguage(minecraftVersion: Version, rawLang: String): String {
             val lang = if (rawLang == "system") YLTools.getSystemLanguage() else rawLang
 
@@ -41,15 +49,24 @@ class ProfileLanguageSelector {
             }
         }
 
+/**
+ * 1.10.2以前のリリース版かを判定する
+ */
         private fun isOlderVersionRelease(versionName: String): Boolean {
             return VersionRange.atMost(VersionNumber.asVersion("1.10.2")).contains(VersionNumber.asVersion(versionName))
         }
 
+/**
+ * 16w32a以前のスナップショットかを判定する
+ */
         private fun isOlderVersionSnapshot(versionName: String): Boolean {
             return VersionRange.atMost(VersionNumber.asVersion("16w32a")).contains(VersionNumber.asVersion(versionName))
         }
 
         @JvmStatic
+/**
+ * ゲームの言語をMCOptionsに設定する
+ */
         fun setGameLanguage(version: Version, overridden: Boolean) {
             if (MCOptions.containsKey("lang") && !overridden) return
             val language = getLanguage(version, AllSettings.setGameLanguage.getValue())

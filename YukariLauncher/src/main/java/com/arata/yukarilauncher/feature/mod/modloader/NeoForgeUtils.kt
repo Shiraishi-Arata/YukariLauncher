@@ -20,6 +20,9 @@ class NeoForgeUtils {
             "https://maven.neoforged.net/releases/net/neoforged/forge/%1\$s/forge-%1\$s-installer.jar"
 
         @Throws(Exception::class)
+/**
+ * downloadVersionsする
+ */
         private fun downloadVersions(metaDataUrl: String, name: String, force: Boolean): List<String> {
             val parserFactory = SAXParserFactory.newInstance()
             val saxParser = parserFactory.newSAXParser()
@@ -43,27 +46,42 @@ class NeoForgeUtils {
 
         @JvmStatic
         @Throws(Exception::class)
+/**
+ * downloadNeoForgeVersionsする
+ */
         fun downloadNeoForgeVersions(force: Boolean): List<String> {
             return downloadVersions(NEOFORGE_METADATA_URL, "neoforge_versions", force)
         }
 
         @JvmStatic
         @Throws(Exception::class)
+/**
+ * downloadNeoForgedForgeVersionsする
+ */
         fun downloadNeoForgedForgeVersions(force: Boolean): List<String> {
             return downloadVersions(NEOFORGED_FORGE_METADATA_URL, "neoforged_forge_versions", force)
         }
 
         @JvmStatic
+/**
+ * getNeoForgeInstallerUrlする
+ */
         fun getNeoForgeInstallerUrl(version: String?): String {
             return String.format(NEOFORGE_INSTALLER_URL, version)
         }
 
         @JvmStatic
+/**
+ * getNeoForgedForgeInstallerUrlする
+ */
         fun getNeoForgedForgeInstallerUrl(version: String?): String {
             return String.format(NEOFORGED_FORGE_INSTALLER_URL, version)
         }
 
         @JvmStatic
+/**
+ * formatGameVersionする
+ */
         fun formatGameVersion(neoForgeVersion: String): String {
             val result = when {
                 neoForgeVersion.contains("1.20.1") -> {

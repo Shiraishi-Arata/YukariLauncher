@@ -42,7 +42,7 @@ import net.kdt.pojavlaunch.customcontrols.buttons.ControlInterface;
 import java.util.List;
 
 /**
- * Class providing a sort of popup on top of a Layout, allowing to edit a given ControlButton
+ * レイアウトの上に表示されるポップアップを提供し、ControlButtonを編集できるようにするクラス
  */
 public class EditControlPopup {
     private final Context context;
@@ -54,8 +54,12 @@ public class EditControlPopup {
     private final ObjectAnimator mEditPopupAnimator;
     private final ObjectAnimator mColorEditorAnimator;
     private final int mMargin;
-    public boolean internalChanges = false; // True when we programmatically change stuff.
+    public boolean internalChanges = false; // プログラムで値を変更する場合はtrue。
     private final View.OnLayoutChangeListener mLayoutChangedListener = new View.OnLayoutChangeListener() {
+/**
+ * 「on Layout Change」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             if (internalChanges) return;
@@ -91,11 +95,13 @@ public class EditControlPopup {
     private boolean mDisplaying = false;
     private boolean mDisplayingColor = false;
     private ControlInterface mCurrentlyEditedButton;
-    // Decorative textviews
+    // 装飾用テキストビュー
     private TextView mOrientationTextView, mMappingTextView, mNameTextView,
             mCornerRadiusTextView, mVisibilityTextView, mSizeTextview, mSizeXTextView;
-
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public EditControlPopup(Context context, ViewGroup parent) {
         this.context = context;
 
@@ -124,13 +130,15 @@ public class EditControlPopup {
 
         setupRealTimeListeners();
     }
-
+/**
+ * 「PercentageText」の値を設定します。
+ */
     public static void setPercentageText(TextView textView, int progress) {
         textView.setText(textView.getContext().getString(R.string.percent_format, progress));
     }
 
     /**
-     * Slide the layout into the visible screen area
+     * レイアウトを表示可能な画面領域にスライドインします
      */
     public void appear(boolean fromRight) {
         disappearColor(); // When someone jumps from a button to another
@@ -151,7 +159,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Slide out the layout
+     * レイアウトをスライドアウトします
      */
     public void disappear() {
         if (!mDisplaying) return;
@@ -166,7 +174,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Slide the layout into the visible screen area
+     * レイアウトを表示可能な画面領域にスライドインします
      */
     public void appearColor(boolean fromRight, int color) {
         if (fromRight) {
@@ -191,7 +199,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Slide out the layout
+     * レイアウトをスライドアウトします
      */
     public void disappearColor() {
         if (!mDisplayingColor) return;
@@ -206,9 +214,9 @@ public class EditControlPopup {
     }
 
     /**
-     * Slide out the first visible layer.
+     * 最初の表示レイヤーをスライドアウトします。
      *
-     * @return True if the last layer is disappearing
+     * @return 最後のレイヤーが非表示になる場合はtrue
      */
     public boolean disappearLayer() {
         if (mDisplayingColor) {
@@ -221,7 +229,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Switch the panels position if needed
+     * 必要に応じてパネルの位置を切り替えます
      */
     public void adaptPanelPosition() {
         if (mDisplaying) {
@@ -229,14 +237,20 @@ public class EditControlPopup {
             appear(isAtRight);
         }
     }
-
+/**
+ * 「destroy」メソッド。
+ * このクラスに定義された機能メソッドです。
+ */
     public void destroy() {
         ((ViewGroup) mScrollView.getParent()).removeView(mColorSelector.getRootView());
         ((ViewGroup) mScrollView.getParent()).removeView(mScrollView);
     }
-
+/**
+ * 「load Adapter」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void loadAdapter() {
-        //Initialize adapter for keycodes
+        // キーコードのアダプターを初期化
         mAdapter = new ArrayAdapter<>(context, R.layout.item_centered_textview);
         mSpecialArray = ControlData.buildSpecialButtonArray(context);
 
@@ -255,7 +269,9 @@ public class EditControlPopup {
 
         mOrientationSpinner.setAdapter(adapter);
     }
-
+/**
+ * 「DefaultVisibilitySetting」の値を設定します。
+ */
     private void setDefaultVisibilitySetting() {
         for (int i = 0; i < mRootView.getChildCount(); ++i) {
             mRootView.getChildAt(i).setVisibility(VISIBLE);
@@ -264,7 +280,9 @@ public class EditControlPopup {
             s.setVisibility(View.INVISIBLE);
         }
     }
-
+/**
+ * このオブジェクトが「AtRight」状態であるかを判定します。
+ */
     private boolean isAtRight() {
         return mScrollView.getX() > currentDisplayMetrics.widthPixels / 2f;
     }
@@ -272,7 +290,7 @@ public class EditControlPopup {
     /* LOADING VALUES */
 
     /**
-     * Load values for basic control data
+     * 基本コントロールデータの値を読み込みます
      */
     public void loadValues(ControlData data) {
         setDefaultVisibilitySetting();
@@ -316,7 +334,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Load values for extended control data
+     * 拡張コントロールデータの値を読み込みます
      */
     public void loadValues(ControlDrawerData data) {
         loadValues(data.properties);
@@ -339,7 +357,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Load values for the joystick
+     * ジョイスティックの値を読み込みます
      */
     public void loadJoystickValues(ControlJoystickData data) {
         loadValues(data);
@@ -369,7 +387,7 @@ public class EditControlPopup {
     }
 
     /**
-     * Load values for sub buttons
+     * サブボタンの値を読み込みます
      */
     public void loadSubButtonValues(ControlData data, ControlDrawerData.Orientation drawerOrientation) {
         loadValues(data);
@@ -387,7 +405,10 @@ public class EditControlPopup {
         mDisplayInMenuCheckbox.setVisibility(GONE);
         mDisplayInGameCheckbox.setVisibility(GONE);
     }
-
+/**
+ * 「bind Layout」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     private void bindLayout() {
         mRootView = mScrollView.findViewById(R.id.edit_layout);
@@ -426,7 +447,7 @@ public class EditControlPopup {
         mDisplayInGameCheckbox = mScrollView.findViewById(R.id.visibility_game_checkbox);
         mDisplayInMenuCheckbox = mScrollView.findViewById(R.id.visibility_menu_checkbox);
 
-        //Decorative stuff
+        // 装飾的な要素
         mMappingTextView = mScrollView.findViewById(R.id.editMapping_textView);
         mOrientationTextView = mScrollView.findViewById(R.id.editOrientation_textView);
         mNameTextView = mScrollView.findViewById(R.id.editName_textView);
@@ -439,8 +460,7 @@ public class EditControlPopup {
     }
 
     /**
-     * A long function linking all the displayed data on the popup and,
-     * the currently edited mCurrentlyEditedButton
+     * ポップアップに表示されたすべてのデータを現在編集中のボタンにリンクする長い関数です。
      * @noinspection SuspiciousNameCombination
      */
     public void setupRealTimeListeners() {
@@ -512,6 +532,10 @@ public class EditControlPopup {
         });
 
         mAlphaSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+/**
+ * 「on Progress Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (internalChanges) return;
@@ -519,17 +543,27 @@ public class EditControlPopup {
                 mCurrentlyEditedButton.getControlView().setAlpha(mAlphaSeekbar.getProgress() / 100f);
                 setPercentageText(mAlphaPercentTextView, progress);
             }
-
+/**
+ * 「on Start Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
-
+/**
+ * 「on Stop Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
         mStrokeWidthSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+/**
+ * 「on Progress Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (internalChanges) return;
@@ -537,17 +571,27 @@ public class EditControlPopup {
                 mCurrentlyEditedButton.setBackground();
                 setPercentageText(mStrokePercentTextView, progress);
             }
-
+/**
+ * 「on Start Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
-
+/**
+ * 「on Stop Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
         mCornerRadiusSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+/**
+ * 「on Progress Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (internalChanges) return;
@@ -555,17 +599,27 @@ public class EditControlPopup {
                 mCurrentlyEditedButton.setBackground();
                 setPercentageText(mCornerRadiusPercentTextView, progress);
             }
-
+/**
+ * 「on Start Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
-
+/**
+ * 「on Stop Tracking Touch」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
         mRepeatedlyCpsSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+/**
+ * 「on Progress Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (internalChanges) return;
@@ -578,6 +632,10 @@ public class EditControlPopup {
         });
 
         mRepeatedlyDelaySeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+/**
+ * 「on Progress Changed」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (internalChanges) return;
@@ -598,11 +656,18 @@ public class EditControlPopup {
             }).show());
 
             mKeycodeSpinners[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+/**
+ * 「on Item Selected」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     updateKeycodeText(position, finalI);
                 }
-
+/**
+ * 「on Nothing Selected」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -611,6 +676,10 @@ public class EditControlPopup {
 
 
         mOrientationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+/**
+ * 「on Item Selected」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Side note, spinner listeners are fired later than all the other ones.
@@ -621,7 +690,10 @@ public class EditControlPopup {
                     ((ControlDrawer) mCurrentlyEditedButton).syncButtons();
                 }
             }
-
+/**
+ * 「on Nothing Selected」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -655,7 +727,10 @@ public class EditControlPopup {
             appearColor(isAtRight(), mCurrentlyEditedButton.getProperties().bgColor);
         });
     }
-
+/**
+ * 「update Repeatedly Visibility」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateRepeatedlyVisibility(boolean isVisible) {
         int visibility = isVisible ? VISIBLE : GONE;
         mRepeatedlyCpsTextView.setVisibility(visibility);
@@ -665,7 +740,10 @@ public class EditControlPopup {
         mRepeatedlyDelaySeekbar.setVisibility(visibility);
         mRepeatedlyDelayValueTextView.setVisibility(visibility);
     }
-
+/**
+ * 「update Keycode Text」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void updateKeycodeText(int index, int finalI) {
         // Side note, spinner listeners are fired later than all the other ones.
         // Meaning the internalChanges bool is useless here.
@@ -676,7 +754,10 @@ public class EditControlPopup {
         }
         mKeycodeTextviews[finalI].setText((String) mKeycodeSpinners[finalI].getSelectedItem());
     }
-
+/**
+ * 「safe Parse Float」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private float safeParseFloat(String string) {
         float out = -1; // -1
         try {
@@ -686,7 +767,9 @@ public class EditControlPopup {
         }
         return out;
     }
-
+/**
+ * 「CurrentlyEditedButton」の値を設定します。
+ */
     public void setCurrentlyEditedButton(ControlInterface button) {
         if (mCurrentlyEditedButton != null)
             mCurrentlyEditedButton.getControlView().removeOnLayoutChangeListener(mLayoutChangedListener);

@@ -16,6 +16,9 @@ public class ForgeUtils {
     private static final String FORGE_METADATA_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
     private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/%1$s/forge-%1$s-installer.jar";
 
+/**
+ * downloadForgeVersionsメソッド
+ */
     public static List<String> downloadForgeVersions(boolean force) throws Exception {
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         SAXParser saxParser = parserFactory.newSAXParser();
@@ -32,6 +35,10 @@ public class ForgeUtils {
             }
         });
     }
+/**
+ * installerUrlを取得する
+ * @return installerUrlの値
+ */
     public static String getInstallerUrl(String version) {
         return String.format(FORGE_INSTALLER_URL, version);
     }

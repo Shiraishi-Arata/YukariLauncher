@@ -18,14 +18,32 @@ import java.util.zip.ZipFile
 
 class ModrinthModPackInstallHelper {
     companion object {
+        /**
+         * ModrinthのModパックインストールを開始する
+         * @param versionItem インストールするバージョン情報
+         * @param customName カスタムバージョン名
+         * @return ModLoaderのラッパー情報
+         */
         @Throws(Exception::class)
+/**
+ * startInstallする
+ */
         fun startInstall(versionItem: VersionItem, customName: String): ModLoaderWrapper? {
             return InstallHelper.installModPack(versionItem, customName) { modpackFile, targetPath ->
                 installZip(modpackFile, targetPath)
             }
         }
 
+        /**
+         * ModrinthのModパックZIPファイルを解析してインストールを実行する
+         * @param packFile ModパックのZIPファイル
+         * @param targetPath インストール先のパス
+         * @return ModLoaderのラッパー情報
+         */
         @Throws(Exception::class)
+/**
+ * installZipする
+ */
         fun installZip(packFile: File, targetPath: File): ModLoaderWrapper? {
             ZipFile(packFile).use { modpackZipFile ->
                 val modrinthIndex = Tools.GLOBAL_GSON.fromJson(
@@ -65,6 +83,14 @@ class ModrinthModPackInstallHelper {
             }
         }
 
+        /**
+         * ModrinthIndexからModLoader情報を生成する
+         * @param modrinthIndex Modrinthのインデックス情報
+         * @return ModLoaderのラッパー情報
+         */
+/**
+ * createInfoする
+ */
         private fun createInfo(modrinthIndex: ModrinthIndex?): ModLoaderWrapper? {
             if (modrinthIndex == null) return null
             val dependencies = modrinthIndex.dependencies

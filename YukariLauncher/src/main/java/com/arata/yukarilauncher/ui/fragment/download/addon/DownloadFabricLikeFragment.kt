@@ -16,8 +16,14 @@ import com.arata.yukarilauncher.ui.fragment.InstallGameFragment.Companion.BUNDLE
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 
+/**
+ * Fabric系ローダー（Fabric、Quilt等）をダウンロードするための抽象フラグメントです。
+ */
 abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: Int) : ModListFragment() {
 
+    /**
+     * ビューの初期設定を行います。
+     */
     override fun refreshCreatedView() {
         setIcon(ContextCompat.getDrawable(fragmentActivity!!, icon))
         setTitleText(utils.name)
@@ -26,14 +32,27 @@ abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: 
         setReleaseCheckBoxGone()
     }
 
+    /**
+     * 初回のデータ更新を非同期で実行します。
+     * @return 非同期タスクのFuture
+     */
     override fun initRefresh(): Future<*>? {
         return refresh(false)
     }
 
+    /**
+     * データを強制的に更新します。
+     * @return 非同期タスクのFuture
+     */
     override fun refresh(): Future<*> {
         return refresh(true)
     }
 
+    /**
+     * 指定されたモードでデータを更新します。
+     * @param force 強制更新するかどうか
+     * @return 非同期タスクのFuture
+     */
     private fun refresh(force: Boolean): Future<*> {
         return TaskExecutors.getDefault().submit {
             runCatching {
@@ -53,6 +72,9 @@ abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: 
         }
     }
 
+    /**
+     * 空の状態をUIに反映します。
+     */
     private fun empty() {
         TaskExecutors.runInUIThread {
             componentProcessing(false)
@@ -60,6 +82,11 @@ abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: 
         }
     }
 
+    /**
+     * 取得したバージョン情報を処理し、アダプターに設定します。
+     * @param gameVersions ゲームバージョンの配列
+     * @param force 強制更新するかどうか
+     */
     private fun processInfo(gameVersions: Array<FabricVersion>?, force: Boolean) {
         if (gameVersions.isNullOrEmpty()) {
             empty()
@@ -85,7 +112,7 @@ abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: 
             return
         }
 
-        //为整理好的Fabric版本设置Adapter
+        // 整理されたFabricバージョンにアダプターを設定
         val adapter = ModVersionListAdapter(icon, mFabricVersions)
         adapter.setOnItemClickListener { version ->
             if (isTaskRunning()) return@setOnItemClickListener false

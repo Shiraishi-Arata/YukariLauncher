@@ -36,6 +36,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
     private boolean mGrabState = false;
     private boolean mOldState = false;
 
+/**
+ * GamepadMapperAdapterを構築します
+ */
     public GamepadMapperAdapter(Context context) {
         GamepadMapStore.load();
         mKeyAdapter = new ArrayAdapter<>(context, R.layout.item_centered_textview_large);
@@ -49,6 +52,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         keyboardDialog = new KeyboardDialog(context, true);
     }
 
+/**
+ * createRebinderMapメソッド
+ */
     private void createRebinderMap() {
         mRebinderButtons = new RebinderButton[BUTTON_COUNT];
         mRealButtons = new GamepadEmulatedButton[BUTTON_COUNT];
@@ -76,6 +82,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         mSimulatedGamepadMap.DPAD_LEFT = mRebinderButtons[index] = new RebinderButton(R.drawable.dpad_left, R.string.controller_dpad_left);
     }
 
+/**
+ * updateRealButtonsメソッド
+ */
     private void updateRealButtons() {
         GamepadMap currentRealMap = mGrabState ? GamepadMapStore.getGameMap() : GamepadMapStore.getMenuMap();
         int index = 0;
@@ -125,6 +134,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         return mRebinderButtons.length;
     }
 
+/**
+ * updateStickIconsメソッド
+ */
     private void updateStickIcons() {
         // Which stick is used for keyboard emulation depends on grab state, so we need
         // to update the mapper UI icons accordingly
@@ -135,16 +147,25 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         ((RebinderButton)mSimulatedGamepadMap.DIRECTION_LEFT).iconResourceId = stickIcon;
     }
 
+/**
+ * RebinderButton内部クラス
+ */
     private static class RebinderButton extends GamepadButton {
         public int iconResourceId;
         public final int localeResourceId;
         private ViewHolder mButtonHolder;
 
+/**
+ * RebinderButtonを構築します
+ */
         public RebinderButton(int iconResourceId, int localeResourceId) {
             this.iconResourceId = iconResourceId;
             this.localeResourceId = localeResourceId;
         }
 
+/**
+ * changeViewHolderメソッド
+ */
         public void changeViewHolder(ViewHolder viewHolder) {
             mButtonHolder = viewHolder;
             if(mButtonHolder != null) mButtonHolder.setPressed(mIsDown);
@@ -157,6 +178,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         }
     }
 
+/**
+ * ViewHolder内部クラス
+ */
     public class ViewHolder extends RecyclerView.ViewHolder implements AdapterView.OnItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
         private static final int COLOR_ACTIVE_BUTTON = 0x2000FF00;
         private final Context mContext;
@@ -170,6 +194,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         private GamepadEmulatedButton mAttachedButton;
         private short[] mKeycodes;
 
+/**
+ * ViewHolderを構築します
+ */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mContext = itemView.getContext();
@@ -198,6 +225,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
                 mKeySpinners[i].setOnItemSelectedListener(this);
             }
         }
+/**
+ * attachメソッド
+ */
         private void attach(int index) {
             RebinderButton rebinderButton = mRebinderButtons[index];
             mExpandedView.setVisibility(View.GONE);
@@ -239,15 +269,25 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
 
             mAttachedPosition = index;
         }
+/**
+ * detachメソッド
+ */
         private void detach() {
             mRebinderButtons[mAttachedPosition].changeViewHolder(null);
             mAttachedPosition = -1;
             mAttachedButton = null;
         }
+/**
+ * pressedを設定する
+ * @param pressed 設定値
+ */
         private void setPressed(boolean pressed) {
             itemView.setBackgroundColor(pressed ? COLOR_ACTIVE_BUTTON : Color.TRANSPARENT);
         }
 
+/**
+ * updateKeycodeLabelメソッド
+ */
         private void updateKeycodeLabel() {
             StringBuilder labelBuilder = new StringBuilder();
             boolean first = true;
@@ -262,6 +302,9 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
             mKeycodeLabel.setText(labelBuilder.toString());
         }
 
+/**
+ * updateIndicatorメソッド
+ */
         private void updateIndicator(boolean rotation) {
             mExpansionIndicator.setRotation(rotation ? 180 : 0);
         }
@@ -340,6 +383,10 @@ public class GamepadMapperAdapter extends RecyclerView.Adapter<GamepadMapperAdap
         grabListener.onGrabState(mGrabState);
     }
 
+/**
+ * grabStateを設定する
+ * @param grabState 設定値
+ */
     public void setGrabState(boolean newState) {
         mGrabState = newState;
         if(mGamepadGrabListener != null) mGamepadGrabListener.onGrabState(newState);

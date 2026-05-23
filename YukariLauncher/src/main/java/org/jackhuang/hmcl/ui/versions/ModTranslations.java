@@ -39,30 +39,44 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Parser for mod_data.txt
+ * mod_data.txtのパーサー
  *
  * @see <a href="https://www.mcmod.cn">mcmod.cn</a>
  */
 public enum ModTranslations {
     MOD("/assets/mod_data.txt") {
+        /**
+         * MODタイプのmcmod.cn URLを返します。
+         */
         @Override
         public String getMcmodUrl(Mod mod) {
             return String.format("https://www.mcmod.cn/class/%s.html", mod.getMcmod());
         }
     },
     MODPACK("/assets/modpack_data.txt") {
+        /**
+         * MODPACKタイプのmcmod.cn URLを返します。
+         */
         @Override
         public String getMcmodUrl(Mod mod) {
             return String.format("https://www.mcmod.cn/modpack/%s.html", mod.getMcmod());
         }
     },
     EMPTY("") {
+        /**
+         * 空のURLを返します。
+         */
         @Override
         public String getMcmodUrl(Mod mod) {
             return "";
         }
     };
 
+    /**
+     * リポジトリタイプに対応するModTranslationsを返します。
+     * @param type リポジトリタイプ
+     * @return 対応するModTranslations
+     */
     public static ModTranslations getTranslationsByRepositoryType(Classify type) {
         switch (type) {
             case MOD:
@@ -76,15 +90,24 @@ public enum ModTranslations {
 
     private final String resourceName;
     private List<Mod> mods;
-    private Map<String, Mod> modIdMap; // mod id -> mod
-    private Map<String, Mod> curseForgeMap; // curseforge id -> mod
+    private Map<String, Mod> modIdMap;
+    private Map<String, Mod> curseForgeMap;
     private List<Pair<String, Mod>> keywords;
     private int maxKeywordLength = -1;
 
+    /**
+     * リソース名を指定してModTranslationsを構築します。
+     * @param resourceName リソースファイル名
+     */
     ModTranslations(String resourceName) {
         this.resourceName = resourceName;
     }
 
+    /**
+     * CurseForge IDからModを取得します。
+     * @param id CurseForge ID
+     * @return 見つかったMod、またはnull
+     */
     @Nullable
     public Mod getModByCurseForgeId(String id) {
         if (StringUtilsKt.isBlank(id) || !loadCurseForgeMap()) return null;
@@ -92,6 +115,11 @@ public enum ModTranslations {
         return curseForgeMap.get(id);
     }
 
+    /**
+     * Mod IDからModを取得します。
+     * @param id Mod ID
+     * @return 見つかったMod、またはnull
+     */
     @Nullable
     public Mod getModById(String id) {
         if (StringUtilsKt.isBlank(id) || !loadModIdMap()) return null;
@@ -99,8 +127,17 @@ public enum ModTranslations {
         return modIdMap.get(id);
     }
 
+    /**
+     * Modのmcmod.cn URLを返します（抽象メソッド）。
+     */
     public abstract String getMcmodUrl(Mod mod);
 
+    /**
+     * クエリ文字列でModを検索します。
+     * 最長共通部分列（LCS）アルゴリズムを使用して類似度を計算します。
+     * @param query 検索クエリ
+     * @return 見つかったModのリスト（関連度順）
+     */
     public List<Mod> searchMod(String query) {
         if (!loadKeywords()) return Collections.emptyList();
 
@@ -123,6 +160,10 @@ public enum ModTranslations {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * リソースファイルからModデータを読み込みます。
+     * @return 読み込みに成功した場合はtrue
+     */
     private boolean loadFromResource() {
         if (mods != null) return true;
         if (StringUtilsKt.isBlank(resourceName)) {
@@ -140,6 +181,9 @@ public enum ModTranslations {
         }
     }
 
+    /**
+     * CurseForge IDからModへのマップを読み込みます。
+     */
     private boolean loadCurseForgeMap() {
         if (curseForgeMap != null) {
             return true;
@@ -158,6 +202,9 @@ public enum ModTranslations {
         return true;
     }
 
+    /**
+     * Mod IDからModへのマップを読み込みます。
+     */
     private boolean loadModIdMap() {
         if (modIdMap != null) {
             return true;
@@ -178,6 +225,9 @@ public enum ModTranslations {
         return true;
     }
 
+    /**
+     * 検索用のキーワードリストを読み込みます。
+     */
     private boolean loadKeywords() {
         if (keywords != null) {
             return true;
@@ -206,6 +256,9 @@ public enum ModTranslations {
         return true;
     }
 
+    /**
+     * Modのデータモデル
+     */
     public static final class Mod {
         private final String curseforge;
         private final String mcmod;
@@ -214,6 +267,10 @@ public enum ModTranslations {
         private final String subname;
         private final String abbr;
 
+        /**
+         * セミコロン区切りの行からModを構築します。
+         * @param line データ行（6つのフィールドが必要）
+         */
         public Mod(String line) {
             String[] items = line.split(";", -1);
             if (items.length != 6) {
@@ -228,6 +285,9 @@ public enum ModTranslations {
             abbr = items[5];
         }
 
+        /**
+         * すべてのフィールドを指定してModを構築します。
+         */
         public Mod(String curseforge, String mcmod, List<String> modIds, String name, String subname, String abbr) {
             this.curseforge = curseforge;
             this.mcmod = mcmod;
@@ -237,6 +297,9 @@ public enum ModTranslations {
             this.abbr = abbr;
         }
 
+        /**
+         * 表示名を返します（省略名、名前、サブ名を結合）。
+         */
         public String getDisplayName() {
             StringBuilder builder = new StringBuilder();
             if (StringUtilsKt.isNotBlank(abbr)) {
@@ -249,26 +312,44 @@ public enum ModTranslations {
             return builder.toString();
         }
 
+        /**
+         * CurseForge IDを返します。
+         */
         public String getCurseforge() {
             return curseforge;
         }
 
+        /**
+         * mcmod.cn IDを返します。
+         */
         public String getMcmod() {
             return mcmod;
         }
 
+        /**
+         * Mod IDのリストを返します。
+         */
         public List<String> getModIds() {
             return modIds;
         }
 
+        /**
+         * Mod名を返します。
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * サブ名を返します。
+         */
         public String getSubname() {
             return subname;
         }
 
+        /**
+         * 省略名を返します。
+         */
         public String getAbbr() {
             return abbr;
         }

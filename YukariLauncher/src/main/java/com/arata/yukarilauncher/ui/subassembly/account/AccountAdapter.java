@@ -19,10 +19,16 @@ import net.kdt.pojavlaunch.value.MinecraftAccount;
 
 import java.util.List;
 
+/**
+ * アカウント一覧のRecyclerViewアダプター
+ */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.Holder> {
     private final List<MinecraftAccount> mData;
     private AccountUpdateListener accountUpdateListener;
 
+    /**
+     * アダプターを構築する
+     */
     public AccountAdapter(List<MinecraftAccount> mData) {
         this.mData = mData;
     }
@@ -46,28 +52,46 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.Holder> 
         return 0;
     }
 
+    /**
+     * アカウント更新リスナーを設定する
+     */
     public void setAccountUpdateListener(AccountUpdateListener accountUpdateListener) {
         this.accountUpdateListener = accountUpdateListener;
     }
 
+    /**
+     * アカウント操作のコールバックリスナー
+     */
     public interface AccountUpdateListener {
+        /** アカウントがクリックされた */
         void onViewClick(MinecraftAccount account);
 
+        /** アカウントの更新が要求された */
         void onRefresh(MinecraftAccount account);
 
+        /** アカウントの削除が要求された */
         void onDelete(MinecraftAccount account);
     }
 
+    /**
+     * アカウントアイテムのビューホルダー
+     */
     public class Holder extends RecyclerView.ViewHolder {
         private final Context mContext;
         private final ItemAccountManagerBinding binding;
 
+        /**
+         * ホルダーを構築する
+         */
         public Holder(@NonNull ItemAccountManagerBinding binding) {
             super(binding.getRoot());
             this.mContext = binding.getRoot().getContext();
             this.binding = binding;
         }
 
+        /**
+         * アカウントデータをビューに設定する
+         */
         public void setData(MinecraftAccount account) {
             if (accountUpdateListener != null) {
                 itemView.setOnClickListener(v -> accountUpdateListener.onViewClick(account));
@@ -98,6 +122,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.Holder> 
             binding.loginType.setText(loginType);
         }
 
+        /**
+         * ボタンのクリック可否を設定する
+         */
         private void setButtonClickable(View button, boolean clickable) {
             button.setAlpha(clickable ? 1.0f : 0.5f);
             button.setEnabled(clickable);

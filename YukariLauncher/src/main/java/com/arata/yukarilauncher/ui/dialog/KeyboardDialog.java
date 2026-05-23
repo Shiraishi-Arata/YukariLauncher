@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * キーボード入力選択ダイアログ
+ */
 public class KeyboardDialog extends FullScreenDialog implements View.OnClickListener {
     private final DialogKeyboardBinding binding = DialogKeyboardBinding.inflate(getLayoutInflater());
     private final List<View> mSelectedViews = new ArrayList<>(1);
@@ -38,6 +41,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         this.isGamepadMapper = isGamepadMapper;
     }
 
+    /**
+     * 特殊ボタンの表示状態を設定する
+     */
     public KeyboardDialog setShowSpecialButtons(boolean show) {
         showSpecialButtons = show;
         return this;
@@ -64,6 +70,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         init(showSpecialButtons);
     }
 
+    /**
+     * キーボードレイアウトを初期化する
+     */
     private void init(boolean showSpecialButtons) {
         binding.close.setOnClickListener(this);
         binding.close1.setOnClickListener(this);
@@ -134,7 +143,6 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         if (!isGamepadMapper) buttons.add(0, getKey(getString(R.string.keycode_unspecified)));
 
         if (showSpecialButtons) {
-            //此处如果不是手柄映射模式，那么将反着加入
             int specialCount = isGamepadMapper ? 0 : specialButtons.size() - 1;
             for (View specialButton : specialButtons) {
                 int finalSpecialCount = specialCount;
@@ -154,8 +162,7 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
             button.setTag(finalButtonCount);
             button.setOnClickListener(this);
 
-            if (    //保证顺序正确
-                    Objects.equals(button, binding.keyboard9) ||
+            if (    Objects.equals(button, binding.keyboard9) ||
                     Objects.equals(button, binding.keyboardSlash) ||
                     Objects.equals(button, binding.keyboardPageDown) ||
                     Objects.equals(button, binding.keyboardPause) ||
@@ -185,6 +192,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         }
     }
 
+    /**
+     * ダイアログを閉じる
+     */
     private void closeDialog() {
         mSelectedViews.forEach(sv -> sv.setSelected(false));
         mSelectedViews.clear();
@@ -192,6 +202,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         this.dismiss();
     }
 
+    /**
+     * テキスト付きのキーボタンを生成する
+     */
     private AnimButton getKey(String text) {
         AnimButton key = new AnimButton(getContext());
         key.setText(text);
@@ -204,6 +217,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         return getContext().getString(resId);
     }
 
+    /**
+     * キーコード選択時の処理
+     */
     private void onKeycodeSelect(View view, int index) {
         if (this.mOnKeycodeSelectListener != null) {
             this.mOnKeycodeSelectListener.onSelect(index);
@@ -221,6 +237,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         }
     }
 
+    /**
+     * 単一キーコード選択リスナーを設定する
+     */
     public KeyboardDialog setOnKeycodeSelectListener(OnKeycodeSelectListener listener) {
         if (this.mOnMultiKeycodeSelectListener != null) {
             throw new IllegalStateException("Two listeners should not be initialized at the same time");
@@ -231,6 +250,9 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         return this;
     }
 
+    /**
+     * 複数キーコード選択リスナーを設定する
+     */
     public KeyboardDialog setOnMultiKeycodeSelectListener(OnMultiKeycodeSelectListener listener) {
         if (this.mOnKeycodeSelectListener != null) {
             throw new IllegalStateException("Two listeners should not be initialized at the same time");
@@ -241,10 +263,16 @@ public class KeyboardDialog extends FullScreenDialog implements View.OnClickList
         return this;
     }
 
+    /**
+     * 単一キーコード選択のコールバックインターフェース
+     */
     public interface OnKeycodeSelectListener {
         void onSelect(int index);
     }
 
+    /**
+     * 複数キーコード選択のコールバックインターフェース
+     */
     public interface OnMultiKeycodeSelectListener {
         void onSelect(List<Integer> index);
     }

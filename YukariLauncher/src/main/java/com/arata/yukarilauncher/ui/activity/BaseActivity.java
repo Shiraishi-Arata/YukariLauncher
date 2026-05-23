@@ -87,6 +87,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Subscribe
+/**
+ * eventメソッド
+ */
     public void event(LauncherIgnoreNotchEvent event) {
         Tools.ignoreNotch(shouldIgnoreNotch(),this);
     }
@@ -96,6 +99,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         return AllSettings.getIgnoreNotchLauncher().getValue();
     }
 
+/**
+ * checkStoragePermissionsメソッド
+ */
     private void checkStoragePermissions() {
         //检查所有文件管理权限
         StoragePermissionsUtils.checkPermissions(this);

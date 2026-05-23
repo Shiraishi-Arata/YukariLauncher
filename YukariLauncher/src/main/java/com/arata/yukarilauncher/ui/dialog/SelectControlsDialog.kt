@@ -6,6 +6,9 @@ import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlSelectedLis
 import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlsListViewCreator
 import java.io.File
 
+/**
+ * コントロール設定選択ダイアログ
+ */
 class SelectControlsDialog(
     context: Context,
     private val selectedListener: SelectedListener
@@ -26,6 +29,9 @@ class SelectControlsDialog(
         }
     }
 
+    /**
+     * 選択結果のコールバックインターフェース
+     */
     interface SelectedListener {
         fun onSelected(file: File)
     }

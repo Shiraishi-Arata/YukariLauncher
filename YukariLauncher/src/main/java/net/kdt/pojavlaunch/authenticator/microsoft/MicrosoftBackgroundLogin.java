@@ -34,8 +34,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-/** Allow to perform a background login on a given account */
-// TODO handle connection errors !
+/**
+ * 指定されたアカウントでバックグラウンドログインを実行します。
+ */
 public class MicrosoftBackgroundLogin {
     private static final String authTokenUrl = "https://login.live.com/oauth20_token.srf";
     private static final String xblAuthUrl = "https://user.auth.xboxlive.com/user/authenticate";
@@ -57,19 +58,24 @@ public class MicrosoftBackgroundLogin {
         XSTS_ERRORS.put(2148074255L ,R.string.account_microsoft_xerr_unauthorized);
     }
 
-    /* Fields used to fill the account  */
     public String msRefreshToken;
     public String mcName;
     public String mcToken;
     public String mcUuid;
     public boolean doesOwnGame;
 
+    /**
+     * @param isRefresh リフレッシュトークンを使用する場合はtrue
+     * @param authCode 認証コードまたはリフレッシュトークン
+     */
     public MicrosoftBackgroundLogin(boolean isRefresh, String authCode){
         mIsRefresh = isRefresh;
         mAuthCode = authCode;
     }
 
-    /** Performs a full login, calling back listeners appropriately  */
+    /**
+     * 完全なログインフローを実行し、リスナーに結果をコールバックします。
+     */
     public void performLogin(
             final Context context,
             final MinecraftAccount account,
@@ -91,7 +97,6 @@ public class MicrosoftBackgroundLogin {
 
             MinecraftAccount acc;
             if (account == null) {
-                //尝试找到本地已经存在的，相同Profile UUID的账号
                 MinecraftAccount acc1 = MinecraftAccount.loadFromProfileID(mcUuid);
                 acc = acc1 != null ? acc1 : new MinecraftAccount();
             } else {
@@ -100,7 +105,7 @@ public class MicrosoftBackgroundLogin {
 
             if (doesOwnGame) {
                 acc.xuid = xsts[0];
-                acc.clientToken = "0"; /* FIXME */
+                acc.clientToken = "0";
                 acc.accessToken = mcToken;
                 acc.username = mcName;
                 acc.profileId = mcUuid;
@@ -122,6 +127,9 @@ public class MicrosoftBackgroundLogin {
         }).execute();
     }
 
+    /**
+     * アクセストークンを取得します（新規認証またはリフレッシュ）。
+     */
     public String acquireAccessToken(boolean isRefresh, String authcode) throws IOException, JSONException {
         URL url = new URL(authTokenUrl);
         Logging.i("MicrosoftLogin", "isRefresh=" + isRefresh);
@@ -134,7 +142,6 @@ public class MicrosoftBackgroundLogin {
                 "scope", "service::user.auth.xboxlive.com::MBI_SSL"
         );
 
-        //да пошла yf[eq1 она ваша джава 11
         HttpURLConnection conn = UrlManager.createHttpConnection(url);
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         conn.setRequestProperty("charset", "utf-8");
@@ -152,12 +159,14 @@ public class MicrosoftBackgroundLogin {
             msRefreshToken = jo.getString("refresh_token");
             conn.disconnect();
             return jo.getString("access_token");
-            //acquireXBLToken(jo.getString("access_token"));
         }else{
             throw getResponseThrowable(conn);
         }
     }
 
+    /**
+     * Xbox Live認証トークンを取得します。
+     */
     private String acquireXBLToken(String accessToken) throws IOException, JSONException {
         URL url = new URL(xblAuthUrl);
 
@@ -182,13 +191,15 @@ public class MicrosoftBackgroundLogin {
             JSONObject jo = new JSONObject(Tools.read(conn.getInputStream()));
             conn.disconnect();
             return jo.getString("Token");
-            //acquireXsts(jo.getString("Token"));
         }else{
             throw getResponseThrowable(conn);
         }
     }
 
-    /** @return [uhs, token]*/
+    /**
+     * XSTSトークンを取得します。
+     * @return [uhs, token] の配列
+     */
     private @NonNull String[] acquireXsts(String xblToken) throws IOException, JSONException {
         URL url = new URL(xstsAuthUrl);
 
@@ -215,7 +226,6 @@ public class MicrosoftBackgroundLogin {
             String token = jo.getString("Token");
             conn.disconnect();
             return new String[]{uhs, token};
-            //acquireMinecraftToken(uhs,jo.getString("Token"));
         }else if(conn.getResponseCode() == 401) {
             String responseContents = Tools.read(conn.getErrorStream());
             JSONObject jo = new JSONObject(responseContents);
@@ -230,6 +240,9 @@ public class MicrosoftBackgroundLogin {
         }
     }
 
+    /**
+     * Minecraft認証トークンを取得します。
+     */
     private String acquireMinecraftToken(String xblUhs, String xblXsts) throws IOException, JSONException {
         URL url = new URL(mcLoginUrl);
 
@@ -249,16 +262,17 @@ public class MicrosoftBackgroundLogin {
             JSONObject jo = new JSONObject(Tools.read(conn.getInputStream()));
             conn.disconnect();
             mcToken = jo.getString("access_token");
-            //checkMcProfile(jo.getString("access_token"));
             return jo.getString("access_token");
         }else{
             throw getResponseThrowable(conn);
         }
     }
 
+    /**
+     * 所有しているアイテムを取得します（必須リクエスト）。
+     */
     private void fetchOwnedItems(String mcAccessToken) throws IOException {
         URL url = new URL(mcStoreUrl);
-
         HttpURLConnection conn = UrlManager.createHttpConnection(url);
         conn.setRequestProperty("Authorization", "Bearer " + mcAccessToken);
         conn.setUseCaches(false);
@@ -266,14 +280,13 @@ public class MicrosoftBackgroundLogin {
         if(conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
             throw getResponseThrowable(conn);
         }
-        // We don't need any data from this request, it just needs to happen in order for
-        // the MS servers to work properly. The data from this is practically useless
-        // as it does not indicate whether the user owns the game through Game Pass.
     }
 
+    /**
+     * Minecraftプロファイルを確認し、アカウント情報を設定します。
+     */
     private void checkMcProfile(String mcAccessToken) throws IOException, JSONException {
         URL url = new URL(mcProfileUrl);
-
         HttpURLConnection conn = UrlManager.createHttpConnection(url);
         conn.setRequestProperty("Authorization", "Bearer " + mcAccessToken);
         conn.setUseCaches(false);
@@ -297,17 +310,19 @@ public class MicrosoftBackgroundLogin {
             Logging.i("MicrosoftLogin","It seems that this Microsoft Account does not own the game.");
             doesOwnGame = false;
             throw new PresentedException(new RuntimeException(conn.getResponseMessage()), R.string.minecraft_not_owned, true);
-            //throwResponseError(conn);
         }
     }
 
-    /** Wrapper to ease notifying the listener */
+    /**
+     * 進捗状況をリスナーに通知するラッパー。
+     */
     private void notifyProgress(int step, String stepString) {
         ProgressLayout.setProgress(ProgressLayout.LOGIN_ACCOUNT, step * 20, R.string.account_login_microsoft_progress, stepString);
     }
 
-
-    /** Set common properties for the connection. Given that all requests are POST, interactivity is always enabled */
+    /**
+     * HTTP接続に共通のプロパティを設定します。
+     */
     private static void setCommonProperties(HttpURLConnection conn, String formData) {
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Accept", "application/json");
@@ -324,8 +339,9 @@ public class MicrosoftBackgroundLogin {
     }
 
     /**
-     * @param data A series a strings: key1, value1, key2, value2...
-     * @return the data converted as a form string for a POST request
+     * キーと値のペアをフォームデータ文字列に変換します。
+     * @param data 奇数目がキー、偶数目が値の文字列配列
+     * @return POSTリクエスト用のフォーム文字列
      */
     private static String convertToFormData(String... data) throws UnsupportedEncodingException {
         StringBuilder builder = new StringBuilder();
@@ -338,6 +354,9 @@ public class MicrosoftBackgroundLogin {
         return builder.toString();
     }
 
+    /**
+     * HTTPエラーレスポンスからRuntimeExceptionを生成します。
+     */
     private RuntimeException getResponseThrowable(HttpURLConnection conn) throws IOException {
         Logging.i("MicrosoftLogin", "Error code: " + conn.getResponseCode() + ": " + conn.getResponseMessage());
         if(conn.getResponseCode() == 429) {

@@ -6,13 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
+/**
+ * マインクラフトのアセットインデックスを保持するクラス。
+ */
 @Keep
 public class JAssets {
-    /* Used by older versions of mc, when the files were named and under .minecraft/resources  */
+    /* 古いバージョンのMCで使用され、ファイルが .minecraft/resources 以下に配置されていた場合 */
     @SerializedName("map_to_resources") public boolean mapToResources;
+    /** アセットオブジェクトのマップ */
     public Map<String, JAssetInfo> objects;
 
-    /* Used by the legacy.json (~1.6.X) asset file, used for paths at the root of the .minecraft/assets folder */
+    /* legacy.json（〜1.6.X）アセットファイルで使用され、.minecraft/assetsフォルダのルートのパスに使用されます */
     public boolean virtual;
 }
-

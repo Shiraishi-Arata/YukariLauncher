@@ -1,14 +1,14 @@
 package net.kdt.pojavlaunch.customcontrols.keyboard;
 
-/** Simple interface for sending chars through whatever bridge will be necessary */
+/** 必要なブリッジを介して文字を送信するためのシンプルなインターフェース */
 public interface CharacterSenderStrategy {
-    /** Called when there is a character to delete, may be called multiple times in a row */
+    /** 削除する文字があるときに呼び出されます。連続して複数回呼び出される可能性があります */
     void sendBackspace();
 
-    /** Called when we want to send enter specifically */
+    /** エンターキーを送信するときに呼び出されます */
     void sendEnter();
 
-    /** Called when there is a character to send, may be called multiple times in a row */
+    /** 送信する文字があるときに呼び出されます。連続して複数回呼び出される可能性があります */
     void sendChar(char character);
 
 }

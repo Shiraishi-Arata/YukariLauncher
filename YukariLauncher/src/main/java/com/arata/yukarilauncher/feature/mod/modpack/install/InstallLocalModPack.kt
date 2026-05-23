@@ -24,6 +24,9 @@ class InstallLocalModPack {
     companion object {
         @JvmStatic
         @Throws(Exception::class)
+/**
+ * installModPackする
+ */
         fun installModPack(
             context: Context,
             type: ModPackEnum?,
@@ -89,6 +92,9 @@ class InstallLocalModPack {
         }
 
         @JvmStatic
+/**
+ * showUnSupportDialogする
+ */
         fun showUnSupportDialog(context: Context) {
             TipDialog.Builder(context)
                 .setTitle(R.string.generic_warning)
@@ -100,6 +106,9 @@ class InstallLocalModPack {
         }
 
         @Throws(Exception::class)
+/**
+ * curseforgeModPackする
+ */
         private fun curseforgeModPack(
             zipFile: File,
             versionPath: File
@@ -112,6 +121,9 @@ class InstallLocalModPack {
         }
 
         @Throws(Exception::class)
+/**
+ * modrinthModPackする
+ */
         private fun modrinthModPack(
             zipFile: File,
             versionPath: File
@@ -123,6 +135,9 @@ class InstallLocalModPack {
         }
 
         @Throws(Exception::class)
+/**
+ * mcbbsModPackする
+ */
         private fun mcbbsModPack(context: Context, zipFile: File, versionPath: File): ModLoaderWrapper? {
             val mcbbsModPack = MCBBSModPack(context, zipFile)
             return mcbbsModPack.install(versionPath)

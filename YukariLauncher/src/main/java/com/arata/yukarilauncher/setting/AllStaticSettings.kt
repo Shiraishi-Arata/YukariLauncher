@@ -1,54 +1,54 @@
 package com.arata.yukarilauncher.setting
 
 /**
- * 静态设置项的值，用于一些临时生效的设置项使用
- * 这里的值不会被保存到设置配置中，软件重启就会消失！
+ * 静的設定項目の値。一時的に有効な設定項目に使用する
+ * ここでの値は設定構成に保存されず、ソフトウェアの再起動で消去される
  */
 class AllStaticSettings {
     companion object {
         /**
-         * 刘海屏缺口宽度 Int
+         * ノッチ（画面の切り欠き）の幅
          */
         @JvmField var notchSize = 0
 
         /**
-         * 缩放因子 Float
+         * スケール係数
          */
         @JvmField var scaleFactor = AllSettings.resolutionRatio.getValue() / 100f
 
         /**
-         * 禁用双击交换手中物品 Boolean
+         * ダブルタップによるアイテム入れ替えの無効化
          */
         @JvmField var disableDoubleTap = AllSettings.disableDoubleTap.getValue()
         @JvmField var forceGuiInput = AllSettings.forceGuiInput.getValue()
 
         /**
-         * 触发长按延迟 Int
+         * 長押しトリガーの遅延時間（ミリ秒）
          */
         @JvmField var timeLongPressTrigger = AllSettings.timeLongPressTrigger.getValue()
 
         /**
-         * 启用陀螺仪控制 Boolean
+         * ジャイロスコープ制御の有効/無効
          */
         @JvmField var enableGyro = AllSettings.enableGyro.getValue()
 
         /**
-         * 陀螺仪控制灵敏度 Int
+         * ジャイロスコープの感度
          */
         @JvmField var gyroSensitivity = AllSettings.gyroSensitivity.getValue()
 
         /**
-         * 陀螺仪反转X轴 Boolean
+         * ジャイロスコープX軸の反転
          */
         @JvmField var gyroInvertX = AllSettings.gyroInvertX.getValue()
 
         /**
-         * 陀螺仪反转Y轴 Boolean
+         * ジャイロスコープY軸の反転
          */
         @JvmField var gyroInvertY = AllSettings.gyroInvertY.getValue()
 
         /**
-         * 使用控制代理 Boolean
+         * コントロールプロキシの使用
          */
         @JvmField var useControllerProxy = false
     }

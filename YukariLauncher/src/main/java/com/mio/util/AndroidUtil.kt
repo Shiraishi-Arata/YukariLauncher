@@ -9,9 +9,15 @@ import java.util.zip.ZipFile
 
 /**
  * [AndroidUtil.kt](https://github.com/FCL-Team/FoldCraftLauncher/blob/3b828ee/FCLLibrary/src/main/java/com/mio/util/AndroidUtil.kt)
+ * Android用のユーティリティクラス
+ * ELFファイルのアーキテクチャ情報を解析する機能を提供する
  */
 class AndroidUtil {
     companion object {
+        /**
+         * .soファイルからELFアーキテクチャ情報を取得する
+         * ファイルヘッダーを解析し、対応するアーキテクチャ名（x86, x86_64, ARM, AArch64等）を返す
+         */
         fun getElfArchFromSo(filePath: String): String {
             RandomAccessFile(filePath, "r").use { file ->
                 val magic = ByteArray(4)
@@ -47,6 +53,10 @@ class AndroidUtil {
             }
         }
 
+        /**
+         * ZIPファイル内のELFエントリからアーキテクチャ情報を取得する
+         * ZIP内の指定されたパスのELFファイルを解析し、アーキテクチャ名を返す
+         */
         fun getElfArchFromZip(zipFile: File, elfEntryPath: String): String {
             var arch = ""
             try {

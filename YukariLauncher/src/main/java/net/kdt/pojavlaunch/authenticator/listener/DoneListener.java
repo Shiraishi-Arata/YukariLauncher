@@ -2,7 +2,13 @@ package net.kdt.pojavlaunch.authenticator.listener;
 
 import net.kdt.pojavlaunch.value.MinecraftAccount;
 
-/** Called when the login is done and the account received. guaranteed to be on the UI Thread */
+/**
+ * ログインが完了しアカウントが受信されたときに呼び出されます。UIスレッドで実行されることが保証されています。
+ */
 public interface DoneListener {
+    /**
+     * ログインが完了したときに呼び出されます。
+     * @param account ログインしたアカウント
+     */
     void onLoginDone(MinecraftAccount account);
 }

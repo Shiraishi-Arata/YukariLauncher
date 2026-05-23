@@ -8,10 +8,14 @@ import net.kdt.pojavlaunch.prefs.LauncherPreferences
 
 class LocaleHelper(context: Context) : ContextWrapper(context) {
     companion object {
+        /**
+         * ロケールを設定し、必要な初期化処理を実行する
+         * パスの初期化と設定のリフレッシュを行い、ラッパーを返す
+         * @param context アプリケーションコンテキスト
+         * @return ロケール設定済みのContextWrapper
+         */
         fun setLocale(context: Context): ContextWrapper {
-            //初始化路径
             PathManager.initContextConstants(context)
-            //刷新启动器设置
             Settings.refreshSettings()
 
             LauncherPreferences.loadPreferences()

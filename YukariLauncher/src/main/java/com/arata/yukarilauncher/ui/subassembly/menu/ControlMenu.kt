@@ -16,6 +16,9 @@ import net.kdt.pojavlaunch.customcontrols.ControlJoystickData
 import net.kdt.pojavlaunch.customcontrols.ControlLayout
 import net.kdt.pojavlaunch.customcontrols.EditorExitable
 
+/**
+ * コントロール設定メニュー
+ */
 class ControlMenu(
     private val activity: Activity,
     private val exitListener: EditorExitable,
@@ -62,7 +65,7 @@ class ControlMenu(
                 save -> controlLayout.openSaveDialog()
                 saveAndExit -> controlLayout.openSaveAndExitDialog(exitListener)
                 saveAndExport -> {
-                    try { // Saving the currently shown control
+                    try {
                         val contentUri = DocumentsContract.buildDocumentUri(
                             activity.getString(R.string.storageProviderAuthorities),
                             controlLayout.saveToDirectory(controlLayout.mLayoutFileName)
@@ -103,6 +106,9 @@ class ControlMenu(
         updateSeekbarValue(seekBar, true)
     }
 
+    /**
+     * シークバーの値を更新する
+     */
     private fun updateSeekbarValue(seekBar: SeekBar?, saveValue: Boolean) {
         val progress = seekBar?.progress ?: 0
 

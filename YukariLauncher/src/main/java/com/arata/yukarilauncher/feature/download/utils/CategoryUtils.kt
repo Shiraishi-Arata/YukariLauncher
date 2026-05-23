@@ -15,6 +15,9 @@ class CategoryUtils {
             sModCategories, sModPackCategories, sResourcePackCategories, sWorldCategories, sShaderPackCategories
         )
 
+/**
+ * reloadCategoriesする
+ */
         private fun reloadCategories() {
             sCategoryMap.forEach { it.clear() }
 
@@ -30,31 +33,49 @@ class CategoryUtils {
             }
         }
 
+/**
+ * getModCategoryする
+ */
         fun getModCategory(): List<Category> = sModCategories.ifEmpty {
             reloadCategories()
             sModCategories
         }
 
+/**
+ * getModPackCategoryする
+ */
         fun getModPackCategory(): List<Category> = sModPackCategories.ifEmpty {
             reloadCategories()
             sModPackCategories
         }
 
+/**
+ * getResourcePackCategoryする
+ */
         fun getResourcePackCategory(): List<Category> = sResourcePackCategories.ifEmpty {
             reloadCategories()
             sResourcePackCategories
         }
 
+/**
+ * getWorldCategoryする
+ */
         fun getWorldCategory(): List<Category> = sWorldCategories.ifEmpty {
             reloadCategories()
             sWorldCategories
         }
 
+/**
+ * getShaderPackCategoryする
+ */
         fun getShaderPackCategory(): List<Category> = sShaderPackCategories.ifEmpty {
             reloadCategories()
             sShaderPackCategories
         }
 
+/**
+ * checkForCategoryする
+ */
         private fun checkForCategory(func: (category: Category) -> Boolean): Category? {
             Category.entries.forEach { category ->
                 if (func.invoke(category)) return category
@@ -62,10 +83,16 @@ class CategoryUtils {
             return null
         }
 
+/**
+ * getCategoryByModrinthする
+ */
         fun getCategoryByModrinth(name: String): Category? {
             return checkForCategory { category -> category.modrinthName == name }
         }
 
+/**
+ * getCategoryByCurseForgeする
+ */
         fun getCategoryByCurseForge(id: String): Category? {
             return checkForCategory { category -> category.curseforgeID == id }
         }

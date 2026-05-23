@@ -26,16 +26,25 @@ class FileTools {
     companion object {
         const val INVALID_CHARACTERS_REGEX = "[\\\\/:*?\"<>|\\t\\n]"
 
+        /**
+         * ディレクトリを作成する
+         */
         @JvmStatic
         fun mkdir(dir: File): Boolean {
             return dir.mkdir()
         }
 
+        /**
+         * 親ディレクトリも含めてディレクトリを作成する
+         */
         @JvmStatic
         fun mkdirs(dir: File): Boolean {
             return dir.mkdirs()
         }
 
+        /**
+         * URIからファイルをバックグラウンドでコピーする（出力先はルートパス+ファイル名）
+         */
         @JvmStatic
         fun copyFileInBackground(context: Context, fileUri: Uri, rootPath: String): File {
             val fileName = Tools.getFileName(context, fileUri)
@@ -43,6 +52,9 @@ class FileTools {
             return copyFileInBackground(context, fileUri, outputFile)
         }
 
+        /**
+         * URIからファイルをバックグラウンドで指定された出力先にコピーする
+         */
         @JvmStatic
         fun copyFileInBackground(context: Context, fileUri: Uri, outputFile: File): File {
             context.contentResolver.openInputStream(fileUri).use { inputStream ->
@@ -51,6 +63,9 @@ class FileTools {
             return outputFile
         }
 
+        /**
+         * ファイル名として無効な文字を置換し、長さを255文字以内に制限する
+         */
         @JvmStatic
         fun ensureValidFilename(str: String): String =
             str.trim().replace(INVALID_CHARACTERS_REGEX.toRegex(), "-").run {
@@ -58,6 +73,10 @@ class FileTools {
                 else this
             }
 
+        /**
+         * ファイル名の妥当性をチェックする
+         * 不正な文字が含まれている場合や長さが255を超えている場合に例外をスローする
+         */
         @Throws(InvalidFilenameException::class)
         @JvmStatic
         fun checkFilenameValidity(str: String) {
@@ -77,6 +96,9 @@ class FileTools {
             }
         }
 
+        /**
+         * ファイル名が無効かどうかをコールバックで判定する
+         */
         @JvmStatic
         fun isFilenameInvalid(
             str: String,
@@ -97,6 +119,9 @@ class FileTools {
             return false
         }
 
+        /**
+         * EditTextの内容がファイル名として有効かどうかをチェックする
+         */
         @JvmStatic
         fun isFilenameInvalid(editText: EditText): Boolean {
             val str = editText.text.toString()
@@ -111,12 +136,19 @@ class FileTools {
             )
         }
 
+        /**
+         * フォルダ内の最新ファイルを取得する
+         */
         @JvmStatic
         fun getLatestFile(folderPath: String?, modifyTime: Int): File? {
             if (folderPath == null) return null
             return getLatestFile(File(folderPath), modifyTime.toLong())
         }
 
+        /**
+         * フォルダ内で指定した時間以内に更新された最新ファイルを取得する
+         * modifyTime（秒）以内に更新されたファイルがない場合はnullを返す
+         */
         @JvmStatic
         fun getLatestFile(folder: File?, modifyTime: Long): File? {
             if (folder == null || !folder.isDirectory) {
@@ -138,7 +170,7 @@ class FileTools {
 
             if (modifyTime > 0) {
                 val difference =
-                    (YLTools.getCurrentTimeMillis() - fileList[0].lastModified()) / 1000 //转换为秒
+                    (YLTools.getCurrentTimeMillis() - fileList[0].lastModified()) / 1000
                 if (difference >= modifyTime) {
                     return null
                 }
@@ -147,11 +179,17 @@ class FileTools {
             return fileList[0]
         }
 
+        /**
+         * ファイルを共有する
+         */
         @JvmStatic
         fun shareFile(context: Context, file: File) {
             shareFile(context, file.name, file.absolutePath)
         }
 
+        /**
+         * ファイル名とパスを指定してファイルを共有する
+         */
         @JvmStatic
         fun shareFile(context: Context, fileName: String, filePath: String) {
             val contentUri = DocumentsContract.buildDocumentUri(
@@ -170,6 +208,9 @@ class FileTools {
             context.startActivity(sendIntent)
         }
 
+        /**
+         * ファイル名変更ダイアログを表示する（拡張子指定版）
+         */
         @JvmStatic
         @SuppressLint("UseCompatLoadingForDrawables")
         fun renameFileListener(context: Context, endTask: Task<*>?, file: File, suffix: String) {
@@ -205,6 +246,9 @@ class FileTools {
                 }).showDialog()
         }
 
+        /**
+         * ファイル名変更ダイアログを表示する（拡張子なし版）
+         */
         @JvmStatic
         @SuppressLint("UseCompatLoadingForDrawables")
         fun renameFileListener(context: Context, endTask: Task<*>?, file: File) {
@@ -240,23 +284,35 @@ class FileTools {
                 }).showDialog()
         }
 
+        /**
+         * ファイル名を変更する
+         */
         @JvmStatic
         fun renameFile(origin: File, target: File): Boolean {
             return origin.renameTo(target)
         }
 
+        /**
+         * ファイルまたはディレクトリをコピーする
+         */
         @JvmStatic
         fun copyFile(file :File, target: File) {
             if (file.isFile) FileUtils.copyFile(file, target)
             else if (file.isDirectory) FileUtils.copyDirectory(file, target)
         }
 
+        /**
+         * ファイルまたはディレクトリを移動する
+         */
         @JvmStatic
         fun moveFile(file :File, target: File) {
             if (file.isFile) FileUtils.moveFile(file, target)
             else if (file.isDirectory) FileUtils.moveDirectory(file, target)
         }
 
+        /**
+         * ファイル名から拡張子を除いた部分を取得する
+         */
         @JvmStatic
         fun getFileNameWithoutExtension(fileName: String, fileExtension: String?): String {
             val dotIndex = if (fileExtension == null) {
@@ -267,9 +323,15 @@ class FileTools {
             return if (dotIndex == -1) fileName else fileName.substring(0, dotIndex)
         }
 
+        /**
+         * Fileオブジェクトから拡張子を除いたファイル名を取得する
+         */
         @JvmStatic
         fun getFileNameWithoutExtension(file: File): String = file.nameWithoutExtension
 
+        /**
+         * ファイルサイズを人間が読みやすい形式にフォーマットする
+         */
         @JvmStatic
         @SuppressLint("DefaultLocale")
         fun formatFileSize(bytes: Long): String {
@@ -278,7 +340,7 @@ class FileTools {
             val units = arrayOf("B", "KB", "MB", "GB")
             var unitIndex = 0
             var value = bytes.toDouble()
-            //循环获取合适的单位
+            // 適切な単位をループで選択する
             while (value >= 1024 && unitIndex < units.size - 1) {
                 value /= 1024.0
                 unitIndex++
@@ -286,6 +348,9 @@ class FileTools {
             return String.format("%.2f %s", value, units[unitIndex])
         }
 
+        /**
+         * ディレクトリをZIPに圧縮する（フィルター付き）
+         */
         @JvmStatic
         @Throws(IOException::class)
         fun zipDirectory(folder: File, parentPath: String, filter: (File) -> Boolean, zos: ZipOutputStream) {
@@ -299,12 +364,15 @@ class FileTools {
             }
         }
 
+        /**
+         * 単一ファイルをZIPエントリとして追加する
+         */
         @JvmStatic
         @Throws(IOException::class)
         fun zipFile(file: File, entryName: String, zos: ZipOutputStream) {
             FileInputStream(file).use { fis ->
                 val zipEntry = ZipEntry(entryName)
-                zipEntry.time = file.lastModified() //保留文件的修改时间
+                zipEntry.time = file.lastModified() // ファイルの更新日時を保持する
                 zos.putNextEntry(zipEntry)
 
                 val buffer = ByteArray(4096)
@@ -316,12 +384,18 @@ class FileTools {
             }
         }
 
+        /**
+         * ファイルのハッシュ値を計算する（デフォルトはSHA-256）
+         */
         @JvmStatic
         @Throws(Exception::class)
         fun calculateFileHash(file: File, algorithm: String = "SHA-256"): String {
             return calculateFileHash(file.inputStream(), algorithm)
         }
 
+        /**
+         * InputStreamからハッシュ値を計算する
+         */
         @JvmStatic
         @Throws(Exception::class)
         fun calculateFileHash(inputStream: InputStream, algorithm: String = "SHA-256"): String {
@@ -337,7 +411,7 @@ class FileTools {
         }
 
         /**
-         * 字节数组转十六进制字符串（高效实现）
+         * バイト配列を16進数文字列に変換する（高効率実装）
          */
         private fun ByteArray.toHex(): String {
             val hexChars = "0123456789abcdef"

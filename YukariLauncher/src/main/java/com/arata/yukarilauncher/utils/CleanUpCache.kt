@@ -14,6 +14,10 @@ class CleanUpCache {
     companion object {
         private var isCleaning = false
 
+        /**
+         * キャッシュのクリーンアップを開始する
+         * キャッシュディレクトリとバージョンリストファイルを削除し、結果をトーストで表示する
+         */
         @JvmStatic
         fun start(context: Context) {
             if (isCleaning) return
@@ -59,6 +63,9 @@ class CleanUpCache {
             }
         }
 
+        /**
+         * 複数のファイル配列を一つのリストに結合する
+         */
         private fun getList(vararg filesArray: Array<File>): MutableList<File> {
             val filesList: MutableList<File> = ArrayList()
             for (fileArray in filesArray) {

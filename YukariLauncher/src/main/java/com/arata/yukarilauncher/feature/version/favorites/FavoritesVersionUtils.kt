@@ -3,8 +3,16 @@ package com.arata.yukarilauncher.feature.version.favorites
 import com.arata.yukarilauncher.feature.version.VersionsManager
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * お気に入りバージョン管理のユーティリティクラス
+ * お気に入りフォルダの追加・削除・リネームなどの操作を提供する
+ */
 class FavoritesVersionUtils private constructor() {
     companion object {
+        /**
+         * お気に入りマップを変更するための汎用関数
+         * @param action 変更操作
+         */
         private inline fun modifyFavorites(action: (MutableMap<String, MutableSet<String>>) -> Unit) {
             VersionsManager.currentGameInfo.apply {
                 action(favoritesMap)
@@ -13,7 +21,9 @@ class FavoritesVersionUtils private constructor() {
         }
 
         /**
-         * 原子化重命名版本
+         * バージョン名を原子的に変更する
+         * @param oldName 古い名前
+         * @param newName 新しい名前
          */
         fun renameVersion(oldName: String, newName: String) = modifyFavorites { map ->
             map.values.forEach { versions ->
@@ -25,38 +35,41 @@ class FavoritesVersionUtils private constructor() {
         }
 
         /**
-         * 添加一个收藏夹
+         * 新しいお気に入りフォルダを追加する
+         * @param name フォルダ名
          */
         fun addFolder(name: String) = modifyFavorites { map ->
             map.putIfAbsent(name, ConcurrentHashMap.newKeySet())
         }
 
         /**
-         * 移除一个收藏夹
+         * お気に入りフォルダを削除する
+         * @param name フォルダ名
          */
         fun removeFolder(name: String) = modifyFavorites { map ->
             map.remove(name)
         }
 
         /**
-         * 更新版本收藏夹
-         * @param version 目标版本
-         * @param targetFolders 需要包含该版本的收藏夹集合
+         * バージョンのお気に入りフォルダ所属を更新する
+         * @param version 対象バージョン
+         * @param targetFolders このバージョンを含めるお気に入りフォルダのセット
          */
         fun updateVersionFolders(version: String, targetFolders: Set<String>) = modifyFavorites { map ->
-            //添加至目标收藏夹
+            // ターゲットフォルダに追加
             targetFolders.forEach { folder ->
                 map.getOrPut(folder) { ConcurrentHashMap.newKeySet() }.add(version)
             }
 
-            //从非目标收藏夹移除
+            // 非ターゲットフォルダから削除
             map.keys.filterNot { it in targetFolders }.forEach { folder ->
                 map[folder]?.remove(version)
             }
         }
 
         /**
-         * 获取有效收藏夹结构
+         * 有効なお気に入り構造を取得する
+         * @return フォルダ名とバージョンセットのマップ
          */
         fun getFavoritesStructure(): Map<String, Set<String>> =
             VersionsManager.currentGameInfo.favoritesMap.let { map ->
@@ -64,7 +77,9 @@ class FavoritesVersionUtils private constructor() {
             }
 
         /**
-         * 获取指定收藏夹的有效版本
+         * 指定されたお気に入りフォルダの有効なバージョンを取得する
+         * @param folder フォルダ名
+         * @return 有効なバージョン名のセット
          */
         fun getValidVersions(folder: String): Set<String> =
             VersionsManager.currentGameInfo.favoritesMap[folder]

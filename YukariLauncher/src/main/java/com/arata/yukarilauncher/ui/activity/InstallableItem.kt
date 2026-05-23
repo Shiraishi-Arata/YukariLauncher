@@ -2,6 +2,9 @@ package com.arata.yukarilauncher.ui.activity
 
 import com.arata.yukarilauncher.feature.unpack.AbstractUnpackTask
 
+/**
+ * インストール可能なアイテムを表すデータクラス
+ */
 class InstallableItem(
     val name: String,
     val summary: String?,

@@ -22,6 +22,9 @@ class FabricLikeUtils private constructor(
     val addon: Addon
 ) {
     @Throws(IOException::class)
+/**
+ * downloadGameVersionsする
+ */
     fun downloadGameVersions(force: Boolean): Array<FabricVersion>? {
         try {
             return DownloadUtils.downloadStringCached(
@@ -40,6 +43,9 @@ class FabricLikeUtils private constructor(
     }
 
     @Throws(IOException::class)
+/**
+ * downloadLoaderVersionsする
+ */
     fun downloadLoaderVersions(force: Boolean): Array<FabricVersion>? {
         try {
             return DownloadUtils.downloadStringCached(
@@ -82,6 +88,9 @@ class FabricLikeUtils private constructor(
             return url
         }
 
+/**
+ * createJsonDownloadUrlする
+ */
     fun createJsonDownloadUrl(gameVersion: String?, loaderVersion: String?): String {
         val newGameVersion: String?
         val newLoaderVersion: String?
@@ -97,8 +106,14 @@ class FabricLikeUtils private constructor(
         )
     }
 
+/**
+ * nameする
+ */
     val name: String get() = addon.addonName
 
+/**
+ * getDownloadTaskする
+ */
     fun getDownloadTask(gameVersion: String?, loaderVersion: String?): FabricLikeDownloadTask {
         return if ("Fabric" == addon.addonName) {
             FabricLikeDownloadTask(this)
@@ -128,6 +143,9 @@ class FabricLikeUtils private constructor(
         private const val JSON_DOWNLOAD_URL = "%s/versions/loader/%s/%s/profile/json"
 
         @Throws(JSONException::class)
+/**
+ * deserializeLoaderVersionsする
+ */
         private fun deserializeLoaderVersions(input: String): Array<FabricVersion> {
             val jsonArray = JSONArray(input)
             val fabricVersions: MutableList<FabricVersion> = ArrayList()
@@ -144,6 +162,9 @@ class FabricLikeUtils private constructor(
         }
 
         @Throws(DownloadUtils.ParseException::class)
+/**
+ * deserializeRawVersionsする
+ */
         private fun deserializeRawVersions(jsonArrayIn: String): Array<FabricVersion> {
             try {
                 return Tools.GLOBAL_GSON.fromJson(jsonArrayIn, Array<FabricVersion>::class.java)

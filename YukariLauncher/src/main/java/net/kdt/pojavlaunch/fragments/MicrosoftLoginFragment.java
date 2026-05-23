@@ -29,6 +29,9 @@ public class MicrosoftLoginFragment extends BaseFragment {
     // Technically the client is blank (or there is none) when the fragment is initialized
     private boolean mBlankClient = true;
 
+/**
+ * MicrosoftLoginFragmentを構築します
+ */
     public MicrosoftLoginFragment() {
         super(R.layout.fragment_microsoft_login);
     }
@@ -53,6 +56,10 @@ public class MicrosoftLoginFragment extends BaseFragment {
     // separately. Note that general state should not be altered here (aka no loading pages, no manipulating back/front lists),
     // to avoid "undesirable side-effects"
     @SuppressLint("SetJavaScriptEnabled")
+/**
+ * webViewSettingsを設定する
+ * @param webViewSettings 設定値
+ */
     private void setWebViewSettings() {
         WebSettings settings = binding.webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -60,6 +67,9 @@ public class MicrosoftLoginFragment extends BaseFragment {
         mBlankClient = false;
     }
 
+/**
+ * startNewSessionメソッド
+ */
     private void startNewSession() {
         CookieManager.getInstance().removeAllCookies((b)->{
             binding.webView.clearHistory();
@@ -74,6 +84,9 @@ public class MicrosoftLoginFragment extends BaseFragment {
         });
     }
 
+/**
+ * restoreWebViewStateメソッド
+ */
     private void restoreWebViewState(Bundle savedInstanceState) {
         Logging.i("MSAuthFragment","Restoring state...");
         if(binding.webView.restoreState(savedInstanceState) == null) {
@@ -115,10 +128,16 @@ public class MicrosoftLoginFragment extends BaseFragment {
     }
 
     /* Expose webview actions to others */
+/**
+ * canGoBackメソッド
+ */
     public boolean canGoBack() {
         return binding.webView.canGoBack();
     }
 
+/**
+ * goBackメソッド
+ */
     public void goBack() {
         binding.webView.goBack();
     }

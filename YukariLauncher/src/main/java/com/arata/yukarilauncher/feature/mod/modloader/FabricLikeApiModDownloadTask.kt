@@ -12,6 +12,9 @@ import java.io.File
 
 class FabricLikeApiModDownloadTask(private val fileName: String, private val versionItem: VersionItem) : InstallTask, Tools.DownloaderFeedback {
     @Throws(Exception::class)
+/**
+ * runする
+ */
     override fun run(customName: String): File {
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.mod_download_progress, versionItem.fileName)
         val destinationFile = File(PathManager.DIR_CACHE, "$fileName.jar")
@@ -20,6 +23,9 @@ class FabricLikeApiModDownloadTask(private val fileName: String, private val ver
         return destinationFile
     }
 
+/**
+ * updateProgressする
+ */
     override fun updateProgress(curr: Long, max: Long) {
         val progress100 = ((curr.toFloat() / max.toFloat()) * 100f).toInt()
         ProgressKeeper.submitProgress(ProgressLayout.INSTALL_RESOURCE, progress100, R.string.mod_download_progress, versionItem.fileName)

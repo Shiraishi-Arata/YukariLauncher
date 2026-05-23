@@ -22,8 +22,10 @@ public class ControlDrawer extends ControlButton {
     public final ControlDrawerData drawerData;
     public final ControlLayout parentLayout;
     public boolean areButtonsVisible;
-
-
+/**
+ * コンストラクタ。
+ * このクラスの新しいインスタンスを初期化します。
+ */
     public ControlDrawer(ControlLayout layout, ControlDrawerData drawerData) {
         super(layout, drawerData.properties);
 
@@ -32,22 +34,32 @@ public class ControlDrawer extends ControlButton {
         this.drawerData = drawerData;
         areButtonsVisible = layout.getModifiable();
     }
-
-
+/**
+ * 「add Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void addButton(ControlData properties){
         addButton(new ControlSubButton(parentLayout, properties, this));
     }
-
+/**
+ * 「add Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void addButton(ControlSubButton button){
         buttons.add(button);
         syncButtons();
         setControlButtonVisibility(button, areButtonsVisible);
     }
-
+/**
+ * 「ControlButtonVisibility」の値を設定します。
+ */
     private void setControlButtonVisibility(ControlButton button, boolean isVisible){
         button.getControlView().setVisibility(isVisible ? VISIBLE : GONE);
     }
-
+/**
+ * 「switch Button Visibility」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     private void switchButtonVisibility(){
         areButtonsVisible = !areButtonsVisible;
         int visibility = areButtonsVisible ? VISIBLE : GONE;
@@ -55,8 +67,12 @@ public class ControlDrawer extends ControlButton {
             button.getControlView().setVisibility(visibility);
         }
     }
+/**
+ * 「align Buttons」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
-    //Syncing stuff
+    //同期処理
     private void alignButtons(){
         if(buttons == null) return;
         if(drawerData.orientation == ControlDrawerData.Orientation.FREE) return;
@@ -87,7 +103,10 @@ public class ControlDrawer extends ControlButton {
             buttons.get(i).updateProperties();
         }
     }
-
+/**
+ * 「resize Buttons」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
 
     private void resizeButtons(){
         if (buttons == null || drawerData.orientation == ControlDrawerData.Orientation.FREE) return;
@@ -98,17 +117,20 @@ public class ControlDrawer extends ControlButton {
             subButton.updateProperties();
         }
     }
-
+/**
+ * 「sync Buttons」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     public void syncButtons(){
         alignButtons();
         resizeButtons();
     }
 
     /**
-     * Check whether or not the button passed as a parameter belongs to this drawer.
+     * パラメータとして渡されたボタンがこのドロワーに属するかどうかを確認します。
      *
-     * @param button The button to look for
-     * @return Whether the button is in the buttons list of the drawer.
+     * @param button 検索するボタン
+     * @return ボタンがドロワーのボタンリスト内にあるかどうか
      */
     public boolean containsChild(ControlInterface button){
         for(ControlButton childButton : buttons){
@@ -116,14 +138,19 @@ public class ControlDrawer extends ControlButton {
         }
         return false;
     }
-
+/**
+ * 「pre Process Properties」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public ControlData preProcessProperties(ControlData properties, ControlLayout layout) {
         ControlData data = super.preProcessProperties(properties, layout);
         data.isHideable = true;
         return data;
     }
-
+/**
+ * 「Visible」の値を設定します。
+ */
     @Override
     public void setVisible(boolean isVisible) {
         int visibility = isVisible ? VISIBLE : GONE;
@@ -134,6 +161,10 @@ public class ControlDrawer extends ControlButton {
             }
         }
     }
+/**
+ * タッチイベントを処理します。
+ * ユーザーからのタッチ入力を検出し、適切なアクションを実行します。
+ */
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -150,42 +181,60 @@ public class ControlDrawer extends ControlButton {
 
         return super.onTouchEvent(event);
     }
-
+/**
+ * 「X」の値を設定します。
+ */
 
     @Override
     public void setX(float x) {
         super.setX(x);
         alignButtons();
     }
-
+/**
+ * 「Y」の値を設定します。
+ */
     @Override
     public void setY(float y) {
         super.setY(y);
         alignButtons();
     }
-
+/**
+ * 「LayoutParams」の値を設定します。
+ */
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
         super.setLayoutParams(params);
         syncButtons();
     }
-
+/**
+ * 「can Snap」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public boolean canSnap(ControlInterface button) {
         boolean result = super.canSnap(button);
         return result && !containsChild(button);
     }
+/**
+ * 「DrawerData」の値を取得します。
+ */
 
-    //Getters
+    //ゲッター
     public ControlDrawerData getDrawerData() {
         return drawerData;
     }
-
+/**
+ * 「load Edit Values」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void loadEditValues(EditControlPopup editControlPopup) {
         editControlPopup.loadValues(drawerData);
     }
-
+/**
+ * 「clone Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void cloneButton() {
         ControlDrawerData cloneData = new ControlDrawerData(getDrawerData());
@@ -193,7 +242,10 @@ public class ControlDrawer extends ControlButton {
         cloneData.properties.dynamicY = "0.5 * ${screen_height}";
         ((ControlLayout) getParent()).addDrawer(cloneData);
     }
-
+/**
+ * 「remove Button」処理を実行します。
+ * このメソッドは特定の機能を提供するために実装されています。
+ */
     @Override
     public void removeButton() {
         ControlLayout layout = getControlLayoutParent();

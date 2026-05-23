@@ -15,8 +15,8 @@ class ContextExecutor {
         private var sActivity: WeakReference<Activity>? = null
 
         /**
-         * Set the Application that will be used to execute tasks if the Activity won't be available.
-         * @param application the application to use as the fallback
+         * Activityが利用できない場合にタスクを実行するためのApplicationを設定する
+         * @param application フォールバックとして使用するApplication
          */
         @JvmStatic
         fun setApplication(application: Application) {
@@ -24,8 +24,9 @@ class ContextExecutor {
         }
 
         /**
-         * Clear the Application previously set, so that ContextExecutor will notify the user of a critical error
-         * that is executing code after the application is ended by the system.
+         * 設定されたApplicationをクリアする
+         * アプリケーションがシステムによって終了された後にコードが実行される重大なエラーを
+         * ContextExecutorがユーザーに通知できるようにする
          */
         @JvmStatic
         fun clearApplication() {
@@ -33,8 +34,8 @@ class ContextExecutor {
         }
 
         /**
-         * Set the Activity that this ContextExecutor will use for executing tasks
-         * @param activity the activity to be used
+         * ContextExecutorがタスクの実行に使用するActivityを設定する
+         * @param activity 使用するActivity
          */
         @JvmStatic
         fun setActivity(activity: Activity) {
@@ -42,7 +43,8 @@ class ContextExecutor {
         }
 
         /**
-         * Clear the Activity previously set, so the ContextExecutor won't use it to execute tasks.
+         * 設定されたActivityをクリアする
+         * ContextExecutorがタスクの実行にそれを使用しないようにする
          */
         @JvmStatic
         fun clearActivity() {
@@ -50,9 +52,9 @@ class ContextExecutor {
         }
 
         /**
-         * Schedules a ContextExecutorTask to be executed. For more info on tasks
-         * @see ContextExecutorTask
-         * @param task the task to be executed
+         * ContextExecutorTaskを実行するようにスケジュールする
+         * @see ContextExecutorTask タスクの詳細についてはこちら
+         * @param task 実行するタスク
          */
         @JvmStatic
         fun executeTask(task: ContextExecutorTask) {
@@ -67,9 +69,9 @@ class ContextExecutor {
         }
 
         /**
-         * 忽略Context是来自谁，直接使用这个Context执行任务
+         * Contextの種類に関わらず、このContextを使用してタスクを実行する
          * @see AllContextExecutorTask
-         * @param task 想要执行的任务
+         * @param task 実行したいタスク
          */
         @JvmStatic
         fun executeTaskWithAllContext(task: AllContextExecutorTask) {
@@ -79,6 +81,10 @@ class ContextExecutor {
             )
         }
 
+        /**
+         * ActivityまたはApplicationのContextを使用してタスクを実行する
+         * 内部処理用。まずActivityを試し、なければApplicationを使用する
+         */
         private fun execute(activity: (Activity) -> Unit, application: (Application) -> Unit) {
             TaskExecutors.runInUIThread {
                 Tools.getWeakReference(this.sActivity)?.let {
@@ -94,9 +100,9 @@ class ContextExecutor {
         }
 
         /**
-         * 通过这里保存的Activity获得res string
-         * 如果Activity没有设置或者无法查找对应的res string，那么就会找到Application尝试获取
-         * 如果仍旧失败，那么就只能接受报错了
+         * 保存されたActivityからリソース文字列を取得する
+         * Activityが設定されていない、またはリソースが見つからない場合はApplicationを試す
+         * それでも失敗した場合は例外がスローされる
          */
         @JvmStatic
         fun getString(resId: Int): String {
@@ -104,10 +110,9 @@ class ContextExecutor {
         }
 
         /**
-         * 在Java语言中，想要通过这个类来展示一个Toast会比较复杂
-         * 这个函数就是用来解决这个痛点的XD
-         * @param resId 要展示的文本的 res ID
-         * @param duration 时长 LENGTH_SHORT LENGTH_LONG，与官方一致
+         * Java言語からこのクラスを使ってToastを表示するための簡易メソッド
+         * @param resId 表示するテキストのリソースID
+         * @param duration 表示時間（LENGTH_SHORT / LENGTH_LONG）
          */
         @JvmStatic
         fun showToast(resId: Int, duration: Int) {
@@ -115,10 +120,9 @@ class ContextExecutor {
         }
 
         /**
-         * 在Java语言中，想要通过这个类来展示一个Toast会比较复杂
-         * 这个函数就是用来解决这个痛点的XD
-         * @param string 要展示的文本
-         * @param duration 时长 LENGTH_SHORT LENGTH_LONG，与官方一致
+         * Java言語からこのクラスを使ってToastを表示するための簡易メソッド
+         * @param string 表示するテキスト
+         * @param duration 表示時間（LENGTH_SHORT / LENGTH_LONG）
          */
         @JvmStatic
         fun showToast(string: String, duration: Int) {
@@ -126,8 +130,8 @@ class ContextExecutor {
         }
 
         /**
-         * 尝试获取Activity
-         * @throws RuntimeException 如果Activity不存在，那么将抛出异常
+         * Activityを取得する
+         * @throws RuntimeException Activityが存在しない場合にスローされる
          */
         @JvmStatic
         fun getActivity(): Activity {
@@ -135,8 +139,8 @@ class ContextExecutor {
         }
 
         /**
-         * 尝试获取Application
-         * @throws RuntimeException 如果Application不存在，那么将抛出异常
+         * Applicationを取得する
+         * @throws RuntimeException Applicationが存在しない場合にスローされる
          */
         @JvmStatic
         fun getApplication(): Application {
@@ -145,14 +149,14 @@ class ContextExecutor {
     }
 
     /**
-     * A AllContextExecutorTask is a task that can dynamically change its behaviour, based on the context
-     * used for its execution. This can be used to implement for ex. error/finish notifications from
-     * background threads that may live with the Service after the activity that started them died.
+     * AllContextExecutorTaskは、実行に使用されるContextに基づいて動作を動的に変更できるタスク
+     * 例えば、Activityが死んだ後にServiceと共に生存するバックグラウンドスレッドからの
+     * エラー通知や終了通知を実装するために使用できる
      */
     fun interface AllContextExecutorTask {
         /**
-         * 将会伴随着Activity或者是Application的Context执行的任务
-         * @param context Activity或者是Application的Context
+         * ActivityまたはApplicationのContextと共に実行されるタスク
+         * @param context ActivityまたはApplicationのContext
          */
         fun execute(context: Context)
     }

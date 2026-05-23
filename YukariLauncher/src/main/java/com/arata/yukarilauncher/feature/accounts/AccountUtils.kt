@@ -18,30 +18,51 @@ import java.util.Objects
 class AccountUtils {
     companion object {
         @JvmStatic
+/**
+ * microsoftLoginする
+ */
         fun microsoftLogin(context: Context, account: MinecraftAccount, doneListener: DoneListener, errorListener: ErrorListener) {
             MicrosoftBackgroundLogin(true, account.msaRefreshToken)
                 .performLogin(context, account, doneListener, errorListener)
         }
 
         @JvmStatic
+/**
+ * otherLoginする
+ */
         fun otherLogin(context: Context, account: MinecraftAccount, doneListener: DoneListener, errorListener: ErrorListener) {
+/**
+ * clearProgressする
+ */
             fun clearProgress() = ProgressLayout.clearProgress(ProgressLayout.LOGIN_ACCOUNT)
 
             Task.runTask {
                 OtherLoginHelper(account.otherBaseUrl, account.accountType, account.otherAccount, account.otherPassword,
                     object : OtherLoginHelper.OnLoginListener {
+/**
+ * onLoadingする
+ */
                         override fun onLoading() {
                             ProgressLayout.setProgress(ProgressLayout.LOGIN_ACCOUNT, 0, R.string.account_login_start)
                         }
 
+/**
+ * unLoadingする
+ */
                         override fun unLoading() {}
 
+/**
+ * onSuccessする
+ */
                         override fun onSuccess(account: MinecraftAccount) {
                             account.save()
                             clearProgress()
                             doneListener.onLoginDone(account)
                         }
 
+/**
+ * onFailedする
+ */
                         override fun onFailed(error: String) {
                             clearProgress()
                             errorListener.onLoginError(RuntimeException(error))
@@ -52,21 +73,33 @@ class AccountUtils {
         }
 
         @JvmStatic
+/**
+ * isOtherLoginAccountする
+ */
         fun isOtherLoginAccount(account: MinecraftAccount): Boolean {
             return !Objects.isNull(account.otherBaseUrl) && account.otherBaseUrl != "0"
         }
 
         @JvmStatic
+/**
+ * isMicrosoftAccountする
+ */
         fun isMicrosoftAccount(account: MinecraftAccount): Boolean {
             return account.accountType == AccountType.MICROSOFT.type
         }
 
         @JvmStatic
+/**
+ * isNoLoginRequiredする
+ */
         fun isNoLoginRequired(account: MinecraftAccount?): Boolean {
             return account == null || account.accountType == AccountType.LOCAL.type
         }
 
         @JvmStatic
+/**
+ * getAccountTypeNameする
+ */
         fun getAccountTypeName(context: Context, account: MinecraftAccount): String {
             return if (isMicrosoftAccount(account)) {
                 context.getString(R.string.account_microsoft_account)
@@ -81,7 +114,13 @@ class AccountUtils {
          * 修改自源代码：[HMCL Core: AuthlibInjectorServer.java](https://github.com/HMCL-dev/HMCL/blob/main/HMCLCore/src/main/java/org/jackhuang/hmcl/auth/authlibinjector/AuthlibInjectorServer.java#L60-#L76)
          * <br>原项目版权归原作者所有，遵循GPL v3协议
          */
+/**
+ * tryGetFullServerUrlする
+ */
         fun tryGetFullServerUrl(baseUrl: String): String {
+/**
+ * Stringする
+ */
             fun String.addSlashIfMissing(): String {
                 if (!endsWith("/")) return "$this/"
                 return this
@@ -112,6 +151,9 @@ class AccountUtils {
          * 修改自源代码：[HMCL Core: AuthlibInjectorServer.java](https://github.com/HMCL-dev/HMCL/blob/main/HMCLCore/src/main/java/org/jackhuang/hmcl/auth/authlibinjector/AuthlibInjectorServer.java#L90-#L96)
          * <br>原项目版权归原作者所有，遵循GPL v3协议
          */
+/**
+ * addHttpsIfMissingする
+ */
         private fun addHttpsIfMissing(baseUrl: String): String {
             return if (!baseUrl.startsWith("http://", true) && !baseUrl.startsWith("https://")) {
                 "https://$baseUrl".lowercase(Locale.ROOT)

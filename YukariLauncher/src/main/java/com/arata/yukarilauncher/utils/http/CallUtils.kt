@@ -8,11 +8,18 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import java.io.IOException
 
+/**
+ * HTTPリクエスト実行のユーティリティクラス
+ * トークン認証付きのOkHttpリクエストを非同期的・同期的に実行する
+ */
 class CallUtils(
     private val listener: CallbackListener,
     url: String,
     private val token: String?
 ) {
+    /**
+     * リクエストにAuthorizationヘッダーを追加するインターセプター
+     */
     private val tokenInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val requestWithToken = originalRequest.newBuilder()
@@ -27,6 +34,9 @@ class CallUtils(
 
     private val newCall: Call = client.newCall(UrlManager.createRequestBuilder(url).build())
 
+    /**
+     * 非同期でリクエストを実行する
+     */
     fun enqueue() {
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -40,6 +50,9 @@ class CallUtils(
         })
     }
 
+    /**
+     * 同期でリクエストを実行する
+     */
     fun execute() {
         try {
             val response = newCall.execute()
@@ -54,6 +67,9 @@ class CallUtils(
         }
     }
 
+    /**
+     * コールバックリスナーインターフェース
+     */
     interface CallbackListener {
         fun onFailure(call: Call?)
 

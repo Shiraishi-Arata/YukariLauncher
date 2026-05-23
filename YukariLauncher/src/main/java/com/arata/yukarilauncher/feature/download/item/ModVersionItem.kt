@@ -22,6 +22,9 @@ class ModVersionItem(
 ) : ModLikeVersionItem(
     projectId, title, downloadCount, uploadDate, mcVersions, versionType, fileName, fileHash, fileUrl, modloaders
 ) {
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "ModVersionItem(" +
                 "projectId='$projectId', " +

@@ -27,38 +27,45 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 
+    /**
+     * Object型の引数を文字列に変換し、間にスペースを挿入する
+     */
     public static String insertSpace(Object prefixString, Object... suffixString) {
         return insertSpace(prefixString == null ? null : prefixString.toString(),
                 Arrays.stream(suffixString).map(Object::toString).toArray(String[]::new));
     }
 
     /**
-     * 在字符串之间插入空格
-     *
-     * @param prefixString 第一个字符串
-     * @param suffixString 之后的多个字符串
-     * @return 返回插入好空格的字符串 "string1 string2 string3"
+     * 文字列の間にスペースを挿入する
+     * @param prefixString 最初の文字列
+     * @param suffixString それ以降の複数の文字列
+     * @return スペースが挿入された文字列 "string1 string2 string3"
      */
     public static String insertSpace(String prefixString, String... suffixString) {
         return insertString(" ", prefixString, suffixString);
     }
 
+    /**
+     * Object型の引数を文字列に変換し、間に改行を挿入する
+     */
     public static String insertNewline(Object prefixString, Object... suffixString) {
         return insertNewline(prefixString == null ? null : prefixString.toString(),
                 Arrays.stream(suffixString).map(Object::toString).toArray(String[]::new));
     }
 
     /**
-     * 在字符串之间插入换行符
-     *
-     * @param prefixString 第一个字符串
-     * @param suffixString 之后的多个字符串
-     * @return 返回插入好换行符的字符串
+     * 文字列の間に改行を挿入する
+     * @param prefixString 最初の文字列
+     * @param suffixString それ以降の複数の文字列
+     * @return 改行が挿入された文字列
      */
     public static String insertNewline(String prefixString, String... suffixString) {
         return insertString("\r\n", prefixString, suffixString);
     }
 
+    /**
+     * 文字列の間に指定された区切り文字を挿入する
+     */
     public static String insertString(String stringToInsert, String prefixString, String... suffixString) {
         StringJoiner stringJoiner = new StringJoiner(stringToInsert);
         if (prefixString != null) {
@@ -71,12 +78,16 @@ public class StringUtils {
         return stringJoiner.toString();
     }
 
+    /**
+     * 文字列を指定した方向と数だけシフト（ローテーション）する
+     * シフト数は文字列の長さで割った余りに調整される
+     */
     public static String shiftString(String input, ShiftDirection direction, int shiftCount) {
         if (input == null || input.isEmpty()) {
             return input;
         }
 
-        //确保位移个数在字符串长度范围内
+        // シフト数が文字列長の範囲内に収まるように調整する
         int length = input.length();
         shiftCount = shiftCount % length;
         if (shiftCount == 0) {
@@ -94,7 +105,7 @@ public class StringUtils {
     }
 
     /**
-     * @return 检查字符串是否为null，如果是那么则返回""，如果不是，则返回字符串本身
+     * @return 文字列がnullの場合は空文字列を、それ以外は元の文字列を返す
      */
     public static String getStringNotNull(String string) {
         if (string == null) return "";
@@ -102,9 +113,9 @@ public class StringUtils {
     }
 
     /**
-     * 检查一段字符串内是否含有中文字符（中文标点）
-     * @param str 检查的字符
-     * @return 是否带有中文
+     * 文字列に中国語（中国語の句読点を含む）が含まれているかどうかをチェックする
+     * @param str チェックする文字列
+     * @return 中国語が含まれているかどうか
      */
     public static boolean containsChinese(String str) {
         if (str == null || str.isEmpty()) {
@@ -116,6 +127,9 @@ public class StringUtils {
         return matcher.find();
     }
 
+    /**
+     * ISO 8601形式の時刻文字列をフォーマットする（TとZを除去してスペース区切りにする）
+     */
     public static String formattingTime(String time) {
         int T = time.indexOf('T');
         int Z = time.indexOf('Z');
@@ -123,12 +137,18 @@ public class StringUtils {
         return StringUtils.insertSpace(time.substring(0, T), time.substring(T + 1, Z));
     }
 
+    /**
+     * 日付を指定されたロケールとタイムゾーンでフォーマットする
+     */
     public static String formatDate(Date date, Locale locale, TimeZone timeZone) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
         formatter.setTimeZone(timeZone);
         return formatter.format(date);
     }
 
+    /**
+     * Markdown形式の文字列をHTMLに変換する
+     */
     public static String markdownToHtml(String markdown) {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdown);
@@ -136,12 +156,18 @@ public class StringUtils {
         return renderer.render(document);
     }
 
+    /**
+     * テキストをクリップボードにコピーし、トースト通知を表示する
+     */
     public static void copyText(String label, String text, Context context) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
         clipboardManager.setPrimaryClip(ClipData.newPlainText(label, text));
         TaskExecutors.runInUIThread(() -> Toast.makeText(context, context.getString(R.string.generic_copied), Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Base64エンコードされた文字列をデコードする
+     */
     public static String decodeBase64(String rawValue) {
         byte[] decodedBytes = Base64.decode(rawValue, Base64.DEFAULT);
         return new String(decodedBytes, StandardCharsets.UTF_8);

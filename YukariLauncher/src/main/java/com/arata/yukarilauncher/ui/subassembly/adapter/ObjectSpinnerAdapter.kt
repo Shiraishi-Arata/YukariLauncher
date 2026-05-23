@@ -11,12 +11,13 @@ import com.skydoves.powerspinner.PowerSpinnerView
 import com.skydoves.powerspinner.databinding.PowerspinnerItemDefaultPowerBinding
 
 /**
- * 改自 [com.skydoves.powerspinner.DefaultSpinnerAdapter]
+ * PowerSpinner用のジェネリックアダプター
+ * 元コード: [com.skydoves.powerspinner.DefaultSpinnerAdapter] を改変
  */
 @SuppressLint("NotifyDataSetChanged")
 class ObjectSpinnerAdapter<T>(
     powerSpinnerView: PowerSpinnerView,
-    private val itemNameProvider: (T) -> String //提供函数来获取字符串
+    private val itemNameProvider: (T) -> String
 ) : RecyclerView.Adapter<ObjectSpinnerAdapter.ViewHolder<T>>(),
     PowerSpinnerInterface<T> {
     companion object {
@@ -30,6 +31,9 @@ class ObjectSpinnerAdapter<T>(
 
     private val spinnerItems: MutableList<T> = arrayListOf()
 
+    /**
+     * ビューホルダーを生成します。
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -48,16 +52,25 @@ class ObjectSpinnerAdapter<T>(
         }
     }
 
+    /**
+     * ビューホルダーにデータをバインドします。
+     */
     override fun onBindViewHolder(holder: ViewHolder<T>, position: Int) {
         holder.bind(spinnerView, spinnerItems[position], index == position)
     }
 
+    /**
+     * アイテムリストを設定する
+     */
     override fun setItems(itemList: List<T>) {
         this.spinnerItems.clear()
         this.spinnerItems.addAll(itemList)
         notifyDataSetChanged()
     }
 
+    /**
+     * 指定インデックスのアイテムを選択状態にする
+     */
     override fun notifyItemSelected(index: Int) {
         if (index == NO_SELECTED_INDEX) return
         val oldIndex = this.index
@@ -75,13 +88,25 @@ class ObjectSpinnerAdapter<T>(
         )
     }
 
+    /**
+     * アイテム総数を返します。
+     */
     override fun getItemCount(): Int = spinnerItems.size
 
+    /**
+     * スピナーアイテムのビューホルダー
+     */
+    /**
+     * スピナーアイテムのビューホルダー。
+     */
     class ViewHolder<T>(
         private val binding: PowerspinnerItemDefaultPowerBinding,
         private val itemNameProvider: (T) -> String
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * アイテムデータをビューにバインドする
+         */
         internal fun bind(spinnerView: PowerSpinnerView, item: T, isSelectedItem: Boolean) {
             binding.itemDefaultText.apply {
                 text = itemNameProvider(item)

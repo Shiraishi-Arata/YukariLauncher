@@ -34,6 +34,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * マインクラフトのゲームファイルをダウンロードするクラス。
+ * バージョンメタデータ、アセット、ライブラリ、ネイティブファイルを並列ダウンロードします。
+ */
 public class MinecraftDownloader {
     private static final double ONE_MEGABYTE = (1024d * 1024d);
     public static final String MINECRAFT_RES = "https://resources.download.minecraft.net/";
@@ -42,24 +46,24 @@ public class MinecraftDownloader {
     private ArrayList<DownloaderTask> mScheduledDownloadTasks;
     private ArrayList<File> mDeclaredNatives;
     private AtomicLong mProcessedFileCounter;
-    private AtomicLong mProcessedSizeCounter; // Total bytes of processed files (passed SHA1 or downloaded)
-    private AtomicLong mInternetUsageCounter; // How many bytes downloaded over Internet
+    private AtomicLong mProcessedSizeCounter;
+    private AtomicLong mInternetUsageCounter;
     private long mTotalFileCount;
     private long mTotalSize;
-    private File mSourceJarFile; // The source client JAR picked during the inheritance process
-    private File mTargetJarFile; // The destination client JAR to which the source will be copied to.
-    private boolean mUseFileCounter; // Whether a file counter or a size counter should be used for progress
+    private File mSourceJarFile;
+    private File mTargetJarFile;
+    private boolean mUseFileCounter;
 
     private static final ThreadLocal<byte[]> sThreadLocalDownloadBuffer = new ThreadLocal<>();
 
     /**
-     * Start the game version download process on the global executor service.
-     * @param version The JMinecraftVersionList.Version from the version list, if available
-     * @param realVersion The version ID (necessary)
-     * @param listener The download status listener
+     * ゲームバージョンのダウンロードプロセスをグローバルエグゼキュータで開始します。
+     * @param version バージョンリストからのJMinecraftVersionList.Version（利用可能な場合）
+     * @param realVersion バージョンID
+     * @param listener ダウンロードステータスリスナー
      */
     public void start(@Nullable JMinecraftVersionList.Version version,
-                      @NonNull String realVersion, // this was there for a reason
+                      @NonNull String realVersion,
                       @NonNull AsyncMinecraftDownloader.DoneListener listener) {
         Task.runTask(() -> {
             downloadGame(version, realVersion);
@@ -71,14 +75,11 @@ public class MinecraftDownloader {
     }
 
     /**
-     * Download the game version.
-     * @param verInfo The JMinecraftVersionList.Version from the version list, if available
-     * @param versionName The version ID (necessary)
-     * @throws Exception when an exception occurs in the function body or in any of the downloading threads.
+     * ゲームバージョンをダウンロードします。
+     * @param verInfo バージョンリストからのバージョン情報
+     * @param versionName バージョンID
      */
     private void downloadGame(JMinecraftVersionList.Version verInfo, String versionName) throws Exception {
-        // Put up a dummy progress line, for the activity to start the service and do all the other necessary
-        // work to keep the launcher alive. We will replace this line when we will start downloading stuff.
         ProgressLayout.setProgress(ProgressLayout.DOWNLOAD_MINECRAFT, 0, R.string.newdl_starting);
         SpeedCalculator speedCalculator = new SpeedCalculator();
 
@@ -95,8 +96,6 @@ public class MinecraftDownloader {
 
         ThreadPoolExecutor downloaderPool = createThreadPoolExecutor();
 
-        // I have tried pre-filling the queue directly instead of doing this, but it didn't work.
-        // What a shame.
         for(DownloaderTask scheduledTask : mScheduledDownloadTasks) downloaderPool.execute(scheduledTask);
         downloaderPool.shutdown();
 
@@ -106,7 +105,6 @@ public class MinecraftDownloader {
                 double speed = speedCalculator.feed(mInternetUsageCounter.get()) / ONE_MEGABYTE;
                 if(mUseFileCounter) reportProgressFileCounter(speed);
                 else reportProgressSizeCounter(speed);
-
             }
             Exception thrownException = mDownloaderThreadException.get();
             if(thrownException != null) {
@@ -116,12 +114,13 @@ public class MinecraftDownloader {
                 extractNatives(versionName);
             }
         }catch (InterruptedException e) {
-            // Interrupted while waiting, which means that the download was cancelled.
-            // Kill all downloading threads immediately, and ignore any exceptions thrown by them
             downloaderPool.shutdownNow();
         }
     }
 
+    /**
+     * ダウンロードスレッドプールを作成します。
+     */
     @NonNull
     private ThreadPoolExecutor createThreadPoolExecutor() {
         int maxThreads = AllSettings.getMaxDownloadThreads().getValue();
@@ -137,6 +136,9 @@ public class MinecraftDownloader {
         );
     }
 
+    /**
+     * ファイルカウンタベースで進捗状況を報告します。
+     */
     private void reportProgressFileCounter(double speed) {
         long dlFileCounter = mProcessedFileCounter.get();
         int progress = (int)((dlFileCounter * 100L) / mTotalFileCount);
@@ -144,6 +146,10 @@ public class MinecraftDownloader {
                 R.string.newdl_downloading_game_files, dlFileCounter,
                 mTotalFileCount, speed);
     }
+
+    /**
+     * サイズカウンタベースで進捗状況を報告します。
+     */
     private void reportProgressSizeCounter(double speed) {
         long dlFileSize = mProcessedSizeCounter.get();
         double dlSizeMegabytes = (double) dlFileSize / ONE_MEGABYTE;
@@ -153,18 +159,22 @@ public class MinecraftDownloader {
                 R.string.newdl_downloading_game_files_size, dlSizeMegabytes, dlTotalMegabytes, speed);
     }
 
+    /**
+     * バージョンJSONファイルのパスを作成します。
+     */
     private File createGameJsonPath(String versionId) {
         return new File(ProfilePathHome.getVersionsHome(), versionId + File.separator + versionId + ".json");
     }
 
+    /**
+     * バージョンJARファイルのパスを作成します。
+     */
     private File createGameJarPath(String versionId) {
         return new File(ProfilePathHome.getVersionsHome(), versionId + File.separator + versionId + ".jar");
     }
 
     /**
-     * Ensure that there is a copy of the client JAR file in the version folder, if a copy is
-     * needed.
-     * @throws IOException if the copy fails
+     * 必要に応じて、バージョンフォルダにクライアントJARのコピーがあることを確認します。
      */
     private void ensureJarFileCopy() throws IOException {
         if(mSourceJarFile == null) return;
@@ -175,6 +185,9 @@ public class MinecraftDownloader {
         org.apache.commons.io.FileUtils.copyFile(mSourceJarFile, mTargetJarFile, false);
     }
 
+    /**
+     * 宣言されたネイティブライブラリを抽出します。
+     */
     private void extractNatives(String versionName) throws IOException {
         if(mDeclaredNatives.isEmpty()) return;
         int totalCount = mDeclaredNatives.size();
@@ -194,6 +207,9 @@ public class MinecraftDownloader {
         }
     }
 
+    /**
+     * ゲームバージョンJSONファイルをダウンロードします（未ダウンロードまたはSHA1不一致の場合）。
+     */
     private File downloadGameJson(JMinecraftVersionList.Version verInfo) throws IOException, MirrorTamperedException {
         File targetFile = createGameJsonPath(verInfo.id);
         if(verInfo.sha1 == null && targetFile.canRead() && targetFile.isFile())
@@ -213,6 +229,9 @@ public class MinecraftDownloader {
         return targetFile;
     }
 
+    /**
+     * アセットインデックスをダウンロードします。
+     */
     private JAssets downloadAssetsIndex(JMinecraftVersionList.Version verInfo) throws IOException{
         JMinecraftVersionList.AssetIndex assetIndex = verInfo.assetIndex;
         if(assetIndex == null || verInfo.assets == null) return null;
@@ -226,7 +245,10 @@ public class MinecraftDownloader {
         });
         return Tools.GLOBAL_GSON.fromJson(Tools.read(targetFile), JAssets.class);
     }
-    
+
+    /**
+     * バージョン情報からクライアントJAR情報を取得します。
+     */
     private MinecraftClientInfo getClientInfo(JMinecraftVersionList.Version verInfo) {
         Map<String, MinecraftClientInfo> downloads = verInfo.downloads;
         if(downloads == null) return null;
@@ -234,11 +256,8 @@ public class MinecraftDownloader {
     }
 
     /**
-     * Download (if necessary) and process a version's metadata, scheduling all downloads that this
-     * version needs.
-     * @param verInfo The JMinecraftVersionList.Version from the version list, if available
-     * @param versionName The version ID (necessary)
-     * @throws IOException if the download of any of the metadata files fails
+     * バージョンのメタデータをダウンロード（必要に応じて）し、処理します。
+     * このバージョンが必要とするすべてのダウンロードをスケジュールします。
      */
     private void downloadAndProcessMetadata(JMinecraftVersionList.Version verInfo, String versionName) throws IOException, MirrorTamperedException {
         File versionJsonFile;
@@ -253,7 +272,6 @@ public class MinecraftDownloader {
         JAssets assets = downloadAssetsIndex(verInfo);
         if(assets != null) scheduleAssetDownloads(assets);
 
-
         MinecraftClientInfo minecraftClientInfo = getClientInfo(verInfo);
         if(minecraftClientInfo != null) scheduleGameJarDownload(minecraftClientInfo, versionName);
 
@@ -261,20 +279,24 @@ public class MinecraftDownloader {
 
         if(Tools.isValidString(verInfo.inheritsFrom)) {
             JMinecraftVersionList.Version inheritedVersion = AsyncMinecraftDownloader.getListedVersion(verInfo.inheritsFrom);
-            // Infinite inheritance !?! :noway:
             downloadAndProcessMetadata(inheritedVersion, verInfo.inheritsFrom);
         }
     }
 
+    /**
+     * ダウンロードリストの容量を拡張します。
+     */
     private void growDownloadList(int addedElementCount) {
         mScheduledDownloadTasks.ensureCapacity(mScheduledDownloadTasks.size() + addedElementCount);
     }
 
+    /**
+     * ダウンロードタスクをスケジュールに追加します。
+     */
     private void scheduleDownload(File targetFile, int downloadClass, String url, String sha1,
                                   long size, boolean skipIfFailed) throws IOException {
         FileUtils.ensureParentDirectory(targetFile);
         mTotalFileCount++;
-        // Only attempt to check size if we still use the size counter and didn't switch to file counter.
         if(size <= 0 && !mUseFileCounter) {
             try {
                 size = DownloadMirror.getContentLengthMirrored(downloadClass, url);
@@ -283,8 +305,6 @@ public class MinecraftDownloader {
             }
         }
         if(size < 0) {
-            // If we were unable to get the content length ourselves, we automatically fall back
-            // to tracking the progress using the file counter.
             size = 0;
             mUseFileCounter = true;
             Logging.i("MinecraftDownloader", "Failed to determine size of "+targetFile.getName()+", switching to file counter");
@@ -297,11 +317,7 @@ public class MinecraftDownloader {
     }
 
     /**
-     * Schedule the download of an AAR library containing the required natives, for later extraction
-     * and adding to the library path.
-     * @param baseRepository the source Maven repository to download from.
-     * @param dependentLibrary the DependentLibrary to get the path from
-     * @throws IOException in case if download scheduling fails.
+     * AARライブラリ（ネイティブを含む）のダウンロードをスケジュールします。
      */
     private void scheduleNativeLibraryDownload(String baseRepository, DependentLibrary dependentLibrary) throws IOException {
         String libArtifactPath = Tools.artifactToPath(dependentLibrary);
@@ -313,13 +329,14 @@ public class MinecraftDownloader {
         scheduleDownload(targetPath, DownloadMirror.DOWNLOAD_CLASS_LIBRARIES, downloadUrl, null, 0, true);
     }
 
+    /**
+     * 依存ライブラリのダウンロードをスケジュールします。
+     */
     private void scheduleLibraryDownloads(DependentLibrary[] dependentLibraries) throws IOException {
         Tools.preProcessLibraries(dependentLibraries);
         growDownloadList(dependentLibraries.length);
         for(DependentLibrary dependentLibrary : dependentLibraries) {
-            // Don't download lwjgl, we have our own bundled in.
             if(dependentLibrary.name.startsWith("org.lwjgl")) continue;
-            // Special handling for JNA Android natives
             if(dependentLibrary.name.startsWith("net.java.dev.jna:jna:")) {
                 scheduleNativeLibraryDownload(MAVEN_CENTRAL_REPO1, dependentLibrary);
             }
@@ -337,8 +354,6 @@ public class MinecraftDownloader {
                     url = artifact.url;
                     size = artifact.size;
                 } else {
-                    // If the library has a downloads section but doesn't have an artifact in
-                    // it, it is likely natives-only, which means it can be skipped.
                     Logging.i("NewMCDownloader", "Skipped library " + dependentLibrary.name + " due to lack of artifact");
                     continue;
                 }
@@ -356,7 +371,10 @@ public class MinecraftDownloader {
             );
         }
     }
-    
+
+    /**
+     * アセットのダウンロードをスケジュールします。
+     */
     private void scheduleAssetDownloads(JAssets assets) throws IOException {
         Map<String, JAssetInfo> assetObjects = assets.objects;
         if(assetObjects == null) return;
@@ -383,10 +401,12 @@ public class MinecraftDownloader {
         }
     }
 
+    /**
+     * ゲームJARのダウンロードをスケジュールします。
+     */
     private void scheduleGameJarDownload(MinecraftClientInfo minecraftClientInfo, String versionName) throws IOException {
         File clientJar = createGameJarPath(versionName);
-        String clientSha1 = AllSettings.getCheckLibraries().getValue() ?
-                minecraftClientInfo.sha1 : null;
+        String clientSha1 = AllSettings.getCheckLibraries().getValue() ? minecraftClientInfo.sha1 : null;
         growDownloadList(1);
         scheduleDownload(clientJar,
                 DownloadMirror.DOWNLOAD_CLASS_LIBRARIES,
@@ -395,10 +415,12 @@ public class MinecraftDownloader {
                 minecraftClientInfo.size,
                 false
         );
-        // Store the path of the JAR to copy it into our new version folder later.
         mSourceJarFile = clientJar;
     }
 
+    /**
+     * スレッドローカルなダウンロードバッファを取得します。
+     */
     private static byte[] getLocalBuffer() {
         byte[] tlb = sThreadLocalDownloadBuffer.get();
         if(tlb != null) return tlb;
@@ -407,6 +429,9 @@ public class MinecraftDownloader {
         return tlb;
     }
 
+    /**
+     * 個別のファイルのダウンロードを実行する内部タスククラス。
+     */
     private final class DownloaderTask implements Runnable, Tools.DownloaderFeedback {
         private final File mTargetPath;
         private final String mTargetUrl;
@@ -416,6 +441,15 @@ public class MinecraftDownloader {
         private long mLastCurr;
         private final long mDownloadSize;
 
+        /**
+         * ダウンロードタスクを初期化します。
+         * @param targetPath ダウンロード先のファイルパス
+         * @param downloadClass ダウンロードクラス（ミラー用）
+         * @param targetUrl ダウンロードURL
+         * @param targetSha1 期待されるSHA1ハッシュ
+         * @param downloadSize ダウンロードサイズ
+         * @param skipIfFailed 失敗時にスキップするかどうか
+         */
         DownloaderTask(File targetPath, int downloadClass, String targetUrl, String targetSha1,
                        long downloadSize, boolean skipIfFailed) {
             this.mTargetPath = targetPath;
@@ -426,30 +460,26 @@ public class MinecraftDownloader {
             this.mSkipIfFailed = skipIfFailed;
         }
 
+        /**
+         * SHA1ハッシュファイルをダウンロードします。
+         */
         private String downloadSha1() throws IOException {
             String downloadedHash = DownloadMirror.downloadStringMirrored(
                     mDownloadClass, mTargetUrl + ".sha1"
             );
             if(!Tools.isValidString(downloadedHash)) return null;
-            // Ensure that we don't have leading/trailing whitespaces before checking hash length
             downloadedHash = downloadedHash.trim();
-            // SHA1 is made up of 20 bytes, which means 40 hexadecimal digits, which means 40 chars
             if(downloadedHash.length() != 40) return null;
             return downloadedHash;
         }
 
-        /*
-         * Maven repositories usually have the hash of a library near it, like:
-         * .../libraryName-1.0.jar
-         * .../libraryName.1.0.jar.sha1
-         * Since Minecraft libraries are stored in maven repositories, try to use
-         * this when downloading libraries without hashes in the json.
+        /**
+         * MavenリポジトリからSHA1ハッシュを取得しようとします。
          */
         private void tryGetLibrarySha1() {
             String resultHash = null;
             try {
                 resultHash = downloadSha1();
-                // The hash is a 40-byte download.
                 mInternetUsageCounter.getAndAdd(40);
             }catch (IOException e) {
                 Logging.i("MinecraftDownloader", "Failed to download hash", e);
@@ -460,6 +490,9 @@ public class MinecraftDownloader {
             }
         }
 
+        /**
+         * ダウンロードタスクを実行します。
+         */
         @Override
         public void run() {
             try {
@@ -469,31 +502,36 @@ public class MinecraftDownloader {
             }
         }
 
+        /**
+         * 例外をキャッチしながらダウンロード処理を実行します。
+         */
         private void runCatching() throws Exception {
             if(mDownloadClass == DownloadMirror.DOWNLOAD_CLASS_LIBRARIES && !Tools.isValidString(mTargetSha1)) {
-                // If we're downloading a library, try to get sha1 since it might be available as a file
                 tryGetLibrarySha1();
             }
             if(Tools.isValidString(mTargetSha1)) {
                 verifyFileSha1();
             }else {
-                mTargetSha1 = null; // Nullify SHA1 as DownloadUtils.ensureSha1 only checks for null,
-                                    // not for string validity
+                mTargetSha1 = null;
                 if(mTargetPath.exists()) finishWithoutDownloading();
                 else downloadFile();
             }
         }
-        
+
+        /**
+         * ファイルのSHA1ハッシュを検証します。
+         */
         private void verifyFileSha1() throws Exception {
             if(mTargetPath.isFile() && mTargetPath.canRead() && Tools.compareSHA1(mTargetPath, mTargetSha1)) {
                 finishWithoutDownloading();
             } else {
-                // Rely on the download function to throw an IOE in case if the file is not
-                // writable/not a file/etc...
                 downloadFile();
             }
         }
-        
+
+        /**
+         * ファイルをダウンロードします。
+         */
         private void downloadFile() throws Exception {
             try {
                 DownloadUtils.ensureSha1(mTargetPath, mTargetSha1, () -> {
@@ -507,11 +545,17 @@ public class MinecraftDownloader {
             mProcessedFileCounter.incrementAndGet();
         }
 
+        /**
+         * ダウンロードせずにタスクを完了します（既存ファイルを利用）。
+         */
         private void finishWithoutDownloading() {
             mProcessedFileCounter.incrementAndGet();
             mProcessedSizeCounter.addAndGet(mDownloadSize);
         }
 
+        /**
+         * ダウンロード進捗を更新します。
+         */
         @Override
         public void updateProgress(long curr, long max) {
             long delta = curr - mLastCurr;

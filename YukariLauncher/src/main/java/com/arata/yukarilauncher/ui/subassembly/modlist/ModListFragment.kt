@@ -27,6 +27,9 @@ import com.arata.yukarilauncher.utils.stringutils.StringUtils
 import java.util.concurrent.Future
 
 
+/**
+ * Modダウンロードリストのベースフラグメント
+ */
 abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download) {
     private lateinit var binding: FragmentModDownloadBinding
     protected lateinit var recyclerView: RecyclerView
@@ -38,6 +41,9 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
     private val parentElementAnimPlayer = AnimPlayer()
     private var isInitialized: Boolean = false
 
+    /**
+     * フラグメントのビューを生成します。
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +55,9 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         return binding.root
     }
 
+    /**
+     * ビュー作成後の初期化を行います。
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -85,23 +94,38 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         currentTask = initRefresh()
     }
 
+    /**
+     * ビュー作成後に追加の更新処理を実行します。
+     */
     protected open fun refreshCreatedView() {}
 
+    /**
+     * フラグメントがアクティビティにアタッチされたときに呼ばれます。
+     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.fragmentActivity = requireActivity()
     }
 
+    /**
+     * フラグメントが一時停止するときにタスクをキャンセルします。
+     */
     override fun onPause() {
         cancelTask()
         super.onPause()
     }
 
+    /**
+     * フラグメントが破棄されるときにタスクをキャンセルします。
+     */
     override fun onDestroy() {
         cancelTask()
         super.onDestroy()
     }
 
+    /**
+     * バックキー押下時の処理を行います。
+     */
     override fun onBackPressed(): Boolean {
         return parentAdapter?.let { adapter ->
             hideParentElement(false)
@@ -112,6 +136,9 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         } ?: true
     }
 
+    /**
+     * 親要素の表示/非表示を切り替える
+     */
     private fun hideParentElement(hide: Boolean) {
         cancelTask()
 
@@ -146,17 +173,32 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /**
+     * 現在のタスクをキャンセルする
+     */
     private fun cancelTask() {
         currentTask?.apply { if (!isDone) cancel(true) }
     }
 
+    /**
+     * 更新タスクを実行する
+     */
     private fun refreshTask() {
         currentTask = refresh()
     }
 
+    /**
+     * 最初の更新処理を初期化します。
+     */
     protected abstract fun initRefresh(): Future<*>?
+    /**
+     * データの更新処理を実行します。
+     */
     protected abstract fun refresh(): Future<*>?
 
+    /**
+     * 処理中状態の表示/非表示を設定する
+     */
     protected fun componentProcessing(state: Boolean) {
         binding.apply {
             playVisibilityAnim(loadingLayout, state)
@@ -167,18 +209,19 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
     }
 
     /**
-     * 如果一个Map中没有包含指定Key的List集合，则创建一个新的ArrayList，并将元素添加进去
-     * 如果这个Map中存在这个集合，则直接将元素添加进去
+     * Mapに指定されたKeyのListが存在しない場合は新規作成して要素を追加する
      */
     protected fun <K, E> addIfAbsent(map: MutableMap<K, MutableList<E>>, key: K, element: E) {
         map.computeIfAbsent(key) { ArrayList() }
             .add(element)
     }
 
+    /** タイトルテキストを設定する */
     protected fun setTitleText(nameText: String?) {
         binding.title.text = nameText
     }
 
+    /** 説明文を設定する */
     protected fun setDescription(text: String) {
         binding.description.apply {
             this.visibility = View.VISIBLE
@@ -186,27 +229,33 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /** アイコンを設定する */
     protected fun setIcon(icon: Drawable?) {
         binding.icon.setImageDrawable(icon)
     }
 
+    /** アイコンビューを取得する */
     protected fun getIconView() = binding.icon
 
+    /** リリース版チェックボックスを非表示にする */
     protected fun setReleaseCheckBoxGone() {
         releaseCheckBoxVisible = false
         binding.releaseVersion.visibility = View.GONE
     }
 
+    /** 読み込み失敗を表示する */
     protected fun setFailedToLoad(reasons: String?) {
         val text = fragmentActivity!!.getString(R.string.mod_failed_to_load_list)
         binding.failedToLoad.text = if (reasons == null) text else StringUtils.insertNewline(text, reasons)
         playVisibilityAnim(binding.failedToLoad, true)
     }
 
+    /** 読み込み失敗表示を解除する */
     protected fun cancelFailedToLoad() {
         playVisibilityAnim(binding.failedToLoad, false)
     }
 
+    /** 外部リンクを設定する */
     protected fun setLink(link: String?) {
         link?.let { uri ->
             binding.launchLink.apply {
@@ -216,6 +265,7 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /** MCModリンクを設定する */
     protected fun setMCMod(link: String?) {
         if (YLTools.areaChecks("zh")) {
             link?.let { uri ->
@@ -228,18 +278,22 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /** 追加ビューを追加する */
     protected fun addMoreView(view: View) {
         binding.moreLayout.addView(view)
     }
 
+    /** 追加ビューを削除する */
     protected fun removeMoreView(view: View) {
         binding.moreLayout.removeView(view)
     }
 
+    /**
+     * 子アダプターに切り替える
+     */
     fun switchToChild(adapter: RecyclerView.Adapter<*>?, title: String?) {
         if (currentTask!!.isDone && adapter != null) {
             binding.apply {
-                //保存父级，设置选中的标题文本，切换至子级
                 parentAdapter = recyclerView.adapter
                 selectTitle.text = title
                 hideParentElement(true)
@@ -249,6 +303,9 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /**
+     * スライドインアニメーションを設定します。
+     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(modsLayout, Animations.BounceInDown))
@@ -259,6 +316,9 @@ abstract class ModListFragment : FragmentWithAnim(R.layout.fragment_mod_download
         }
     }
 
+    /**
+     * スライドアウトアニメーションを設定します。
+     */
     override fun slideOut(animPlayer: AnimPlayer) {
         animPlayer.apply(AnimPlayer.Entry(binding.modsLayout, Animations.FadeOutUp))
             .apply(AnimPlayer.Entry(binding.operateLayout, Animations.FadeOutRight))

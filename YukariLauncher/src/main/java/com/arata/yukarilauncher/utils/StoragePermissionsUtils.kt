@@ -23,7 +23,8 @@ class StoragePermissionsUtils {
         private var hasStoragePermission: Boolean = false
 
         /**
-         * 检查存储权限，返回是否拥有存储权限
+         * ストレージ権限をチェックし、結果をキャッシュする
+         * Android 11以降とそれ以前で異なるチェック方法を使用する
          */
         @JvmStatic
         fun checkPermissions(context: Context) {
@@ -35,13 +36,13 @@ class StoragePermissionsUtils {
         }
 
         /**
-         * 获得提前检查好的存储权限
+         * 事前にチェックされたストレージ権限の状態を取得する
          */
         @JvmStatic
         fun checkPermissions() = hasStoragePermission
 
         /**
-         * 检查存储权限，如果没有存储权限，则弹出弹窗向用户申请
+         * ストレージ権限をチェックし、権限がない場合はダイアログを表示してユーザーに許可を求める
          */
         @JvmStatic
         fun checkPermissions(
@@ -58,16 +59,22 @@ class StoragePermissionsUtils {
         }
 
         /**
-         * 适用于安卓10及一下的存储权限检查
+         * Android 10以下向けのストレージ権限チェック
          */
         fun hasStoragePermissions(context: Context): Boolean {
             return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         }
 
+        /**
+         * Android 11以上向けのストレージ権限チェック
+         */
         @RequiresApi(api = Build.VERSION_CODES.R)
         private fun checkPermissionsForAndroid11AndAbove() = Environment.isExternalStorageManager()
 
+        /**
+         * Android 11以上の権限リクエスト処理
+         */
         @RequiresApi(api = Build.VERSION_CODES.R)
         private fun handlePermissionsForAndroid11AndAbove(activity: Activity, title: Int, message: String, permissionGranted: PermissionGranted?) {
             if (!checkPermissionsForAndroid11AndAbove()) {
@@ -88,6 +95,9 @@ class StoragePermissionsUtils {
             }
         }
 
+        /**
+         * Android 10以下の権限リクエスト処理
+         */
         private fun handlePermissionsForAndroid10AndBelow(activity: Activity, title: Int, message: String, permissionGranted: PermissionGranted?) {
             if (!hasStoragePermissions(activity)) {
                 showPermissionRequestDialog(activity, title, message, object : RequestPermissions {
@@ -109,6 +119,9 @@ class StoragePermissionsUtils {
             }
         }
 
+        /**
+         * 権限リクエスト用の確認ダイアログを表示する
+         */
         private fun showPermissionRequestDialog(
             context: Context,
             title: Int,
@@ -124,15 +137,24 @@ class StoragePermissionsUtils {
                 .showDialog()
         }
 
+        /**
+         * デフォルトの権限リクエストメッセージを取得する
+         */
         private fun getDefaultPermissionMessage(context: Context) =
             InfoCenter.replaceName(context, R.string.permissions_manage_external_storage)
     }
 
+    /**
+     * 権限リクエストのインターフェース
+     */
     private interface RequestPermissions {
         fun onRequest()
         fun onCancel()
     }
 
+    /**
+     * 権限付与結果のコールバックインターフェース
+     */
     interface PermissionGranted {
         fun granted()
         fun cancelled()

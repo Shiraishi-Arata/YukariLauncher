@@ -1,5 +1,9 @@
 package com.arata.yukarilauncher.feature.download.enums
 
+/**
+ * Modローダーの種類を定義する列挙型。
+ * 各プラットフォーム（CurseForge、Modrinth）における識別子と名前を保持する。
+ */
 enum class ModLoader(val type: Int, val loaderName: String, val curseforgeId: String, val modrinthName: String) {
     ALL(-1, "", "", ""),
     FORGE(0, "Forge", "1", "forge"),

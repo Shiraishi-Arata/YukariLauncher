@@ -26,6 +26,9 @@ open class VersionItem(
     val fileHash: String?,
     val fileUrl: String
 ) {
+/**
+ * toStringする
+ */
     override fun toString(): String {
         return "VersionItem(" +
                 "projectId='$projectId', " +
