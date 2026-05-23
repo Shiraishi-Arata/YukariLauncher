@@ -41,9 +41,6 @@ import org.greenrobot.eventbus.EventBus
 
 class LaunchGame {
     companion object {
-        /** ゲームが実行中かどうかを示すフラグ */
-        @JvmStatic
-        var isGameRunning = false
         /**
          * ゲーム起動前の前処理を行う
          * - ログイン処理とアカウント情報の更新
