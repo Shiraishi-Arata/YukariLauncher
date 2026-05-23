@@ -329,7 +329,7 @@
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/version"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/_38sdp"
+                        android:layout_height="@dimen/_44sdp"
                         android:layout_marginHorizontal="@dimen/_8sdp"
                         android:layout_marginBottom="@dimen/_12sdp"
                         app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"

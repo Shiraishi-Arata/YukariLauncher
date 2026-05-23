@@ -3,6 +3,8 @@ package com.arata.yukarilauncher.ui.subassembly.filelist
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
@@ -16,6 +18,9 @@ import com.arata.yukarilauncher.utils.stringutils.StringFilter.Companion.contain
 import java.io.File
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.regex.Pattern
+import java.util.zip.ZipFile
+import org.json.JSONObject
 
 class FileRecyclerViewCreator(
     context: Context?,
@@ -84,6 +89,8 @@ class FileRecyclerViewCreator(
     }
 
     companion object {
+        private const val ICON_SCAN_ENTRY_LIMIT = 256
+        private const val ICON_SCAN_MAX_SIZE_BYTES = 512 * 1024L
         fun loadItemBeansFromPath(context: Context, path: File, fileIcon: FileIcon,
             showFile: Boolean, showFolder: Boolean
         ): MutableList<FileItemBean> {
@@ -145,10 +152,11 @@ class FileRecyclerViewCreator(
         private fun getIcon(context: Context, file: File, fileIcon: FileIcon, resources: Resources): Drawable? {
             return if (file.isFile) {
                 when (fileIcon) {
-                    FileIcon.MOD -> if (file.name.endsWith(ModUtils.JAR_FILE_SUFFIX)) {
-                        ContextCompat.getDrawable(context, R.drawable.ic_java)
-                    } else if (file.name.endsWith(ModUtils.DISABLE_JAR_FILE_SUFFIX)) {
+                    FileIcon.MOD -> if (file.name.endsWith(ModUtils.DISABLE_JAR_FILE_SUFFIX)) {
                         ContextCompat.getDrawable(context, R.drawable.ic_disabled)
+                    } else if (isModArchive(file.name)) {
+                        getModArchiveIcon(context, file)
+                            ?: ContextCompat.getDrawable(context, R.drawable.ic_profile_mods)
                     } else {
                         getFileIcon(file, resources)
                     }
@@ -157,6 +165,110 @@ class FileRecyclerViewCreator(
                 }
             } else {
                 ContextCompat.getDrawable(context, R.drawable.ic_folder)
+            }
+        }
+        
+        private fun isModArchive(fileName: String): Boolean {
+            return fileName.endsWith(ModUtils.JAR_FILE_SUFFIX) ||
+                    fileName.endsWith(ModUtils.DISABLE_JAR_FILE_SUFFIX)
+        }
+
+        /**
+         * Attempts to read the icon path from common mod metadata files.
+         * Returns the normalized entry name (without leading slash) or null.
+         */
+        private fun getIconPathFromMetadata(zip: ZipFile): String? {
+            // Try Fabric: fabric.mod.json
+            val fabricEntry = zip.getEntry("fabric.mod.json")
+            if (fabricEntry != null) {
+                zip.getInputStream(fabricEntry).use { input ->
+                    val jsonString = input.bufferedReader().readText()
+                    try {
+                        val json = JSONObject(jsonString)
+                        val iconPath = json.optString("icon", null)
+                        if (!iconPath.isNullOrEmpty()) {
+                            return normalizeIconPath(iconPath)
+                        }
+                    } catch (_: Exception) {
+                        // Ignore JSON parsing errors
+                    }
+                }
+            }
+        
+            // Helper to parse TOML (both Forge and NeoForge)
+            fun parseTomlIconPath(entryName: String): String? {
+                val entry = zip.getEntry(entryName) ?: return null
+                zip.getInputStream(entry).use { input ->
+                    val content = input.bufferedReader().readText()
+                    // Pattern: logoFile = "path/icon.png" (supports spaces)
+                    val pattern = Pattern.compile("logoFile\\s*=\\s*\"([^\"]+)\"")
+                    val matcher = pattern.matcher(content)
+                    if (matcher.find()) {
+                        return normalizeIconPath(matcher.group(1))
+                    }
+                }
+                return null
+            }
+        
+            // Try Forge: mods.toml
+            parseTomlIconPath("META-INF/mods.toml")?.let { return it }
+            // Try NeoForge: neoforge.mods.toml
+            parseTomlIconPath("META-INF/neoforge.mods.toml")?.let { return it }
+        
+            return null
+        }
+        
+        /**
+         * Normalizes an icon path: removes leading slash and ensures it's a valid entry name.
+         */
+        private fun normalizeIconPath(path: String): String {
+            return path.trimStart('/')
+        }
+        
+        // Now replace the existing getModArchiveIcon with this enhanced version:
+        private fun getModArchiveIcon(context: Context, file: File): Drawable? {
+            return try {
+                ZipFile(file).use { zip ->
+                    // First try to get icon from metadata
+                    val metadataIconPath = getIconPathFromMetadata(zip)
+                    if (metadataIconPath != null) {
+                        val entry = zip.getEntry(metadataIconPath)
+                        if (entry != null && !entry.isDirectory && entry.size <= ICON_SCAN_MAX_SIZE_BYTES) {
+                            zip.getInputStream(entry).use { input ->
+                                BitmapFactory.decodeStream(input)?.let { bitmap ->
+                                    return BitmapDrawable(context.resources, bitmap)
+                                }
+                            }
+                        }
+                    }
+        
+                    // Fallback: heuristic scanning
+                    val entry = zip.entries().asSequence()
+                        .take(ICON_SCAN_ENTRY_LIMIT)
+                        .filter { !it.isDirectory && it.name.endsWith(".png", ignoreCase = true) }
+                        .filter { it.size in 1..ICON_SCAN_MAX_SIZE_BYTES }
+                        .minByOrNull { scoreIconEntry(it.name) }
+                        ?: return null
+        
+                    zip.getInputStream(entry).use { input ->
+                        BitmapFactory.decodeStream(input)?.let { bitmap ->
+                            BitmapDrawable(context.resources, bitmap)
+                        }
+                    }
+                }
+            } catch (_: Exception) {
+                null
+            }
+        }
+        
+        private fun scoreIconEntry(name: String): Int {
+            val lower = name.lowercase()
+            return when {
+                lower.endsWith("assets/icon.png") -> 0
+                lower.endsWith("icon.png") -> 1
+                lower.endsWith("logo.png") -> 2
+                lower.endsWith("pack.png") -> 3
+                else -> 10
             }
         }
 
