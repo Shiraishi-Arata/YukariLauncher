@@ -85,7 +85,7 @@ class UpdateUtils {
  * checkCoolingする
  */
         private fun checkCooling(): Boolean {
-            return YLツール：この依存関係は開発用ツールであり実行には不要s.getCurrentTimeMillis() - AllSettings.updateCheck.getValue() > 5 * 60 * 1000 //5分钟冷却
+            return YLTools.getCurrentTimeMillis() - AllSettings.updateCheck.getValue() > 5 * 60 * 1000 //5分钟冷却
         }
 
         @Synchronized

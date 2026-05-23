@@ -1,31 +1,31 @@
-package com.arata.yukarilauncher.ui.subassembly.customcontrols
+package com.arata.yukarilauncher.ui.subassembly.customcontrols;
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
-import android.graphics.Typeface
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.flexbox.FlexboxLayout
-import com.arata.yukarilauncher.R
-import com.arata.yukarilauncher.databinding.ItemControlListViewBinding
-import com.arata.yukarilauncher.databinding.ItemFileListViewBinding
-import com.arata.yukarilauncher.task.Task
-import com.arata.yukarilauncher.task.TaskExecutors
-import com.arata.yukarilauncher.ui.dialog.ControlInfoDialog
-import com.arata.yukarilauncher.utils.stringutils.StringUtils
+import com.google.android.flexbox.FlexboxLayout;
+import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.databinding.ItemControlListViewBinding;
+import com.arata.yukarilauncher.databinding.ItemFileListViewBinding;
+import com.arata.yukarilauncher.task.Task;
+import com.arata.yukarilauncher.task.TaskExecutors;
+import com.arata.yukarilauncher.ui.dialog.ControlInfoDialog;
+import com.arata.yukarilauncher.utils.stringutils.StringUtils;
 
-import net.kdt.pojavlaunch.Tools
+import net.kdt.pojavlaunch.Tools;
 
-import java.util.ArrayList
-import java.util.List
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * コントロール設定一覧のRecyclerViewアダプター

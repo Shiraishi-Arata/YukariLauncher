@@ -24,7 +24,7 @@ class CheckNewNotice {
  * checkCoolingする
  */
         private fun checkCooling(): Boolean {
-            return YLツール：この依存関係は開発用ツールであり実行には不要s.getCurrentTimeMillis() - AllSettings.noticeCheck.getValue() > 2 * 60 * 1000 //2分钟冷却
+            return YLTools.getCurrentTimeMillis() - AllSettings.noticeCheck.getValue() > 2 * 60 * 1000 //2分钟冷却
         }
 
         @JvmStatic
