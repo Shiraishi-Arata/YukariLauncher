@@ -77,6 +77,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * ツールクラス。ストレージチェック、通知、ファイル操作などのユーティリティメソッドを提供します。
+ */
 @SuppressWarnings("IOStreamConstructor")
 public final class Tools {
     public static final String NOTIFICATION_CHANNEL_DEFAULT = "channel_id";
@@ -88,16 +91,20 @@ public final class Tools {
     // New since 3.0.0
     public static String DIRNAME_HOME_JRE = "lib";
 
-    /**
-     * Checks if the Pojav's storage root is accessible and read-writable
-     * @return true if storage is fine, false if storage is not accessible
-     */
+/**
+ * Pojavのストレージルートがアクセス可能で読み書き可能かどうかをチェックします
+ * @return ストレージが正常ならtrue、アクセス不能ならfalse
+ */
     public static boolean checkStorageRoot() {
         File externalFilesDir = new File(PathManager.DIR_GAME_HOME);
         //externalFilesDir == null when the storage is not mounted if it was obtained with the context call
         return Environment.getExternalStorageState(externalFilesDir).equals(Environment.MEDIA_MOUNTED);
     }
 
+    /**
+     * 通知チャンネルを構築します
+     * @param context コンテキスト
+     */
     public static void buildNotificationChannel(Context context) {
         NotificationChannel channel = new NotificationChannel(
                 NOTIFICATION_CHANNEL_DEFAULT,
@@ -106,6 +113,10 @@ public final class Tools {
         manager.createNotificationChannel(channel);
     }
 
+    /**
+     * Forgeのスプラッシュスクリーンを無効にします
+     * @param dir ゲームディレクトリ
+     */
     public static void disableSplash(File dir) {
         File configDir = new File(dir, "config");
         if(FileUtils.ensureDirectorySilently(configDir)) {

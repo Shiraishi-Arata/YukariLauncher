@@ -35,14 +35,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A document provider for the Storage Access Framework which exposes the files in the
- * $HOME/ directory to other apps.
+ * ストレージアクセスフレームワーク用のドキュメントプロバイダー。
+ * $HOME/ ディレクトリのファイルを他のアプリに公開します。
  * <p/>
- * Note that this replaces providing an activity matching the ACTION_GET_CONTENT intent:
- * <p/>
- * "A document provider and ACTION_GET_CONTENT should be considered mutually exclusive. If you
- * support both of them simultaneously, your app will appear twice in the system picker UI,
- * offering two different ways of accessing your stored data. This would be confusing for users."
+ * 注意: ACTION_GET_CONTENT を処理するアクティビティを提供するのではなく、
+ * これらを同時にサポートすると、システムピッカー UI でアプリが2回表示され、
+ * 保存されたデータにアクセスする2つの異なる方法を提供することになり、ユーザーにとって混乱を招きます。
  * - <a href="http://developer.android.com/guide/topics/providers/document-provider.html#43">...</a>
  */
 public class FolderProvider extends DocumentsProvider {

@@ -32,18 +32,26 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.util.Date;
 
+/**
+ * アプリケーションクラス。アプリケーションのライフサイクルを管理し、クラッシュレポートのハンドリングや初期設定を行います。
+ */
 public class PojavApplication extends Application {
 	public static final String CRASH_REPORT_TAG = "YukariCrashReport";
 
+	/**
+	 * アプリケーションが作成されたときに呼ばれます。
+	 * 未捕捉例外のハンドラを設定し、パスマネージャーを初期化します。
+	 */
 	@Override
 	public void onCreate() {
 		ContextExecutor.setApplication(this);
 
+		// 未捕捉例外のハンドラを設定し、クラッシュレポートをファイルに保存します
 		Thread.setDefaultUncaughtExceptionHandler((thread, th) -> {
 			boolean storagePermAllowed = (Build.VERSION.SDK_INT >= 29 || ActivityCompat.checkSelfPermission(PojavApplication.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && Tools.checkStorageRoot();
 			File crashFile = new File(storagePermAllowed ? PathManager.DIR_LAUNCHER_LOG : PathManager.DIR_DATA, "latestcrash.txt");
 			try {
-				// Write to file, since some devices may not able to show error
+				// 一部のデバイスではエラーを表示できないため、ファイルに書き込みます
 				FileUtils.ensureParentDirectory(crashFile);
 				PrintStream crashStream = new PrintStream(crashFile);
 				crashStream.append(InfoDistributor.APP_NAME + " crash report\n");
@@ -65,11 +73,12 @@ public class PojavApplication extends Application {
 		
 		try {
 			super.onCreate();
+			// パスマネージャーのディレクトリを初期化します
 			PathManager.DIR_DATA = getDir("files", MODE_PRIVATE).getParent();
 			PathManager.DIR_CACHE = getCacheDir();
 			PathManager.DIR_ACCOUNT_NEW = PathManager.DIR_DATA + "/accounts";
 			Tools.DEVICE_ARCHITECTURE = Architecture.getDeviceArchitecture();
-			//Force x86 lib directory for Asus x86 based zenfones
+			// Asus x86ベースのZenfone用にx86ライブラリディレクトリを強制します
 			if(Architecture.isx86Device() && Architecture.is32BitsDevice()){
 				String originalJNIDirectory = getApplicationInfo().nativeLibraryDir;
 				getApplicationInfo().nativeLibraryDir = originalJNIDirectory.substring(0,
@@ -83,22 +92,34 @@ public class PojavApplication extends Application {
 			startActivity(ferrorIntent);
 		}
 
-		// Force dark mode for the launcher UI.
+		// ランチャーUIにダークモードを強制します
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 	}
 
+	/**
+	 * アプリケーションが終了するときに呼ばれます。
+	 * アプリケーションコンテキストをクリアします。
+	 */
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
 		ContextExecutor.clearApplication();
 	}
 
+	/**
+	 * ベースコンテキストがアタッチされたときに呼ばれます。
+	 * アプリケーションコンテキストを設定し、ロケールを適用します。
+	 */
 	@Override
     protected void attachBaseContext(Context base) {
 		ContextExecutor.setApplication(this);
         super.attachBaseContext(LocaleHelper.Companion.setLocale(base));
     }
 
+    /**
+     * 設定が変更されたときに呼ばれます（画面の向き変更など）。
+     * アプリケーションコンテキストとロケールを更新します。
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
