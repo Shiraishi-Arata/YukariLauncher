@@ -5,7 +5,7 @@ import android.content.Intent
 import com.arata.yukarilauncher.feature.download.enums.ModLoader
 import com.arata.yukarilauncher.feature.mod.modloader.NeoForgeDownloadTask
 import com.arata.yukarilauncher.feature.version.install.InstallTask
-import net.kdt.pojavlaunch.JavaGUILauncherActivity
+import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
 import com.arata.yukarilauncher.feature.mod.modloader.FabricLikeUtils
 import com.arata.yukarilauncher.feature.mod.modloader.ForgeDownloadTask
 import com.arata.yukarilauncher.feature.version.install.InstallArgsUtils

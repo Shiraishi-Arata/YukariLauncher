@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
  * 新しいFragmentをトランザクション管理に追加するイベント
  * LauncherActivityが受け取り処理する
  * Fragment追加時に親Fragmentが現在のFragmentであることを保証する
- * @see net.kdt.pojavlaunch.LauncherActivity
+ * @see com.arata.yukarilauncher.ui.activity.LauncherActivity
  * @see com.arata.yukarilauncher.utils.YLTools.addFragment
  */
 class AddFragmentEvent(

@@ -6,7 +6,7 @@ import com.kdt.mcgui.ProgressLayout
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.utils.path.LibPath
-import net.kdt.pojavlaunch.JavaGUILauncherActivity
+import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
 import java.io.File
 import java.io.IOException

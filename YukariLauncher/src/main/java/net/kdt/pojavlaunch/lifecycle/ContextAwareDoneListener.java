@@ -1,6 +1,6 @@
 package net.kdt.pojavlaunch.lifecycle;
 
-import static net.kdt.pojavlaunch.MainActivity.INTENT_VERSION;
+import static com.arata.yukarilauncher.ui.activity.MainActivity.INTENT_VERSION;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ import com.arata.yukarilauncher.feature.mod.parser.ModParserListener;
 import com.arata.yukarilauncher.feature.version.Version;
 import com.arata.yukarilauncher.setting.AllSettings;
 
-import net.kdt.pojavlaunch.MainActivity;
+import com.arata.yukarilauncher.ui.activity.MainActivity;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 import net.kdt.pojavlaunch.tasks.AsyncMinecraftDownloader;

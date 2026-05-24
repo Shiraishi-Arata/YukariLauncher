@@ -35,7 +35,7 @@ import com.arata.yukarilauncher.ui.fragment.download.addon.DownloadQuiltFragment
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
-import net.kdt.pojavlaunch.JavaGUILauncherActivity
+import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
 import net.kdt.pojavlaunch.Tools
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus

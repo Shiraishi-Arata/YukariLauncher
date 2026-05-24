@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import net.kdt.pojavlaunch.GrabListener;
 import net.kdt.pojavlaunch.LwjglGlfwKeycode;
-import net.kdt.pojavlaunch.MainActivity;
+import com.arata.yukarilauncher.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 

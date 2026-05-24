@@ -34,7 +34,7 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.AnimUtils.Companion.setVisibilityAnim
 import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.file.PasteFile
-import net.kdt.pojavlaunch.CustomControlsActivity
+import com.arata.yukarilauncher.ui.activity.CustomControlsActivity
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 import org.greenrobot.eventbus.EventBus

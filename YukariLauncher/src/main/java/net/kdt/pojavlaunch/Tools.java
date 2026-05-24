@@ -47,6 +47,10 @@ import com.arata.yukarilauncher.utils.stringutils.StringUtils;
 
 import net.kdt.pojavlaunch.fragments.MainMenuFragment;
 import net.kdt.pojavlaunch.lifecycle.ContextExecutorTask;
+import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity;
+import com.arata.yukarilauncher.ui.activity.LauncherActivity;
+import com.arata.yukarilauncher.ui.activity.MainActivity;
+import com.arata.yukarilauncher.ui.activity.ShowErrorActivity;
 import net.kdt.pojavlaunch.memory.MemoryHoleFinder;
 import net.kdt.pojavlaunch.memory.SelfMapsParser;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;

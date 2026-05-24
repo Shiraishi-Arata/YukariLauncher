@@ -19,8 +19,8 @@ import com.arata.yukarilauncher.feature.unpack.UnpackSingleFilesTask
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils
-import net.kdt.pojavlaunch.LauncherActivity
-import net.kdt.pojavlaunch.MissingStorageActivity
+import com.arata.yukarilauncher.ui.activity.LauncherActivity
+import com.arata.yukarilauncher.ui.activity.MissingStorageActivity
 import net.kdt.pojavlaunch.Tools
 
 /**

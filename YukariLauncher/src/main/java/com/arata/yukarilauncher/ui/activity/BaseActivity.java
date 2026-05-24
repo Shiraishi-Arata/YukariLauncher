@@ -18,7 +18,7 @@ import com.arata.yukarilauncher.renderer.Renderers;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils;
 
-import net.kdt.pojavlaunch.MissingStorageActivity;
+import com.arata.yukarilauncher.ui.activity.MissingStorageActivity;
 import net.kdt.pojavlaunch.Tools;
 
 import org.greenrobot.eventbus.EventBus;

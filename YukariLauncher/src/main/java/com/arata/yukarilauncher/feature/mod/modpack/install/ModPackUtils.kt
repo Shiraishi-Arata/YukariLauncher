@@ -7,7 +7,7 @@ import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.mod.models.MCBBSPackMeta
 import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
-import net.kdt.pojavlaunch.JavaGUILauncherActivity
+import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
 import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.modloaders.modpacks.models.CurseManifest
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ModrinthIndex

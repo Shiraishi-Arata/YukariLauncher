@@ -4,7 +4,7 @@ import com.github.megatronking.stringfog.plugin.StringFogExtension
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android") version "2.0.21"
+    id("org.jetbrains.kotlin.android") version "2.1.10"
     id("stringfog")
 }
 apply(plugin = "stringfog")
@@ -171,8 +171,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     packaging {
@@ -190,7 +190,7 @@ android {
 
     buildToolsVersion = "35.0.0"
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -246,10 +246,10 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation("commons-codec:commons-codec:1.17.1")
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
-    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
-    implementation("androidx.annotation:annotation:1.7.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.annotation:annotation:1.9.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation("com.github.duanhong169:checkerboarddrawable:1.0.2")
@@ -275,7 +275,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.commonmark:commonmark:0.19.0")
+    implementation("org.commonmark:commonmark:0.24.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 

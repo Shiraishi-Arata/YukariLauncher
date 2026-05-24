@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.setting.AllSettings;
 
-import net.kdt.pojavlaunch.ShowErrorActivity;
+import com.arata.yukarilauncher.ui.activity.ShowErrorActivity;
 import net.kdt.pojavlaunch.lifecycle.ContextExecutorTask;
 
 /**

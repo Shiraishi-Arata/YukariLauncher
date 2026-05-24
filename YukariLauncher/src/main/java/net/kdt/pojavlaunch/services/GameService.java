@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat;
 import com.arata.yukarilauncher.InfoCenter;
 import com.arata.yukarilauncher.R;
 
-import net.kdt.pojavlaunch.MainActivity;
+import com.arata.yukarilauncher.ui.activity.MainActivity;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.utils.NotificationUtils;
 

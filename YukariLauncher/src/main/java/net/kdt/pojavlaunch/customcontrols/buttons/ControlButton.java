@@ -20,7 +20,7 @@ import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.setting.AllSettings;
 
 import net.kdt.pojavlaunch.LwjglGlfwKeycode;
-import net.kdt.pojavlaunch.MainActivity;
+import com.arata.yukarilauncher.ui.activity.MainActivity;
 import net.kdt.pojavlaunch.customcontrols.ControlData;
 import net.kdt.pojavlaunch.customcontrols.ControlLayout;
 import net.kdt.pojavlaunch.customcontrols.handleview.EditControlPopup;

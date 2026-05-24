@@ -22,7 +22,7 @@ import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SeekBarSettingsWrap
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapper
 import com.arata.yukarilauncher.utils.CleanUpCache.Companion.start
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.LauncherActivity
+import com.arata.yukarilauncher.ui.activity.LauncherActivity
 import org.greenrobot.eventbus.EventBus
 
 /**
