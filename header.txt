@@ -1,0 +1,8 @@
+/*
+ * YukariLauncher - A Minecraft: Java Edition launcher for Android
+ * Copyright (c) 2025 Shiraishi Arata.
+ *
+ * Source: https://github.com/Shiraishi-Arata/YukariLauncher
+ */
+
+
