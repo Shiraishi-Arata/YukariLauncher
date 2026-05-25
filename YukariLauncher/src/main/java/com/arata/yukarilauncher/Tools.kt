@@ -322,9 +322,12 @@ object Tools {
         return "$DIR_HOME_VERSION/$versionName/$versionName.jar"
     }
 
-    fun getLWJGL3ClassPath(): String {
+    fun getLWJGL3ClassPath(): String = getLWJGL3ClassPath("3.3.6")
+
+    fun getLWJGL3ClassPath(version: String): String {
         val libStr = StringBuilder()
-        val lwjgl3Folder = File(PathManager.DIR_DATA, "lwjgl3")
+        val dirName = "lwjgl/$version"
+        val lwjgl3Folder = File(PathManager.DIR_DATA, dirName)
         val lwjgl3Files = lwjgl3Folder.listFiles()
         if (lwjgl3Files != null) {
             for (file in lwjgl3Files) {

@@ -72,6 +72,16 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
             binding.versionCustomInfoEdittext
         )
 
+        ListSettingsWrapper(
+            context,
+            AllSettings.lwjglVersion,
+            binding.lwjglVersionLayout,
+            binding.lwjglVersionTitle,
+            binding.lwjglVersionValue,
+            R.array.setting_lwjgl_version_entries,
+            R.array.setting_lwjgl_version_values
+        )
+
         SwitchSettingsWrapper(
             context,
             AllSettings.autoSetGameLanguage,

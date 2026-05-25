@@ -23,6 +23,7 @@ class VersionConfig(private var versionPath: File) : Parcelable {
     private var customPath: String = ""
     private var customInfo: String = ""
     private var gameArgs: String = ""
+    private var lwjglVersion: String = ""
 
     /**
      * 指定されたファイルパスと設定値でVersionConfigを作成する
@@ -47,7 +48,8 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         control: String = "",
         customPath: String = "",
         customInfo: String = "",
-        gameArgs: String = ""
+        gameArgs: String = "",
+        lwjglVersion: String = ""
     ) : this(filePath) {
         this.isolationType = isolationType
         this.javaDir = javaDir
@@ -58,6 +60,7 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         this.customPath = customPath
         this.customInfo = customInfo
         this.gameArgs = gameArgs
+        this.lwjglVersion = lwjglVersion
     }
 
     /**
@@ -73,7 +76,8 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         getStringNotNull(control),
         getStringNotNull(customPath),
         getStringNotNull(customInfo),
-        getStringNotNull(gameArgs)
+        getStringNotNull(gameArgs),
+        getStringNotNull(lwjglVersion)
     )
 
     /**
@@ -227,6 +231,17 @@ class VersionConfig(private var versionPath: File) : Parcelable {
     fun setGameArgs(args: String) { this.gameArgs = args }
 
     /**
+     * @return LWJGLバージョンを取得する
+     */
+    fun getLwjglVersion(): String = getStringNotNull(lwjglVersion)
+
+    /**
+     * LWJGLバージョンを設定する
+     * @param version LWJGLバージョン
+     */
+    fun setLwjglVersion(version: String) { this.lwjglVersion = version }
+
+    /**
      * 現在の設定と別の設定が異なるかどうかをチェックする
      * @param otherConfig 比較対象の設定
      * @return 異なる場合はtrue
@@ -240,7 +255,8 @@ class VersionConfig(private var versionPath: File) : Parcelable {
                 this.getControl() == otherConfig.getControl() &&
                 this.getCustomPath() == otherConfig.getCustomPath() &&
                 this.getCustomInfo() == otherConfig.getCustomInfo() &&
-                this.getGameArgs() == otherConfig.getGameArgs())
+                this.getGameArgs() == otherConfig.getGameArgs() &&
+                this.getLwjglVersion() == otherConfig.getLwjglVersion())
     }
 
     /**
@@ -272,6 +288,7 @@ class VersionConfig(private var versionPath: File) : Parcelable {
         dest.writeString(getStringNotNull(customPath))
         dest.writeString(getStringNotNull(customInfo))
         dest.writeString(getStringNotNull(gameArgs))
+        dest.writeString(getStringNotNull(lwjglVersion))
     }
 
     companion object CREATOR : Parcelable.Creator<VersionConfig> {
@@ -291,7 +308,8 @@ class VersionConfig(private var versionPath: File) : Parcelable {
             val customPath = parcel.readString().orEmpty()
             val customInfo = parcel.readString().orEmpty()
             val gameArgs = parcel.readString().orEmpty()
-            return VersionConfig(versionPath, isolationType, javaDir, javaArgs, renderer, driver, control, customPath, customInfo, gameArgs)
+            val lwjglVersion = parcel.readString().orEmpty()
+            return VersionConfig(versionPath, isolationType, javaDir, javaArgs, renderer, driver, control, customPath, customInfo, gameArgs, lwjglVersion)
         }
 
         /**

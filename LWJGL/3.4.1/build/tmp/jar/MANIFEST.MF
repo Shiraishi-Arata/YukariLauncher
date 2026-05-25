@@ -1,3 +1,0 @@
-Manifest-Version: 3.4.1
-Automatic-Module-Name: org.lwjgl
-

@@ -43,7 +43,7 @@ class LaunchArgs(
         argsList.addAll(getMinecraftJVMArgs())
         if (!hasClasspathInJvmArgs) {
             argsList.add("-cp")
-            argsList.add("${Tools.getLWJGL3ClassPath()}:$launchClassPath")
+            argsList.add("${Tools.getLWJGL3ClassPath(minecraftVersion.getLWJGLVersion())}:$launchClassPath")
         }
 
         if (runtime.javaVersion > 8) {
@@ -95,6 +95,11 @@ class LaunchArgs(
         if (versionSpecificNativesDir.exists()) {
             libraryPath.append(versionSpecificNativesDir.absolutePath).append(":")
         }
+        val lwjglVersion = minecraftVersion.getLWJGLVersion()
+        val lwjglNativeDir = File(PathManager.DIR_DATA, "lwjgl/$lwjglVersion/native/${Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"}")
+        if (lwjglNativeDir.exists()) {
+            libraryPath.append(lwjglNativeDir.absolutePath).append(":")
+        }
         if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
             libraryPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
         }
@@ -106,11 +111,19 @@ class LaunchArgs(
         if (versionSpecificNativesDir.exists()) {
             jnaPath.append(versionSpecificNativesDir.absolutePath).append(":")
         }
+        if (lwjglNativeDir.exists()) {
+            jnaPath.append(lwjglNativeDir.absolutePath).append(":")
+        }
         if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
             jnaPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
         }
         jnaPath.append(PathManager.DIR_NATIVE_LIB)
         argsList.add("-Djna.boot.library.path=$jnaPath")
+
+        // LWJGL専用のネイティブライブラリ検索パス
+        if (lwjglNativeDir.exists()) {
+            argsList.add("-Dorg.lwjgl.library.path=${lwjglNativeDir.absolutePath}")
+        }
 
         return argsList
     }
@@ -151,7 +164,7 @@ class LaunchArgs(
 
                     argument == "\${classpath}" -> {
                         hasClasspathInJvmArgs = true
-                        "${Tools.getLWJGL3ClassPath()}:$launchClassPath"
+                        "${Tools.getLWJGL3ClassPath(minecraftVersion.getLWJGLVersion())}:$launchClassPath"
                     }
 
                     else -> argument

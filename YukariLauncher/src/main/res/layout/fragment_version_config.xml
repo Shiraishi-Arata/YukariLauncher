@@ -187,6 +187,28 @@
                         app:spinner_popup_max_height="@dimen/_240sdp"
                         tools:paddingVertical="@dimen/_12sdp" />
 
+                    <TextView
+                        android:id="@+id/lwjgl_version_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="@string/pedit_lwjgl_version"
+                        app:layout_constraintStart_toStartOf="@+id/lwjgl_version_spinner"
+                        app:layout_constraintTop_toBottomOf="@+id/driver_spinner" />
+
+                    <com.skydoves.powerspinner.PowerSpinnerView
+                        android:id="@+id/lwjgl_version_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:background="@drawable/background_item"
+                        android:padding="@dimen/padding_heavy"
+                        app:layout_constraintTop_toBottomOf="@+id/lwjgl_version_title"
+                        app:spinner_arrow_tint="@color/primary_text"
+                        app:spinner_item_height="@dimen/_40sdp"
+                        app:spinner_popup_background="@drawable/background_edit_box"
+                        app:spinner_popup_max_height="@dimen/_240sdp"
+                        tools:paddingVertical="@dimen/_12sdp" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout

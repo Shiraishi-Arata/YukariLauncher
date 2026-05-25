@@ -136,6 +136,28 @@ android {
                                     }
                                 }
                             }
+                            if (arch != "all") {
+                                val lwjglVersions = listOf("lwjgl/3.3.6", "lwjgl/3.4.1")
+                                val keepAbi = when (arch) {
+                                    "arm" -> "armeabi-v7a"
+                                    "arm64" -> "arm64-v8a"
+                                    "x86" -> "x86"
+                                    "x86_64" -> "x86_64"
+                                    else -> null
+                                }
+                                if (keepAbi != null) {
+                                    lwjglVersions.forEach { lwjglDir ->
+                                        val nativeDir = File("$assetsDir/components/$lwjglDir/native")
+                                        if (nativeDir.exists()) {
+                                            nativeDir.listFiles()?.forEach { abiDir ->
+                                                if (abiDir.isDirectory && abiDir.name != keepAbi) {
+                                                    println("delete:${abiDir} : ${abiDir.deleteRecursively()}")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
 

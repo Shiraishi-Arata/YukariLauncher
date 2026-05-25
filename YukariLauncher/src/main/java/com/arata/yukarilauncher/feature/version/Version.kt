@@ -123,6 +123,8 @@ class Version(
      */
     fun getGameArgs(): String = versionConfig.getGameArgs()
 
+    fun getLWJGLVersion(): String = versionConfig.getLwjglVersion().getValueOrDefault(AllSettings.lwjglVersion.getValue())
+
     /**
      * @return 保存されているバージョン情報
      */

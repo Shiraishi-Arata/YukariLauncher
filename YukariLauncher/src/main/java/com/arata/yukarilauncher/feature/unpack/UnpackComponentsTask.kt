@@ -8,6 +8,7 @@ import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStream
 
 class UnpackComponentsTask(val context: Context, val component: Components) : AbstractUnpackTask() {
@@ -62,11 +63,25 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
  */
     override fun run() {
         listener?.onTaskStart()
-        val fileList = am.list("components/${component.component}")
-        for (fileName in fileList!!) {
-            Tools.copyAssetFile(context, "components/${component.component}/$fileName", "$rootDir/${component.component}", true)
-        }
+        copyAssetDir("components/${component.component}", "$rootDir/${component.component}")
         listener?.onTaskEnd()
+    }
+
+/**
+ * copyAssetDirする - recursively copy assets including subdirectories
+ */
+    private fun copyAssetDir(assetPath: String, outputPath: String) {
+        val names = am.list(assetPath) ?: return
+        for (name in names) {
+            val fullAssetPath = "$assetPath/$name"
+            val children = try { am.list(fullAssetPath) } catch (_: IOException) { null }
+            if (children != null && children.isNotEmpty()) {
+                File(outputPath, name).mkdirs()
+                copyAssetDir(fullAssetPath, "$outputPath/$name")
+            } else {
+                Tools.copyAssetFile(context, fullAssetPath, outputPath, true)
+            }
+        }
     }
 
 /**

@@ -130,6 +130,9 @@ class AllSettings {
         val javaSandbox = BooleanSettingUnit("java_sandbox", true)
 
         @JvmStatic
+        val lwjglVersion = StringSettingUnit("lwjglVersion", "3.3.6")
+
+        @JvmStatic
         val gameMenuShowMemory = BooleanSettingUnit("gameMenuShowMemory", false)
 
         @JvmStatic
