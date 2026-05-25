@@ -7,7 +7,7 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.utils.path.LibPath
 import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
+import com.arata.yukarilauncher.task.ProgressKeeper
 import java.io.File
 import java.io.IOException
 import java.util.zip.ZipEntry

@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.ui.subassembly.account
 
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.value.MinecraftAccount
 
 /**
  * アカウント選択時のコールバックリスナー

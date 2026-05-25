@@ -8,11 +8,11 @@ import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackUtils.Companion.verifyModrinthIndex
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ModDownloader
-import net.kdt.pojavlaunch.modloaders.modpacks.models.ModrinthIndex
-import net.kdt.pojavlaunch.progresskeeper.DownloaderProgressWrapper
-import net.kdt.pojavlaunch.utils.ZipUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ModDownloader
+import com.arata.yukarilauncher.feature.mod.modpack.models.ModrinthIndex
+import com.arata.yukarilauncher.task.DownloaderProgressWrapper
+import com.arata.yukarilauncher.utils.file.ZipUtils
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -45,22 +45,23 @@ class ModrinthModPackInstallHelper {
  * installZipする
  */
         fun installZip(packFile: File, targetPath: File): ModLoaderWrapper? {
-            ZipFile(packFile).use { modpackZipFile ->
+            val result = ZipFile(packFile).use { modpackZipFile ->
                 val modrinthIndex = Tools.GLOBAL_GSON.fromJson(
                     Tools.read(ZipUtils.getEntryStream(modpackZipFile, "modrinth.index.json")),
                     ModrinthIndex::class.java
                 )
                 if (!verifyModrinthIndex(modrinthIndex)) {
                     Logging.i("ModrinthModPackInstallHelper", "manifest verification failed")
-                    return null
+                    return@use null
                 }
                 val modDownloader = ModDownloader(targetPath)
-                for (indexFile in modrinthIndex.files) {
+                val files = modrinthIndex.files ?: return@use null
+                for (indexFile in files) {
                     modDownloader.submitDownload(
                         indexFile.fileSize,
-                        indexFile.path,
-                        indexFile.hashes.sha1,
-                        *indexFile.downloads
+                        indexFile.path ?: continue,
+                        indexFile.hashes?.sha1,
+                        *(indexFile.downloads ?: arrayOf())
                     )
                 }
                 modDownloader.awaitFinish(
@@ -79,8 +80,9 @@ class ModrinthModPackInstallHelper {
                 ZipUtils.zipExtract(modpackZipFile, "overrides/", targetPath)
                 ProgressLayout.setProgress(ProgressLayout.INSTALL_RESOURCE, 50, R.string.modpack_download_applying_overrides, 2, 2)
                 ZipUtils.zipExtract(modpackZipFile, "client-overrides/", targetPath)
-                return createInfo(modrinthIndex)
+                createInfo(modrinthIndex)
             }
+            return result
         }
 
         /**
@@ -93,7 +95,7 @@ class ModrinthModPackInstallHelper {
  */
         private fun createInfo(modrinthIndex: ModrinthIndex?): ModLoaderWrapper? {
             if (modrinthIndex == null) return null
-            val dependencies = modrinthIndex.dependencies
+            val dependencies = modrinthIndex.dependencies ?: return null
             val mcVersion = dependencies["minecraft"] ?: return null
             dependencies["forge"]?.let {
                 Logging.i("ModLoader", "Forge")

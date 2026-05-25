@@ -6,8 +6,8 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Locale

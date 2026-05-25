@@ -26,7 +26,7 @@ import com.arata.yukarilauncher.ui.fragment.DownloadModFragment
 import com.arata.yukarilauncher.utils.NumberWithUnits
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import org.jackhuang.hmcl.ui.versions.ModTranslations
 import java.util.Collections

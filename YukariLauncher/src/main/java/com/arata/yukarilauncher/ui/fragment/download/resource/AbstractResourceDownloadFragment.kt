@@ -45,7 +45,7 @@ import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.AnimUtils.Companion.setVisibilityAnim
 import com.skydoves.powerspinner.PowerSpinnerView
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.Future

@@ -5,9 +5,9 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 import com.arata.yukarilauncher.feature.version.install.InstallTask
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import java.io.File
 
 class FabricLikeApiModDownloadTask(private val fileName: String, private val versionItem: VersionItem) : InstallTask, Tools.DownloaderFeedback {

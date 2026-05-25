@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.event.sticky
 
-import net.kdt.pojavlaunch.JMinecraftVersionList
+import com.arata.yukarilauncher.value.JMinecraftVersionList
 
 /**
  * Minecraftバージョンリストが更新されたことを通知するイベント

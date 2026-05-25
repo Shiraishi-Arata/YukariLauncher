@@ -7,7 +7,7 @@ import com.arata.yukarilauncher.feature.mod.parser.ModChecker
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 /**

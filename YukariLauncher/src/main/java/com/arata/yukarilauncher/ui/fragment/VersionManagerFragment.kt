@@ -32,7 +32,7 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileDeletionHandler
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.json.JSONObject
 import java.io.File
 import java.util.zip.ZipFile

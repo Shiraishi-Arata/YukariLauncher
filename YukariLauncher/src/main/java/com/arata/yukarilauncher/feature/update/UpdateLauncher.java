@@ -15,7 +15,7 @@ import com.arata.yukarilauncher.ui.dialog.ProgressDialog;
 import com.arata.yukarilauncher.utils.YLTools;
 import com.arata.yukarilauncher.utils.path.UrlManager;
 
-import net.kdt.pojavlaunch.Tools;
+import com.arata.yukarilauncher.Tools;
 
 import org.apache.commons.io.FileUtils;
 

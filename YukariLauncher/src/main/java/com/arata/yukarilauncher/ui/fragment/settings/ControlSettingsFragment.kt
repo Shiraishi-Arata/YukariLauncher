@@ -20,7 +20,7 @@ import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SeekBarSettingsWrap
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapper
 import com.arata.yukarilauncher.utils.YLTools
 import fr.spse.gamepad_remapper.Remapper
-import net.kdt.pojavlaunch.fragments.GamepadMapperFragment
+import com.arata.yukarilauncher.ui.fragment.GamepadMapperFragment
 
 /**
  * コントロール設定フラグメント

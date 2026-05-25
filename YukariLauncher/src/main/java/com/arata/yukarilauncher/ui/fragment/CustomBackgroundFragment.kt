@@ -36,7 +36,7 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.mkdirs
 import com.arata.yukarilauncher.utils.image.ImageUtils.Companion.isImage
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.util.EnumMap

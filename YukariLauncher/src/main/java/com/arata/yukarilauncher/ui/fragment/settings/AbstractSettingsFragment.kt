@@ -5,7 +5,7 @@ import com.arata.anim.AnimPlayer
 import com.arata.yukarilauncher.event.single.SettingsChangeEvent
 import com.arata.yukarilauncher.event.value.SettingsPageSwapEvent
 import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim
-import net.kdt.pojavlaunch.prefs.LauncherPreferences
+import com.arata.yukarilauncher.setting.LauncherPreferences
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 

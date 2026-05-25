@@ -15,7 +15,7 @@ import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.util.zip.ZipFile

@@ -5,9 +5,9 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonSyntaxException
 import com.arata.yukarilauncher.feature.log.Logging.e
 import com.arata.yukarilauncher.feature.version.install.Addon
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.FabricVersion
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modloader.FabricVersion
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
@@ -78,11 +78,11 @@ class FabricLikeUtils private constructor(
                     mApiUrl
                 ),
                 iconName + "_installer", false
-            ) { input: String? -> input }
+            ) { input: String -> input }
 
             val jsonArray = Gson().fromJson(jsonString, JsonArray::class.java)
-            val jsonObject = jsonArray[0].asJsonObject //始终获取最新的安装器信息
-            val url = jsonObject["url"].asString
+            val jsonObject = jsonArray[0].getAsJsonObject()
+            val url = jsonObject.get("url").getAsString()
             println(url)
 
             return url
@@ -170,7 +170,7 @@ class FabricLikeUtils private constructor(
                 return Tools.GLOBAL_GSON.fromJson(jsonArrayIn, Array<FabricVersion>::class.java)
             } catch (e: JsonSyntaxException) {
                 e(FabricLikeUtils::class.java.name, Tools.printToString(e))
-                throw DownloadUtils.ParseException(null)
+                throw DownloadUtils.ParseException(Exception())
             }
         }
     }

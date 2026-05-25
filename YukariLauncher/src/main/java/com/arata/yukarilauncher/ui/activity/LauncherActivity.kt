@@ -82,17 +82,18 @@ import com.arata.yukarilauncher.utils.image.ImageUtils
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
 import com.arata.yukarilauncher.launch.LaunchGame
 import com.kdt.mcgui.ProgressLayout
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.authenticator.microsoft.MicrosoftBackgroundLogin
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
-import net.kdt.pojavlaunch.fragments.MainMenuFragment
-import net.kdt.pojavlaunch.prefs.LauncherPreferences
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.progresskeeper.TaskCountListener
-import net.kdt.pojavlaunch.services.ProgressServiceKeeper
-import net.kdt.pojavlaunch.tasks.AsyncVersionList
-import net.kdt.pojavlaunch.utils.NotificationUtils
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.login.MicrosoftBackgroundLogin
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
+import com.arata.yukarilauncher.ui.fragment.MainMenuFragment
+import com.arata.yukarilauncher.setting.LauncherPreferences
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.task.TaskCountListener
+import com.arata.yukarilauncher.feature.ProgressServiceKeeper
+import com.arata.yukarilauncher.task.AsyncVersionList
+import com.arata.yukarilauncher.utils.NotificationUtils
+import com.arata.yukarilauncher.value.JMinecraftVersionList
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -116,7 +117,7 @@ class LauncherActivity : BaseActivity() {
     @JvmField
     val modInstallerLauncher: ActivityResultLauncher<Any> =
         registerForActivityResult(OpenDocumentWithExtension("jar")) { uris ->
-            if (uris != null) {
+            if (uris != null && uris.isNotEmpty()) {
                 Tools.launchModInstaller(this, uris[0])
             }
         }
@@ -374,7 +375,11 @@ class LauncherActivity : BaseActivity() {
         ProgressKeeper.addTaskCountListener(binding.progressLayout)
 
         AsyncVersionList().getVersionList(
-            { versions -> EventBus.getDefault().postSticky(MinecraftVersionValueEvent(versions)) },
+            object : AsyncVersionList.VersionDoneListener {
+                override fun onVersionDone(versions: JMinecraftVersionList) {
+                    EventBus.getDefault().postSticky(MinecraftVersionValueEvent(versions))
+                }
+            },
             false
         )
 

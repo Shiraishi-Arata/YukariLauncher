@@ -11,7 +11,7 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.ActivityErrorBinding
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 /**

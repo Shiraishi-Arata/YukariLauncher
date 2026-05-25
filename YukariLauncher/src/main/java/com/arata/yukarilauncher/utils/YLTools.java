@@ -47,7 +47,7 @@ import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim;
 import com.arata.yukarilauncher.utils.file.FileTools;
 import com.arata.yukarilauncher.utils.path.PathManager;
 
-import net.kdt.pojavlaunch.Tools;
+import com.arata.yukarilauncher.Tools;
 import org.lwjgl.glfw.CallbackBridge;
 
 import java.io.File;

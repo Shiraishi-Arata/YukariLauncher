@@ -57,9 +57,9 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.http.NetworkUtils
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.fragments.MicrosoftLoginFragment
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.fragment.MicrosoftLoginFragment
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -156,9 +156,9 @@ class AccountFragment : FragmentWithAnim(R.layout.fragment_account), View.OnClic
                     .setWarning()
                     .setConfirmClickListener {
                         val accountFile =
-                            File(PathManager.DIR_ACCOUNT_NEW, account.uniqueUUID)
+                            File(PathManager.DIR_ACCOUNT_NEW, account.getUniqueUUID())
                         val userSkinFile =
-                            File(PathManager.DIR_USER_SKIN, account.uniqueUUID + ".png")
+                            File(PathManager.DIR_USER_SKIN, account.getUniqueUUID() + ".png")
                         if (accountFile.exists()) FileUtils.deleteQuietly(accountFile)
                         if (userSkinFile.exists()) FileUtils.deleteQuietly(userSkinFile)
                         reloadAccounts()

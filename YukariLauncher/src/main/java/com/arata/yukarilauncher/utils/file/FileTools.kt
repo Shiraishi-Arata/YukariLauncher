@@ -11,7 +11,7 @@ import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.ui.dialog.EditTextDialog
 import com.arata.yukarilauncher.ui.dialog.EditTextDialog.ConfirmListener
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileInputStream

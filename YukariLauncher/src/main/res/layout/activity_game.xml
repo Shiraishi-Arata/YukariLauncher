@@ -40,19 +40,19 @@
             android:visibility="gone"
             android:padding="@dimen/_8sdp"/>
 
-        <net.kdt.pojavlaunch.customcontrols.ControlLayout
+        <com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlLayout
             android:id="@+id/main_control_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <net.kdt.pojavlaunch.MinecraftGLSurface
+            <com.arata.yukarilauncher.MinecraftGLSurface
                 android:id="@+id/main_game_render_view"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:defaultFocusHighlightEnabled="false"
                 tools:ignore="UnusedAttribute" />
 
-            <net.kdt.pojavlaunch.customcontrols.mouse.Touchpad
+            <com.arata.yukarilauncher.ui.subassembly.customcontrols.mouse.Touchpad
                 android:id="@+id/main_touchpad"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -61,7 +61,7 @@
                 android:translationZ="2dp"
                 android:visibility="gone" />
 
-            <net.kdt.pojavlaunch.customcontrols.keyboard.TouchCharInput
+            <com.arata.yukarilauncher.ui.subassembly.customcontrols.keyboard.TouchCharInput
                 android:id="@+id/mainTouchCharInput"
                 android:layout_width="1dp"
                 android:layout_height="1dp"
@@ -71,9 +71,9 @@
                 android:inputType="textFilter|textImeMultiLine|textAutoComplete|textAutoCorrect"
                 tools:ignore="TouchTargetSizeCheck" />
 
-        </net.kdt.pojavlaunch.customcontrols.ControlLayout>
+        </com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlLayout>
 
-        <net.kdt.pojavlaunch.customcontrols.mouse.HotbarView
+        <com.arata.yukarilauncher.ui.subassembly.customcontrols.mouse.HotbarView
             android:id="@+id/hotbar_view"
             android:layout_width="0px"
             android:layout_height="0px"/>

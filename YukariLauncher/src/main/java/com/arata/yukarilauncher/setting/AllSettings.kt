@@ -7,8 +7,8 @@ import com.arata.yukarilauncher.setting.unit.IntSettingUnit
 import com.arata.yukarilauncher.setting.unit.LongSettingUnit
 import com.arata.yukarilauncher.setting.unit.StringSettingUnit
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.prefs.LauncherPreferences
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.setting.LauncherPreferences
 
 class AllSettings {
     companion object {

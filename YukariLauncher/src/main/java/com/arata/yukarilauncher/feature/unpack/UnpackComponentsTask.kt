@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.AssetManager
 import com.arata.yukarilauncher.feature.log.Logging.i
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileInputStream

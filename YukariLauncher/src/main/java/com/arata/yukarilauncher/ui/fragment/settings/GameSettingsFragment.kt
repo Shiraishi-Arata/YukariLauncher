@@ -22,10 +22,10 @@ import com.arata.yukarilauncher.utils.platform.MemoryUtils.Companion.getFreeDevi
 import com.arata.yukarilauncher.utils.platform.MemoryUtils.Companion.getTotalDeviceMemory
 import com.arata.yukarilauncher.utils.platform.MemoryUtils.Companion.getUsedDeviceMemory
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
-import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
+import com.arata.yukarilauncher.utils.runtime.MultiRTConfigDialog
 import kotlin.math.min
 
 /**
@@ -36,10 +36,8 @@ class GameSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragment
     private val mVmInstallLauncher = registerForActivityResult(
         OpenDocumentWithExtension("xz")
     ) { uris: List<Uri>? ->
-        uris?.let { uriList ->
-            uriList[0].let { data ->
-                Tools.installRuntimeFromUri(context, data)
-            }
+        if (!uris.isNullOrEmpty()) {
+            Tools.installRuntimeFromUri(context!!, uris[0])
         }
     }
 

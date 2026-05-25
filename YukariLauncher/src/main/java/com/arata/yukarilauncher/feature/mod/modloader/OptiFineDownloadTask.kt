@@ -4,11 +4,11 @@ import com.kdt.mcgui.ProgressLayout
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.version.install.InstallTask
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools.DownloaderFeedback
-import net.kdt.pojavlaunch.modloaders.OFDownloadPageScraper
-import net.kdt.pojavlaunch.modloaders.OptiFineUtils.OptiFineVersion
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools.DownloaderFeedback
+import com.arata.yukarilauncher.feature.mod.modloader.OFDownloadPageScraper
+import com.arata.yukarilauncher.feature.mod.modloader.OptiFineUtils.OptiFineVersion
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import java.io.File
 import java.io.IOException
 
@@ -28,7 +28,7 @@ class OptiFineDownloadTask(
             R.string.mod_download_progress,
             mOptiFineVersion.versionName
         )
-        val downloadUrl = OFDownloadPageScraper.run(mOptiFineVersion.downloadUrl) ?: return null
+        val downloadUrl = OFDownloadPageScraper.run(mOptiFineVersion.downloadUrl!!) ?: return null
         DownloadUtils.downloadFileMonitored(
             downloadUrl, mDestinationFile, ByteArray(8192),
             this

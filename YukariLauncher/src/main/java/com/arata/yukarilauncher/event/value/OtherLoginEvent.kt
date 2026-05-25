@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.event.value
 
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.value.MinecraftAccount
 
 /**
  * 外部アカウントでのログインが行われたことを通知するイベント

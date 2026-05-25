@@ -13,7 +13,7 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.path.PathManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.BufferedReader
 import java.io.File

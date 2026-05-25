@@ -11,9 +11,9 @@ import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackUtils
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.ProgressDialog
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.utils.FileUtils
-import net.kdt.pojavlaunch.utils.ZipUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.file.FileUtils
+import com.arata.yukarilauncher.utils.file.ZipUtils
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.io.IOException

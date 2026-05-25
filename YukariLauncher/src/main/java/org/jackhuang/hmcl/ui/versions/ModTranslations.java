@@ -23,7 +23,7 @@ import com.arata.yukarilauncher.feature.download.enums.Classify;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt;
 
-import net.kdt.pojavlaunch.Tools;
+import com.arata.yukarilauncher.Tools;
 
 import org.jackhuang.hmcl.util.Pair;
 import org.jackhuang.hmcl.util.StringUtils;

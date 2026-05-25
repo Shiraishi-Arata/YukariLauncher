@@ -8,7 +8,7 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.setting.AllSettings
 import com.google.gson.JsonParser
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 object GameGraphicsApiHelper {

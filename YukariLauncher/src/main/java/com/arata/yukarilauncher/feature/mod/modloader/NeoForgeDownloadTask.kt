@@ -9,9 +9,9 @@ import com.arata.yukarilauncher.feature.mod.modloader.NeoForgeUtils.Companion.ge
 import com.arata.yukarilauncher.feature.mod.modloader.NeoForgeUtils.Companion.getNeoForgedForgeInstallerUrl
 import com.arata.yukarilauncher.feature.version.install.InstallTask
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools.DownloaderFeedback
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools.DownloaderFeedback
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import java.io.File
 import java.io.IOException
 
@@ -73,7 +73,7 @@ class NeoForgeDownloadTask(neoforgeVersion: String) : InstallTask, DownloaderFee
         )
         val destinationFile = File(PathManager.DIR_CACHE, "neoforge-installer.jar")
         val buffer = ByteArray(8192)
-        DownloadUtils.downloadFileMonitored(mDownloadUrl, destinationFile, buffer, this)
+        DownloadUtils.downloadFileMonitored(mDownloadUrl!!, destinationFile, buffer, this)
         return destinationFile
     }
 

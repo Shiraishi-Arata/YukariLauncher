@@ -21,7 +21,7 @@ import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils
 import com.arata.yukarilauncher.ui.activity.LauncherActivity
 import com.arata.yukarilauncher.ui.activity.MissingStorageActivity
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 
 /**
  * スプラッシュ/初期セットアップアクティビティ
@@ -62,7 +62,7 @@ class SplashActivity : BaseActivity() {
             isClickable = false
         }
 
-        if (!Tools.checkStorageRoot()) {
+        if (!Tools.checkStorageRoot(this)) {
             startActivity(Intent(this, MissingStorageActivity::class.java))
             finish()
             return

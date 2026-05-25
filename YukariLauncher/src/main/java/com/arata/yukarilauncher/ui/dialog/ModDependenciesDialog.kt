@@ -14,7 +14,7 @@ import com.arata.yukarilauncher.feature.download.ModDependenciesAdapter
 import com.arata.yukarilauncher.feature.download.item.DependenciesInfoItem
 import com.arata.yukarilauncher.feature.download.item.InfoItem
 import com.arata.yukarilauncher.feature.log.Logging
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 
 /**
  * Mod依存関係表示ダイアログ

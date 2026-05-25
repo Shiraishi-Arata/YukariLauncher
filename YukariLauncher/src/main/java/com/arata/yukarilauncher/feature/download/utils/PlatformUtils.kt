@@ -5,7 +5,7 @@ import com.arata.yukarilauncher.feature.download.Filters
 import com.arata.yukarilauncher.feature.download.enums.Classify
 import com.arata.yukarilauncher.utils.stringutils.StringUtils.containsChinese
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 import org.jackhuang.hmcl.ui.versions.ModTranslations
 import org.jackhuang.hmcl.util.StringUtils
 

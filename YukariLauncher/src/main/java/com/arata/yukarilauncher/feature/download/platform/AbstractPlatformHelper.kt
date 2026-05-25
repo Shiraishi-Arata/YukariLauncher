@@ -23,9 +23,9 @@ import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.EditTextDialog
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import org.jackhuang.hmcl.ui.versions.ModTranslations
 import java.io.File
 

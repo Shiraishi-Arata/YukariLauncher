@@ -6,7 +6,7 @@ import android.os.FileObserver
 import com.arata.yukarilauncher.event.single.MCOptionChangeEvent
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.Version
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import org.lwjgl.glfw.CallbackBridge.windowHeight
 import org.lwjgl.glfw.CallbackBridge.windowWidth

@@ -36,7 +36,7 @@ import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
 import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.io.File

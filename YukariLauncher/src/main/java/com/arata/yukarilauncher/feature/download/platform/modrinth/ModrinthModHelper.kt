@@ -21,7 +21,7 @@ import com.arata.yukarilauncher.feature.download.utils.ModLoaderUtils
 import com.arata.yukarilauncher.feature.download.utils.PlatformUtils
 import com.arata.yukarilauncher.feature.download.utils.VersionTypeUtils
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 
 class ModrinthModHelper {
     companion object {

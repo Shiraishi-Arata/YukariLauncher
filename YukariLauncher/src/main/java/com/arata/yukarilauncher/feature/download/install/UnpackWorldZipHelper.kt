@@ -1,7 +1,7 @@
 package com.arata.yukarilauncher.feature.download.install
 
 import com.arata.yukarilauncher.feature.log.Logging
-import net.kdt.pojavlaunch.utils.ZipUtils
+import com.arata.yukarilauncher.utils.file.ZipUtils
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException

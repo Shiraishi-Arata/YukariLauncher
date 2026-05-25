@@ -9,12 +9,12 @@ import android.widget.SeekBar
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.ViewControlMenuBinding
 import com.arata.yukarilauncher.setting.AllSettings
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.customcontrols.ControlData
-import net.kdt.pojavlaunch.customcontrols.ControlDrawerData
-import net.kdt.pojavlaunch.customcontrols.ControlJoystickData
-import net.kdt.pojavlaunch.customcontrols.ControlLayout
-import net.kdt.pojavlaunch.customcontrols.EditorExitable
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlData
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlDrawerData
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlJoystickData
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlLayout
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.EditorExitable
 
 /**
  * コントロール設定メニュー
@@ -68,7 +68,7 @@ class ControlMenu(
                     try {
                         val contentUri = DocumentsContract.buildDocumentUri(
                             activity.getString(R.string.storageProviderAuthorities),
-                            controlLayout.saveToDirectory(controlLayout.mLayoutFileName)
+                            controlLayout.saveToDirectory(controlLayout.mLayoutFileName!!)
                         )
 
                         val shareIntent = Intent()

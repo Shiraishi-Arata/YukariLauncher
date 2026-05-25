@@ -36,8 +36,8 @@ import com.arata.yukarilauncher.utils.path.UrlManager
 
 import com.google.android.material.materialswitch.MaterialSwitch
 
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.io.File

@@ -35,9 +35,9 @@ import com.arata.yukarilauncher.utils.file.FileTools.Companion.copyFileInBackgro
 import com.skydoves.powerspinner.DefaultSpinnerAdapter
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.multirt.MultiRTUtils
-import net.kdt.pojavlaunch.multirt.Runtime
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
+import com.arata.yukarilauncher.utils.runtime.Runtime
 import org.greenrobot.eventbus.EventBus
 import kotlin.enums.EnumEntries
 
@@ -362,7 +362,7 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                 jvmArgsEdit.setText(config.getJavaArgs())
                 gameArgsEdit.setText(config.getGameArgs())
 
-                val runtimes = MultiRTUtils.getRuntimes()
+                val runtimes = MultiRTUtils.runtimes
                 val runtimeNames: MutableList<String> = ArrayList()
                 runtimes.forEach { v: Runtime ->
                     runtimeNames.add(String.format("%s - %s", v.name, v.versionString ?: getString(R.string.multirt_runtime_corrupt)))

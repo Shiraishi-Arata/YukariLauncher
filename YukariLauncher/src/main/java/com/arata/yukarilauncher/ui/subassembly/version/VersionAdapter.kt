@@ -33,7 +33,7 @@ import com.arata.yukarilauncher.ui.fragment.FilesFragment
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileDeletionHandler
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 
 /**
  * バージョン一覧のRecyclerViewアダプター

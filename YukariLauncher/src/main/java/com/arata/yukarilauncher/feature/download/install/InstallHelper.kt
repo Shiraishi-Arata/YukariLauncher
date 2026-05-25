@@ -9,8 +9,8 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.progresskeeper.DownloaderProgressWrapper
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.task.DownloaderProgressWrapper
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.io.File

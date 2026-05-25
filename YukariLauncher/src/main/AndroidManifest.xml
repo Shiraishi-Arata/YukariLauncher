@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
-        android:name="net.kdt.pojavlaunch.PojavApplication"
+        android:name="com.arata.yukarilauncher.PojavApplication"
         android:allowBackup="true"
         android:allowNativeHeapPointerTagging="false"
         android:networkSecurityConfig="@xml/network_security_config"
@@ -95,7 +95,7 @@
             android:screenOrientation="sensorLandscape" />
 
         <provider
-            android:name="net.kdt.pojavlaunch.scoped.FolderProvider"
+            android:name="com.arata.yukarilauncher.utils.path.FolderProvider"
             android:authorities="@string/storageProviderAuthorities"
             android:exported="true"
             android:grantUriPermissions="true"
@@ -115,10 +115,10 @@
         </provider>
 
         <service
-            android:name="net.kdt.pojavlaunch.services.ProgressService"
+            android:name="com.arata.yukarilauncher.feature.ProgressService"
             android:foregroundServiceType="dataSync" />
         <service
-            android:name="net.kdt.pojavlaunch.services.GameService"
+            android:name="com.arata.yukarilauncher.feature.GameService"
             android:process=":game"
             android:foregroundServiceType="specialUse">
             <property

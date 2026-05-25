@@ -19,7 +19,7 @@ import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils;
 
 import com.arata.yukarilauncher.ui.activity.MissingStorageActivity;
-import net.kdt.pojavlaunch.Tools;
+import com.arata.yukarilauncher.Tools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ContextExecutor.setActivity(this);
-        if (!Tools.checkStorageRoot()) {
+        if (!Tools.checkStorageRoot(this)) {
             startActivity(new Intent(this, MissingStorageActivity.class));
             finish();
         }

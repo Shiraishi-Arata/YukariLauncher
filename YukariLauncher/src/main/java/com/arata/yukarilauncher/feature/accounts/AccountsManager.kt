@@ -16,11 +16,11 @@ import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.authenticator.listener.DoneListener
-import net.kdt.pojavlaunch.authenticator.listener.ErrorListener
-import net.kdt.pojavlaunch.authenticator.microsoft.PresentedException
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.login.DoneListener
+import com.arata.yukarilauncher.feature.login.ErrorListener
+import com.arata.yukarilauncher.feature.login.PresentedException
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.io.IOException
@@ -31,30 +31,34 @@ object AccountsManager {
     private val accounts = CopyOnWriteArrayList<MinecraftAccount>()
 
     val doneListener by lazy {
-        DoneListener { account ->
-            TaskExecutors.runInUIThread {
-                showToast(R.string.account_login_done, Toast.LENGTH_SHORT)
-            }
-
-            synchronized(accountsLock) {
-                if (accounts.any { it.uniqueUUID == account.uniqueUUID }) {
-                    EventBus.getDefault().post(AccountUpdateEvent())
-                    return@DoneListener
+        object : DoneListener {
+            override fun onLoginDone(account: MinecraftAccount) {
+                TaskExecutors.runInUIThread {
+                    showToast(R.string.account_login_done, Toast.LENGTH_SHORT)
                 }
 
-                reloadInternal()
-                if (accounts.isEmpty()) currentAccount = account
-                else EventBus.getDefault().post(AccountUpdateEvent())
+                synchronized(accountsLock) {
+                    if (accounts.any { it.getUniqueUUID() == account.getUniqueUUID() }) {
+                        EventBus.getDefault().post(AccountUpdateEvent())
+                        return
+                    }
+
+                    reloadInternal()
+                    if (accounts.isEmpty()) currentAccount = account
+                    else EventBus.getDefault().post(AccountUpdateEvent())
+                }
             }
         }
     }
 
     val errorListener by lazy {
-        ErrorListener { error ->
-            ContextExecutor.executeTaskWithAllContext { context ->
-                when (error) {
-                    is PresentedException -> handlePresentedException(context, error)
-                    else -> Tools.showError(context, error)
+        object : ErrorListener {
+            override fun onLoginError(error: Throwable) {
+                ContextExecutor.executeTaskWithAllContext { context ->
+                    when (error) {
+                        is PresentedException -> handlePresentedException(context, error)
+                        else -> Tools.showError(context, error)
+                    }
                 }
             }
         }
@@ -93,7 +97,7 @@ object AccountsManager {
         }
         set(value) {
             requireNotNull(value) { "Account cannot be null" }
-            AllSettings.currentAccount.put(value.uniqueUUID).save()
+            AllSettings.currentAccount.put(value.getUniqueUUID()).save()
             EventBus.getDefault().post(AccountUpdateEvent())
         }
 
@@ -132,9 +136,10 @@ object AccountsManager {
  * handlePresentedExceptionする
  */
     private fun handlePresentedException(activity: Context, exception: PresentedException) {
-        exception.cause?.let {
-            Tools.showError(activity, exception.toString(activity), it)
-        } ?: run {
+        val cause = exception.cause
+        if (cause != null) {
+            Tools.showError(activity, exception.toString(activity), cause)
+        } else {
             TipDialog.Builder(activity)
                 .setTitle(R.string.generic_error)
                 .setMessage(exception.toString(activity))

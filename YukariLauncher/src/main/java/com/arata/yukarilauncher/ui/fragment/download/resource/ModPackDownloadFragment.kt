@@ -18,8 +18,8 @@ import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils.Companion.setViewAnim
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -40,23 +40,20 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension(null)) { uris: List<Uri>? ->
-            uris?.let { uriList ->
-                uriList[0].let { result ->
-                    if (!isTaskRunning()) {
-                        val dialog = YLTools.showTaskRunningDialog(requireContext())
-                        Task.runTask {
-                            FileTools.copyFileInBackground(requireContext(), result, PathManager.DIR_CACHE.absolutePath)
-                        }.ended(TaskExecutors.getAndroidUI()) { modPackFile ->
-                            modPackFile?.let {
-                                EventBus.getDefault().post(InstallLocalModpackEvent(InstallExtra(true, it.absolutePath)))
-                            }
-                        }.onThrowable { e ->
-                            Tools.showErrorRemote(e)
-                        }.finallyTask(TaskExecutors.getAndroidUI()) {
-                            dialog.dismiss()
-                        }.execute()
+            if (!uris.isNullOrEmpty() && !isTaskRunning()) {
+                val uri = uris[0]
+                val dialog = YLTools.showTaskRunningDialog(requireContext())
+                Task.runTask {
+                    FileTools.copyFileInBackground(requireContext(), uri, PathManager.DIR_CACHE.absolutePath)
+                }.ended(TaskExecutors.getAndroidUI()) { modPackFile ->
+                    modPackFile?.let {
+                        EventBus.getDefault().post(InstallLocalModpackEvent(InstallExtra(true, it.absolutePath)))
                     }
-                }
+                }.onThrowable { e ->
+                    Tools.showErrorRemote(e)
+                }.finallyTask(TaskExecutors.getAndroidUI()) {
+                    dialog.dismiss()
+                }.execute()
             }
         }
     }

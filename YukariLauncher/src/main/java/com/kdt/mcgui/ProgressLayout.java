@@ -22,9 +22,9 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
-import net.kdt.pojavlaunch.progresskeeper.ProgressListener;
-import net.kdt.pojavlaunch.progresskeeper.TaskCountListener;
+import com.arata.yukarilauncher.task.ProgressKeeper;
+import com.arata.yukarilauncher.task.ProgressListener;
+import com.arata.yukarilauncher.task.TaskCountListener;
 
 import java.util.HashMap;
 import java.util.List;

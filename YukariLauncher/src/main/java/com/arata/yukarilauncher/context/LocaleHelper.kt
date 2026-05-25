@@ -3,8 +3,9 @@ package com.arata.yukarilauncher.context
 import android.content.Context
 import android.content.ContextWrapper
 import com.arata.yukarilauncher.setting.Settings
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.prefs.LauncherPreferences
+import com.arata.yukarilauncher.setting.LauncherPreferences
 
 class LocaleHelper(context: Context) : ContextWrapper(context) {
     companion object {
@@ -16,6 +17,7 @@ class LocaleHelper(context: Context) : ContextWrapper(context) {
          */
         fun setLocale(context: Context): ContextWrapper {
             PathManager.initContextConstants(context)
+            Tools.initStorageConstants(context)
             Settings.refreshSettings()
 
             LauncherPreferences.loadPreferences()

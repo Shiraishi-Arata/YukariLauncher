@@ -7,7 +7,7 @@ import com.arata.yukarilauncher.utils.http.CallUtils
 import com.arata.yukarilauncher.utils.http.CallUtils.CallbackListener
 import com.arata.yukarilauncher.utils.path.UrlManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONObject

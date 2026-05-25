@@ -15,7 +15,7 @@ import com.arata.yukarilauncher.databinding.ViewLoggerBinding;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils;
 
-import net.kdt.pojavlaunch.Logger;
+import com.arata.yukarilauncher.feature.log.Logger;
 
 /**
  * ユーザーにログを表示するためのクラス
@@ -107,13 +107,16 @@ public class LoggerView extends ConstraintLayout {
         binding.toggleAutoscroll.setChecked(true);
 
         // ログのリスナー設定
-        mLogListener = text -> {
-            if (binding.logView.getVisibility() != VISIBLE) return;
-            post(() -> {
-                binding.logView.append(text + '\n');
-                if (binding.scroll.isKeepFocusing())
-                    binding.scroll.fullScroll(View.FOCUS_DOWN);
-            });
+        mLogListener = new Logger.eventLogListener() {
+            @Override
+            public void onEventLogged(String text) {
+                if (binding.logView.getVisibility() != VISIBLE) return;
+                post(() -> {
+                    binding.logView.append(text + '\n');
+                    if (binding.scroll.isKeepFocusing())
+                        binding.scroll.fullScroll(View.FOCUS_DOWN);
+                });
+            }
         };
         Logger.setLogListener(mLogListener);
     }

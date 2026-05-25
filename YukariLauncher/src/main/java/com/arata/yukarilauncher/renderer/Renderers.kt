@@ -9,8 +9,8 @@ import com.arata.yukarilauncher.renderer.renderers.PanfrostRenderer
 import com.arata.yukarilauncher.renderer.renderers.VirGLRenderer
 import com.arata.yukarilauncher.renderer.renderers.KopperZinkRenderer
 import com.arata.yukarilauncher.renderer.renderers.VulkanZinkRenderer
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.Tools
 
 /**
  * ランチャーの全レンダラー管理

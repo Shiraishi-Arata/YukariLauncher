@@ -30,8 +30,8 @@ import com.arata.yukarilauncher.utils.anim.AnimUtils.Companion.setVisibilityAnim
 import com.arata.yukarilauncher.utils.file.FileCopyHandler
 import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.file.PasteFile
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 import java.io.File
 import java.util.function.Consumer
 

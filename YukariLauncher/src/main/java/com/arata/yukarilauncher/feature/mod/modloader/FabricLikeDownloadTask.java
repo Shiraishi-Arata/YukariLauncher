@@ -8,10 +8,10 @@ import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome;
 import com.arata.yukarilauncher.feature.version.install.InstallTask;
 import com.arata.yukarilauncher.utils.path.PathManager;
 
-import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
-import net.kdt.pojavlaunch.utils.DownloadUtils;
-import net.kdt.pojavlaunch.utils.FileUtils;
+import com.arata.yukarilauncher.Tools;
+import com.arata.yukarilauncher.task.ProgressKeeper;
+import com.arata.yukarilauncher.utils.http.DownloadUtils;
+import com.arata.yukarilauncher.utils.file.FileUtils;
 
 import java.io.File;
 

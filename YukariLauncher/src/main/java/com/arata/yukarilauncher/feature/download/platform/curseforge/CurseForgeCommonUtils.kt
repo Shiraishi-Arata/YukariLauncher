@@ -19,9 +19,9 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.utils.MCVersionRegex.Companion.RELEASE_REGEX
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
-import net.kdt.pojavlaunch.utils.GsonJsonUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
+import com.arata.yukarilauncher.utils.GsonJsonUtils
 import java.io.IOException
 import java.util.TreeSet
 import java.util.function.Consumer
@@ -135,8 +135,16 @@ class CurseForgeCommonUtils {
             putDefaultParams(params, filters, lastResult.previousCount)
             params["classId"] = classId
 
-            val response = api.get("mods/search", params, JsonObject::class.java) ?: return null
-            val dataArray = response.getAsJsonArray("data") ?: return null
+            val response = api.get("mods/search", params, JsonObject::class.java)
+            if (response == null) {
+                Logging.e("CurseForgeCommonUtils", "mods/search returned null (likely 403 - API key lacks search permissions)")
+                return null
+            }
+            val dataArray = response.getAsJsonArray("data")
+            if (dataArray == null) {
+                Logging.e("CurseForgeCommonUtils", "mods/search response has no 'data' array: ${response}")
+                return null
+            }
 
             val infoItems: MutableList<InfoItem> = ArrayList()
             for (data in dataArray) {

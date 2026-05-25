@@ -8,9 +8,9 @@ import com.arata.yukarilauncher.feature.update.UpdateUtils
 import com.arata.yukarilauncher.renderer.Renderers
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.utils.ZipUtils
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.file.ZipUtils
 import java.io.DataInputStream
 import java.io.File
 import java.io.FileInputStream

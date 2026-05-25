@@ -5,8 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import com.arata.yukarilauncher.task.TaskExecutors
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.lifecycle.ContextExecutorTask
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.context.ContextExecutorTask
 import java.lang.ref.WeakReference
 
 class ContextExecutor {

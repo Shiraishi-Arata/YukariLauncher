@@ -38,7 +38,7 @@ import com.arata.yukarilauncher.ui.view.AnimButton
 import com.arata.yukarilauncher.utils.MCVersionRegex.Companion.RELEASE_REGEX
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import org.jackhuang.hmcl.ui.versions.ModTranslations
 import org.jackhuang.hmcl.util.versioning.VersionNumber

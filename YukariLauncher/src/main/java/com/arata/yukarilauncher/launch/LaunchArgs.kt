@@ -11,12 +11,12 @@ import com.arata.yukarilauncher.feature.version.Version
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.LibPath
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.AWTCanvasView
-import net.kdt.pojavlaunch.JMinecraftVersionList
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.multirt.Runtime
-import net.kdt.pojavlaunch.utils.JSONUtils
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.ui.view.AWTCanvasView
+import com.arata.yukarilauncher.value.JMinecraftVersionList
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.runtime.Runtime
+import com.arata.yukarilauncher.utils.JSONUtils
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.jackhuang.hmcl.util.versioning.VersionNumber
 import java.io.File
 
@@ -48,11 +48,11 @@ class LaunchArgs(
 
         if (runtime.javaVersion > 8) {
             argsList.add("--add-exports")
-            val pkg: String = versionInfo.mainClass.substring(0, versionInfo.mainClass.lastIndexOf("."))
+            val pkg: String = versionInfo.mainClass!!.substring(0, versionInfo.mainClass!!.lastIndexOf("."))
             argsList.add("$pkg/$pkg=ALL-UNNAMED")
         }
 
-        argsList.add(versionInfo.mainClass)
+        argsList.add(versionInfo.mainClass ?: "")
         argsList.addAll(getMinecraftClientArgs())
 
         return argsList
@@ -75,8 +75,8 @@ class LaunchArgs(
         prepareImGuiMoulberryNativeFallback()
 
         if (AccountUtils.isOtherLoginAccount(account)) {
-            if (account.otherBaseUrl.contains("auth.mc-user.com")) {
-                argsList.add("-javaagent:${LibPath.NIDE_8_AUTH.absolutePath}=${account.otherBaseUrl.replace("https://auth.mc-user.com:233/", "")}")
+            if (account.otherBaseUrl!!.contains("auth.mc-user.com")) {
+                argsList.add("-javaagent:${LibPath.NIDE_8_AUTH.absolutePath}=${account.otherBaseUrl!!.replace("https://auth.mc-user.com:233/", "")}")
                 argsList.add("-Dnide8auth.client=true")
             } else {
                 argsList.add("-javaagent:${LibPath.AUTHLIB_INJECTOR.absolutePath}=${account.otherBaseUrl}")
@@ -162,7 +162,7 @@ class LaunchArgs(
                 arg.processJvmArg()?.let(minecraftArgs::add)
             }
         }
-        return JSONUtils.insertJSONValueList(minecraftArgs.toTypedArray<String>(), varArgMap)
+        return JSONUtils.insertJSONValueList(minecraftArgs.toTypedArray<String>(), varArgMap as Map<String, String>)
     }
 
     /**
@@ -180,9 +180,9 @@ class LaunchArgs(
         verArgMap["clientid"] = account.clientToken
         // アンダースコア付きのバリアントとの互換性を維持
         verArgMap["client_id"] = account.clientToken
-        verArgMap["auth_xuid"] = account.xuid
+        verArgMap["auth_xuid"] = account.xuid ?: ""
         verArgMap["assets_root"] = ProfilePathHome.getAssetsHome()
-        verArgMap["assets_index_name"] = versionInfo.assets
+        verArgMap["assets_index_name"] = versionInfo.assets ?: ""
         verArgMap["game_assets"] = ProfilePathHome.getAssetsHome()
         verArgMap["game_directory"] = gameDirPath.absolutePath
         verArgMap["user_properties"] = "{}"
@@ -200,7 +200,7 @@ class LaunchArgs(
         val minecraftArgs: MutableList<String> = ArrayList()
         versionInfo.arguments?.apply {
             // Minecraft 1.13+ 対応
-            game.forEach { if (it is String) minecraftArgs.add(it) }
+            game?.forEach { if (it is String) minecraftArgs.add(it) }
         }
 
         val finalArgs = JSONUtils.insertJSONValueList(
@@ -220,10 +220,10 @@ class LaunchArgs(
      */
     private fun setLauncherInfo(verArgMap: MutableMap<String, String>) {
         verArgMap["launcher_name"] = InfoDistributor.LAUNCHER_NAME
-        verArgMap["launcher_version"] = YLTools.getVersionName()
+        verArgMap["launcher_version"] = YLTools.getVersionName() ?: ""
         verArgMap["version_type"] = minecraftVersion.getCustomInfo()
             .takeIf { it.isNotEmpty() && it.isNotBlank() }
-            ?: versionInfo.type
+            ?: (versionInfo.type ?: "release")
     }
 
 

@@ -13,7 +13,7 @@ import com.arata.yukarilauncher.utils.file.FileTools.Companion.mkdirs
 import com.arata.yukarilauncher.utils.image.ImageUtils.Companion.isImage
 import jp.wasabeef.glide.transformations.BlurTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter

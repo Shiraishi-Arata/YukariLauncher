@@ -7,10 +7,10 @@ import com.arata.yukarilauncher.event.value.InstallGameEvent
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.task.Task
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.tasks.AsyncMinecraftDownloader
-import net.kdt.pojavlaunch.tasks.MinecraftDownloader
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.task.AsyncMinecraftDownloader
+import com.arata.yukarilauncher.task.MinecraftDownloader
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.util.concurrent.atomic.AtomicReference

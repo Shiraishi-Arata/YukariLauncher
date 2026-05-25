@@ -1,8 +1,8 @@
 package com.arata.yukarilauncher.ui.fragment
 
 import androidx.fragment.app.Fragment
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.progresskeeper.TaskCountListener
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.task.TaskCountListener
 
 /**
  * すべてのフラグメントの基底クラス

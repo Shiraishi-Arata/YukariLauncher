@@ -31,7 +31,7 @@ import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.mkdirs
 import com.arata.yukarilauncher.utils.mouse.CursorPackUtils
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 /**

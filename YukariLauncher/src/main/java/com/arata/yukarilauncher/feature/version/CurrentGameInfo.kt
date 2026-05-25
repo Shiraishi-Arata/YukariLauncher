@@ -3,7 +3,7 @@ package com.arata.yukarilauncher.feature.version
 import com.google.gson.annotations.SerializedName
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.feature.log.Logging
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap

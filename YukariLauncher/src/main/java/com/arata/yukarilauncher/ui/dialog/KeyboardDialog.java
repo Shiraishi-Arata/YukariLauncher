@@ -14,7 +14,7 @@ import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.databinding.DialogKeyboardBinding;
 import com.arata.yukarilauncher.ui.view.AnimButton;
 
-import net.kdt.pojavlaunch.Tools;
+import com.arata.yukarilauncher.Tools;
 
 import java.util.ArrayList;
 import java.util.List;

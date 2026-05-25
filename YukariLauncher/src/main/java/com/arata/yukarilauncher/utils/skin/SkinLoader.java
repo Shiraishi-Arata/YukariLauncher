@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.path.PathManager;
 
-import net.kdt.pojavlaunch.value.MinecraftAccount;
+import com.arata.yukarilauncher.value.MinecraftAccount;
 
 import org.jetbrains.annotations.NotNull;
 

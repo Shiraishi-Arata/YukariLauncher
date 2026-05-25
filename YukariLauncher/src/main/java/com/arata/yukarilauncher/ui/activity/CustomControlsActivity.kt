@@ -19,9 +19,9 @@ import com.arata.yukarilauncher.feature.background.BackgroundType
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.subassembly.menu.ControlMenu
 import com.arata.yukarilauncher.ui.subassembly.view.GameMenuViewWrapper
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.customcontrols.ControlLayout
-import net.kdt.pojavlaunch.customcontrols.EditorExitable
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlLayout
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.EditorExitable
 import java.io.File
 import java.io.IOException
 

@@ -16,9 +16,9 @@ import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.subassembly.filelist.FileItemBean;
 import com.arata.yukarilauncher.ui.subassembly.filelist.FileRecyclerViewCreator;
 
-import net.kdt.pojavlaunch.JMinecraftVersionList;
-import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.utils.FilteredSubList;
+import com.arata.yukarilauncher.value.JMinecraftVersionList;
+import com.arata.yukarilauncher.Tools;
+import com.arata.yukarilauncher.utils.FilteredSubList;
 
 import org.greenrobot.eventbus.EventBus;
 

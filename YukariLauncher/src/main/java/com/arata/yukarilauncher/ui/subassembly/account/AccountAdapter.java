@@ -14,8 +14,8 @@ import com.arata.yukarilauncher.feature.accounts.AccountUtils;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.skin.SkinLoader;
 
-import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.value.MinecraftAccount;
+import com.arata.yukarilauncher.Tools;
+import com.arata.yukarilauncher.value.MinecraftAccount;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.Holder> 
                 binding.delete.setOnClickListener(v -> accountUpdateListener.onDelete(account));
             }
 
-            binding.name.setText(account.username);
+            binding.name.setText(account.getUsername());
 
             String loginType;
             if (AccountUtils.isMicrosoftAccount(account)) {
@@ -107,7 +107,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.Holder> 
                 loginType = mContext.getString(R.string.account_microsoft_account);
             } else if (AccountUtils.isOtherLoginAccount(account)) {
                 setButtonClickable(binding.refresh, true);
-                loginType = account.accountType;
+                loginType = account.getAccountType();
             } else {
                 setButtonClickable(binding.refresh, false);
                 loginType = mContext.getString(R.string.account_local_account);

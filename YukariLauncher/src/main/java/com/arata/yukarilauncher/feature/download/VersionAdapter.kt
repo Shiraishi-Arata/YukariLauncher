@@ -22,8 +22,8 @@ import com.arata.yukarilauncher.utils.NumberWithUnits.Companion.formatNumberWith
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils.Companion.setViewAnim
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.task.ProgressKeeper
 import java.util.Locale
 import java.util.StringJoiner
 import java.util.TimeZone

@@ -7,8 +7,8 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.utils.path.UrlManager
 import com.arata.yukarilauncher.utils.path.UrlManager.Companion.createRequestBuilder
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.value.MinecraftAccount
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody

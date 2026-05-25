@@ -10,9 +10,9 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Logger
-import net.kdt.pojavlaunch.plugins.FFmpegPlugin
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.feature.log.Logger
+import com.arata.yukarilauncher.plugins.FFmpegPlugin
 import java.io.File
 import java.net.URL
 import java.util.zip.ZipFile
