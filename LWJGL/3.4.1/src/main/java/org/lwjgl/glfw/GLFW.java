@@ -519,7 +519,7 @@ public class GLFW
     public static boolean mGLFWIsInputReady;
     private static boolean mGLFWInputPumping;
     private static boolean mGLFWWindowVisibleOnCreation = true;
-    public static final ByteBuffer keyDownBuffer = ByteBuffer.allocateDirect(317);
+    public static final ByteBuffer keyDownBuffer = ByteBuffer.allocateDirect(GLFW_KEY_LAST - 31 + 1);
     public static final ByteBuffer mouseDownBuffer = ByteBuffer.allocateDirect(8);
 
     private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
@@ -1244,7 +1244,9 @@ public class GLFW
     }
 
     public static int glfwGetKey(@NativeType("GLFWwindow *") long window, int key) {
-        return keyDownBuffer.get(Math.max(0, key-31));
+        int idx = key - 31;
+        if (idx < 0 || idx >= keyDownBuffer.capacity()) return 0;
+        return keyDownBuffer.get(idx);
     }
 
     public static int glfwGetMouseButton(@NativeType("GLFWwindow *") long window, int button) {
