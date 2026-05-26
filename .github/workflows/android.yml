@@ -24,7 +24,15 @@ jobs:
       - name: Set build type
         id: set-env
         run: |
-          BUILD_TYPE="RELEASE" 
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          BUILD_TYPE="DEBUG"
+
+          if [[ "$COMMIT_MSG" == *"pre-release"* ]]; then
+            BUILD_TYPE="PRE_RELEASE"
+          elif [[ "$COMMIT_MSG" == *"release"* ]]; then
+            BUILD_TYPE="RELEASE"
+          fi
+          
           echo "YL_BUILD_TYPE=${BUILD_TYPE}" >> $GITHUB_ENV
 
       - name: Set up JDK 21
