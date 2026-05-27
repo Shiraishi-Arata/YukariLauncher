@@ -27,23 +27,20 @@ class CleanUpCache {
             var fileCount = 0
             try {
                 Task.runTask {
-                    val list = PathManager.DIR_CACHE.listFiles()?.let {
-                        PathManager.DIR_APP_CACHE.listFiles()?.let { it1 ->
-                            getList(it, it1)
-                        }
-                    }
+                    /* 複数のキャッシュディレクトリと指定ファイルを収集し、一つのリストに結合する */
+                    val filesToDelete = mutableListOf<File>()
 
-                    PathManager.FILE_VERSION_LIST.let {
-                        val file = File(it)
-                        if (file.exists()) list?.add(file)
-                    }
+                    PathManager.DIR_CACHE.listFiles()?.let { filesToDelete.addAll(it) }
+                    PathManager.DIR_APP_CACHE.listFiles()?.let { filesToDelete.addAll(it) }
+                    File(PathManager.DIR_MOD_LIBRARY).listFiles()?.let { filesToDelete.addAll(it) }
 
-                    list?.let{
-                        for (file in list) {
-                            ++fileCount
-                            totalSize += FileUtils.sizeOf(file)
-                            FileUtils.deleteQuietly(file)
-                        }
+                    val versionListFile = File(PathManager.FILE_VERSION_LIST)
+                    if (versionListFile.exists()) filesToDelete.add(versionListFile)
+
+                    for (file in filesToDelete) {
+                        ++fileCount
+                        totalSize += FileUtils.sizeOf(file)
+                        FileUtils.deleteQuietly(file)
                     }
                 }.ended(TaskExecutors.getAndroidUI()) {
                     if (fileCount != 0) {
@@ -63,16 +60,6 @@ class CleanUpCache {
             }
         }
 
-        /**
-         * 複数のファイル配列を一つのリストに結合する
-         */
-        private fun getList(vararg filesArray: Array<File>): MutableList<File> {
-            val filesList: MutableList<File> = ArrayList()
-            for (fileArray in filesArray) {
-                filesList.addAll(listOf(*fileArray))
-            }
 
-            return filesList
-        }
     }
 }

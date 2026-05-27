@@ -140,6 +140,15 @@
     <string name="mod_check_replay_mod">ReplayMod (%s) 需要 FFmpeg 渲染视频，请单独安装 FFmpeg 插件\n%s\n%s</string>
     <string name="mod_check_borderlesswindow">Borderless Window (%s) 不适用于安卓。它会使游戏在启动阶段崩溃。</string>
 
+    <string name="mod_check_download_progress">Downloading: %s</string>
+    <string name="mod_check_download_bytes">%s / %s</string>
+    <string name="mod_check_download_speed">Speed: %s/s</string>
+    <string name="mod_check_download_retry_title">Download Failed</string>
+    <string name="mod_check_download_retry_message">Failed to download required native library for %s.\nWould you like to retry?</string>
+    <string name="mod_check_download_retry">Retry</string>
+    <string name="mod_check_download_skip">Skip</string>
+    <string name="mod_check_no_network_library">No internet connection. Required native library for %s cannot be downloaded.\nYou can disable the compatibility check for this mod to continue, or cancel to abort.</string>
+    <string name="mod_check_disable_check">Disable this mod</string>
     <!-- Controls -->
     <string name="control_primary">左键</string>
     <string name="control_secondary">右键</string>

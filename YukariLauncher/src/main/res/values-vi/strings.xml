@@ -135,6 +135,15 @@
     <string name="mod_check_imblocker">IMBlocker/In-GameIME (%s) không tương thích với Android và sẽ khiến trò chơi bị treo khi khởi động.</string>
     <string name="mod_check_replay_mod">ReplayMod (%s) yêu cầu FFmpeg để render video. Vui lòng cài đặt plugin FFmpeg riêng\n%s\n%s</string>
     <string name="mod_check_borderlesswindow">Borderless Window (%s) không tương thích với Android và sẽ khiến trò chơi bị treo khi khởi động.</string>
+    <string name="mod_check_download_progress">Downloading: %s</string>
+    <string name="mod_check_download_bytes">%s / %s</string>
+    <string name="mod_check_download_speed">Speed: %s/s</string>
+    <string name="mod_check_download_retry_title">Download Failed</string>
+    <string name="mod_check_download_retry_message">Failed to download required native library for %s.\nWould you like to retry?</string>
+    <string name="mod_check_download_retry">Retry</string>
+    <string name="mod_check_download_skip">Skip</string>
+    <string name="mod_check_no_network_library">No internet connection. Required native library for %s cannot be downloaded.\nYou can disable the compatibility check for this mod to continue, or cancel to abort.</string>
+    <string name="mod_check_disable_check">Disable this mod</string>
     <!-- Controls -->
     <string name="control_primary">Nhấp chuột trái</string>
     <string name="control_secondary">Nhấp chuột phải</string>

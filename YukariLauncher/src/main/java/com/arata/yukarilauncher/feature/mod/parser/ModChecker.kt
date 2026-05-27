@@ -1,20 +1,32 @@
 package com.arata.yukarilauncher.feature.mod.parser
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcel
 import android.os.Parcelable
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mio.util.AndroidUtil
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.TipDialog
+import com.arata.yukarilauncher.utils.http.NetworkUtils
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.platform.Architecture
 import com.arata.yukarilauncher.feature.log.Logger
+import com.arata.yukarilauncher.feature.mod.ModUtils
 import com.arata.yukarilauncher.plugins.FFmpegPlugin
 import java.io.File
 import java.net.URL
+import java.util.Locale
 import java.util.zip.ZipFile
 
 class ModChecker {
@@ -100,6 +112,22 @@ class ModChecker {
         }
     }
 
+/**
+ * DownloadTaskする
+ */
+    private data class DownloadTask(
+        val url: String,
+        val targetFile: File,
+        val modFile: File,
+        val libFileName: String,
+        val modFileName: String,
+        val tag: String,
+        val settings: AllModCheckSettings,
+        val downloadingResId: Int,
+        val errorResId: Int,
+        val debugResId: Int
+    )
+
     /**
      * 检查所有模组，并对一些已知的模组进行判断
      */
@@ -117,6 +145,7 @@ class ModChecker {
             }
 
             val modResult = ModCheckResult()
+            val downloadTasks = mutableListOf<DownloadTask>()
 
             modInfoList.forEach { mod ->
                 when (mod.id) {
@@ -137,12 +166,21 @@ class ModChecker {
                                 "de/fabmax/physxjni/linux/libPhysXJniBindings_64.so"
                             )
                             if (arch.isBlank() or (!Architecture.isx86Device() and arch.contains("x86"))) {
-                                // Try to download the native library (no ABI check)
-                                val errorMessage = handlePhysics(context, mod.file)
-                                if (errorMessage != null) {
-                                    modCheckSettings[AllModCheckSettings.PHYSICS_MOD] = Pair(
-                                        "1",
-                                        errorMessage
+                                val targetFile = File(PathManager.DIR_MOD_LIBRARY, "libPhysXJniBindings_64.so")
+                                if (!targetFile.exists()) {
+                                    downloadTasks.add(
+                                        DownloadTask(
+                                            url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/PhysX/libPhysXJniBindings_64.so",
+                                            targetFile = targetFile,
+                                            modFile = mod.file,
+                                            libFileName = "libPhysXJniBindings_64.so",
+                                            modFileName = mod.file.name,
+                                            tag = "Physics",
+                                            settings = AllModCheckSettings.PHYSICS_MOD,
+                                            downloadingResId = R.string.mod_check_physics_downloading,
+                                            errorResId = R.string.mod_check_physics_failed,
+                                            debugResId = R.string.mod_check_physics_debug
+                                        )
                                     )
                                 }
                             }
@@ -218,15 +256,25 @@ class ModChecker {
                             )
                         }
                     }
-                
                     "sable" -> {
                         if (!modResult.hasSable) {
                             modResult.hasSable = true
-                            val errorMessage = handleSable(context, mod.file)
-                            if (errorMessage != null) {
-                                modCheckSettings[AllModCheckSettings.SABLE] = Pair(
-                                    "1",
-                                    errorMessage
+                            val libFileName = "libsable_rapier-$abiTag.so"
+                            val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
+                            if (!targetFile.exists()) {
+                                downloadTasks.add(
+                                    DownloadTask(
+                                        url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libFileName",
+                                        targetFile = targetFile,
+                                        modFile = mod.file,
+                                        libFileName = libFileName,
+                                        modFileName = mod.file.name,
+                                        tag = "Sable",
+                                        settings = AllModCheckSettings.SABLE,
+                                        downloadingResId = R.string.mod_check_sable_downloading,
+                                        errorResId = R.string.mod_check_sable_failed,
+                                        debugResId = R.string.mod_check_sable_debug
+                                    )
                                 )
                             }
                         }
@@ -234,27 +282,104 @@ class ModChecker {
                     "flashback" -> {
                         if (!modResult.hasFlashBack) {
                             modResult.hasFlashBack = true
-                            val errorMessage = handleFlashback(context, mod.file)
-                            if (errorMessage != null) {
-                                modCheckSettings[AllModCheckSettings.FLASHBACK] = Pair(
-                                    "1",
-                                    errorMessage
+                            val libFileName = "libimgui-moulberry90-java-$abiTag.so"
+                            val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
+                            if (!targetFile.exists()) {
+                                downloadTasks.add(
+                                    DownloadTask(
+                                        url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libFileName",
+                                        targetFile = targetFile,
+                                        modFile = mod.file,
+                                        libFileName = libFileName,
+                                        modFileName = mod.file.name,
+                                        tag = "Flashback",
+                                        settings = AllModCheckSettings.FLASHBACK,
+                                        downloadingResId = R.string.mod_check_axiom_downloading,
+                                        errorResId = R.string.mod_check_axiom_failed,
+                                        debugResId = R.string.mod_check_axiom_debug
+                                    )
                                 )
                             }
                         }
                     }
                 }
-                
+
                 if (mod.file.name.matches(Regex("Axiom-.*\\.jar", RegexOption.IGNORE_CASE))) {
-                    val errorMessage = handleAxiom(context, mod.file)
-                    if (errorMessage != null) {
-                        modCheckSettings[AllModCheckSettings.AXIOM] = Pair("1", errorMessage)
+                    var foundMatch = false
+                    ZipFile(mod.file).use { zipFile ->
+                        val entries = zipFile.entries()
+                        while (entries.hasMoreElements()) {
+                            val entry = entries.nextElement()
+                            val name = entry.name
+                            if (!name.contains("zstd-jni-", true)) continue
+                            if (!name.endsWith(".so")) continue
+                            if (!matchesAbi(name)) continue
+
+                            val versionStart = "zstd-jni-"
+                            val rawIndex = name.indexOf(versionStart)
+                            if (rawIndex == -1) continue
+
+                            val startIndex = rawIndex + versionStart.length
+                            val endIndex = name.indexOf(".so", startIndex)
+                            if (endIndex <= startIndex) continue
+
+                            val version = name.substring(startIndex, endIndex)
+                            foundMatch = true
+
+                            Logging.i("Axiom", "Extracted version: $version from $name (ABI: $abiTag)")
+
+                            val libraries = listOf(
+                                "libzstd-jni-$version.so",
+                                "libimgui-moulberry92-java-$abiTag.so"
+                            )
+
+                            for (libraryName in libraries) {
+                                val targetFile = File(PathManager.DIR_MOD_LIBRARY, libraryName)
+                                if (targetFile.exists()) {
+                                    Logging.i("Axiom", "Library already exists: $targetFile")
+                                    continue
+                                }
+                                val url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libraryName"
+                                Logging.i("Axiom", "Queuing download from: $url")
+
+                                downloadTasks.add(
+                                    DownloadTask(
+                                        url = url,
+                                        targetFile = targetFile,
+                                        modFile = mod.file,
+                                        libFileName = libraryName,
+                                        modFileName = mod.file.name,
+                                        tag = "Axiom",
+                                        settings = AllModCheckSettings.AXIOM,
+                                        downloadingResId = R.string.mod_check_axiom_downloading,
+                                        errorResId = R.string.mod_check_axiom_failed,
+                                        debugResId = R.string.mod_check_axiom_debug
+                                    )
+                                )
+                            }
+                            break
+                        }
+                    }
+                    if (!foundMatch) {
+                        modCheckSettings[AllModCheckSettings.AXIOM] = Pair(
+                            "1",
+                            context.getString(R.string.mod_check_axiom_failed, mod.file.name) + "\n" +
+                                    context.getString(R.string.mod_check_axiom_debug, "No suitable native library found in JAR")
+                        )
                     }
                 }
             }
 
-            showResultDialog(context, modCheckSettings) {
-                executeTask(modResult)
+            if (downloadTasks.isEmpty()) {
+                showResultDialog(context, modCheckSettings) {
+                    executeTask(modResult)
+                }
+            } else {
+                processNextDownload(context, downloadTasks, 0, modCheckSettings, modResult) {
+                    showResultDialog(context, modCheckSettings) {
+                        executeTask(modResult)
+                    }
+                }
             }
         }.onFailure { e ->
             Logging.e("LaunchGame", "An error occurred while trying to process existing mod information", e)
@@ -263,53 +388,266 @@ class ModChecker {
     }
 
 /**
- * handlePhysicsする
+ * processNextDownloadする
  */
-    private fun handlePhysics(context: Context, modFile: File): String? {
-        val libFileName = "libPhysXJniBindings_64.so"
-        val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
-
-        if (targetFile.exists()) {
-            Logging.i("Physics", "Library already exists: $targetFile")
-            return null
+    private fun processNextDownload(
+        context: Context,
+        tasks: List<DownloadTask>,
+        index: Int,
+        modCheckSettings: MutableMap<AllModCheckSettings, Pair<String, String>>,
+        modResult: ModCheckResult,
+        onComplete: () -> Unit
+    ) {
+        if (index >= tasks.size) {
+            onComplete()
+            return
         }
 
-        val url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/PhysX/$libFileName"
-        Logging.i("Physics", "Attempting to download $libFileName from $url")
+        val task = tasks[index]
+        downloadLibraryWithDialog(context, task) { error ->
+            if (error != null) {
+                modCheckSettings[task.settings] = Pair("1", error)
+                Logging.i(task.tag, "Download failed, moving to next task")
+            }
+            processNextDownload(context, tasks, index + 1, modCheckSettings, modResult, onComplete)
+        }
+    }
+
+/**
+ * downloadLibraryWithDialogする
+ */
+    private fun downloadLibraryWithDialog(
+        context: Context,
+        task: DownloadTask,
+        onResult: (String?) -> Unit
+    ) {
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            TaskExecutors.runInUIThread {
+                TipDialog.Builder(context)
+                    .setTitle(R.string.generic_warning)
+                    .setMessage(context.getString(R.string.mod_check_no_network_library, task.modFileName))
+                    .setCheckBox(R.string.mod_check_disable_check)
+                    .setShowCheckBox(true)
+                    .setConfirm(R.string.generic_confirm)
+                    .setConfirmClickListener { disable ->
+                        if (disable) {
+                            ModUtils.disableMod(task.modFile)
+                            task.settings.unit.put("1").save()
+                        }
+                        onResult(null)
+                    }
+                    .setCancel(R.string.generic_cancel)
+                    .setCancelClickListener {
+                        val error = context.getString(task.errorResId, task.modFileName) + "\n" +
+                                context.getString(task.debugResId, context.getString(R.string.generic_no_network))
+                        onResult(error)
+                    }
+                    .setShowCancel(true)
+                    .setCancelable(false)
+                    .showDialog()
+            }
+            return
+        }
+
+        val uiHandler = Handler(Looper.getMainLooper())
+        val dialog = createProgressDialog(context, task.libFileName)
+        var lastUpdateTime = System.nanoTime()
+        var lastBytes = 0L
+        var speed = ""
+
+        dialog.setOnDismissListener {
+            TaskExecutors.runInUIThread {
+                com.kdt.mcgui.ProgressLayout.clearProgress(com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE)
+            }
+        }
 
         TaskExecutors.runInUIThread {
             com.kdt.mcgui.ProgressLayout.setProgress(
                 com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
                 0,
-                R.string.mod_check_physics_downloading,
-                libFileName
+                task.downloadingResId,
+                task.libFileName
             )
+            dialog.show()
         }
 
-        var error: String? = null
         val thread = Thread {
+            var error: String? = null
             try {
-                downloadLibraryWithProgress(
-                    url,
-                    targetFile,
-                    R.string.mod_check_physics_downloading,
-                    libFileName
-                )
-                Logging.i("Physics", "Successfully downloaded $libFileName")
+                val connection = URL(task.url).openConnection().apply {
+                    setRequestProperty("User-Agent", "YukariLauncher")
+                    connect()
+                }
+
+                val totalBytes = connection.contentLengthLong
+                var downloadedBytes = 0L
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+
+                connection.getInputStream().use { input ->
+                    task.targetFile.parentFile?.mkdirs()
+                    task.targetFile.outputStream().use { output ->
+                        while (true) {
+                            val readCount = input.read(buffer)
+                            if (readCount <= 0) break
+                            output.write(buffer, 0, readCount)
+                            downloadedBytes += readCount
+
+                            val progress = if (totalBytes > 0L) {
+                                ((downloadedBytes * 100) / totalBytes).toInt().coerceIn(0, 100)
+                            } else {
+                                0
+                            }
+
+                            val now = System.nanoTime()
+                            val elapsed = (now - lastUpdateTime) / 1_000_000_000.0
+                            if (elapsed >= 0.5) {
+                                val bytesDelta = downloadedBytes - lastBytes
+                                val bytesPerSec = (bytesDelta / elapsed).toLong()
+                                speed = formatBytes(bytesPerSec) + "/s"
+                                lastUpdateTime = now
+                                lastBytes = downloadedBytes
+                            }
+
+                            val dlBytes = downloadedBytes
+                            val total = totalBytes
+                            uiHandler.post {
+                                com.kdt.mcgui.ProgressLayout.setProgress(
+                                    com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
+                                    progress,
+                                    task.downloadingResId,
+                                    task.libFileName
+                                )
+                                updateProgressDialog(dialog, progress, dlBytes, total, speed)
+                            }
+                        }
+                    }
+                }
+
+                uiHandler.post {
+                    com.kdt.mcgui.ProgressLayout.setProgress(
+                        com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
+                        100,
+                        task.downloadingResId,
+                        task.libFileName
+                    )
+                    updateProgressDialog(dialog, 100, downloadedBytes, totalBytes, speed)
+                }
+
+                Logging.i(task.tag, "Successfully downloaded ${task.libFileName}")
             } catch (e: Exception) {
-                Logging.e("Physics", "Failed to download $libFileName", e)
+                Logging.e(task.tag, "Failed to download ${task.libFileName}", e)
+                if (task.targetFile.exists()) {
+                    task.targetFile.delete()
+                    Logging.i(task.tag, "Deleted partial file: ${task.targetFile}")
+                }
                 val errorDetail = "${e.javaClass.simpleName}: ${e.message ?: "No message"}"
-                error = context.getString(R.string.mod_check_physics_failed, modFile.name) + "\n" +
-                        context.getString(R.string.mod_check_physics_debug, errorDetail)
-            } finally {
-                TaskExecutors.runInUIThread {
-                    com.kdt.mcgui.ProgressLayout.clearProgress(com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE)
+                error = context.getString(task.errorResId, task.modFileName) + "\n" +
+                        context.getString(task.debugResId, errorDetail)
+            }
+
+            uiHandler.post {
+                dialog.dismiss()
+                if (error != null) {
+                    showRetryDialog(context, task, error, onResult)
+                } else {
+                    onResult(null)
                 }
             }
         }
         thread.start()
-        thread.join()
-        return error
+    }
+
+/**
+ * createProgressDialogする
+ */
+    private fun createProgressDialog(context: Context, libFileName: String): AlertDialog {
+        val row = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+        }
+
+        val progressIndicator = LinearProgressIndicator(context).apply {
+            setTrackThickness(dp(8))
+            trackCornerRadius = dp(4)
+            max = 100
+        }
+
+        val sizeText = TextView(context).apply {
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            setTextColor(context.getColor(R.color.primary_text))
+            textSize = 14f
+        }
+
+        val speedText = TextView(context).apply {
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            setTextColor(context.getColor(R.color.primary_text))
+            textSize = 12f
+        }
+
+        val card = MaterialCardView(context).apply {
+            setCardBackgroundColor(context.getColor(R.color.background_menu_element))
+            setStrokeColor(context.getColor(R.color.settings_category))
+            strokeWidth = dp(1)
+            radius = dp(10).toFloat()
+        }
+
+        card.addView(row)
+        row.addView(progressIndicator, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+        row.addView(sizeText)
+        row.addView(speedText)
+
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.mod_check_download_progress, libFileName))
+            .setView(card)
+            .setCancelable(false)
+            .create()
+    }
+
+/**
+ * updateProgressDialogする
+ */
+    private fun updateProgressDialog(dialog: AlertDialog, progress: Int, downloadedBytes: Long, totalBytes: Long, speed: String) {
+        val customFrame = dialog.findViewById<android.widget.FrameLayout>(android.R.id.custom) ?: return
+        val card = customFrame.getChildAt(0) as? MaterialCardView ?: return
+        val row = card.getChildAt(0) as? LinearLayout ?: return
+        val progressIndicator = row.getChildAt(0) as? LinearProgressIndicator ?: return
+        val sizeText = row.getChildAt(1) as? TextView ?: return
+        val speedText = row.getChildAt(2) as? TextView ?: return
+
+        progressIndicator.progress = progress
+        sizeText.text = if (totalBytes > 0) {
+            "${formatBytes(downloadedBytes)} / ${formatBytes(totalBytes)}"
+        } else {
+            formatBytes(downloadedBytes)
+        }
+        speedText.text = speed
+    }
+
+/**
+ * showRetryDialogする
+ */
+    private fun showRetryDialog(
+        context: Context,
+        task: DownloadTask,
+        error: String,
+        onResult: (String?) -> Unit
+    ) {
+        TaskExecutors.runInUIThread {
+            TipDialog.Builder(context)
+                .setTitle(R.string.mod_check_download_retry_title)
+                .setMessage(context.getString(R.string.mod_check_download_retry_message, task.modFileName) + "\n\n$error")
+                .setConfirm(R.string.mod_check_download_retry)
+                .setConfirmClickListener {
+                    downloadLibraryWithDialog(context, task, onResult)
+                }
+                .setCancel(R.string.mod_check_download_skip)
+                .setCancelClickListener {
+                    onResult(error)
+                }
+                .setShowCancel(true)
+                .setCancelable(false)
+                .showDialog()
+        }
     }
 
     private var abiTag: String = "aarch64"
@@ -319,7 +657,7 @@ class ModChecker {
  */
     private fun initAbis() {
         val deviceAbi = Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"
-    
+
         abiTag = when {
             deviceAbi.contains("arm64") -> "arm64"
             deviceAbi.contains("x86_64") -> "x86_64"
@@ -327,10 +665,10 @@ class ModChecker {
             deviceAbi.contains("armeabi-v7a") -> "arm"
             else -> "arm64"
         }
-    
+
         Logging.i("ABI", "Detected ABI: $deviceAbi -> $abiTag")
     }
-    
+
 /**
  * matchesAbiする
  */
@@ -339,347 +677,21 @@ class ModChecker {
             "arm64" ->
                 name.contains("aarch64", true) ||
                 name.contains("arm64", true)
-    
+
             "x86_64" ->
                 name.contains("x86_64", true) ||
                 name.contains("amd64", true)
-    
+
             "x86" ->
                 name.contains("x86", true) &&
                 !name.contains("x86_64", true)
-    
+
             "arm" ->
                 name.contains("arm", true) &&
                 !name.contains("arm64", true) &&
                 !name.contains("aarch64", true)
-    
+
             else -> true
-        }
-    }
-    
-/**
- * handleAxiomする
- */
-    private fun handleAxiom(context: Context, modFile: File): String? {
-
-        ZipFile(modFile).use { zipFile ->
-    
-            val entries = zipFile.entries()
-    
-            while (entries.hasMoreElements()) {
-    
-                val entry = entries.nextElement()
-                val name = entry.name
-    
-                if (!name.contains("zstd-jni-", true)) continue
-                if (!name.endsWith(".so")) continue
-                if (!matchesAbi(name)) continue
-    
-                val versionStart = "zstd-jni-"
-                val rawIndex = name.indexOf(versionStart)
-    
-                if (rawIndex == -1) continue
-    
-                val startIndex = rawIndex + versionStart.length
-                val endIndex = name.indexOf(".so", startIndex)
-    
-                if (endIndex <= startIndex) continue
-    
-                val version = name.substring(startIndex, endIndex)
-    
-                Logging.i(
-                    "Axiom",
-                    "Extracted version: $version from $name (ABI: $abiTag)"
-                )
-    
-                val libraries = listOf(
-                    "libzstd-jni-$version.so",
-                    "libimgui-moulberry92-java-$abiTag.so"
-                )
-    
-                for (libraryName in libraries) {
-    
-                    val targetFile =
-                        File(PathManager.DIR_MOD_LIBRARY, libraryName)
-    
-                    if (targetFile.exists()) {
-                        Logging.i(
-                            "Axiom",
-                            "Library already exists: $targetFile"
-                        )
-                        continue
-                    }
-    
-                    val url =
-                        "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libraryName"
-    
-                    Logging.i(
-                        "Axiom",
-                        "Attempting to download from: $url"
-                    )
-    
-                    TaskExecutors.runInUIThread {
-                        com.kdt.mcgui.ProgressLayout.setProgress(
-                            com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
-                            0,
-                            R.string.mod_check_axiom_downloading,
-                            libraryName
-                        )
-                    }
-    
-                    var error: String? = null
-    
-                    val thread = Thread {
-    
-                        try {
-    
-                            downloadLibraryWithProgress(
-                                url,
-                                targetFile,
-                                R.string.mod_check_axiom_downloading,
-                                libraryName
-                            )
-    
-                            Logging.i(
-                                "Axiom",
-                                "Successfully downloaded $libraryName"
-                            )
-    
-                        } catch (e: Exception) {
-    
-                            Logging.e(
-                                "Axiom",
-                                "Download failed",
-                                e
-                            )
-    
-                            val errorDetail =
-                                "${e.javaClass.simpleName}: ${e.message ?: "No message"}"
-    
-                            error =
-                                context.getString(
-                                    R.string.mod_check_axiom_failed,
-                                    modFile.name
-                                ) + "\n" +
-                                context.getString(
-                                    R.string.mod_check_axiom_debug,
-                                    errorDetail
-                                )
-    
-                        } finally {
-    
-                            TaskExecutors.runInUIThread {
-                                com.kdt.mcgui.ProgressLayout.clearProgress(
-                                    com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE
-                                )
-                            }
-                        }
-                    }
-    
-                    thread.start()
-                    thread.join()
-    
-                    if (error != null) {
-                        return error
-                    }
-                }
-    
-                return null
-            }
-        }
-    
-        return context.getString(
-            R.string.mod_check_axiom_failed,
-            modFile.name
-        ) + "\n" +
-        context.getString(
-            R.string.mod_check_axiom_debug,
-            "No suitable native library found in JAR"
-        )
-    }
-    
-/**
- * handleFlashbackする
- */
-    private fun handleFlashback(context: Context, modFile: File): String? {
-        val libFileName = "libimgui-moulberry90-java-$abiTag.so"
-        val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
-
-        if (targetFile.exists()) {
-            Logging.i("Flashback", "Library already exists: $targetFile")
-            return null
-        }
-
-        val url = "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libFileName"
-        Logging.i("Flashback", "Attempting to download $libFileName from $url")
-
-        TaskExecutors.runInUIThread {
-            com.kdt.mcgui.ProgressLayout.setProgress(
-                com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
-                0,
-                R.string.mod_check_axiom_downloading,
-                libFileName
-            )
-        }
-
-        var error: String? = null
-
-        val thread = Thread {
-            try {
-                downloadLibraryWithProgress(
-                    url,
-                    targetFile,
-                    R.string.mod_check_axiom_downloading,
-                    libFileName
-                )
-                Logging.i("Flashback", "Successfully downloaded $libFileName")
-            } catch (e: Exception) {
-                Logging.e("Flashback", "Failed to download $libFileName", e)
-                val errorDetail = "${e.javaClass.simpleName}: ${e.message ?: "No message"}"
-                error = context.getString(R.string.mod_check_axiom_failed, modFile.name) + "\n" +
-                        context.getString(R.string.mod_check_axiom_debug, errorDetail)
-            } finally {
-                TaskExecutors.runInUIThread {
-                    com.kdt.mcgui.ProgressLayout.clearProgress(
-                        com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE
-                    )
-                }
-            }
-        }
-
-        thread.start()
-        thread.join()
-
-        return error
-    }
-
-/**
- * handleSableする
- */
-    private fun handleSable(context: Context, modFile: File): String? {
-    
-        val libFileName = "libsable_rapier-$abiTag.so"
-        val targetFile = File(PathManager.DIR_MOD_LIBRARY, libFileName)
-    
-        if (targetFile.exists()) {
-            Logging.i("Sable", "Library already exists: $targetFile")
-            return null
-        }
-    
-        val url =
-            "https://github.com/Shiraishi-Arata/Yukari-Fixes/releases/download/$abiTag/$libFileName"
-    
-        Logging.i("Sable", "Attempting to download $libFileName from $url")
-    
-        TaskExecutors.runInUIThread {
-            com.kdt.mcgui.ProgressLayout.setProgress(
-                com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
-                0,
-                R.string.mod_check_sable_downloading,
-                libFileName
-            )
-        }
-    
-        var error: String? = null
-    
-        val thread = Thread {
-            try {
-    
-                downloadLibraryWithProgress(
-                    url,
-                    targetFile,
-                    R.string.mod_check_sable_downloading,
-                    libFileName
-                )
-    
-                Logging.i(
-                    "Sable",
-                    "Successfully downloaded $libFileName"
-                )
-    
-            } catch (e: Exception) {
-    
-                Logging.e(
-                    "Sable",
-                    "Failed to download $libFileName",
-                    e
-                )
-    
-                val errorDetail =
-                    "${e.javaClass.simpleName}: ${e.message ?: "No message"}"
-    
-                error =
-                    context.getString(
-                        R.string.mod_check_sable_failed,
-                        modFile.name
-                    ) + "\n" +
-                    context.getString(
-                        R.string.mod_check_sable_debug,
-                        errorDetail
-                    )
-    
-            } finally {
-                TaskExecutors.runInUIThread {
-                    com.kdt.mcgui.ProgressLayout.clearProgress(
-                        com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE
-                    )
-                }
-            }
-        }
-    
-        thread.start()
-        thread.join()
-    
-        return error
-    }
-
-
-/**
- * downloadLibraryWithProgressする
- */
-    private fun downloadLibraryWithProgress(url: String, targetFile: File, progressResId: Int, progressArg: String) {
-        val connection = URL(url).openConnection().apply {
-            setRequestProperty("User-Agent", "YukariLauncher")
-            connect()
-        }
-
-        val totalBytes = connection.contentLengthLong
-        var downloadedBytes = 0L
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-
-        connection.getInputStream().use { input ->
-            targetFile.parentFile?.mkdirs()
-            targetFile.outputStream().use { output ->
-                while (true) {
-                    val readCount = input.read(buffer)
-                    if (readCount <= 0) break
-                    output.write(buffer, 0, readCount)
-                    downloadedBytes += readCount
-
-                    val progress = if (totalBytes > 0L) {
-                        ((downloadedBytes * 100) / totalBytes).toInt().coerceIn(0, 100)
-                    } else {
-                        0
-                    }
-                    TaskExecutors.runInUIThread {
-                        com.kdt.mcgui.ProgressLayout.setProgress(
-                            com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
-                            progress,
-                            progressResId,
-                            progressArg
-                        )
-                    }
-                }
-            }
-        }
-
-        TaskExecutors.runInUIThread {
-            com.kdt.mcgui.ProgressLayout.setProgress(
-                com.kdt.mcgui.ProgressLayout.INSTALL_RESOURCE,
-                100,
-                progressResId,
-                progressArg
-            )
         }
     }
 
@@ -721,6 +733,29 @@ class ModChecker {
                     }
                     executeTask()
                 }.showDialog()
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_BUFFER_SIZE = 8192
+
+/**
+ * dpする
+ */
+        private fun dp(value: Int): Int {
+            return (value * Resources.getSystem().displayMetrics.density).toInt()
+        }
+
+/**
+ * formatBytesする
+ */
+        private fun formatBytes(bytes: Long): String {
+            return when {
+                bytes < 1024 -> "$bytes B"
+                bytes < 1024 * 1024 -> String.format(Locale.US, "%.1f KB", bytes / 1024.0)
+                bytes < 1024 * 1024 * 1024 -> String.format(Locale.US, "%.1f MB", bytes / (1024.0 * 1024.0))
+                else -> String.format(Locale.US, "%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
+            }
         }
     }
 }
