@@ -7,7 +7,7 @@ on:
 
 jobs:
   BuildRelease:
-    if: github.repository_owner == 'Shiraishi-Arata' && !startsWith(github.ref, 'refs/pull/') && github.ref_name == 'UI-backup'
+    if: github.repository_owner == 'Shiraishi-Arata' && !startsWith(github.ref, 'refs/pull/') && github.ref_name == 'UI-backup' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'release') || contains(github.event.head_commit.message, 'pre-release'))
     runs-on: ubuntu-22.04
     strategy:
       matrix:
