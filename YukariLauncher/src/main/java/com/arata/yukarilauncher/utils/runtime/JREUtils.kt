@@ -30,6 +30,7 @@ import com.arata.yukarilauncher.utils.platform.Architecture
 import com.arata.yukarilauncher.feature.log.Logger
 import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.plugins.FFmpegPlugin
+import com.google.gson.Gson
 import com.oracle.dalvik.VMLauncher
 import org.greenrobot.eventbus.EventBus
 import org.lwjgl.glfw.CallbackBridge
@@ -271,9 +272,22 @@ object JREUtils {
 
         envMap["POJAV_RENDERER"] = rendererId
 
-        if (RendererPluginManager.selectedRendererPlugin != null) return
+        if (RendererPluginManager.selectedRendererPlugin != null) {
+            if (!envMap.containsKey("LIBGL_ES")) {
+                envMap["LIBGL_ES"] = "3"
+            }
+            return
+        }
 
         when {
+            rendererId == "opengles3" -> {
+                envMap["LIBGL_ES"] = "3"
+                envMap["POJAV_RENDERER"] = "opengles3"
+                envMap["POJAVEXEC_EGL"] = "libmobileglues.so"
+                // MobileGlues 設定ファイルを書き込む
+                writeMobileGluesConfig()
+                envMap["MG_DIR_PATH"] = getMobileGluesDir().absolutePath
+            }
             rendererId.startsWith("opengles") -> {
                 envMap["LIBGL_ES"] = "2"
                 envMap["LIBGL_MIPMAP"] = "3"
@@ -737,6 +751,51 @@ object JREUtils {
             Logging.e("glesDetect", "Couldn't initialize EGL.")
             return -3
         }
+    }
+
+    /**
+     * MobileGlues の設定ディレクトリをアプリのキャッシュ内に取得する
+     * @return MG設定ディレクトリ（存在しない場合は作成される）
+     */
+    private fun getMobileGluesDir(): File {
+        val dir = File(PathManager.DIR_CACHE, "MG")
+        dir.mkdirs()
+        return dir
+    }
+
+    /**
+     * MobileGlues 設定ファイル（config.json）を書き込む
+     * AllSettings の mg_* 設定値を読み取り、MGネイティブライブラリが解釈する形式のJSONとして出力する
+     * ゲーム起動時に setRendererEnv() 内から呼ばれる
+     */
+    private fun writeMobileGluesConfig() {
+        val config = com.google.gson.JsonObject().apply {
+            addProperty("enableANGLE", AllSettings.mgAngle.getValue().toIntOrNull() ?: 1)
+            // 0=DisableIfPossible, 1=EnableIfPossible, 2=ForceDisable, 3=ForceEnable
+            addProperty("enableNoError", AllSettings.mgNoError.getValue().toIntOrNull() ?: 0)
+            // 0=Auto, 1=Disable, 2=Level1, 3=Level2
+            addProperty("enableExtTimerQuery", if (AllSettings.mgExtTimerQuery.getValue()) 1 else 0)
+            // 0=有効（推奨）, 1=無効化（UIスイッチON時）
+            addProperty("enableExtComputeShader", if (AllSettings.mgExtComputeShader.getValue()) 1 else 0)
+            // 不完全なARB_compute_shader拡張
+            addProperty("enableExtDirectStateAccess", if (AllSettings.mgExtDirectStateAccess.getValue()) 1 else 0)
+            // 実験的なdirect_state_access拡張
+            addProperty("maxGlslCacheSize", AllSettings.mgGlslCacheSize.getValue().toIntOrNull() ?: 32)
+            // MB単位、-1で無効化
+            addProperty("multidrawMode", AllSettings.mgMultidrawMode.getValue().toIntOrNull() ?: 0)
+            // 0=Auto, 1=Indirect, 2=BaseVertex, 3=MultidrawIndirect, 4=DrawElements, 5=Compute
+            addProperty("angleDepthClearFixMode", AllSettings.mgAngleDepthClearFixMode.getValue().toIntOrNull() ?: 0)
+            // 0=Disable, 1=Mode1
+            addProperty("customGLVersion", AllSettings.mgCustomGLVersion.getValue().toIntOrNull() ?: 0)
+            // 0=無効, 32/33/40-46
+            addProperty("fsr1Setting", if (AllSettings.mgFsr1.getValue()) 1 else 0)
+            // FSR1超解像度
+            addProperty("hideMGEnvLevel", if (AllSettings.mgHideMG.getValue()) 1 else 0)
+            // F3画面からMG情報を隠す
+        }
+        val configFile = File(getMobileGluesDir(), "config.json")
+        configFile.writeText(Gson().toJson(config))
+        Logging.i("MobileGlues", "Config written to ${configFile.absolutePath}")
     }
 
     /** @param path カレントディレクトリを変更するパス @return 成功時は0 */

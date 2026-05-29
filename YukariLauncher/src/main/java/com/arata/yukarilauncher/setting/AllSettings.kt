@@ -46,6 +46,51 @@ class AllSettings {
         @JvmStatic
         val zinkPreferSystemDriver = BooleanSettingUnit("zinkPreferSystemDriver", false)
 
+        // MobileGlues 設定
+        @JvmStatic
+        val mgAngle = StringSettingUnit("mg_angle", "1")
+        // 0=DisableIfPossible, 1=EnableIfPossible, 2=ForceDisable, 3=ForceEnable
+
+        @JvmStatic
+        val mgNoError = StringSettingUnit("mg_no_error", "0")
+        // 0=Auto, 1=Disable, 2=Level1, 3=Level2
+
+        @JvmStatic
+        val mgExtTimerQuery = BooleanSettingUnit("mg_ext_timer_query", true)
+        // true=推奨のtimer_query拡張を無効化, false=有効化（UIは反転）
+
+        @JvmStatic
+        val mgExtComputeShader = BooleanSettingUnit("mg_ext_compute_shader", false)
+        // 不完全なARB_compute_shader拡張を有効化
+
+        @JvmStatic
+        val mgExtDirectStateAccess = BooleanSettingUnit("mg_ext_direct_state_access", false)
+        // 実験的なdirect_state_access拡張を有効化
+
+        @JvmStatic
+        val mgGlslCacheSize = StringSettingUnit("mg_glsl_cache_size", "32")
+        // GLSLキャッシュサイズ（MB）、-1で無効化
+
+        @JvmStatic
+        val mgMultidrawMode = StringSettingUnit("mg_multidraw_mode", "0")
+        // 0=Auto, 1=PreferIndirect, 2=PreferBaseVertex, 3=PreferMultidrawIndirect, 4=ForceDrawElements, 5=PreferCompute
+
+        @JvmStatic
+        val mgAngleDepthClearFixMode = StringSettingUnit("mg_angle_depth_clear_fix", "0")
+        // 0=Disable, 1=Mode1（ANGLE深度クリアの回避策）
+
+        @JvmStatic
+        val mgCustomGLVersion = StringSettingUnit("mg_custom_gl_version", "0")
+        // 0=無効, 32=3.2, 33=3.3, 40=4.0, 41=4.1, 42=4.2, 43=4.3, 44=4.4, 45=4.5, 46=4.6
+
+        @JvmStatic
+        val mgFsr1 = BooleanSettingUnit("mg_fsr1", false)
+        // FSR1（FidelityFX Super Resolution）を有効化
+
+        @JvmStatic
+        val mgHideMG = BooleanSettingUnit("mg_hide_mg", false)
+        // F3画面からMobileGlues情報を隠す
+
         // コントロール設定
         @JvmStatic
         val disableGestures = BooleanSettingUnit("disableGestures", false)

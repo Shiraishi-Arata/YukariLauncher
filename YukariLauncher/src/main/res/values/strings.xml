@@ -845,4 +845,96 @@
     <string name="console_fetching">Loading…</string>
     <string name="console_command_hint">Enter command…</string>
     <string name="console_send">Send</string>
+
+    <!-- MobileGlues settings -->
+    <string name="setting_mg_category">MobileGlues</string>
+    <string name="setting_mg_angle">Use ANGLE as OpenGL ES driver</string>
+    <string name="setting_mg_no_error">OpenGL Error Setting</string>
+    <string name="setting_mg_ext_timer_query">Disable Recommended \'timer_query\' Extension</string>
+    <string name="setting_mg_ext_compute_shader">Enable Incomplete \'ARB_compute_shader\' Extension</string>
+    <string name="setting_mg_ext_direct_state_access">Enable Advanced \'direct_state_access\' Extension</string>
+    <string name="setting_mg_glsl_cache">Max GLSL Cache Size (enter -1 to disable)</string>
+    <string name="setting_mg_glsl_cache_desc">Unit: Megabytes (MB)</string>
+    <string name="setting_mg_multidraw">MultiDraw Emulation</string>
+    <string name="setting_mg_angle_clear_workaround">ANGLE Depth Clear Workaround</string>
+    <string name="setting_mg_custom_gl_version">Custom target OpenGL Version</string>
+    <string name="setting_mg_fsr1">(Experimental) Enable built-in FSR1</string>
+    <string name="setting_mg_hide_f3">Hide MobileGlues from F3 screen</string>
+
+    <string-array name="setting_mg_angle_entries">
+        <item>Prefer Disabled</item>
+        <item>Prefer Enabled</item>
+        <item>Disable</item>
+        <item>Enable</item>
+    </string-array>
+    <string-array name="setting_mg_angle_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_no_error_entries">
+        <item>Auto</item>
+        <item>Do not ignore</item>
+        <item>Ignore shader/program error</item>
+        <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_mg_no_error_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_multidraw_entries">
+        <item>Auto</item>
+        <item>Prefer Indirect</item>
+        <item>Prefer BaseVertex</item>
+        <item>Prefer MultiDraw Indirect</item>
+        <item>Force DrawElements</item>
+        <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_mg_multidraw_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="setting_mg_angle_clear_entries">
+        <item>Disable</item>
+        <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_mg_angle_clear_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="setting_mg_custom_gl_version_entries">
+        <item>Disabled</item>
+        <item>OpenGL 3.2</item>
+        <item>OpenGL 3.3</item>
+        <item>OpenGL 4.0</item>
+        <item>OpenGL 4.1</item>
+        <item>OpenGL 4.2</item>
+        <item>OpenGL 4.3</item>
+        <item>OpenGL 4.4</item>
+        <item>OpenGL 4.5</item>
+        <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_mg_custom_gl_version_values">
+        <item>0</item>
+        <item>32</item>
+        <item>33</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+    </string-array>
 </resources>
