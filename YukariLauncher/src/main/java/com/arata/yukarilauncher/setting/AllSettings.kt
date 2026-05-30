@@ -56,7 +56,7 @@ class AllSettings {
         // 0=Auto, 1=Disable, 2=Level1, 3=Level2
 
         @JvmStatic
-        val mgExtTimerQuery = BooleanSettingUnit("mg_ext_timer_query", true)
+        val mgExtTimerQuery = BooleanSettingUnit("mg_ext_timer_query", false)
         // true=推奨のtimer_query拡張を無効化, false=有効化（UIは反転）
 
         @JvmStatic
