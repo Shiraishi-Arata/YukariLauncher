@@ -305,6 +305,7 @@ object JREUtils {
                 envMap["LIBGL_NOERROR"] = "1"
                 envMap["POJAV_RENDERER"] = "nggl4es"
                 envMap["POJAVEXEC_EGL"] = "libEGL.so"
+                envMap["NGG_DIR_PATH"] = PathManager.DIR_CACHE.absolutePath
             }
             rendererId == "ltw" -> {
                 envMap["LIBGL_ES"] = "3"
