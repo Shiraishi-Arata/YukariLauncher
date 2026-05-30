@@ -162,11 +162,19 @@ int pojavInitOpenGL() {
     
     if (!strcmp(renderer, "kopper_zink")) 
     {
-        pojav_environ->config_renderer = RENDERER_VK_ZINK;
+        /*
+         * Kopper Zink is shipped as a Mesa EGL/GLX stack (libEGL_mesa +
+         * libglxshim), not as an OSMesa renderer. Using the OSMesa bridge here
+         * makes the loader search libglxshim for OSMesa* entry points and leaves
+         * the context bridge with NULL OSMesa function pointers. Route Kopper
+         * through the EGL bridge so it resolves EGL symbols from POJAVEXEC_EGL
+         * and exposes desktop GL through the renderer library.
+         */
+        pojav_environ->config_renderer = RENDERER_GL4ES;
         load_vulkan();
         setenv("GALLIUM_DRIVER", "zink", 1);
         setenv("MESA_ANDROID_NO_KMS_SWRAST", "1", 1);
-        set_osm_bridge_tbl();
+        set_gl_bridge_tbl();
     }
     
     if (!strcmp(renderer, "gallium_virgl"))
