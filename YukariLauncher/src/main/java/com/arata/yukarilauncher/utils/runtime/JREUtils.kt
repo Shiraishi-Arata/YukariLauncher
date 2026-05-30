@@ -306,6 +306,12 @@ object JREUtils {
                 envMap["POJAV_RENDERER"] = "nggl4es"
                 envMap["POJAVEXEC_EGL"] = "libEGL.so"
             }
+            rendererId == "ltw" -> {
+                envMap["LIBGL_ES"] = "3"
+                envMap["LIBGL_NOERROR"] = "1"
+                envMap["POJAV_RENDERER"] = "ltw"
+                envMap["POJAVEXEC_EGL"] = "libltw.so"
+            }
             else -> {
                 envMap["MESA_GLSL_CACHE_DIR"] = PathManager.DIR_CACHE.absolutePath
                 envMap["MESA_GL_VERSION_OVERRIDE"] = if (rendererId == "gallium_virgl") "4.3" else "4.6"

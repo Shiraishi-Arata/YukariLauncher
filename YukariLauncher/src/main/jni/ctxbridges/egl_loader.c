@@ -30,6 +30,7 @@ EGLBoolean (*eglQuerySurface_p)(EGLDisplay display, EGLSurface surface, EGLint a
 
 void dlsym_EGL() {
     void* dl_handle = NULL;
+    void* fallback_handle = NULL;
     char* eglName = NULL;
     char* gles = getenv("LIBGL_GLES");
 
@@ -45,26 +46,34 @@ void dlsym_EGL() {
 
     if (dl_handle == NULL)
         dl_handle = dlopen("libEGL.so", RTLD_LOCAL | RTLD_LAZY);
+    else
+        fallback_handle = dlopen("libEGL.so", RTLD_LOCAL | RTLD_LAZY);
 
     if (dl_handle == NULL) abort();
 
-    eglBindAPI_p = GLGetProcAddress(dl_handle, "eglBindAPI");
-    eglChooseConfig_p = GLGetProcAddress(dl_handle, "eglChooseConfig");
-    eglCreateContext_p = GLGetProcAddress(dl_handle, "eglCreateContext");
-    eglCreatePbufferSurface_p = GLGetProcAddress(dl_handle, "eglCreatePbufferSurface");
-    eglCreateWindowSurface_p = GLGetProcAddress(dl_handle, "eglCreateWindowSurface");
-    eglDestroyContext_p = GLGetProcAddress(dl_handle, "eglDestroyContext");
-    eglDestroySurface_p = GLGetProcAddress(dl_handle, "eglDestroySurface");
-    eglGetConfigAttrib_p = GLGetProcAddress(dl_handle, "eglGetConfigAttrib");
-    eglGetCurrentContext_p = GLGetProcAddress(dl_handle, "eglGetCurrentContext");
-    eglGetDisplay_p = GLGetProcAddress(dl_handle, "eglGetDisplay");
-    eglGetError_p = GLGetProcAddress(dl_handle, "eglGetError");
-    eglInitialize_p = GLGetProcAddress(dl_handle, "eglInitialize");
-    eglMakeCurrent_p = GLGetProcAddress(dl_handle, "eglMakeCurrent");
-    eglSwapBuffers_p = GLGetProcAddress(dl_handle, "eglSwapBuffers");
-    eglReleaseThread_p = GLGetProcAddress(dl_handle, "eglReleaseThread");
-    eglSwapInterval_p = GLGetProcAddress(dl_handle, "eglSwapInterval");
-    eglTerminate_p = GLGetProcAddress(dl_handle, "eglTerminate");
-    eglGetCurrentSurface_p = GLGetProcAddress(dl_handle,"eglGetCurrentSurface");
-    eglQuerySurface_p = GLGetProcAddress(dl_handle, "eglQuerySurface");
+    #define LOAD_EGL_SYM(name) do { \
+        name##_p = GLGetProcAddress(dl_handle, #name); \
+        if (name##_p == NULL && fallback_handle != NULL) \
+            name##_p = GLGetProcAddress(fallback_handle, #name); \
+    } while(0)
+
+    LOAD_EGL_SYM(eglBindAPI);
+    LOAD_EGL_SYM(eglChooseConfig);
+    LOAD_EGL_SYM(eglCreateContext);
+    LOAD_EGL_SYM(eglCreatePbufferSurface);
+    LOAD_EGL_SYM(eglCreateWindowSurface);
+    LOAD_EGL_SYM(eglDestroyContext);
+    LOAD_EGL_SYM(eglDestroySurface);
+    LOAD_EGL_SYM(eglGetConfigAttrib);
+    LOAD_EGL_SYM(eglGetCurrentContext);
+    LOAD_EGL_SYM(eglGetDisplay);
+    LOAD_EGL_SYM(eglGetError);
+    LOAD_EGL_SYM(eglInitialize);
+    LOAD_EGL_SYM(eglMakeCurrent);
+    LOAD_EGL_SYM(eglSwapBuffers);
+    LOAD_EGL_SYM(eglReleaseThread);
+    LOAD_EGL_SYM(eglSwapInterval);
+    LOAD_EGL_SYM(eglTerminate);
+    LOAD_EGL_SYM(eglGetCurrentSurface);
+    LOAD_EGL_SYM(eglQuerySurface);
 }

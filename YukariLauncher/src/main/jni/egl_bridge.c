@@ -124,7 +124,7 @@ int pojavInitOpenGL() {
 
     load_vulkan();
 
-    if (strncmp("opengles", renderer, 8) == 0 || !strcmp(renderer, "nggl4es")) 
+    if (strncmp("opengles", renderer, 8) == 0 || !strcmp(renderer, "nggl4es") || !strcmp(renderer, "ltw")) 
     {
         pojav_environ->config_renderer = RENDERER_GL4ES;
         set_gl_bridge_tbl();

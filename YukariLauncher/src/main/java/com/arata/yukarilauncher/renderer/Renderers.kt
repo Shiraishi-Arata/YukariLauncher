@@ -4,6 +4,7 @@ import android.content.Context
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.renderer.renderers.FreedrenoRenderer
 import com.arata.yukarilauncher.renderer.renderers.GL4ESRenderer
+import com.arata.yukarilauncher.renderer.renderers.LTWRenderer
 import com.arata.yukarilauncher.renderer.renderers.MobileGluesRenderer
 import com.arata.yukarilauncher.renderer.renderers.NGGL4ESRenderer
 import com.arata.yukarilauncher.renderer.renderers.PanfrostRenderer
@@ -42,6 +43,7 @@ object Renderers {
             GL4ESRenderer(),
             NGGL4ESRenderer(),
             MobileGluesRenderer(),
+            LTWRenderer(),
             KopperZinkRenderer(),
             VulkanZinkRenderer(),
             VirGLRenderer(),

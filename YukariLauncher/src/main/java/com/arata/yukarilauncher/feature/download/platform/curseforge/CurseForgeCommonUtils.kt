@@ -170,7 +170,7 @@ class CurseForgeCommonUtils {
             val allowModDistribution = dataObject.get("allowModDistribution")
             // Gsonはnullを自動的にfalseにキャストするため、問題が発生する
             // そのため、allowModDistributionフラグがnullでない場合のみチェックする
-            if (!allowModDistribution.isJsonNull && !allowModDistribution.asBoolean) {
+            if (allowModDistribution != null && !allowModDistribution.isJsonNull && !allowModDistribution.asBoolean) {
                 Logging.i("CurseForgeCommonUtils", "Skipping project ${dataObject["name"].asString} because curseforge sucks")
                 return null
             }
