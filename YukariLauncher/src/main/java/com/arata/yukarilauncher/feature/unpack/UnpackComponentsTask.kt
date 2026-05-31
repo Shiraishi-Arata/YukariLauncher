@@ -2,6 +2,7 @@ package com.arata.yukarilauncher.feature.unpack
 
 import android.content.Context
 import android.content.res.AssetManager
+import android.os.Build
 import com.arata.yukarilauncher.feature.log.Logging.i
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.Tools
@@ -48,7 +49,7 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
             val fis = FileInputStream(versionFile)
             val release1 = Tools.read(input)
             val release2 = Tools.read(fis)
-            if (release1 != release2) {
+            if (release1 != release2 || isLwjglComponentMissingNative()) {
                 requestEmptyParentDir(versionFile)
                 return true
             } else {
@@ -56,6 +57,23 @@ class UnpackComponentsTask(val context: Context, val component: Components) : Ab
                 return false
             }
         }
+    }
+
+
+/**
+ * isLwjglComponentMissingNativeする
+ */
+    private fun isLwjglComponentMissingNative(): Boolean {
+        if (!component.component.startsWith("lwjgl/")) return false
+        val supportedAbis = Build.SUPPORTED_ABIS.takeIf { it.isNotEmpty() } ?: arrayOf("arm64-v8a")
+        val componentDir = versionFile.parentFile ?: return true
+        val hasCompatibleNative = supportedAbis.any { abi ->
+            File(componentDir, "native/$abi/liblwjgl.so").exists()
+        }
+        if (!hasCompatibleNative) {
+            i("UnpackPrep", "${component.component}: Missing liblwjgl.so for ${supportedAbis.joinToString()}; unpacking again...")
+        }
+        return !hasCompatibleNative
     }
 
 /**

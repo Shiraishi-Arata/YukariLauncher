@@ -89,43 +89,43 @@ class LaunchArgs(
         val configFilePath = if (is7) LibPath.LOG4J_XML_1_7 else LibPath.LOG4J_XML_1_12
         argsList.add("-Dlog4j.configurationFile=${configFilePath.absolutePath}")
 
-        // ライブラリパス文字列を構築する
-        val versionSpecificNativesDir = File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
-        val libraryPath = StringBuilder()
-        if (versionSpecificNativesDir.exists()) {
-            libraryPath.append(versionSpecificNativesDir.absolutePath).append(":")
-        }
-        val lwjglVersion = minecraftVersion.getLWJGLVersion()
-        val lwjglNativeDir = File(PathManager.DIR_DATA, "lwjgl/$lwjglVersion/native/${Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"}")
-        if (lwjglNativeDir.exists()) {
-            libraryPath.append(lwjglNativeDir.absolutePath).append(":")
-        }
-        if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
-            libraryPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
-        }
-        libraryPath.append(PathManager.DIR_NATIVE_LIB)
+        val libraryPath = getNativeLibrarySearchPath()
         argsList.add("-Djava.library.path=$libraryPath")
 
         // JNAブートライブラリパス（一部のModが依存するJNAで使用）
-        val jnaPath = StringBuilder()
-        if (versionSpecificNativesDir.exists()) {
-            jnaPath.append(versionSpecificNativesDir.absolutePath).append(":")
-        }
-        if (lwjglNativeDir.exists()) {
-            jnaPath.append(lwjglNativeDir.absolutePath).append(":")
-        }
-        if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
-            jnaPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
-        }
-        jnaPath.append(PathManager.DIR_NATIVE_LIB)
-        argsList.add("-Djna.boot.library.path=$jnaPath")
+        argsList.add("-Djna.boot.library.path=$libraryPath")
 
         // LWJGL専用のネイティブライブラリ検索パス
-        if (lwjglNativeDir.exists()) {
-            argsList.add("-Dorg.lwjgl.library.path=${lwjglNativeDir.absolutePath}")
+        getLwjglNativeLibraryPath().takeIf { it.isNotEmpty() }?.let { lwjglNativeLibraryPath ->
+            argsList.add("-Dorg.lwjgl.library.path=$lwjglNativeLibraryPath")
+            argsList.add("-Dorg.lwjgl.librarypath=$lwjglNativeLibraryPath")
         }
 
         return argsList
+    }
+
+
+    private fun getVersionSpecificNativesDir(): File =
+        File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
+
+    private fun getLwjglNativeDirs(): List<File> {
+        val lwjglVersion = minecraftVersion.getLWJGLVersion()
+        val supportedAbis = Build.SUPPORTED_ABIS.takeIf { it.isNotEmpty() } ?: arrayOf("arm64-v8a")
+        return supportedAbis
+            .map { abi -> File(PathManager.DIR_DATA, "lwjgl/$lwjglVersion/native/$abi") }
+            .filter { nativeDir -> File(nativeDir, "liblwjgl.so").exists() }
+    }
+
+    private fun getLwjglNativeLibraryPath(): String =
+        getLwjglNativeDirs().joinToString(":") { it.absolutePath }
+
+    private fun getNativeLibrarySearchPath(): String {
+        val libraryDirs = ArrayList<String>()
+        getVersionSpecificNativesDir().takeIf { it.exists() }?.let { libraryDirs.add(it.absolutePath) }
+        getLwjglNativeDirs().forEach { libraryDirs.add(it.absolutePath) }
+        PathManager.DIR_MOD_LIBRARY.takeIf { it.isNotEmpty() }?.let { libraryDirs.add(it) }
+        libraryDirs.add(PathManager.DIR_NATIVE_LIB)
+        return libraryDirs.joinToString(":")
     }
 
     /**
@@ -147,8 +147,16 @@ class LaunchArgs(
         hasClasspathInJvmArgs = false
         versionInfo.arguments?.let {
             fun Any.processJvmArg(): String? = (this as? String)?.let { argument ->
+                // Keep version JSON-provided native paths from overriding the richer path
+                // assembled in getJavaArgs(); otherwise LWJGL natives can disappear.
                 if (argument.startsWith("-Djava.library.path=")) {
-                    return@let "-Djava.library.path=${PathManager.DIR_NATIVE_LIB}"
+                    return@let "-Djava.library.path=${getNativeLibrarySearchPath()}"
+                }
+                if (argument.startsWith("-Dorg.lwjgl.library.path=") ||
+                    argument.startsWith("-Dorg.lwjgl.librarypath=")) {
+                    return@let getLwjglNativeLibraryPath().takeIf { it.isNotEmpty() }?.let { lwjglNativeLibraryPath ->
+                        argument.substringBefore("=") + "=$lwjglNativeLibraryPath"
+                    }
                 }
 
                 when {
