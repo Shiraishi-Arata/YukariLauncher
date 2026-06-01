@@ -65,7 +65,7 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
         installButton.setOnClickListener {
             if (!isTaskRunning()) {
                 Toast.makeText(requireActivity(), getString(R.string.select_modpack_local_tip), Toast.LENGTH_SHORT).show()
-                openDocumentLauncher?.launch(null)
+                openDocumentLauncher?.launch(Unit)
             } else {
                 setViewAnim(installButton, Animations.Shake)
                 Toast.makeText(requireActivity(), getString(R.string.tasks_ongoing), Toast.LENGTH_SHORT).show()
