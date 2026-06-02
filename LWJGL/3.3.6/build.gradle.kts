@@ -5,20 +5,20 @@ plugins {
 
 group = "org.lwjgl.glfw"
 
+val lwjglVersion = "3.3.6"
+
 configurations.getByName("default").isCanBeResolved = true
 
 tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveBaseName.set("lwjgl-glfw-classes")
-    destinationDirectory.set(file("../../YukariLauncher/src/main/assets/components/lwjgl/3.3.6/"))
-    // Auto update the version with a timestamp so the project jar gets updated by Pojav
+    destinationDirectory.set(file("../../YukariLauncher/src/main/assets/components/lwjgl/$lwjglVersion/"))
     doLast {
-        val assetsDir = file("../../YukariLauncher/src/main/assets/components/lwjgl/3.3.6/")
+        val assetsDir = file("../../YukariLauncher/src/main/assets/components/lwjgl/$lwjglVersion/")
         val versionFile = file("$assetsDir/version")
         versionFile.writeText(System.currentTimeMillis().toString())
 
-        // Extract native .so files from AAR
-        val aarFile = file("libs/lwjgl-3.3.6.aar")
+        val aarFile = file("libs/lwjgl-$lwjglVersion.aar")
         val nativeOutputDir = file("$assetsDir/native/")
         if (aarFile.exists()) {
             val tempDir = file("$assetsDir/.extract_temp")
@@ -50,9 +50,19 @@ tasks.jar {
     })
     exclude("net/java/openjdk/cacio/ctc/**")
     manifest {
-        attributes("Manifest-Version" to "3.3.6")
+        attributes("Manifest-Version" to lwjglVersion)
         attributes("Automatic-Module-Name" to "org.lwjgl")
     }
+}
+
+tasks.register<Zip>("packageZip") {
+    dependsOn("jar")
+    val assetsDir = file("../../YukariLauncher/src/main/assets/components/lwjgl/$lwjglVersion/")
+    from(assetsDir) {
+        into(lwjglVersion)
+    }
+    archiveFileName.set("$lwjglVersion.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("distributions"))
 }
 
 spotless {
