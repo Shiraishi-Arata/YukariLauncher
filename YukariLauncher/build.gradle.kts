@@ -124,39 +124,21 @@ android {
                     afterEvaluate {
                         val task = tasks.named("merge${variantName}Assets").get() as MergeSourceSetFolders
                         task.doLast {
-                            val arch = System.getProperty("arch", "all")
                             val assetsDir = task.outputDir.get().asFile
+
+                            // Remove JRE and LWJGL from APK assets (downloaded at runtime)
                             val jreList = listOf("jre-8", "jre-17", "jre-21", "jre-25")
-                            println("arch:$arch")
                             jreList.forEach { jreVersion ->
                                 val runtimeDir = File("$assetsDir/components/$jreVersion")
-                                println("runtimeDir:${runtimeDir.absolutePath}")
-                                runtimeDir.listFiles()?.forEach {
-                                    if (arch != "all" && it.name != "version" && !it.name.contains("universal") && it.name != "bin-${arch}.tar.xz") {
-                                        println("delete:${it} : ${it.delete()}")
-                                    }
+                                if (runtimeDir.exists()) {
+                                    println("delete jre assets:${runtimeDir} : ${runtimeDir.deleteRecursively()}")
                                 }
                             }
-                            if (arch != "all") {
-                                val lwjglVersions = listOf("lwjgl/3.3.6", "lwjgl/3.4.1")
-                                val keepAbi = when (arch) {
-                                    "arm" -> "armeabi-v7a"
-                                    "arm64" -> "arm64-v8a"
-                                    "x86" -> "x86"
-                                    "x86_64" -> "x86_64"
-                                    else -> null
-                                }
-                                if (keepAbi != null) {
-                                    lwjglVersions.forEach { lwjglDir ->
-                                        val nativeDir = File("$assetsDir/components/$lwjglDir/native")
-                                        if (nativeDir.exists()) {
-                                            nativeDir.listFiles()?.forEach { abiDir ->
-                                                if (abiDir.isDirectory && abiDir.name != keepAbi) {
-                                                    println("delete:${abiDir} : ${abiDir.deleteRecursively()}")
-                                                }
-                                            }
-                                        }
-                                    }
+                            val lwjglVersions = listOf("lwjgl/3.3.6", "lwjgl/3.4.1")
+                            lwjglVersions.forEach { lwjglDir ->
+                                val lwjglAssetDir = File("$assetsDir/components/$lwjglDir")
+                                if (lwjglAssetDir.exists()) {
+                                    println("delete lwjgl assets:${lwjglAssetDir} : ${lwjglAssetDir.deleteRecursively()}")
                                 }
                             }
                         }

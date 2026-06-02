@@ -12,9 +12,10 @@ import com.arata.yukarilauncher.InfoDistributor
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.ActivitySplashBinding
 import com.arata.yukarilauncher.feature.unpack.Components
+import com.arata.yukarilauncher.feature.unpack.DownloadComponentsTask
+import com.arata.yukarilauncher.feature.unpack.DownloadJreTask
 import com.arata.yukarilauncher.feature.unpack.Jre
 import com.arata.yukarilauncher.feature.unpack.UnpackComponentsTask
-import com.arata.yukarilauncher.feature.unpack.UnpackJreTask
 import com.arata.yukarilauncher.feature.unpack.UnpackSingleFilesTask
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.ui.dialog.TipDialog
@@ -115,28 +116,28 @@ class SplashActivity : BaseActivity() {
      */
     private fun initItems() {
         Components.entries.forEach {
-            val unpackComponentsTask = UnpackComponentsTask(this, it)
-            if (!unpackComponentsTask.isCheckFailed()) {
-                items.add(
-                    InstallableItem(
-                        it.displayName,
-                        it.summary?.let { it1 -> getString(it1) },
-                        unpackComponentsTask
-                    )
-                )
+            val task = if (it.downloadUrl != null) {
+                DownloadComponentsTask(this, it)
+            } else {
+                UnpackComponentsTask(this, it)
             }
+            items.add(
+                InstallableItem(
+                    it.displayName,
+                    it.summary?.let { s -> getString(s) },
+                    task
+                )
+            )
         }
         Jre.entries.forEach {
-            val unpackJreTask = UnpackJreTask(this, it)
-            if (!unpackJreTask.isCheckFailed()) {
-                items.add(
-                    InstallableItem(
-                        it.jreName,
-                        getString(it.summary),
-                        unpackJreTask
-                    )
+            val task = DownloadJreTask(this, it)
+            items.add(
+                InstallableItem(
+                    it.jreName,
+                    getString(it.summary),
+                    task
                 )
-            }
+            )
         }
         items.sort()
         installableAdapter = InstallableAdapter(items) {
