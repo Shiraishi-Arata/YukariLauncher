@@ -1,8 +1,8 @@
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.NativeType;
-
 import javax.annotation.Nullable;
+
+import org.lwjgl.system.NativeType;
 
 public class GLFWNativeWin32 {
     @Nullable

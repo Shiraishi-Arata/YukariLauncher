@@ -11,15 +11,14 @@ import android.graphics.drawable.Drawable;
 
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.path.PathManager;
-
 import com.arata.yukarilauncher.value.MinecraftAccount;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SkinLoader {
     /**

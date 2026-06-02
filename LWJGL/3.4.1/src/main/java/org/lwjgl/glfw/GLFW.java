@@ -4,23 +4,23 @@
  */
 package org.lwjgl.glfw;
 
-import android.util.*;
-
-import java.lang.reflect.*;
-import java.nio.*;
-
-import javax.annotation.*;
-
-import org.lwjgl.*;
-import org.lwjgl.system.*;
-
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.APIUtil.*;
 import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import android.util.*;
+
+import java.lang.reflect.*;
+import java.nio.*;
 import java.util.*;
+
+import javax.annotation.*;
+
+import org.lwjgl.*;
+import org.lwjgl.system.*;
 
 public class GLFW
 {

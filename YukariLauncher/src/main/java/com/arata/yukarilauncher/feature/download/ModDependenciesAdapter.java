@@ -16,11 +16,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.flexbox.FlexboxLayout;
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.databinding.ItemModDependenciesBinding;
 import com.arata.yukarilauncher.event.value.AddFragmentEvent;
 import com.arata.yukarilauncher.feature.download.enums.Category;
@@ -33,15 +30,17 @@ import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.ui.fragment.DownloadModFragment;
 import com.arata.yukarilauncher.utils.NumberWithUnits;
 import com.arata.yukarilauncher.utils.YLTools;
-
-import com.arata.yukarilauncher.Tools;
-
-import org.greenrobot.eventbus.EventBus;
-import org.jackhuang.hmcl.ui.versions.ModTranslations;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.concurrent.Future;
+
+import org.greenrobot.eventbus.EventBus;
+import org.jackhuang.hmcl.ui.versions.ModTranslations;
 
 public class ModDependenciesAdapter extends RecyclerView.Adapter<ModDependenciesAdapter.InnerHolder> {
     private final InfoItem mInfoItem;

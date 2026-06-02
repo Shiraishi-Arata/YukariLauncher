@@ -1,5 +1,6 @@
 plugins {
     java
+    id("com.diffplug.spotless")
 }
 
 group = "org.lwjgl.glfw"
@@ -51,6 +52,14 @@ tasks.jar {
     manifest {
         attributes("Manifest-Version" to "3.3.6")
         attributes("Automatic-Module-Name" to "org.lwjgl")
+    }
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        importOrder("android", "androidx", "com", "io", "java", "javax", "net", "org")
+        removeUnusedImports()
     }
 }
 

@@ -1,10 +1,10 @@
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.NativeType;
-
 import java.nio.ByteBuffer;
 
 import javax.annotation.Nullable;
+
+import org.lwjgl.system.NativeType;
 
 public class GLFWNativeX11 {
     @NativeType("Display *")

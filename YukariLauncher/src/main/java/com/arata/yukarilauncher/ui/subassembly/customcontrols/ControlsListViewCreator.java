@@ -15,8 +15,8 @@ import com.arata.yukarilauncher.task.Task;
 import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.dialog.DeleteDialog;
 import com.arata.yukarilauncher.ui.subassembly.filelist.RefreshListener;
-import com.arata.yukarilauncher.utils.path.PathManager;
 import com.arata.yukarilauncher.utils.file.FileTools;
+import com.arata.yukarilauncher.utils.path.PathManager;
 import com.arata.yukarilauncher.utils.stringutils.StringFilter;
 
 import java.io.File;

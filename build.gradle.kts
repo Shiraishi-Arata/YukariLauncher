@@ -2,6 +2,10 @@
  * ルートプロジェクトのビルド設定
  * プラグインと依存関係のリポジトリを定義します。
  */
+plugins {
+    id("com.diffplug.spotless") version "6.25.0" apply false
+}
+
 buildscript {
     repositories {
         google()

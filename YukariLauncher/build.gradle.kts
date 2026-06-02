@@ -7,6 +7,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") version "2.3.20"
     id("stringfog")
+    id("com.diffplug.spotless")
 }
 apply(plugin = "stringfog")
 
@@ -217,6 +218,23 @@ android {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        importOrder("android", "androidx", "com", "io", "java", "javax", "net", "org")
+        removeUnusedImports()
+    }
+    kotlin {
+        target("src/**/*.kt")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ij_kotlin_imports_layout" to "^android,^androidx,^com,^io,^java,^javax,^net,^org,*",
+                "ktlint_standard" to "disabled"
+            )
+        )
     }
 }
 

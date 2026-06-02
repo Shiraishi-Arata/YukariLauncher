@@ -18,13 +18,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.arata.yukarilauncher.R;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-
 import com.arata.yukarilauncher.task.ProgressKeeper;
 import com.arata.yukarilauncher.task.ProgressListener;
 import com.arata.yukarilauncher.task.TaskCountListener;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.HashMap;
 import java.util.List;

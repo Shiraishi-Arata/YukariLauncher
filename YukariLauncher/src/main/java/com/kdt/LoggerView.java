@@ -12,10 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.arata.anim.animations.Animations;
 import com.arata.yukarilauncher.databinding.ViewLoggerBinding;
+import com.arata.yukarilauncher.feature.log.Logger;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils;
-
-import com.arata.yukarilauncher.feature.log.Logger;
 
 /**
  * ユーザーにログを表示するためのクラス

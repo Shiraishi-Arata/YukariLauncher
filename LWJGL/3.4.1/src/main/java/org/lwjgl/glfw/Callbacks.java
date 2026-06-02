@@ -4,10 +4,11 @@
  */
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
-
 import static org.lwjgl.system.Checks.*;
+
 import java.lang.reflect.*;
+
+import org.lwjgl.system.*;
 
 /** Utility class for GLFW callbacks. */
 public final class Callbacks {

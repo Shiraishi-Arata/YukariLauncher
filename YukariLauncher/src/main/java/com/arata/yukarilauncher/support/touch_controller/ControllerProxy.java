@@ -7,8 +7,6 @@ import android.system.Os;
 import com.arata.yukarilauncher.InfoDistributor;
 import com.arata.yukarilauncher.feature.log.Logging;
 
-import com.arata.yukarilauncher.feature.log.Logger;
-
 import top.fifthlight.touchcontroller.proxy.client.LauncherProxyClient;
 import top.fifthlight.touchcontroller.proxy.client.MessageTransport;
 import top.fifthlight.touchcontroller.proxy.client.android.transport.UnixSocketTransportKt;

@@ -36,19 +36,17 @@ import androidx.fragment.app.FragmentTransaction;
 import com.arata.yukarilauncher.BuildConfig;
 import com.arata.yukarilauncher.InfoDistributor;
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.context.ContextExecutor;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.task.Task;
 import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.dialog.TipDialog;
-import com.arata.yukarilauncher.utils.mouse.CursorPackUtils;
 import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim;
 import com.arata.yukarilauncher.utils.file.FileTools;
+import com.arata.yukarilauncher.utils.mouse.CursorPackUtils;
 import com.arata.yukarilauncher.utils.path.PathManager;
-
-import com.arata.yukarilauncher.Tools;
-import org.lwjgl.glfw.CallbackBridge;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,6 +62,8 @@ import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.Locale;
 import java.util.zip.ZipOutputStream;
+
+import org.lwjgl.glfw.CallbackBridge;
 
 public final class YLTools {
     private YLTools() {

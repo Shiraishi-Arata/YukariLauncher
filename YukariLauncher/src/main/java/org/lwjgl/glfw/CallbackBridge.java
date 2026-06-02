@@ -7,9 +7,9 @@ import android.view.Choreographer;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
+import com.arata.yukarilauncher.ui.activity.MainActivity;
 import com.arata.yukarilauncher.ui.view.GrabListener;
 import com.arata.yukarilauncher.utils.LwjglGlfwKeycode;
-import com.arata.yukarilauncher.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 

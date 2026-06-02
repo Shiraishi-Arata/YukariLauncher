@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.databinding.ItemAccountManagerBinding;
 import com.arata.yukarilauncher.feature.accounts.AccountUtils;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.skin.SkinLoader;
-
-import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.value.MinecraftAccount;
 
 import java.util.List;

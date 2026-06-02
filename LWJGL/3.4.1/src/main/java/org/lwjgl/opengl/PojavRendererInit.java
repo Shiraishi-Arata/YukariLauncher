@@ -1,9 +1,9 @@
 package org.lwjgl.opengl;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.system.FunctionProvider;
 import org.lwjgl.system.SharedLibrary;
-
-import javax.annotation.Nullable;
 
 /**
  * Class for initializing renderer-specific callbacks. Allows to reliably initialize
