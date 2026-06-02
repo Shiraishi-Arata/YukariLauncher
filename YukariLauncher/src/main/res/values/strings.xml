@@ -271,6 +271,7 @@
     <string name="version_manager_export_modpack">Export Modpack</string>
     <string name="version_manager_export_modpack_modrinth">Modrinth (.mrpack)</string>
     <string name="version_manager_export_modpack_curseforge">CurseForge (.zip)</string>
+    <string name="version_manager_export_modpack_exporting">Exporting modpack…</string>
     <string name="version_manager_export_modpack_success">Modpack exported to: %s</string>
     <string name="version_manager_export_modpack_include_title">Include Paths</string>
     <string name="version_manager_export_modpack_include_message">Enter folders/files to include (relative to game directory). Leave empty to include everything.</string>

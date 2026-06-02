@@ -15,7 +15,8 @@ object FileUtils {
     fun getFileName(pathOrUrl: String): String? {
         val lastSlashIndex = pathOrUrl.lastIndexOf('/')
         if (lastSlashIndex == -1) return null
-        return pathOrUrl.substring(lastSlashIndex)
+        val raw = pathOrUrl.substring(lastSlashIndex + 1)
+        return java.net.URLDecoder.decode(raw, "UTF-8")
     }
 
     /** パスまたはURLから拡張子を取り除く。 @param pathOrUrl パスまたはURL @return 拡張子除去後の文字列 */

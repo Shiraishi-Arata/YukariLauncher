@@ -1,7 +1,6 @@
 package com.arata.yukarilauncher.feature.download.platform.curseforge
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.download.Filters
 import com.arata.yukarilauncher.feature.download.InfoCache
 import com.arata.yukarilauncher.feature.download.enums.Category
@@ -16,13 +15,16 @@ import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.feature.download.utils.PlatformUtils.Companion.safeRun
 import com.arata.yukarilauncher.feature.download.utils.VersionTypeUtils
 import com.arata.yukarilauncher.feature.log.Logging
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
+import com.arata.yukarilauncher.utils.GsonJsonUtils
 import com.arata.yukarilauncher.utils.MCVersionRegex.Companion.RELEASE_REGEX
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import com.arata.yukarilauncher.Tools
-import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
-import com.arata.yukarilauncher.utils.GsonJsonUtils
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+
 import java.io.IOException
+import java.net.URLEncoder
 import java.util.TreeSet
 import java.util.function.Consumer
 
@@ -303,7 +305,8 @@ class CurseForgeCommonUtils {
             if (fallbackResponse != null && !fallbackResponse["data"].isJsonNull) {
                 val modData = fallbackResponse["data"].asJsonObject
                 val id = modData["id"].asInt
-                return "https://edge.forgecdn.net/files/${id / 1000}/${id % 1000}/${modData["fileName"].asString}"
+                val encodedName = URLEncoder.encode(modData["fileName"].asString, "UTF-8").replace("+", "%20")
+                return "https://edge.forgecdn.net/files/${id / 1000}/${id % 1000}/$encodedName"
             }
 
             return null

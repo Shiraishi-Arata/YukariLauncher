@@ -1,30 +1,34 @@
 package com.arata.yukarilauncher.feature.download.platform.curseforge
 
-import com.kdt.mcgui.ProgressLayout
 import com.arata.yukarilauncher.R
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.download.enums.ModLoader
 import com.arata.yukarilauncher.feature.download.install.InstallHelper
 import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 import com.arata.yukarilauncher.feature.download.platform.curseforge.CurseForgeCommonUtils.Companion.getDownloadSha1
 import com.arata.yukarilauncher.feature.log.Logging
-import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackUtils
-import com.arata.yukarilauncher.utils.YLTools
-import com.arata.yukarilauncher.utils.file.FileTools
-import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 import com.arata.yukarilauncher.feature.mod.modpack.api.ModDownloader
+import com.arata.yukarilauncher.feature.mod.modpack.install.ModPackUtils
 import com.arata.yukarilauncher.feature.mod.modpack.models.CurseManifest
 import com.arata.yukarilauncher.feature.mod.modpack.models.CurseManifest.CurseMinecraft
 import com.arata.yukarilauncher.feature.mod.modpack.models.CurseManifest.CurseModLoader
 import com.arata.yukarilauncher.task.ProgressKeeper
 import com.arata.yukarilauncher.task.SpeedCalculator
+import com.arata.yukarilauncher.utils.YLTools
+import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.file.FileUtils
 import com.arata.yukarilauncher.utils.file.ZipUtils
+import com.arata.yukarilauncher.utils.stringutils.StringUtils
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.kdt.mcgui.ProgressLayout
+
 import java.io.File
 import java.io.IOException
 import java.util.zip.ZipFile
+
 import kotlin.math.max
 
 class CurseForgeModPackInstallHelper {
@@ -89,6 +93,19 @@ class CurseForgeModPackInstallHelper {
                 })
                 val overridesDir: String = curseManifest.overrides ?: "overrides"
                 ZipUtils.zipExtract(modpackZipFile, overridesDir, targetPath)
+                curseManifest.image?.let { imagePath ->
+                    val entry = modpackZipFile.getEntry(imagePath)
+                    if (entry != null) {
+                        val iconFile = File(File(targetPath, com.arata.yukarilauncher.InfoDistributor.LAUNCHER_NAME), "VersionIcon.png")
+                        iconFile.parentFile?.mkdirs()
+                        modpackZipFile.getInputStream(entry).use { input ->
+                            iconFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                        Logging.i("CurseForgeModPackInstallHelper", "Installed profile image from manifest: $imagePath")
+                    }
+                }
                 return createInfo(curseManifest.minecraft!!)
             }
         }
@@ -104,13 +121,49 @@ class CurseForgeModPackInstallHelper {
 /**
  * getModDownloaderする
  */
+        /** プロジェクトClassId→サブディレクトリ名のマッピング */
+        private fun classIdToDir(classId: Int): String = when (classId) {
+            12 -> "resourcepacks"
+            6552 -> "shaderpacks"
+            else -> "mods"
+        }
+
+        /** マニフェストに含まれる全プロジェクトのClassIdをバッチ取得し、{projectID → サブディレクトリ} のMapを返す */
+        private fun fetchProjectDirs(api: ApiHandler, files: Array<CurseManifest.CurseFile>): Map<Long, String> {
+            val projectIds = files.map { it.projectID }.distinct()
+            if (projectIds.isEmpty()) return emptyMap()
+            val result = mutableMapOf<Long, String>()
+            try {
+                val body = JsonObject().apply {
+                    add("modIds", JsonArray().apply { projectIds.forEach { add(it) } })
+                }
+                val headers = api.additionalHeaders
+                val response = ApiHandler.postRaw(headers, "${api.baseUrl}/mods", body.toString())
+                if (response != null) {
+                    val json = Tools.GLOBAL_GSON.fromJson(response, JsonObject::class.java)
+                    json["data"]?.asJsonArray?.forEach { element ->
+                        val obj = element.asJsonObject
+                        val id = obj["id"]?.asLong ?: return@forEach
+                        val classId = obj["classId"]?.asInt ?: 6
+                        result[id] = classIdToDir(classId)
+                    }
+                }
+            } catch (e: Exception) {
+                Logging.e("CurseForgeModPackInstallHelper", "fetchProjectDirs failed: ${Tools.printToString(e)}")
+            }
+            // フェッチできなかったプロジェクトはデフォルトで mods に
+            projectIds.forEach { result.putIfAbsent(it, "mods") }
+            return result
+        }
+
         private fun getModDownloader(
             api: ApiHandler,
             instanceDestination: File,
             curseManifest: CurseManifest
         ): ModDownloader {
-            val modDownloader = ModDownloader(File(instanceDestination, "mods"), true)
-            val files = curseManifest.files ?: return modDownloader
+            val files = curseManifest.files ?: return ModDownloader(instanceDestination, true)
+            val projectDirs = fetchProjectDirs(api, files)
+            val modDownloader = ModDownloader(instanceDestination, true)
             val fileCount = files.size
             for (i in 0 until fileCount) {
                 val curseFile = files[i]
@@ -121,7 +174,9 @@ class CurseForgeModPackInstallHelper {
                             "Failed to obtain download URL for ${StringUtils.insertSpace(curseFile.projectID, curseFile.fileID)}"
                         )
                         else if (url == null) return null
-                        return ModDownloader.FileInfo(url, FileUtils.getFileName(url) ?: "", getDownloadSha1(api, curseFile.projectID, curseFile.fileID))
+                        val fileName = FileUtils.getFileName(url) ?: ""
+                        val subDir = projectDirs[curseFile.projectID] ?: "mods"
+                        return ModDownloader.FileInfo(url, "$subDir/$fileName", getDownloadSha1(api, curseFile.projectID, curseFile.fileID))
                     }
                 })
             }

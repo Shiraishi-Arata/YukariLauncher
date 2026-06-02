@@ -18,6 +18,8 @@ class CurseManifest {
     var minecraft: CurseMinecraft? = null
     /** 上書き設定のパス。 */
     var overrides: String? = null
+    /** プロフィール画像のパス（ZIP内の相対パス）。 */
+    var image: String? = null
 
     /** CurseForgeのModファイル情報。 */
     class CurseFile {
