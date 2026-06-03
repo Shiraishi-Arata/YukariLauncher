@@ -608,6 +608,10 @@
     <string name="download_info_author">作者:</string>
     <string name="download_info_date">创建日期:</string>
     <string name="download_info_modloader">适用于:</string>
+    <string name="mod_fabric">Fabric</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NeoForge</string>
+    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">依赖类型:</string>
     <string name="download_info_load_screenshot">展示屏幕截图</string>
     <string name="download_search_failed">搜索资源时失败！</string>

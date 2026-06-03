@@ -11,7 +11,6 @@ import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.feature.download.enums.Classify
 import com.arata.yukarilauncher.feature.download.install.UnpackWorldZipHelper
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.Companion.getWorldPath
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.utils.YLTools
@@ -26,7 +25,6 @@ import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.WORLD,
-    CategoryUtils.getWorldCategory(),
     false
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null

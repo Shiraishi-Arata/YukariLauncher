@@ -39,8 +39,9 @@ class ModrinthModHelper {
  * modLikeSearchする
  */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.modrinthName == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedMR = filters.categories.firstOrNull { it.modrinthName != null }
+            if (filters.categories.isNotEmpty() && selectedMR == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             PlatformUtils.searchModLikeWithChinese(filters, type == "mod")?.let {
@@ -63,6 +64,8 @@ class ModrinthModHelper {
                     ModLoaderUtils.getModLoaderByModrinth(string)?.let { modloaders.add(it) }
                 }
 
+                val updatedDate = try { YLTools.getDate(hit.get("updated").asString) } catch (_: Exception) { null }
+
                 infoItems.add(
                     ModInfoItem(
                         classify,
@@ -76,7 +79,8 @@ class ModrinthModHelper {
                         YLTools.getDate(hit.get("date_created").asString),
                         ModrinthCommonUtils.getIconUrl(hit),
                         ModrinthCommonUtils.getAllCategories(hit).toList(),
-                        modloaders
+                        modloaders,
+                        updatedDate
                     )
                 )
             }

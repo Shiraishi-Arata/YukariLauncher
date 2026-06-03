@@ -577,6 +577,10 @@
     <string name="download_info_author">المؤلف:</string>
     <string name="download_info_date">تاريخ الإنشاء:</string>
     <string name="download_info_modloader">متوافق مع:</string>
+    <string name="mod_fabric">Fabric</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NeoForge</string>
+    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">نوع الاعتماد:</string>
     <string name="download_info_load_screenshot">إظهار لقطة الشاشة</string>
     <string name="download_search_failed">فشل في البحث عن الموارد!</string>

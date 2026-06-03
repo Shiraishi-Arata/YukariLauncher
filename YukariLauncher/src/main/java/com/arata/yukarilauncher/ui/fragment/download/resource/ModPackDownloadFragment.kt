@@ -10,7 +10,6 @@ import com.arata.anim.animations.Animations
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.event.value.InstallLocalModpackEvent
 import com.arata.yukarilauncher.feature.download.enums.Classify
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.feature.mod.modpack.install.InstallExtra
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
@@ -29,7 +28,6 @@ import org.greenrobot.eventbus.EventBus
 class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.MODPACK,
-    CategoryUtils.getModPackCategory(),
     true
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null

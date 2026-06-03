@@ -10,7 +10,6 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.download.enums.Classify
 import com.arata.yukarilauncher.feature.download.enums.Platform
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.Companion.getShaderPackPath
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.utils.YLTools
@@ -24,7 +23,6 @@ import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 class ShaderPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.SHADER_PACK,
-    CategoryUtils.getShaderPackCategory(),
     false,
     Platform.MODRINTH
 ) {

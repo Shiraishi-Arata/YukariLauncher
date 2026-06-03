@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.download.enums.Classify
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.Companion.getResourcePackPath
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.utils.YLTools
@@ -23,7 +22,6 @@ import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 class ResourcePackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.RESOURCE_PACK,
-    CategoryUtils.getResourcePackCategory(),
     false
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null

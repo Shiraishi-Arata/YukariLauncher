@@ -76,6 +76,25 @@ enum class Category(val classify: Classify, val resNameID: Int, val curseforgeID
     RP_128X(Classify.RESOURCE_PACK, R.string.category_128x, "396", null),
     RP_256X(Classify.RESOURCE_PACK, R.string.category_256x, "397", null),
     RP_512X(Classify.RESOURCE_PACK, R.string.category_512x, "398", null),
+    RP_SIMPLISTIC(Classify.RESOURCE_PACK, R.string.category_simplistic, null, "simplistic"),
+    RP_THEMED(Classify.RESOURCE_PACK, R.string.category_themed, null, "themed"),
+    RP_TWEAKS(Classify.RESOURCE_PACK, R.string.category_tweaks, null, "tweaks"),
+    RP_UTILITY(Classify.RESOURCE_PACK, R.string.category_utility, null, "utility"),
+    RP_CURSED(Classify.RESOURCE_PACK, R.string.category_cursed, null, "cursed"),
+    RP_FEATURE_AUDIO(Classify.RESOURCE_PACK, R.string.category_rp_feature_audio, null, "audio"),
+    RP_FEATURE_BLOCKS(Classify.RESOURCE_PACK, R.string.category_rp_feature_blocks, null, "blocks"),
+    RP_FEATURE_CORE_SHADERS(Classify.RESOURCE_PACK, R.string.category_rp_feature_core_shaders, null, "core-shaders"),
+    RP_FEATURE_ENTITIES(Classify.RESOURCE_PACK, R.string.category_rp_feature_entities, null, "entities"),
+    RP_FEATURE_ENVIRONMENT(Classify.RESOURCE_PACK, R.string.category_rp_feature_environment, null, "environment"),
+    RP_FEATURE_EQUIPMENT(Classify.RESOURCE_PACK, R.string.category_rp_feature_equipment, null, "equipment"),
+    RP_FEATURE_FONTS(Classify.RESOURCE_PACK, R.string.category_rp_feature_fonts, null, "fonts"),
+    RP_FEATURE_GUI(Classify.RESOURCE_PACK, R.string.category_rp_feature_gui, null, "gui"),
+    RP_FEATURE_ITEMS(Classify.RESOURCE_PACK, R.string.category_rp_feature_items, null, "items"),
+    RP_FEATURE_LOCALE(Classify.RESOURCE_PACK, R.string.category_rp_feature_locale, null, "locale"),
+    RP_FEATURE_MODELS(Classify.RESOURCE_PACK, R.string.category_rp_feature_models, null, "models"),
+    RP_DATAPACKS(Classify.RESOURCE_PACK, R.string.category_datapacks, "4459", null),
+    RP_FONT_PACKS(Classify.RESOURCE_PACK, R.string.category_font_packs, "4462", null),
+    RP_MEDIEVAL(Classify.RESOURCE_PACK, R.string.category_medieval, "402", null),
 
     //ワールドカテゴリ
     WORLD_ADVENTURE(Classify.WORLD, R.string.category_world_adventure, "253", null),
@@ -105,5 +124,15 @@ enum class Category(val classify: Classify, val resNameID: Int, val curseforgeID
     SHADER_LOW(Classify.SHADER_PACK, R.string.category_configuration_low, null, "low"),
     SHADER_MEDIUM(Classify.SHADER_PACK, R.string.category_configuration_medium, null, "medium"),
     SHADER_HIGH(Classify.SHADER_PACK, R.string.category_configuration_high, null, "high"),
-    SHADER_SCREENSHOT(Classify.SHADER_PACK, R.string.category_screenshot, null, "screenshot")
+    SHADER_SCREENSHOT(Classify.SHADER_PACK, R.string.category_screenshot, null, "screenshot"),
+
+    //シェーダーローダー
+    SHADER_LOADER_IRIS(Classify.SHADER_PACK, R.string.category_shader_loader_iris, null, null),
+    SHADER_LOADER_OPTIFINE(Classify.SHADER_PACK, R.string.category_shader_loader_optifine, null, null),
+    SHADER_LOADER_VANILLA(Classify.SHADER_PACK, R.string.category_shader_loader_vanilla, null, null),
+    SHADER_LOADER_CANVAS(Classify.SHADER_PACK, R.string.category_shader_loader_canvas, null, null),
+
+    //環境 (Modrinth client/server)
+    ENV_CLIENT(Classify.ALL, R.string.category_env_client, null, "client"),
+    ENV_SERVER(Classify.ALL, R.string.category_env_server, null, "server")
 }

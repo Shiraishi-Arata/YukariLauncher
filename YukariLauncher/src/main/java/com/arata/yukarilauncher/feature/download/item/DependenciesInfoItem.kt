@@ -20,9 +20,10 @@ open class DependenciesInfoItem(
     iconUrl: String?,
     category: List<Category>,
     modloaders: List<ModLoader>,
-    val dependencyType: DependencyType
+    val dependencyType: DependencyType,
+    updatedDate: Date? = null
 ) : ModInfoItem (
-    classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category, modloaders
+    classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category, modloaders, updatedDate
 ), Comparable<DependenciesInfoItem> {
 /**
  * toStringする

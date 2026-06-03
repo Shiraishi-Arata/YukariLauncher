@@ -52,7 +52,9 @@ class CurseForgeCommonUtils {
             params["sortField"] = filters.sort.curseforge
             params["sortOrder"] = "desc"
             params["pageSize"] = CURSEFORGE_SEARCH_COUNT
-            filters.category.curseforgeID?.let { if (filters.category != Category.ALL) params["categoryId"] = it }
+            filters.categories.firstOrNull { it.curseforgeID != null }?.curseforgeID?.let {
+                params["categoryId"] = it
+            }
             filters.mcVersion?.let { if (it.isNotEmpty()) params["gameVersion"] = it }
             params["index"] = index
         }
@@ -129,8 +131,9 @@ class CurseForgeCommonUtils {
  * getResultsする
  */
         internal fun getResults(api: ApiHandler, lastResult: SearchResult, filters: Filters, classId: Int, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.curseforgeID == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedCF = filters.categories.firstOrNull { it.curseforgeID != null }
+            if (filters.categories.isNotEmpty() && selectedCF == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             val params = HashMap<String, Any>()
@@ -189,6 +192,7 @@ class CurseForgeCommonUtils {
                 YLTools.getDate(dataObject.get("dateCreated").asString),
                 getIconUrl(dataObject),
                 getAllCategories(dataObject).toList(),
+                updatedDate = try { YLTools.getDate(dataObject.get("dateModified").asString) } catch (_: Exception) { null }
             )
         }
 

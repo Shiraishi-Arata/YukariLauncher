@@ -51,4 +51,14 @@
     <color name="switch_track_disabled_off">#40FFFFFF</color>
     
     <color name="card_purple_transparent">#98361361</color>
+
+    <!-- Platform brand colors -->
+    <color name="curseforge_orange">#F16436</color>
+    <color name="modrinth_green">#30D27B</color>
+
+    <!-- Modloader brand colors -->
+    <color name="modloader_forge">#4C4A90D9</color>
+    <color name="modloader_neoforge">#4CD18E5B</color>
+    <color name="modloader_fabric">#4CE8D5B7</color>
+    <color name="modloader_quilt">#4C8D42EB</color>
 </resources>

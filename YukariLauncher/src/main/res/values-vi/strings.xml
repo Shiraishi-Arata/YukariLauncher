@@ -577,6 +577,10 @@
     <string name="download_info_author">Tác giả:</string>
     <string name="download_info_date">Ngày tạo:</string>
     <string name="download_info_modloader">Tương thích với:</string>
+    <string name="mod_fabric">Fabric</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NeoForge</string>
+    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">Loại phụ thuộc:</string>
     <string name="download_info_load_screenshot">Hiển thị ảnh chụp màn hình</string>
     <string name="download_search_failed">Tìm kiếm tài nguyên thất bại!</string>

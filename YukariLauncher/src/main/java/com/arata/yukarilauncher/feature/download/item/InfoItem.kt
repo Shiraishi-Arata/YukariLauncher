@@ -30,13 +30,14 @@ open class InfoItem(
     val downloadCount: Long,
     val uploadDate: Date,
     val iconUrl: String?,
-    val category: List<Category>
+    val category: List<Category>,
+    val updatedDate: Date? = null
 ) {
 /**
  * copyする
  */
     fun copy() = InfoItem(
-        classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category
+        classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category, updatedDate
     )
 
 /**

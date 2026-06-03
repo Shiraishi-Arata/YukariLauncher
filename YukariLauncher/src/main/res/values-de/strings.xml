@@ -577,6 +577,10 @@
     <string name="download_info_author">Autor:</string>
     <string name="download_info_date">Erstellungsdatum:</string>
     <string name="download_info_modloader">Kompatibel mit:</string>
+    <string name="mod_fabric">Fabric</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NeoForge</string>
+    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">Abhängigkeitsart:</string>
     <string name="download_info_load_screenshot">Bildschirmfoto anzeigen</string>
     <string name="download_search_failed">Fehler beim Suchen nach Ressourcen!</string>

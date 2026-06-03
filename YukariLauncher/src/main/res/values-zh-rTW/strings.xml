@@ -577,6 +577,10 @@
     <string name="download_info_author">作者:</string>
     <string name="download_info_date">創建日期:</string>
     <string name="download_info_modloader">適用於:</string>
+    <string name="mod_fabric">Fabric</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NeoForge</string>
+    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">依賴類型:</string>
     <string name="download_info_load_screenshot">展示螢幕截圖</string>
     <string name="download_search_failed">搜尋資源時失敗！</string>

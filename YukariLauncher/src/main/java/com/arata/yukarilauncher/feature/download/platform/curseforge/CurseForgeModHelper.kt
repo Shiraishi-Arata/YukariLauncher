@@ -44,8 +44,9 @@ class CurseForgeModHelper {
  * modLikeSearchする
  */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: Int, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.curseforgeID == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedCF = filters.categories.firstOrNull { it.curseforgeID != null }
+            if (filters.categories.isNotEmpty() && selectedCF == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             PlatformUtils.searchModLikeWithChinese(filters, type == CurseForgeCommonUtils.CURSEFORGE_MOD_CLASS_ID)?.let {
@@ -85,7 +86,8 @@ class CurseForgeModHelper {
                             item.uploadDate,
                             item.iconUrl,
                             item.category,
-                            getModLoaders(dataElement.getAsJsonArray("latestFilesIndexes"))
+                            getModLoaders(dataElement.getAsJsonArray("latestFilesIndexes")),
+                            item.updatedDate
                         )
                     )
                 }

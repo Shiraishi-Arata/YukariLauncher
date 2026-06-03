@@ -36,14 +36,15 @@ class ModrinthCommonUtils {
  * getCategoriesする
  */
         private fun getCategories(filters: Filters): String {
-            val categories = mutableListOf<String>().apply {
-                filters.modloader?.let { add(it.modrinthName) }
-                if (filters.category != Category.ALL) {
-                    add(filters.category.modrinthName!!)
-                }
+            val facets = mutableListOf<String>()
+            filters.modloader?.let {
+                facets.add("[\"categories:${it.modrinthName}\"]")
             }
-            return if (categories.isEmpty()) ""
-            else categories.joinToString { "[\"categories:$it\"]" }
+            val catNames = filters.categories.mapNotNull { it.modrinthName }
+            if (catNames.isNotEmpty()) {
+                facets.add(catNames.joinToString(prefix = "[", postfix = "]") { "\"categories:$it\"" })
+            }
+            return facets.joinToString("")
         }
 
         /**
@@ -142,8 +143,9 @@ class ModrinthCommonUtils {
  * getResultsする
  */
         internal fun getResults(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.modrinthName == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedMR = filters.categories.firstOrNull { it.modrinthName != null }
+            if (filters.categories.isNotEmpty() && selectedMR == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             val response = api.get("search", getParams(lastResult, filters, type), JsonObject::class.java) ?: return null
@@ -210,6 +212,7 @@ class ModrinthCommonUtils {
                 YLTools.getDate(hit.get("date_created").asString),
                 getIconUrl(hit),
                 getAllCategories(hit).toList(),
+                updatedDate = try { YLTools.getDate(hit.get("updated").asString) } catch (_: Exception) { null }
             )
         }
 
@@ -236,7 +239,8 @@ class ModrinthCommonUtils {
                     hit.get("downloads").asLong,
                     YLTools.getDate(hit.get("published").asString),
                     getIconUrl(hit),
-                    getAllCategories(hit).toList()
+                    getAllCategories(hit).toList(),
+                    updatedDate = try { YLTools.getDate(hit.get("updated").asString) } catch (_: Exception) { null }
                 )
             }
             return null

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Mod -->
-    <string name="category_worldgen">World Elements</string>
+    <string name="category_worldgen">World Gen</string>
     <string name="category_biomes">Biomes</string>
     <string name="category_dimensions">Dimensions</string>
     <string name="category_ores_resources">Ores &amp; Resources</string>
     <string name="category_structures">Structures</string>
     <string name="category_technology">Technology</string>
-    <string name="category_item_fluid_energy_transport">Pipes &amp; Logistics</string>
+    <string name="category_item_fluid_energy_transport">Energy, Fluid, And Item Transport</string>
     <string name="category_automation">Automation</string>
     <string name="category_energy">Energy</string>
     <string name="category_redstone">Redstone</string>
-    <string name="category_food">Food &amp; Cooking</string>
+    <string name="category_food">Food</string>
     <string name="category_farming">Farming</string>
     <string name="category_transport">Transport</string>
     <string name="category_storage">Storage</string>

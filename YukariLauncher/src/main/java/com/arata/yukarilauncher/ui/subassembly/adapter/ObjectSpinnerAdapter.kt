@@ -1,6 +1,7 @@
 package com.arata.yukarilauncher.ui.subassembly.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerInterface
 import com.skydoves.powerspinner.PowerSpinnerView
 import com.skydoves.powerspinner.databinding.PowerspinnerItemDefaultPowerBinding
+import com.arata.yukarilauncher.R
+import com.arata.yukarilauncher.Tools
 
 /**
  * PowerSpinner用のジェネリックアダプター
@@ -17,6 +20,7 @@ import com.skydoves.powerspinner.databinding.PowerspinnerItemDefaultPowerBinding
 @SuppressLint("NotifyDataSetChanged")
 class ObjectSpinnerAdapter<T>(
     powerSpinnerView: PowerSpinnerView,
+    private val itemIconProvider: ((T) -> Drawable?)? = null,
     private val itemNameProvider: (T) -> String
 ) : RecyclerView.Adapter<ObjectSpinnerAdapter.ViewHolder<T>>(),
     PowerSpinnerInterface<T> {
@@ -43,7 +47,7 @@ class ObjectSpinnerAdapter<T>(
             parent,
             false
         )
-        return ViewHolder(binding, itemNameProvider).apply {
+        return ViewHolder(binding, itemIconProvider, itemNameProvider).apply {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION }
                     ?: return@setOnClickListener
@@ -88,25 +92,14 @@ class ObjectSpinnerAdapter<T>(
         )
     }
 
-    /**
-     * アイテム総数を返します。
-     */
     override fun getItemCount(): Int = spinnerItems.size
 
-    /**
-     * スピナーアイテムのビューホルダー
-     */
-    /**
-     * スピナーアイテムのビューホルダー。
-     */
     class ViewHolder<T>(
         private val binding: PowerspinnerItemDefaultPowerBinding,
+        private val itemIconProvider: ((T) -> Drawable?)?,
         private val itemNameProvider: (T) -> String
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        /**
-         * アイテムデータをビューにバインドする
-         */
         internal fun bind(spinnerView: PowerSpinnerView, item: T, isSelectedItem: Boolean) {
             binding.itemDefaultText.apply {
                 text = itemNameProvider(item)
@@ -114,6 +107,16 @@ class ObjectSpinnerAdapter<T>(
                 gravity = spinnerView.gravity
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, spinnerView.textSize)
                 setTextColor(spinnerView.currentTextColor)
+                val icon = itemIconProvider?.invoke(item)
+                if (icon != null) {
+                    val size = Tools.dpToPx(16f).toInt()
+                    icon.setBounds(0, 0, size, size)
+                    setCompoundDrawablesRelative(icon, null, null, null)
+                    compoundDrawablePadding = Tools.dpToPx(6f).toInt()
+                } else {
+                    setCompoundDrawablesRelative(null, null, null, null)
+                    compoundDrawablePadding = 0
+                }
             }
             binding.root.setPadding(
                 spinnerView.paddingLeft,
