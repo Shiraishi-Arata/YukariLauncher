@@ -1,0 +1,241 @@
+Improve filter results for resources download (mods, modpacks, resourcepacks, worlds, shaderpacks)
+Can have multi select for filter option.
+add icon for CurseForge and Modrinth option.
+custom UI color for each, if user select one. Orange CurseForge and Green Modrinth.
+
+Modrinth:
+    - Sort:
+        - Relevance
+        - Downloads
+        - Followers
+        - Date published
+        - Date updated
+
+    - Mods:
+        - Category
+            - Adventure
+            - Cursed
+            - Decoration
+            - Economy
+            - Equipment
+            - Food
+            - Game Mechanics
+            - Library
+            - Magic
+            - Management
+            - Minigame
+            - Mobs
+            - Optimization
+            - Social
+            - Storage
+            - Tecnology
+            - Transportation
+            - Utility
+            - World Generation
+        - Environment:
+            - Client
+            - server
+
+    - Modpacks:
+        - Category:
+            - Adventure
+            - Challenging
+            - Combat
+            - Kitchen Sink
+            - Lightweight
+            - Magic
+            - Multiplayer
+            - Optimization
+            - Quests
+            - Technology
+        - Environment:
+            - Client
+            - server
+
+    - Resourcepacks:
+        - Category:
+            - Combat
+            - Cursed
+            - Decoration
+            - Modded
+            - Realistic
+            - Simplistic
+            - Themed
+            - Tweaks
+            - Utility
+            - Vanilla Like
+        - Feature:
+            - Audio
+            - Blocks
+            - Core Shaders
+            - Entities
+            - Environment
+            - Equipment
+            - Fonts
+            - GUI
+            - Items
+            - Locale
+            - Models
+        - Resolution:
+            - 8x or lower
+            - 16x
+            - 32x
+            - 48x
+            - 64x
+            - 128x
+            - 256x
+            - 512x or higher
+
+    - Worlds:
+        - none / not available
+
+    - Shaders:
+        - Category:
+            - Cartoon
+            - Cursed
+            - Fantasy
+            - Realistic
+            - Semi Realistic
+            - Vanilla Like
+        - Feature:
+            - Atmosphere
+            - Bloom
+            - Colored Lighting
+            - Foliage
+            - Path Tracing
+            - PBR
+            - Reflections
+            - Shadows
+        - Performance Impact:
+            - Potato
+            - Low
+            - Medium
+            - High
+            - Screenshot
+        - Loader:
+            - Iris
+            - OptiFine
+            - Vanilla Shader
+            - Canvas
+
+CurseForge:
+    - Sort:
+        - Relevancy
+        - Popularity
+        - Latest Update
+        - Creation Date
+        - Total Downloads
+        - A - Z
+
+    - Mods:
+        - Categories:
+            - Addons:
+                - Applied Energistics 2
+                - Blood Magic
+                - Buildcraft
+                - CraftTweaker
+                - Create
+                - Farmer's Delight
+                - Forestry
+                - Galacticraft
+                - Industrial Craft
+                - Integrated Dynamics
+                - KubeJS
+                - Refined Storage
+                - Skyblock
+                - Thaumcraft
+                - Thermal Expansion
+                - Tinker's Construct
+                - Twilight Forest
+            - Adeventure And RPG
+            - API And Library
+            - Armor, Tools, And Weapons
+            - Bug Fixes
+            - Cosmetic
+            - CreativeMode
+            - Education
+            - Food
+            - Horror
+            - Magic
+            - Map And Information
+            - MCreator
+            - Miscellaneous
+            - ModJam 2025
+            - Performance
+            - Redstone
+            - Server Utility
+            - Storage
+            - Technology
+                - Automation
+                - Energy
+                - Energy, Fluid, And Item Tramsport
+                - Farming
+                - Genetics
+                - Player Transport
+                - Processing
+            - Twitch Integration
+            - Utility And QoL
+            - World Gen
+                - Biomes
+                - Dimensions
+                - Mobs
+                - Ores And Resources
+                - Structures
+                
+    - Modpacks:
+        - Categories:
+            - Adventure And RPG
+            - Combat / PvP
+            - Expert
+            - Exploration
+            - Extra Large
+            - FTB Official Pack
+            - Hardcore
+            - Horror
+            - Magic
+            - Map Based
+            - Minigame
+            - Multiplayer
+            - Quests
+            - RLCraft
+            - Sci-Fi
+            - Skyblock
+            - Small / Light
+            - Tech
+            - Vanilla+
+
+    - Resourcepacks:
+        - Categories;
+            - 16x
+            - 32x
+            - 64x
+            - 128x
+            - 256x
+            - 512 And Higher
+            - Animated
+            - Data Packs
+            - Font Packs
+            - Medieval
+            - Miscellaneous
+            - Mod Support
+            - Modern
+            - ModJam 2025
+            - Photo Realistic
+            - Steampunk
+            - Traditional
+
+    - Worlds:
+        - Categories:
+            - Adventure
+            - Creation
+            - Game Map
+            - Modded World
+            - Parkour
+            - Puzzle
+            - Survival
+
+    - Shaders:
+        - Categories:
+            - Fantasy
+            - Realistic
+            - Vanilla

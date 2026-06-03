@@ -10,3 +10,4 @@ local.properties
 /LWJGL/bin
 /YukariLauncher/.cxx/
 /YukariLauncher/release/
+/YukariLauncher/src/main/assets/components/lwjgl
