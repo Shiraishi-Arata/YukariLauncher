@@ -947,6 +947,8 @@
     <string name="setting_mg_multidraw">MultiDraw-Emulation</string>
     <string name="setting_mg_angle_clear_workaround">ANGLE Depth Clear Workaround</string>
     <string name="setting_mg_custom_gl_version">Benutzerdefinierte OpenGL-Zielversion</string>
+    <string name="setting_mg_frame_generation">(Experimentell) Frame-Generierung aktivieren</string>
+    <string name="setting_mg_frame_generation_warning">Frame-Generierung ist experimentell. Sie kann visuelle Artefakte in schnell bewegten Szenen verursachen und den Batterieverbrauch erhöhen. Trotzdem aktivieren?</string>
     <string name="setting_mg_fsr1">(Experimentell) Aktivieren Sie das integrierte FSR1</string>
     <string name="setting_mg_hide_f3">MobileGlues auf dem F3-Bildschirm ausblenden</string>
 

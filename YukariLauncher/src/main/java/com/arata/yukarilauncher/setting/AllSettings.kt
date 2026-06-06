@@ -91,6 +91,10 @@ class AllSettings {
         val mgHideMG = BooleanSettingUnit("mg_hide_mg", false)
         // F3画面からMobileGlues情報を隠す
 
+        @JvmStatic
+        val mgFrameGeneration = BooleanSettingUnit("mg_frame_generation", false)
+        // フレーム生成（FG）でFPSを向上
+
         // コントロール設定
         @JvmStatic
         val disableGestures = BooleanSettingUnit("disableGestures", false)

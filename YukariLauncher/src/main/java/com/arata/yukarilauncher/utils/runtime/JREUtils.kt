@@ -810,6 +810,8 @@ object JREUtils {
             // FSR1超解像度でシェーダーのレンダリング負荷を軽減
             addProperty("hideMGEnvLevel", if (AllSettings.mgHideMG.getValue()) 1 else 0)
             // F3画面からMG情報を隠す
+            addProperty("enableFrameGeneration", if (AllSettings.mgFrameGeneration.getValue()) 1 else 0)
+            // フレーム生成（FG）でFPSを向上
         }
         val configFile = File(getMobileGluesDir(), "config.json")
         configFile.writeText(Gson().toJson(config))

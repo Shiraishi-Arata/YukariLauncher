@@ -947,6 +947,8 @@
     <string name="setting_mg_multidraw">Emulação MultiDraw</string>
     <string name="setting_mg_angle_clear_workaround">Solução alternativa para limpeza de profundidade ANGLE</string>
     <string name="setting_mg_custom_gl_version">Versão OpenGL de destino personalizado</string>
+    <string name="setting_mg_frame_generation">(Experimental) Ativar Frame Generation</string>
+    <string name="setting_mg_frame_generation_warning">Frame Generation é experimental. Pode causar artefatos visuais em cenas de movimento rápido e aumentar o consumo de bateria. Ativar mesmo assim?</string>
     <string name="setting_mg_fsr1">(Experimental) Habilitar FSR1 integrado</string>
     <string name="setting_mg_hide_f3">Ocultar MobileGlues da tela F3</string>
 

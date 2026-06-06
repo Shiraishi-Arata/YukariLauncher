@@ -372,6 +372,28 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
             binding.mgExtDirectStateAccess
         )
 
+        // フレーム生成（FG）
+        val fgWarning = SwitchSettingsWrapper(
+            context,
+            AllSettings.mgFrameGeneration,
+            binding.mgFrameGenerationLayout,
+            binding.mgFrameGeneration
+        )
+        fgWarning.setOnCheckedChangeListener { buttonView, isChecked, listener ->
+            if (isChecked) {
+                TipDialog.Builder(requireActivity())
+                    .setTitle(R.string.generic_warning)
+                    .setMessage(R.string.setting_mg_frame_generation_warning)
+                    .setWarning()
+                    .setCancelable(false)
+                    .setConfirmClickListener { listener.onSave() }
+                    .setCancelClickListener { buttonView.isChecked = false }
+                    .showDialog()
+            } else {
+                listener.onSave()
+            }
+        }
+
         // FSR1
         SwitchSettingsWrapper(
             context,

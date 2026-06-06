@@ -949,6 +949,8 @@
     <string name="setting_mg_custom_gl_version">Custom target OpenGL Version</string>
     <string name="setting_mg_fsr1">(Experimental) Enable built-in FSR1</string>
     <string name="setting_mg_hide_f3">Hide MobileGlues from F3 screen</string>
+    <string name="setting_mg_frame_generation">(Experimental) Enable Frame Generation</string>
+    <string name="setting_mg_frame_generation_warning">Frame Generation is experimental. It may cause visual artifacts in fast-moving scenes and increase battery consumption. Enable anyway?</string>
 
     <string-array name="setting_mg_angle_entries">
         <item>Prefer Disabled</item>

@@ -368,6 +368,35 @@
                             app:useMaterialThemeColors="true" />
                     </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
 
+                    <!-- フレーム生成（FG） -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_frame_generation_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_frame_generation_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_frame_generation"
+                            android:text="@string/setting_mg_frame_generation"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_frame_generation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
                     <!-- FSR1（超解像度） -->
                     <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
                         android:id="@+id/mg_fsr1_layout"
