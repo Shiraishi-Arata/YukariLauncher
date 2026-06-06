@@ -18,7 +18,7 @@
     <string name="generic_confirm">确认</string>
     <string name="generic_unknown">未知</string>
     <string name="generic_warning">警告</string>
-    <string name="generic_ok">知道了</string>
+    <string name="generic_ok">OK</string>
     <string name="generic_error">错误</string>
     <string name="generic_load">加载</string>
     <string name="generic_name">名称</string>
@@ -30,6 +30,9 @@
     <string name="generic_keyboard">输入法</string>
     <string name="generic_waiting">请稍等</string>
     <string name="generic_select">选择</string>
+    <string name="generic_select_all">选择全部</string>
+    <string name="generic_deselect_all">取消全选</string>
+    <string name="generic_cancel">取消</string>
     <string name="generic_default">默认</string>
     <string name="generic_loading">加载中</string>
     <string name="generic_optional">选填</string>
@@ -52,13 +55,11 @@
     <string name="generic_pre_release">预发布版</string>
     <string name="generic_beta">测试版</string>
     <string name="generic_alpha">内测版</string>
-
     <!-- Error -->
     <string name="error_fatal">%s 意外地崩溃了</string>
     <string name="error_no_version">没有版本！</string>
     <string name="error_show_more">显示详细信息</string>
     <string name="error_show_less">关闭详细信息</string>
-
     <!-- Launcher -->
     <string name="option_category_debug">调试</string>
     <string name="option_category_control">控制</string>
@@ -79,6 +80,7 @@
     <string name="version_snapshot">快照版</string>
     <string name="version_alpha">Alpha 版</string>
     <string name="version_beta">Beta 版</string>
+    <string name="version_april_fools">愚人节</string>
     <string name="force_exit_confirm">你确定要强制关闭吗?</string>
     <string name="autoram_info_msg">内存已设为 %d MB</string>
     <string name="memory_warning_msg">当前可用内存（%d）低于所分配的内存（%d），这可能会导致游戏崩溃，如果游戏崩溃请更改配置！</string>
@@ -93,16 +95,16 @@
     <string name="microsoft_login_retry_later">你的操作过于频繁，请稍后再试</string>
     <string name="storage_required">%s 需要连接外部存储，请重新连接并重启软件</string>
     <string name="dialog_select_jar">选择 Jar 文件</string>
+    <string name="percent_format" translatable="false">%d%%</string>
     <string name="version_select_hint">选择版本（长按重置）</string>
     <string name="notif_error_occured">出现了一个错误</string>
     <string name="notif_error_occured_desc">点击查看详细信息</string>
     <string name="input_preview_tip">预览输入框，捕获软键盘输入，仅供参考:</string>
-
     <string name="dl_tampered_manifest_title">文件校验警告</string>
     <string name="dl_tampered_manifest"><![CDATA[镜像源上的游戏版本列表与 Mojang 官方版本列表并不一致，这意味着它可能被篡改了<br/>
-        <b>这样做并不安全。如果你继续，你的个人信息可能面临风险！</b><br/>
-        如果你仍想继续使用镜像源, 点击 \"关闭游戏版本列表检查\" 再次开始下载<br/>
-        如果你想使用官方下载源, 点击 \"切换到官方下载源\" 再次开始下载<br/>]]></string>
+    <b>这样做并不安全。如果你继续，你的个人信息可能面临风险！</b><br/>
+    如果你仍想继续使用镜像源, 点击 \"关闭游戏版本列表检查\" 再次开始下载<br/>
+    如果你想使用官方下载源, 点击 \"切换到官方下载源\" 再次开始下载<br/>]]></string>
     <string name="dl_turn_off_manifest_checks">关闭游戏版本列表检查</string>
     <string name="dl_switch_to_official_site">切换到官方下载源</string>
     <string name="notif_download_finished">游戏已经准备好启动了</string>
@@ -122,7 +124,6 @@
     <string name="execute_jar_failed_to_read_file">读取 .jar 文件失败</string>
     <string name="execute_jar_incompatible_runtime">执行 .jar 功能与 Java %d 不兼容</string>
     <string name="open_link">将在浏览器内访问此链接:</string>
-
     <string name="mod_download_progress">正在下载 %s 的安装程序</string>
     <string name="mod_forge_searching">正在搜索 Forge 版本号</string>
     <string name="mod_neoforge_searching">正在搜索 NeoForge 版本号</string>
@@ -133,29 +134,36 @@
     <string name="mod_check_progress_message">正在检查模组中 (%d / %d)</string>
     <string name="mod_check_touch_controller">检查到已安装 Touch Controller 模组 (%s)，启动器已准备好启用控制代理，以适配该模组。</string>
     <string name="mod_check_physics">当前使用的物理模组 (%s) 未经修补 (将 libPhysXJniBindings_64.so 从 x86_64 架构替换到 arm64)，启动后将会崩溃。</string>
+    <string name="mod_check_physics_downloading">正在下载物理模组库：%s</string>
+    <string name="mod_check_physics_failed">无法下载物理模组 (%s) 所需的库。</string>
+    <string name="mod_check_physics_debug">调试：%s</string>
     <string name="mod_check_mcef">MCEF (%s) 无法在 Android 上运行。它通常被用来作为 WebDisplays/In-game Browser（浏览器）的前置依赖。</string>
     <string name="mod_check_valkyrien_skies">瓦尔基里天空/瓦尔基里战争 (%s) 无法直接在单人模式下运行。你必须使用服务器运行（可以使用 Termux），否则游戏会崩溃。</string>
     <string name="mod_check_yes_steve_model">是，史蒂夫模型 (%s) 2.2.2+ 无法在 Android 系统上运行。</string>
     <string name="mod_check_imblocker">输入法冲突修复/游戏内输入法 (%s) 不适用于 Android ，它会使游戏在启动阶段崩溃。</string>
     <string name="mod_check_replay_mod">ReplayMod (%s) 需要 FFmpeg 渲染视频，请单独安装 FFmpeg 插件\n%s\n%s</string>
     <string name="mod_check_borderlesswindow">Borderless Window (%s) 不适用于安卓。它会使游戏在启动阶段崩溃。</string>
-
-    <string name="mod_check_download_progress">Downloading: %s</string>
-    <string name="mod_check_download_bytes">%s / %s</string>
-    <string name="mod_check_download_speed">Speed: %s/s</string>
-    <string name="mod_check_download_retry_title">Download Failed</string>
-    <string name="mod_check_download_retry_message">Failed to download required native library for %s.\nWould you like to retry?</string>
-    <string name="mod_check_download_retry">Retry</string>
-    <string name="mod_check_download_skip">Skip</string>
-    <string name="mod_check_no_network_library">No internet connection. Required native library for %s cannot be downloaded.\nYou can disable the compatibility check for this mod to continue, or cancel to abort.</string>
-    <string name="mod_check_disable_check">Disable this mod</string>
+    <string name="mod_check_axiom_downloading">正在下载 Axiom 本机库：%s</string>
+    <string name="mod_check_axiom_failed">无法下载 Axiom (%s) 所需的本机库。</string>
+    <string name="mod_check_axiom_debug">调试：%s</string>
+    <string name="mod_check_sable_downloading">正在下载 Sable 本机库...</string>
+    <string name="mod_check_sable_failed">无法下载 Sable 的本机库（模组：%s）</string>
+    <string name="mod_check_sable_debug">调试信息：%s</string>
+    <string name="mod_check_download_progress">正在下载：%s</string>
+    <string name="mod_check_download_bytes">%s/%s</string>
+    <string name="mod_check_download_speed">速度：%s/s</string>
+    <string name="mod_check_download_retry_title">下载失败</string>
+    <string name="mod_check_download_retry_message">无法下载 %s 所需的本机库。\n您想重试吗？</string>
+    <string name="mod_check_download_retry">重试</string>
+    <string name="mod_check_download_skip">跳过</string>
+    <string name="mod_check_no_network_library">没有互联网连接。无法下载 %s 所需的本机库。\n您可以禁用此 mod 的兼容性检查以继续，或取消以中止。</string>
+    <string name="mod_check_disable_check">禁用此模式</string>
     <!-- Controls -->
     <string name="control_primary">左键</string>
     <string name="control_secondary">右键</string>
     <string name="control_mouse">鼠标</string>
     <string name="control_mouseoff">鼠标：关</string>
     <string name="control_mouseon">鼠标：开</string>
-
     <string name="customctrl_toggle">可切换</string>
     <string name="customctrl_size">大小</string>
     <string name="customctrl_mapping">映射</string>
@@ -172,10 +180,13 @@
     <string name="customctrl_selectdefault">选择默认控制布局</string>
     <string name="customctrl_export">保存并分享</string>
     <string name="customctrl_passthru">鼠标透传</string>
+    <string name="customctrl_repeatedly">反复</string>
+    <string name="customctrl_repeatedly_cps">每秒点击次数 (CPS)</string>
+    <string name="customctrl_repeatedly_delay">长按延迟</string>
+    <string name="customctrl_repeatedly_delay_value">%d 毫秒</string>
     <string name="customctrl_swipeable">可滑动</string>
     <string name="customctrl_forward_lock">锁定前进</string>
     <string name="customctrl_absolute_tracking">强制手指追踪</string>
-    
     <string name="controls_tip">点击齿轮悬浮窗打开菜单⚙\n点击一个按键进行自定义：编辑、缩放、删除或自定义其映射绑定</string>
     <string name="controls_add_control_button">按键</string>
     <string name="controls_add_control_drawer">组合键</string>
@@ -209,7 +220,10 @@
     <string name="controls_tip_set_default">长按控制布局，可以将其设置为默认的控制布局哦！</string>
     <string name="replacement_customcontrol">更换控制布局</string>
     <string name="custom_control_title">管理控制布局</string>
-
+    <string name="controller_button_a" translatable="false">一个</string>
+    <string name="controller_button_b" translatable="false">乙</string>
+    <string name="controller_button_x" translatable="false">X</string>
+    <string name="controller_button_y" translatable="false">是</string>
     <string name="controller_button_start">开始</string>
     <string name="controller_button_trigger_left">左触发键</string>
     <string name="controller_button_trigger_right">右触发键</string>
@@ -230,6 +244,7 @@
 
     <!-- Version -->
     <string name="version_manager_title">版本管理</string>
+    <string name="version_manager_search_hint">搜索版本</string>
     <string name="version_no_versions">没有安装版本</string>
     <string name="version_install_new">安装新版本</string>
     <string name="version_install_new_modloader">为新版本安装 %s</string>
@@ -253,9 +268,30 @@
     <string name="version_manager_shortcuts_crash_report_path">崩溃报告文件夹</string>
     <string name="version_manager_rename">重命名版本</string>
     <string name="version_manager_copy">复制版本</string>
+    <string name="version_manager_export_modpack">导出模组包</string>
+    <string name="version_manager_export_modpack_modrinth">莫德林斯 (.mrpack)</string>
+    <string name="version_manager_export_modpack_curseforge">CurseForge (.zip)</string>
+    <string name="version_manager_export_modpack_exporting">正在导出模组包...</string>
+    <string name="version_manager_export_modpack_success">模组包导出至：%s</string>
+    <string name="version_manager_export_modpack_include_title">包括路径</string>
+    <string name="version_manager_export_modpack_include_message">输入要包含的文件夹/文件（相对于游戏目录）。留空以包含所有内容。</string>
+    <string name="version_manager_export_modpack_exclude_title">排除路径</string>
+    <string name="version_manager_export_modpack_exclude_message">输入要排除的文件夹/文件（相对于游戏目录）。默认值：日志、崩溃报告。</string>
+    <string name="version_manager_export_modpack_paths_hint">示例：mods、config、options.txt</string>
+    <string name="version_manager_export_modpack_expand_all">全部展开</string>
+    <string name="version_manager_export_modpack_collapse_all">全部折叠</string>
+    <string name="version_manager_export_modpack_name_title">模组包名称</string>
+    <string name="version_manager_export_modpack_version_title">模组包版本</string>
+    <string name="version_manager_export_modpack_author_title">模组包作者</string>
+    <string name="version_manager_export_modpack_select_required">请至少选择一个要包含的文件或文件夹。</string>
     <string name="version_manager_copy_tip">将当前版本复制为一个新的版本，且默认开启版本隔离，若开启下方的“复制所有文件”，那么将同时复制当前版本产生的所有文件（资源包、存档、游戏设置等）。</string>
     <string name="version_manager_copy_all">复制所有文件</string>
     <string name="version_manager_delete">删除版本</string>
+    <string name="check_mod_updates">检查模组更新</string>
+    <string name="no_updates_found">所有模组都是最新的。</string>
+    <string name="update_all">全部更新</string>
+    <string name="mod_update_checking">正在检查模组更新...</string>
+    <string name="mod_update_downloading">正在下载 %1$s (%2$d%%)</string>
     <string name="version_manager_delete_tip">删除版本时会一并删除\"./versions/%s\"目录内的所有文件，包括游戏存档、资源包、模组等重要资源，尽管未开启版本隔离，所以请一定要做好备份后再进行此操作！</string>
     <string name="version_manager_delete_tip_invalid">当前版本缺少版本 JSON 文件，所以被判定为无效的版本，因此你不能选择这个版本！点击确认，删除这个错误的版本。</string>
     <string name="version_manager_task_in_progress">任务执行中，暂时无法使用版本管理功能</string>
@@ -268,12 +304,10 @@
     <string name="version_manager_favorites_write_folder_name">为新的收藏夹命名</string>
     <string name="version_manager_favorites_dialog_title">添加到收藏夹</string>
     <string name="version_manager_favorites_dialog_no_folders">还没有收藏夹，请先添加收藏夹！</string>
-
     <!-- Permissions -->
     <string name="permissions_manage_external_storage">%s 需要管理设备所有文件的权限，以便正常使用这个功能，请开启权限！</string>
     <string name="permissions_write_external_storage">%s 需要授予存储管理权限。如果权限未开启，可能会导致游戏文件无法正常保存、解压等问题。请授予权限，以确保功能正常运行。</string>
     <string name="permissions_storage_for_renderer_config">当前选择的渲染器插件 %s 可能存在配置项，如果 %s 未被授予存储管理权限，渲染器插件的配置将无法被读取。请授予权限，以确保功能正常运行。</string>
-
     <!-- Profiles Path -->
     <string name="profiles_path_title">游戏路径管理</string>
     <string name="profiles_path_default">默认路径</string>
@@ -283,7 +317,6 @@
     <string name="profiles_path_create_new_title">为此路径命名</string>
     <string name="profiles_path_delete_title">删除此路径</string>
     <string name="profiles_path_delete_message">启动器将删除此路径，但不会删除对应路径内保存的文件，删除之后仍然可以重新添加此路径</string>
-
     <!-- Profile -->
     <string name="pedit_isolation_enabled">启用版本隔离</string>
     <string name="pedit_reset_icon">这将会重置你设置的自定义图标，且操作不可逆，你确定要重置版本图标吗？</string>
@@ -291,7 +324,6 @@
     <string name="pedit_control">控制布局</string>
     <string name="pedit_custom_path">自定义路径</string>
     <string name="pedit_default">（使用全局默认值）</string>
-
     <string name="profile_mods_download_mod">下载模组</string>
     <string name="profile_mods_download_mod_release_version">仅展示 Minecraft 正式版本</string>
     <string name="profile_mods_add_mod">添加模组</string>
@@ -299,7 +331,6 @@
     <string name="profile_mods_disable">禁用</string>
     <string name="profile_mods_enable">启用</string>
     <string name="profile_mods_disable_or_enable">禁用/启用</string>
-
     <!-- Account -->
     <string name="account_login_done">登录完成</string>
     <string name="account_add">添加账户</string>
@@ -329,7 +360,6 @@
     <string name="account_continue_to_launch_the_game">仍然启动游戏</string>
     <string name="account_purchase_minecraft_account">购买 Minecraft 正版账号</string>
     <string name="account_purchase_minecraft_account_tip">如果你没有 Minecraft 正版账号，请先在 Minecraft 官网购买正版账号！</string>
-
     <string name="xerr_unknown">未知的 Xbox Live API 错误 %d</string>
     <string name="xerr_no_account">你似乎没有 Xbox Live 账户</string>
     <string name="xerr_adult_verification">需要成年人验证你的账户</string>
@@ -337,12 +367,10 @@
     <string name="xerr_not_available">Xbox Live 在你所在的国家/地区不可用</string>
     <string name="minecraft_not_owned">未找到 Minecraft 配置文件</string>
     <string name="no_minecraft_purchase">请确保你已经购买了 Minecraft，前往 https://minecraft.net/ 上登录你的账号，然后重试</string>
-
     <!-- Jre -->
     <string name="install_select_jre_environment">选择 JRE 环境</string>
     <string name="install_recommend_use_jre8">在执行环境内，请尽量使用 JRE 8，以保证稳定性</string>
     <string name="install_auto_select">让启动器决定</string>
-    
     <string name="multirt_runtime_corrupt">Java 运行环境损坏</string>
     <string name="multirt_runtime_incompatiblearch">不兼容的架构：%s</string>
     <string name="multirt_config_title">Java 运行环境</string>
@@ -354,7 +382,6 @@
     <string name="multirt_import">导入运行环境</string>
     <string name="multirt_swap_setdefault">选择默认环境</string>
     <string name="multirt_provided_by_launcher">内置</string>
-
     <!-- Custom Mouse & Background -->
     <string name="mouse_settings_speed_name">虚拟鼠标速度</string>
     <string name="mouse_settings_scale_name">虚拟鼠标缩放</string>
@@ -368,13 +395,14 @@
     <string name="custom_background_add">添加背景图片</string>
     <string name="custom_background_title">自定义启动器背景图片</string>
     <string name="custom_background_desc">打开启动器背景图标管理界面，你能够自行添加你喜欢的背景图片，并为各个不同的界面设置不同的背景</string>
+    <string name="custom_background_blur_title">启动器背景模糊</string>
+    <string name="custom_background_blur_desc">将自定义启动器背景模糊设置为从 0（关闭）到 25（最大）</string>
     <string name="custom_background_main_menu">主菜单</string>
     <string name="custom_background_in_game">游戏界面</string>
     <string name="custom_background_dialog_message">点击 “选择” 按钮，将此图片设置为 %s 的背景图片</string>
     <string name="custom_background_selected">成功为 %s 设置背景图片:</string>
     <string name="custom_background_reset">已重置 %s 的背景图片</string>
     <string name="custom_background_nothing">这里没有任何背景图片，请先添加一些图片！</string>
-
     <!-- File -->
     <string name="file_folder_dialog_insert_name">插入文件夹名称</string>
     <string name="file_create_folder">创建文件夹</string>
@@ -387,6 +415,7 @@
     <string name="file_message">请选择你要对此文件执行的操作</string>
     <string name="file_folder_message">请选择你要对此文件夹执行的操作</string>
     <string name="file_added">成功添加文件</string>
+    <string name="file_cancel_multi_select">取消</string>
     <string name="file_delete">你确定要删除此文件吗？</string>
     <string name="file_delete_dir">你确定要删除此文件夹吗？</string>
     <string name="file_delete_dir_message">删除文件夹时，会将此文件夹内部全部文件一并删除，如果这个文件夹内含有重要的文件，那么请取消此操作！</string>
@@ -402,19 +431,44 @@
     <string name="file_jump_to_path">跳转至路径</string>
     <string name="file_nothing">没有找到任何文件哦！</string>
     <string name="file_invalid_length">名称过长！(当前长度：%d，最大长度：%d)</string>
-
     <!-- Search View -->
     <string name="search_case_sensitive">区分大小写</string>
     <string name="search_only_show_results">仅展示搜索结果</string>
     <string name="search_count">%d 个搜索结果</string>
-
     <!-- Main Page & Settings -->
     <string name="main_open_main_dir">打开主目录</string>
     <string name="main_install_jar_file">执行 .jar 文件</string>
     <string name="main_share_logs">分享日志文件</string>
+    <!-- Host Server Feature Strings -->
     <string name="main_host_server">Host a Server</string>
+    <string name="host_server_info_title">Playit.gg 隧道</string>
+    <string name="host_server_info_desc">为您的本地 Minecraft 服务器创建公共隧道。朋友们可以通过以下地址联系。</string>
+    <string name="host_server_local_port">本地端口</string>
+    <string name="host_server_port_hint">25565</string>
+    <string name="host_server_port_note">注意：声明后在 playit.gg 仪表板中配置隧道端口。</string>
+    <string name="host_server_start">开始隧道</string>
+    <string name="host_server_stop">停止隧道</string>
+    <string name="host_server_status_title">隧道状态</string>
+    <string name="host_server_status_label">地位：</string>
+    <string name="host_server_status_idle">闲置的</string>
+    <string name="host_server_status_starting">开始…</string>
+    <string name="host_server_status_auth">需要身份验证</string>
+    <string name="host_server_status_running">跑步</string>
+    <string name="host_server_auth_required">声明您的代理人：</string>
+    <string name="host_server_open_browser">打开声明 URL</string>
+    <string name="host_server_tunnel_ready">隧道地址：</string>
+    <string name="host_server_copy_address">复制地址</string>
+    <string name="host_server_copied">地址已复制到剪贴板</string>
+    <string name="host_server_open_dashboard">打开仪表板</string>
+    <string name="host_server_log_title">代理日志</string>
+    <string name="host_server_clear_log">清除日志</string>
+    <string name="host_server_invalid_port">端口号无效 (1–65535)</string>
+    <string name="host_server_no_browser">找不到浏览器应用程序</string>
+    <string name="host_server_start_failed">隧道启动失败</string>
+    <string name="host_server_address_unknown">未检测到地址 – 打开仪表板</string>
+    <string name="host_server_notification_permission_denied">后台服务需要通知权限</string>
+    <string name="option_host_server">主机服务器（Playit 隧道）</string>
     <string name="main_launch">启动游戏</string>
-
     <string name="setting_category_control">控制设置</string>
     <string name="setting_category_virtual_mouse">虚拟鼠标</string>
     <string name="setting_category_gyro_controls">陀螺仪控制</string>
@@ -431,8 +485,13 @@
     <string name="setting_category_experimental">实验性设置</string>
     <string name="setting_category_experimental_patches">实验性的补丁</string>
     <string name="setting_category_support">外部支持</string>
-
     <string name="setting_renderer_title">渲染器</string>
+    <string name="setting_game_graphics_api_title">游戏图形API</string>
+    <string name="setting_game_graphics_api_desc">选择 Minecraft 如何选择其游戏内图形后端。</string>
+    <string name="setting_game_graphics_api_auto">汽车</string>
+    <string name="setting_game_graphics_api_opengl">OpenGL</string>
+    <string name="setting_game_graphics_api_vulkan">伏尔甘</string>
+    <string name="setting_game_graphics_api_vulkan_unsupported">您的设备不报告 Vulkan 1.2+ 支持，因此无法选择 Vulkan。</string>
     <string name="setting_renderer_from_plugins">来自 %s 插件</string>
     <string name="setting_renderer_local_import_title">本地导入渲染器</string>
     <string name="setting_renderer_local_import_desc">除了安装软件式渲染器插件之外，启动器还支持在本地导入渲染器插件，不过一些设备可能无法使用本地渲染器插件，请谨慎使用！</string>
@@ -456,7 +515,6 @@
     <string name="setting_vsync_in_zink_desc">允许启动器使用内部系统 API 为 Zink 启用垂直同步</string>
     <string name="setting_vulkan_driver_system_title">使用系统 Vulkan 驱动</string>
     <string name="setting_vulkan_driver_system_desc">强制启动器在 Adreno GPU 上使用系统 Vulkan 驱动而非 Turnip，仅影响使用 Vulkan 的 Zink 和模组</string>
-
     <string name="setting_longpress_trigger_title">触发长按延迟</string>
     <string name="setting_longpress_trigger_desc">更改长按摧毁方块、丢弃物品的触发延迟</string>
     <string name="setting_button_scale_title">控制布局缩放</string>
@@ -490,7 +548,6 @@
     <string name="setting_wipe_controller_desc">允许你重新映射手柄按键</string>
     <string name="setting_deadzone_scale_title">摇杆死区缩放</string>
     <string name="setting_deadzone_scale_desc">若摇杆偏移，请调高此选项</string>
-
     <string name="setting_java_multirt_title">运行环境管理器</string>
     <string name="setting_java_multirt_desc">管理已安装的 Java 运行环境</string>
     <string name="setting_java_select_runtime_title">执行前选择运行环境</string>
@@ -499,23 +556,22 @@
     <string name="setting_java_select_runtime_default">当前的默认运行环境</string>
     <string name="setting_java_args_title">JVM 启动参数</string>
     <string name="setting_java_args_desc">启动 Minecraft 时，额外添加的 JVM 参数，不建议在没有把握的情况下进行修改，因为这很有可能导致游戏崩溃</string>
+    <string name="setting_game_args_title">游戏启动参数</string>
+    <string name="setting_game_args_desc">在默认 Minecraft 启动参数之后附加的附加游戏参数（示例：--demo）</string>
     <string name="setting_java_memory_title">内存分配</string>
     <string name="setting_java_memory_desc">控制给 Minecraft 分配多少内存</string>
     <string name="setting_java_memory_info">当前内存使用信息：%s / %s ，空闲内存大小：%s</string>
     <string name="setting_java_memory_exceeded">当前设置的内存空间超出了可用内存大小</string>
     <string name="setting_java_sandbox_title">启用沙盒安全管理器</string>
     <string name="setting_java_sandbox_desc">在执行 .jar 文件时，是否启用沙盒安全管理器</string>
-
     <string name="setting_check_libraries_title">在下载后检查依赖库</string>
     <string name="setting_check_libraries_desc">此选项强制启动器在哈希值可用时检查运行库，防止下载错误</string>
-
     <string name="setting_shader_dump_title">启用着色器输出</string>
     <string name="setting_shader_dump_desc">记录转换的着色器到日志文件</string>
     <string name="setting_force_big_core_title">强制渲染器在大核上运行</string>
     <string name="setting_force_big_core_desc">强制 Minecraft 渲染线程在最高频率的核心运行</string>
     <string name="setting_touch_controller_vibrate_duration_title">TouchController 模组震动持续时间</string>
     <string name="setting_touch_controller_vibrate_duration_desc">设置该模组的震动持续时间，以适应不同的使用需求</string>
-
     <string name="setting_verify_manifest_title">游戏版本列表检查</string>
     <string name="setting_verify_manifest_desc">启用后，启动器将检查游戏版本列表以及库</string>
     <string name="setting_resource_image_cache_title">缓存资源图片</string>
@@ -530,6 +586,11 @@
     <string name="setting_version_isolation_desc">是否为游戏版本开启版本隔离\n关闭时，版本的游戏路径为 .minecraft/\n开启后，版本的游戏路径将会变更为 .minecraft/versions/&lt;版本名称&gt;/</string>
     <string name="setting_version_custom_info_title">自定义信息</string>
     <string name="setting_version_custom_info_desc">自定义信息将显示在游戏的主菜单左下角和 F3 调试屏幕的左上角。添加 [zl_version] 字段后，启动器会将其替换为启动器版本号</string>
+    <string name="setting_lwjgl_version_title">LWJGL版本</string>
+    <string name="setting_lwjgl_version_desc">选择启动游戏时使用的LWJGL版本</string>
+    <string name="setting_lwjgl_version_3_3_6">绿万金GL 3.3.6</string>
+    <string name="setting_lwjgl_version_3_4_1">龙万金GL 3.4.1</string>
+    <string name="pedit_lwjgl_version">LWJGL版本</string>
     <string name="setting_set_game_language_title">自动设置游戏语言</string>
     <string name="setting_set_game_language_desc">在游戏启动时，自动设置游戏语言为选定的语言</string>
     <string name="setting_set_game_language_list">设置游戏语言</string>
@@ -540,6 +601,8 @@
     <string name="setting_launcher_theme_system">跟随系统变化</string>
     <string name="setting_launcher_theme_light">浅色模式</string>
     <string name="setting_launcher_theme_dark">深色模式</string>
+    <string name="setting_launcher_theme_battery">省电黑暗</string>
+    <string name="setting_launcher_theme_auto_time">按时间自动</string>
     <string name="setting_enable_log_output_title">启动游戏时打开日志输出</string>
     <string name="setting_enable_log_output_desc">在应用正式开始运行游戏时，开启日志输出界面</string>
     <string name="setting_animation_title">启用动画</string>
@@ -554,7 +617,6 @@
     <string name="setting_accept_pre_release_updates_desc">这项设置将决定启动器是否能够收到预发布版更新</string>
     <string name="setting_ask_for_notification_title">允许通知</string>
     <string name="setting_ask_for_notification_desc">单击可重新请求通知权限，这是游戏文件在后台正常下载所必需的</string>
-    
     <string name="setting_game_menu_show_memory_title">实时显示内存信息</string>
     <string name="setting_game_menu_show_memory_desc">在游戏菜单悬浮窗上实时显示内存信息</string>
     <string name="setting_game_menu_show_fps_title">实时显示 FPS</string>
@@ -576,6 +638,24 @@
     <string name="setting_reboot_tip">此项设置已被更改，但是需要重启应用才能生效！</string>
     <string name="setting_zink_driver_adreno">启动器检测到你的设备为 Adreno GPU，开启这个选项可能会导致 Zink 渲染器无法正常工作，你确定要打开这个选项吗？</string>
 
+    <string-array name="setting_lwjgl_version_entries">
+    <item>@string/setting_lwjgl_version_3_3_6</item>
+    <item>@string/setting_lwjgl_version_3_4_1</item>
+    </string-array>
+    <string-array name="setting_lwjgl_version_values">
+    <item>3.3.6</item>
+    <item>3.4.1</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_entries">
+    <item>@string/setting_game_graphics_api_auto</item>
+    <item>@string/setting_game_graphics_api_opengl</item>
+    <item>@string/setting_game_graphics_api_vulkan</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_values">
+    <item>auto</item>
+    <item>opengl</item>
+    <item>vulkan</item>
+    </string-array>
     <!-- Game -->
     <string name="game_exit_message">应用程序/游戏以代码 %d 退出。</string>
     <string name="game_singnal_message">应用程序/游戏因致命信号 %d 而中止。</string>
@@ -585,7 +665,6 @@
     <string name="game_tip">游戏正在运行中，可以通过菜单开启日志输出，查看游戏运行状况</string>
     <string name="game_tip_version">当前启动的游戏版本:</string>
     <string name="game_tip_mc_info">Minecraft 信息:</string>
-
     <!-- Download -->
     <string name="download_classify_mod">下载模组</string>
     <string name="download_classify_modpack">下载整合包</string>
@@ -598,20 +677,22 @@
     <string name="download_ui_platform">搜索平台</string>
     <string name="download_ui_sort_by">排序方式</string>
     <string name="download_ui_category">类别筛选</string>
+    <string name="download_ui_view_grid">网格</string>
+    <string name="download_ui_view_list">列表</string>
     <string name="download_ui_modloader">模组加载器</string>
     <string name="download_ui_sort_by_relevant">相关性</string>
     <string name="download_ui_sort_by_total_downloads">总下载量</string>
     <string name="download_ui_sort_by_popularity">人气</string>
     <string name="download_ui_sort_by_recently_created">最近创建</string>
     <string name="download_ui_sort_by_recently_updated">最近更新</string>
+    <string name="mod_forge">锻造</string>
+    <string name="mod_neoforge">新锻造</string>
+    <string name="mod_fabric">织物</string>
+    <string name="mod_quilt">被子</string>
     <string name="download_info_downloads">下载量:</string>
     <string name="download_info_author">作者:</string>
     <string name="download_info_date">创建日期:</string>
     <string name="download_info_modloader">适用于:</string>
-    <string name="mod_fabric">Fabric</string>
-    <string name="mod_forge">Forge</string>
-    <string name="mod_neoforge">NeoForge</string>
-    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">依赖类型:</string>
     <string name="download_info_load_screenshot">展示屏幕截图</string>
     <string name="download_search_failed">搜索资源时失败！</string>
@@ -630,25 +711,21 @@
     <string name="download_install">下载 %s</string>
     <string name="download_install_is_adapt">当前版本 %s 可用</string>
     <string name="download_install_unpack_world_error">无法识别文件结构，自动解压存档失败，请自行处理此文件！</string>
-
     <!-- ModPack -->
     <string name="select_modpack_local_tip">请选择一个启动器支持导入的整合包文件！</string>
     <string name="select_modpack_local_not_supported">此整合包不受启动器支持！启动器仅支持导入 Modrinth、CurseForge、MCBBS 格式的整合包，请检查你的整合包是否按照规定的格式制作！</string>
     <string name="select_modpack_local_installing_files">安装游戏文件中… (%d / %d)</string>
-
     <string name="modpack_download_downloading_metadata">正在下载整合包元数据（%.2fMB / %.2fMB，速度：%s/s）</string>
     <string name="modpack_download_downloading_mods">正在下载模组（%.2fMB / %.2fMB，速度：%s/s）</string>
     <string name="modpack_download_downloading_mods_fc">正在下载模组（已下载文件：%d (%s), 总文件数：%d, 速度：%s/s）</string>
     <string name="modpack_download_applying_overrides">正在应用覆盖（%d/%d）</string>
     <string name="modpack_install_download_failed">整合包文件下载失败</string>
     <string name="modpack_prepare_mod_loader_installation">已安装所有模组，正在准备安装模组加载器</string>
-
     <!-- Clear Up -->
     <string name="clear_up_cache">清理缓存</string>
     <string name="clear_up_cache_desc">检查并清理应用的缓存文件，清除缓存文件不影响应用正常使用</string>
     <string name="clear_up_cache_not_found">未搜寻到缓存文件</string>
     <string name="clear_up_cache_clean_up">清理完毕，本次总共清除了 %s 的缓存文件</string>
-
     <!-- Check Update -->
     <string name="update">检查更新</string>
     <string name="update_dialog_title">检测到新版本</string>
@@ -664,7 +741,6 @@
     <string name="update_success">最新的安装包已经下载完成，是否安装？安装包位置:</string>
     <string name="update_downloading">正在下载安装包… (%s / %s)</string>
     <string name="update_downloading_tip">正在获取中，更新源：%s</string>
-
     <!-- Other Login -->
     <string name="other_login_server">认证服务器</string>
     <string name="other_login_email">邮箱或用户名</string>
@@ -679,7 +755,6 @@
     <string name="other_login_select_role_message">当前账号存在多个角色，请选择想要使用的角色</string>
     <string name="other_login_registry_now">没有账号？点我跳转注册一个！</string>
     <string name="other_login_role_not_found">未找到与当前账号相匹配的角色，请在你使用的服务器上检查这个角色是否存在！</string>
-
     <!-- Splash -->
     <string name="splash_screen_desc">启动器需要安装这些内容，才能够确保 Minecraft 能够正常启动。这些内容已经包含在应用中，需要解压之后才能正常使用，点击下方按钮，开始解压并更新这些内容。</string>
     <string name="splash_screen_installing">启动器正在解压这些内容，解压完成后将自动进入主界面，请耐心等待。</string>
@@ -690,8 +765,8 @@
     <string name="splash_screen_jre8">Java 8 环境，Minecraft 1.16- 依赖 Java 8。</string>
     <string name="splash_screen_jre17">Java 17 环境，Minecraft 1.17+ 依赖 Java 17。</string>
     <string name="splash_screen_jre21">Java 21 环境，Minecraft 1.20.5+ 依赖 Java 21。</string>
+    <string name="splash_screen_jre25">Java 25 环境，Minecraft 26.1+ 依赖于 Java 25。</string>
     <string name="splash_screen_apply">同意并安装</string>
-
     <!-- About -->
     <string name="about_tab">关于 %s</string>
     <string name="about_dec1">%s 是一款基于 PojavLauncher 开发的 Minecraft 启动器，它能够在 Android 设备上运行 Minecraft: Java Edition。</string>
@@ -716,7 +791,6 @@
     <string name="about_version_code">软件版本码:</string>
     <string name="about_last_update_time">上一次更新时间:</string>
     <string name="about_version_status">版本状态:</string>
-
     <!-- Newbie Guide -->
     <string name="newbie_guide_general_close">可点击此按钮以关闭并返回上一个界面。</string>
     <string name="newbie_guide_general_refresh">可点击此按钮以刷新当前的内容。</string>
@@ -734,8 +808,222 @@
     <string name="newbie_guide_mod_import">在原生的文件管理器内选择一个模组文件，可将其导入当前模组文件夹。</string>
     <string name="newbie_guide_mod_download">点击可以进入模组下载页面，你可以在那里在线搜索与下载模组。</string>
     <string name="newbie_guide_game_menu">可以拖动游戏菜单悬浮窗至屏幕的任意位置。</string>
-
     <!-- Sponsorship Related -->
     <string name="request_sponsorship_title">支持我的开发</string>
     <string name="request_sponsorship_message">这款软件的大部分内容都是我一个人开发和维护的。如果你觉得这款软件对你有帮助，并且条件允许的话，希望你能考虑赞助我，让我有更多动力继续开发和改进，谢谢你的支持！</string>
+    <!-- Category filter strings -->
+    <string name="category_simplistic">简单化</string>
+    <string name="category_themed">主题化</string>
+    <string name="category_tweaks">调整</string>
+    <string name="category_rp_feature_audio">声音的</string>
+    <string name="category_addons">插件</string>
+    <string name="category_ae2">应用能源学2</string>
+    <string name="category_blood_magic">血魔法</string>
+    <string name="category_buildcraft">建造工艺</string>
+    <string name="category_crafttweaker">工艺调整器</string>
+    <string name="category_create">创造</string>
+    <string name="category_farmers_delight">农民的喜悦</string>
+    <string name="category_forestry">林业</string>
+    <string name="category_galacticraft">银河飞船</string>
+    <string name="category_industrial_craft">工业工艺</string>
+    <string name="category_integrated_dynamics">综合动力学</string>
+    <string name="category_kubejs">KubeJS</string>
+    <string name="category_refined_storage">精致收纳</string>
+    <string name="category_thaumcraft">奇术</string>
+    <string name="category_thermal_expansion">热膨胀</string>
+    <string name="category_tinkers_construct">修补匠的构造</string>
+    <string name="category_twilight_forest">暮色森林</string>
+    <string name="category_api_and_library">API 和库</string>
+    <string name="category_armor_tools_weapons">盔甲、工具和武器</string>
+    <string name="category_bug_fixes">错误修复</string>
+    <string name="category_cosmetic">化妆品</string>
+    <string name="category_creative_mode">创意模式</string>
+    <string name="category_education">教育</string>
+    <string name="category_horror">恐怖</string>
+    <string name="category_map_and_info">地图和信息</string>
+    <string name="category_mcreator">创意大师</string>
+    <string name="category_modjam">ModJam 2025</string>
+    <string name="category_server_utility">服务器实用程序</string>
+    <string name="category_twitch_integration">抽搐整合</string>
+    <string name="category_utility_qol">效用和生活质量</string>
+    <string name="category_genetics">遗传学</string>
+    <string name="category_player_transport">玩家运输</string>
+    <string name="category_processing">加工</string>
+    <string name="category_expert">专家</string>
+    <string name="category_hardcore">硬核</string>
+    <string name="category_rlcraft">RL工艺</string>
+    <string name="category_small_light">小/轻</string>
+    <string name="category_vanilla_plus">香草+</string>
+    <string name="category_economy">经济</string>
+    <string name="category_management">管理</string>
+    <string name="category_minigame">小游戏</string>
+    <string name="category_transportation">运输</string>
+    <string name="category_modded">改装</string>
+    <string name="category_realistic">实际的</string>
+    <string name="category_vanilla_like">香草味</string>
+    <string name="category_8x_or_lower">8 倍或更低</string>
+    <string name="category_48x">48x</string>
+    <string name="category_512x_or_higher">512x 或更高</string>
+    <string name="category_rp_feature">特征</string>
+    <string name="category_shader_feature">特征</string>
+    <string name="category_shader_performance">性能影响</string>
+    <string name="download_ui_environment">环境</string>
+    <string name="download_ui_resolution">解决</string>
+    <string name="download_ui_shader_loader">装载机</string>
+    <string name="category_rp_feature_blocks">积木</string>
+    <string name="category_rp_feature_core_shaders">核心着色器</string>
+    <string name="category_rp_feature_entities">实体</string>
+    <string name="category_rp_feature_environment">环境</string>
+    <string name="category_rp_feature_equipment">设备</string>
+    <string name="category_rp_feature_fonts">字体</string>
+    <string name="category_rp_feature_gui">图形用户界面</string>
+    <string name="category_rp_feature_items">项目</string>
+    <string name="category_rp_feature_locale">语言环境</string>
+    <string name="category_rp_feature_models">型号</string>
+    <string name="category_datapacks">数据包</string>
+    <string name="category_font_packs">字体包</string>
+    <string name="category_medieval">中世纪</string>
+    <string name="category_shader_loader_iris">鸢尾花</string>
+    <string name="category_shader_loader_optifine">优化</string>
+    <string name="category_shader_loader_vanilla">香草着色器</string>
+    <string name="category_shader_loader_canvas">帆布</string>
+    <string name="category_env_client">客户</string>
+    <string name="category_env_server">服务器</string>
+    <string name="download_ui_filter_title">筛选</string>
+    <string name="download_ui_filter_apply">申请</string>
+    <string name="download_ui_filter_clear">清除</string>
+    <string name="download_ui_filter_no_selection">无过滤器</string>
+    <string name="download_batch_selected_tag">已选择</string>
+    <string name="download_batch_reset_selected">重置所选</string>
+    <string name="download_batch_cancel_select">取消</string>
+    <string name="host_server_open_console">打开控制台</string>
+    <string name="console_title">服务器控制台（目前只有 Vanilla 和 Fabric 可以运行）</string>
+    <string name="console_ram">内存</string>
+    <string name="console_cpu">中央处理器</string>
+    <string name="console_storage">磁盘</string>
+    <string name="console_downloading">正在下载 playit 代理...</string>
+    <string name="console_waiting">[控制台] 等待隧道启动...</string>
+    <string name="console_status_idle">闲置的</string>
+    <string name="console_status_running">跑步</string>
+    <string name="console_status_auth">需要授权</string>
+    <string name="console_status_connecting">连接</string>
+    <string name="console_log_claim_prefix">打开进行身份验证：</string>
+    <string name="console_log_tunnel_prefix">隧道准备就绪</string>
+    <string name="console_log_download_start">正在下载 playit 二进制文件...</string>
+    <string name="console_log_download_done">下载完成。开始隧道…</string>
+
+    <!-- Server Console -->
+    <string name="console_setup_title">服务器设置</string>
+    <string name="console_server_type">服务器类型</string>
+    <string name="console_type_vanilla">香草</string>
+    <string name="console_type_paper">纸</string>
+    <string name="console_type_fabric">织物</string>
+    <string name="console_mc_version">MC版</string>
+    <string name="console_server_port">港口</string>
+    <string name="console_jvm_args">JVM 参数</string>
+    <string name="console_start">▶ 开始</string>
+    <string name="console_restart">↻ 重新启动</string>
+    <string name="console_stop">■ 停止</string>
+    <string name="console_jvm_args_short">虚拟机</string>
+    <string name="console_server_port_short">港口</string>
+    <string name="console_mc_version_short">版本</string>
+    <string name="console_section_resources">系统资源</string>
+    <string name="console_section_actions">行动</string>
+    <string name="console_section_setup">服务器设置</string>
+    <string name="console_fetch_versions">获取▾</string>
+    <string name="console_fetching">加载中…</string>
+    <string name="console_command_hint">输入命令...</string>
+    <string name="console_send">发送</string>
+
+    <!-- MobileGlues settings -->
+    <string name="setting_mg_category">移动胶水</string>
+    <string name="setting_mg_angle">使用 ANGLE 作为 OpenGL ES 驱动程序</string>
+    <string name="setting_mg_no_error">OpenGL错误设置</string>
+    <string name="setting_mg_ext_timer_query">禁用推荐的“timer_query”扩展</string>
+    <string name="setting_mg_ext_compute_shader">启用不完整的“ARB_compute_shader”扩展</string>
+    <string name="setting_mg_ext_direct_state_access">启用高级“direct_state_access”扩展</string>
+    <string name="setting_mg_glsl_cache">最大 GLSL 缓存大小（输入 -1 禁用）</string>
+    <string name="setting_mg_glsl_cache_desc">单位：兆字节 (MB)</string>
+    <string name="setting_mg_multidraw">多重绘制仿真</string>
+    <string name="setting_mg_angle_clear_workaround">ANGLE 深度清除解决方法</string>
+    <string name="setting_mg_custom_gl_version">自定义目标 OpenGL 版本</string>
+    <string name="setting_mg_fsr1">（实验）启用内置FSR1</string>
+    <string name="setting_mg_hide_f3">从 F3 屏幕隐藏 MobileGlues</string>
+
+    <string-array name="setting_mg_angle_entries">
+    <item>Prefer Disabled</item>
+    <item>Prefer Enabled</item>
+    <item>Disable</item>
+    <item>Enable</item>
+    </string-array>
+    <string-array name="setting_mg_angle_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_no_error_entries">
+    <item>Auto</item>
+    <item>Do not ignore</item>
+    <item>Ignore shader/program error</item>
+    <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_mg_no_error_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_multidraw_entries">
+    <item>Auto</item>
+    <item>Prefer Indirect</item>
+    <item>Prefer BaseVertex</item>
+    <item>Prefer MultiDraw Indirect</item>
+    <item>Force DrawElements</item>
+    <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_mg_multidraw_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    </string-array>
+
+    <string-array name="setting_mg_angle_clear_entries">
+    <item>Disable</item>
+    <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_mg_angle_clear_values">
+    <item>0</item>
+    <item>1</item>
+    </string-array>
+
+    <string-array name="setting_mg_custom_gl_version_entries">
+    <item>Disabled</item>
+    <item>OpenGL 3.2</item>
+    <item>OpenGL 3.3</item>
+    <item>OpenGL 4.0</item>
+    <item>OpenGL 4.1</item>
+    <item>OpenGL 4.2</item>
+    <item>OpenGL 4.3</item>
+    <item>OpenGL 4.4</item>
+    <item>OpenGL 4.5</item>
+    <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_mg_custom_gl_version_values">
+    <item>0</item>
+    <item>32</item>
+    <item>33</item>
+    <item>40</item>
+    <item>41</item>
+    <item>42</item>
+    <item>43</item>
+    <item>44</item>
+    <item>45</item>
+    <item>46</item>
+    </string-array>
 </resources>

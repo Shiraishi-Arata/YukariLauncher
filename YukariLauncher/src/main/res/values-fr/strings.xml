@@ -30,6 +30,9 @@
     <string name="generic_keyboard">Clavier</string>
     <string name="generic_waiting">Veuillez patienter</string>
     <string name="generic_select">Sélectionner</string>
+    <string name="generic_select_all">Sélectionner tout</string>
+    <string name="generic_deselect_all">Désélectionner tout</string>
+    <string name="generic_cancel">Annuler</string>
     <string name="generic_default">Par défaut</string>
     <string name="generic_loading">Chargement</string>
     <string name="generic_optional">Optionnel</string>
@@ -77,6 +80,7 @@
     <string name="version_snapshot">Version snapshot</string>
     <string name="version_alpha">Version Alpha</string>
     <string name="version_beta">Version Beta</string>
+    <string name="version_april_fools">Poisson d\'avril</string>
     <string name="force_exit_confirm">Êtes-vous sûr de vouloir forcer la fermeture ?</string>
     <string name="autoram_info_msg">La mémoire a été réglée à %d Mo</string>
     <string name="memory_warning_msg">La mémoire disponible actuelle (%d) est inférieure à la mémoire allouée (%d), ce qui pourrait entraîner un plantage du jeu. Si le jeu plante, veuillez modifier la configuration !</string>
@@ -91,15 +95,16 @@
     <string name="microsoft_login_retry_later">Vous avez effectué trop d\'opérations, veuillez réessayer plus tard</string>
     <string name="storage_required">%s nécessite une connexion à un stockage externe, veuillez reconnecter et redémarrer l\'application</string>
     <string name="dialog_select_jar">Sélectionner un fichier Jar</string>
+    <string name="percent_format" translatable="false">%d%%</string>
     <string name="version_select_hint">Choisir version (Appui long pour réinit.)</string>
     <string name="notif_error_occured">Une erreur est survenue</string>
     <string name="notif_error_occured_desc">Cliquez pour voir les détails</string>
     <string name="input_preview_tip">Aperçu du champ de saisie, capture l\'entrée du clavier virtuel, à titre de référence uniquement :</string>
     <string name="dl_tampered_manifest_title">Avertissement de vérification de fichier</string>
     <string name="dl_tampered_manifest"><![CDATA[La liste des versions de jeu sur la source miroir ne correspond pas à celle de Mojang, ce qui signifie qu\'elle pourrait avoir été modifiée.<br/>
-        <b>Cela n\'est pas sûr. Si vous continuez, vos informations personnelles pourraient être en danger !</b><br/>
-        Si vous souhaitez toujours utiliser la source miroir, cliquez sur "Désactiver la vérification de la liste des versions du jeu" pour recommencer le téléchargement.<br/>
-        Si vous souhaitez utiliser la source officielle, cliquez sur "Passer à la source officielle" pour recommencer le téléchargement.<br/>]]></string>
+    <b>Cela n\'est pas sûr. Si vous continuez, vos informations personnelles pourraient être en danger !</b><br/>
+    Si vous souhaitez toujours utiliser la source miroir, cliquez sur "Désactiver la vérification de la liste des versions du jeu" pour recommencer le téléchargement.<br/>
+    Si vous souhaitez utiliser la source officielle, cliquez sur "Passer à la source officielle" pour recommencer le téléchargement.<br/>]]></string>
     <string name="dl_turn_off_manifest_checks">Désactiver la vérification de la liste des versions du jeu</string>
     <string name="dl_switch_to_official_site">Passer à la source de téléchargement officielle</string>
     <string name="notif_download_finished">Le jeu est prêt à être lancé</string>
@@ -129,21 +134,30 @@
     <string name="mod_check_progress_message">Vérification des mods (%d / %d)</string>
     <string name="mod_check_touch_controller">Détection du mod Touch Controller (%s) installé, le lanceur est prêt à activer le proxy de contrôle pour adapter le mod.</string>
     <string name="mod_check_physics">Le mod physique utilisé actuellement (%s) n\'est pas patché (libPhysXJniBindings_64.so est remplacé de l\'architecture x86_64 à arm64), il va planter au lancement.</string>
+    <string name="mod_check_physics_downloading">Téléchargement de la bibliothèque de mods Physique : %s</string>
+    <string name="mod_check_physics_failed">Échec du téléchargement de la bibliothèque requise pour le mod Physique (%s).</string>
+    <string name="mod_check_physics_debug">Débogage : %s</string>
     <string name="mod_check_mcef">MCEF (%s) ne peut pas fonctionner sur Android. Il est généralement utilisé comme dépendance préalable pour WebDisplays/In-game Browser (navigateur).</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) ne peut pas s\'exécuter directement en mode solo. Vous devez l\'exécuter sur un serveur (Termux peut être utilisé), sinon le jeu plantera.</string>
     <string name="mod_check_yes_steve_model">Yes Steve Model (%s) 2.2.2+ ne peut pas fonctionner sur Android.</string>
     <string name="mod_check_imblocker">IMBlocker/In-GameIME (%s) n\'est pas compatible avec Android et fera planter le jeu au démarrage.</string>
     <string name="mod_check_replay_mod">ReplayMod (%s) nécessite FFmpeg pour rendre les vidéos. Veuillez installer le plugin FFmpeg séparément\n%s\n%s</string>
     <string name="mod_check_borderlesswindow">Borderless Window (%s) n\'est pas compatible avec Android et fera planter le jeu au démarrage.</string>
-    <string name="mod_check_download_progress">Downloading: %s</string>
-    <string name="mod_check_download_bytes">%s / %s</string>
-    <string name="mod_check_download_speed">Speed: %s/s</string>
-    <string name="mod_check_download_retry_title">Download Failed</string>
-    <string name="mod_check_download_retry_message">Failed to download required native library for %s.\nWould you like to retry?</string>
-    <string name="mod_check_download_retry">Retry</string>
-    <string name="mod_check_download_skip">Skip</string>
-    <string name="mod_check_no_network_library">No internet connection. Required native library for %s cannot be downloaded.\nYou can disable the compatibility check for this mod to continue, or cancel to abort.</string>
-    <string name="mod_check_disable_check">Disable this mod</string>
+    <string name="mod_check_axiom_downloading">Téléchargement de la bibliothèque native Axiom : %s</string>
+    <string name="mod_check_axiom_failed">Échec du téléchargement de la bibliothèque native requise pour Axiom (%s).</string>
+    <string name="mod_check_axiom_debug">Débogage : %s</string>
+    <string name="mod_check_sable_downloading">Téléchargement de la bibliothèque native Sable…</string>
+    <string name="mod_check_sable_failed">Échec du téléchargement de la bibliothèque native pour Sable (mod : %s)</string>
+    <string name="mod_check_sable_debug">Informations de débogage : %s</string>
+    <string name="mod_check_download_progress">Téléchargement : %s</string>
+    <string name="mod_check_download_bytes">%s/%s</string>
+    <string name="mod_check_download_speed">Vitesse : %s/s</string>
+    <string name="mod_check_download_retry_title">Échec du téléchargement</string>
+    <string name="mod_check_download_retry_message">Échec du téléchargement de la bibliothèque native requise pour %s.\nVoulez-vous réessayer ?</string>
+    <string name="mod_check_download_retry">Réessayer</string>
+    <string name="mod_check_download_skip">Sauter</string>
+    <string name="mod_check_no_network_library">Pas de connexion Internet. La bibliothèque native requise pour %s ne peut pas être téléchargée.\nVous pouvez désactiver la vérification de compatibilité pour ce mod pour continuer, ou annuler pour abandonner.</string>
+    <string name="mod_check_disable_check">Désactivez ce module</string>
     <!-- Controls -->
     <string name="control_primary">Clic gauche</string>
     <string name="control_secondary">Clic droit</string>
@@ -166,6 +180,10 @@
     <string name="customctrl_selectdefault">Sélectionner la disposition de contrôle par défaut</string>
     <string name="customctrl_export">Enregistrer et partager</string>
     <string name="customctrl_passthru">Passer le pointeur de la souris</string>
+    <string name="customctrl_repeatedly">À plusieurs reprises</string>
+    <string name="customctrl_repeatedly_cps">Clics par seconde (CPS)</string>
+    <string name="customctrl_repeatedly_delay">Délai de pression longue</string>
+    <string name="customctrl_repeatedly_delay_value">%d ms</string>
     <string name="customctrl_swipeable">Glissable</string>
     <string name="customctrl_forward_lock">Verrouiller l\'avance</string>
     <string name="customctrl_absolute_tracking">Suivi forcé des doigts</string>
@@ -202,6 +220,10 @@
     <string name="controls_tip_set_default">Appuyez longuement sur la disposition des commandes pour la définir comme disposition de contrôle par défaut !</string>
     <string name="replacement_customcontrol">Changer de disposition de contrôles</string>
     <string name="custom_control_title">Gérer les dispositions de contrôles</string>
+    <string name="controller_button_a" translatable="false">UN</string>
+    <string name="controller_button_b" translatable="false">B</string>
+    <string name="controller_button_x" translatable="false">X</string>
+    <string name="controller_button_y" translatable="false">Oui</string>
     <string name="controller_button_start">Démarrer</string>
     <string name="controller_button_trigger_left">Gâchette gauche</string>
     <string name="controller_button_trigger_right">Gâchette droite</string>
@@ -219,8 +241,10 @@
     <string name="controller_dpad_right">Flèche directionnelle droite</string>
     <string name="controller_remapper_operating_mode">Mode actuel</string>
     <string name="controller_remapper_expand_entry">Développer pour modifier le code de la touche</string>
+
     <!-- Version -->
     <string name="version_manager_title">Gestion des versions</string>
+    <string name="version_manager_search_hint">Rechercher des versions</string>
     <string name="version_no_versions">Aucune version installée</string>
     <string name="version_install_new">Installer une nouvelle version</string>
     <string name="version_install_new_modloader">Installer %s pour la nouvelle version</string>
@@ -244,9 +268,30 @@
     <string name="version_manager_shortcuts_crash_report_path">Dossier des rapports de crash</string>
     <string name="version_manager_rename">Renommer la version</string>
     <string name="version_manager_copy">Copier la version</string>
+    <string name="version_manager_export_modpack">Exporter le pack de modules</string>
+    <string name="version_manager_export_modpack_modrinth">Modrinthe (.mrpack)</string>
+    <string name="version_manager_export_modpack_curseforge">MalédictionForge (.zip)</string>
+    <string name="version_manager_export_modpack_exporting">Exportation du pack de modules…</string>
+    <string name="version_manager_export_modpack_success">Modpack exporté vers : %s</string>
+    <string name="version_manager_export_modpack_include_title">Inclure les chemins</string>
+    <string name="version_manager_export_modpack_include_message">Entrez les dossiers/fichiers à inclure (par rapport au répertoire du jeu). Laissez vide pour tout inclure.</string>
+    <string name="version_manager_export_modpack_exclude_title">Exclure les chemins</string>
+    <string name="version_manager_export_modpack_exclude_message">Entrez les dossiers/fichiers à exclure (par rapport au répertoire du jeu). Valeurs par défaut : journaux, rapports de crash.</string>
+    <string name="version_manager_export_modpack_paths_hint">Exemple : mods, config, options.txt</string>
+    <string name="version_manager_export_modpack_expand_all">Développer tout</string>
+    <string name="version_manager_export_modpack_collapse_all">Réduire tout</string>
+    <string name="version_manager_export_modpack_name_title">Nom du pack de modules</string>
+    <string name="version_manager_export_modpack_version_title">Version du pack de modules</string>
+    <string name="version_manager_export_modpack_author_title">Auteur du pack de modules</string>
+    <string name="version_manager_export_modpack_select_required">Veuillez sélectionner au moins un fichier ou un dossier à inclure.</string>
     <string name="version_manager_copy_tip">Copier la version actuelle en une nouvelle avec l\'isolation des versions activée par défaut. Si "Copier tous les fichiers" ci-dessous est activé, tous les fichiers générés par la version actuelle (packs de ressources, sauvegardes, paramètres du jeu, etc.) seront également copiés.</string>
     <string name="version_manager_copy_all">Copier tous les fichiers</string>
     <string name="version_manager_delete">Supprimer la version</string>
+    <string name="check_mod_updates">Rechercher les mises à jour des modules</string>
+    <string name="no_updates_found">Tous les mods sont à jour.</string>
+    <string name="update_all">Tout mettre à jour</string>
+    <string name="mod_update_checking">Vérification des mises à jour des mods...</string>
+    <string name="mod_update_downloading">Téléchargement de %1$s (%2$d%%)</string>
     <string name="version_manager_delete_tip">La suppression d\'une version entraînera la suppression de tous les fichiers du répertoire \"./versions/%s\", y compris des ressources importantes telles que les sauvegardes de jeu, les packs de ressources, les modules, etc., même si l\'isolation des versions n\'est pas activée. Veuillez donc faire une sauvegarde avant d\'effectuer cette opération!</string>
     <string name="version_manager_delete_tip_invalid">La version actuelle manque du fichier JSON de la version et est donc considérée comme une version invalide. Vous ne pouvez pas sélectionner cette version. Cliquez sur Confirmer pour supprimer cette version erronée.</string>
     <string name="version_manager_task_in_progress">Tâche en cours, la gestion des versions est temporairement indisponible</string>
@@ -350,6 +395,8 @@
     <string name="custom_background_add">Ajouter une image de fond</string>
     <string name="custom_background_title">Image de fond personnalisée du lanceur</string>
     <string name="custom_background_desc">Ouvrir l\'interface de gestion des icônes de fond du lanceur, vous pouvez ajouter vos propres images de fond préférées et définir différents fonds pour différentes interfaces</string>
+    <string name="custom_background_blur_title">Flou d\'arrière-plan du lanceur</string>
+    <string name="custom_background_blur_desc">Définir le flou d\'arrière-plan du lanceur personnalisé de 0 (désactivé) à 25 (maximum)</string>
     <string name="custom_background_main_menu">Menu principal</string>
     <string name="custom_background_in_game">Interface de jeu</string>
     <string name="custom_background_dialog_message">Cliquez sur le bouton \"Sélectionner\" pour définir cette image comme fond de %s</string>
@@ -368,6 +415,7 @@
     <string name="file_message">Veuillez sélectionner l\'action que vous souhaitez effectuer sur ce fichier</string>
     <string name="file_folder_message">Veuillez sélectionner l\'action que vous souhaitez effectuer sur ce dossier</string>
     <string name="file_added">Fichier ajouté avec succès</string>
+    <string name="file_cancel_multi_select">Annuler</string>
     <string name="file_delete">Êtes-vous sûr de vouloir supprimer ce fichier ?</string>
     <string name="file_delete_dir">Êtes-vous sûr de vouloir supprimer ce dossier ?</string>
     <string name="file_delete_dir_message">La suppression du dossier supprimera également tous les fichiers qu\'il contient. Si ce dossier contient des fichiers importants, veuillez annuler cette opération !</string>
@@ -391,7 +439,35 @@
     <string name="main_open_main_dir">Ouvrir le répertoire principal</string>
     <string name="main_install_jar_file">Exécuter le fichier .jar</string>
     <string name="main_share_logs">Partager les fichiers journaux</string>
+    <!-- Host Server Feature Strings -->
     <string name="main_host_server">Host a Server</string>
+    <string name="host_server_info_title">Tunnel Playit.gg</string>
+    <string name="host_server_info_desc">Créez un tunnel public pour votre serveur Minecraft local. Les amis peuvent se connecter en utilisant l\'adresse ci-dessous.</string>
+    <string name="host_server_local_port">Port local</string>
+    <string name="host_server_port_hint">25565</string>
+    <string name="host_server_port_note">Remarque : configurez le port du tunnel dans le tableau de bord playit.gg après la réclamation.</string>
+    <string name="host_server_start">Tunnel de départ</string>
+    <string name="host_server_stop">Arrêter le tunnel</string>
+    <string name="host_server_status_title">Statut des tunnels</string>
+    <string name="host_server_status_label">Statut:</string>
+    <string name="host_server_status_idle">Inactif</string>
+    <string name="host_server_status_starting">Départ…</string>
+    <string name="host_server_status_auth">Authentification requise</string>
+    <string name="host_server_status_running">En cours d\'exécution</string>
+    <string name="host_server_auth_required">Réclamez votre agent :</string>
+    <string name="host_server_open_browser">Ouvrir l\'URL de la revendication</string>
+    <string name="host_server_tunnel_ready">Adresse du tunnel :</string>
+    <string name="host_server_copy_address">Copier l\'adresse</string>
+    <string name="host_server_copied">Adresse copiée dans le presse-papiers</string>
+    <string name="host_server_open_dashboard">Ouvrir le tableau de bord</string>
+    <string name="host_server_log_title">Journal des agents</string>
+    <string name="host_server_clear_log">Effacer le journal</string>
+    <string name="host_server_invalid_port">Numéro de port invalide (1–65535)</string>
+    <string name="host_server_no_browser">Aucune application de navigateur trouvée</string>
+    <string name="host_server_start_failed">Échec du démarrage du tunnel</string>
+    <string name="host_server_address_unknown">Adresse non détectée – ouvrir le tableau de bord</string>
+    <string name="host_server_notification_permission_denied">Autorisation de notification requise pour le service en arrière-plan</string>
+    <string name="option_host_server">Serveur hôte (Tunnel Playit)</string>
     <string name="main_launch">Lancer le jeu</string>
     <string name="setting_category_control">Paramètres de contrôle</string>
     <string name="setting_category_virtual_mouse">Souris virtuelle</string>
@@ -410,6 +486,12 @@
     <string name="setting_category_experimental_patches">Patchs expérimentaux</string>
     <string name="setting_category_support">Support externe</string>
     <string name="setting_renderer_title">Moteur de rendu</string>
+    <string name="setting_game_graphics_api_title">API graphique du jeu</string>
+    <string name="setting_game_graphics_api_desc">Choisissez comment Minecraft sélectionne son backend graphique dans le jeu.</string>
+    <string name="setting_game_graphics_api_auto">Auto</string>
+    <string name="setting_game_graphics_api_opengl">OpenGL</string>
+    <string name="setting_game_graphics_api_vulkan">Vulcan</string>
+    <string name="setting_game_graphics_api_vulkan_unsupported">Votre appareil ne signale pas la prise en charge de Vulkan 1.2+, Vulkan ne peut donc pas être sélectionné.</string>
     <string name="setting_renderer_from_plugins">Depuis le plugin %s</string>
     <string name="setting_renderer_local_import_title">Importation du rendu local</string>
     <string name="setting_renderer_local_import_desc">En plus d\'installer des plugins de rendu logiciel, le lanceur prend également en charge l\'importation de plugins de rendu localement. Cependant, certains appareils peuvent ne pas pouvoir utiliser les plugins de rendu local, veuillez donc l\'utiliser avec précaution !</string>
@@ -474,6 +556,8 @@
     <string name="setting_java_select_runtime_default">Environnement d\'exécution par défaut actuel</string>
     <string name="setting_java_args_title">Paramètres de démarrage JVM</string>
     <string name="setting_java_args_desc">Paramètres JVM supplémentaires ajoutés au démarrage de Minecraft. Il est déconseillé de les modifier sans être certain, car cela pourrait entraîner un plantage du jeu</string>
+    <string name="setting_game_args_title">Arguments de démarrage du jeu</string>
+    <string name="setting_game_args_desc">Arguments de jeu supplémentaires ajoutés après les arguments de lancement par défaut de Minecraft (exemple : --demo)</string>
     <string name="setting_java_memory_title">Allocation de mémoire</string>
     <string name="setting_java_memory_desc">Contrôler la quantité de mémoire allouée à Minecraft</string>
     <string name="setting_java_memory_info">Informations actuelles sur l\'utilisation de la mémoire : %s / %s, mémoire libre : %s</string>
@@ -502,6 +586,11 @@
     <string name="setting_version_isolation_desc">Activer l\'isolement des versions pour la version du jeu\nLorsqu\'il est désactivé, le chemin du jeu sera .minecraft/\nLorsqu\'il est activé, le chemin du jeu changera en .minecraft/versions/&lt;nom de la version&gt;/</string>
     <string name="setting_version_custom_info_title">Informations personnalisées</string>
     <string name="setting_version_custom_info_desc">Les informations personnalisées seront affichées dans le coin inférieur gauche du menu principal du jeu et dans le coin supérieur gauche de l\'écran de débogage F3. Après avoir ajouté le champ [zl_version], le lanceur le remplacera par le numéro de version du lanceur.</string>
+    <string name="setting_lwjgl_version_title">Version LWJGL</string>
+    <string name="setting_lwjgl_version_desc">Sélectionnez la version LWJGL à utiliser lors du lancement du jeu</string>
+    <string name="setting_lwjgl_version_3_3_6">LWJGL 3.3.6</string>
+    <string name="setting_lwjgl_version_3_4_1">LWJGL 3.4.1</string>
+    <string name="pedit_lwjgl_version">Version LWJGL</string>
     <string name="setting_set_game_language_title">Définir automatiquement la langue du jeu</string>
     <string name="setting_set_game_language_desc">Définir automatiquement la langue du jeu sur la langue sélectionnée au démarrage</string>
     <string name="setting_set_game_language_list">Définir la langue du jeu</string>
@@ -512,6 +601,8 @@
     <string name="setting_launcher_theme_system">Suivre les changements du système</string>
     <string name="setting_launcher_theme_light">Mode clair</string>
     <string name="setting_launcher_theme_dark">Mode sombre</string>
+    <string name="setting_launcher_theme_battery">Économiseur de batterie sombre</string>
+    <string name="setting_launcher_theme_auto_time">Automatique par heure</string>
     <string name="setting_enable_log_output_title">Ouvrir la sortie du journal lors du lancement du jeu</string>
     <string name="setting_enable_log_output_desc">Activer l\'interface de sortie du journal lorsque l\'application commence à exécuter le jeu</string>
     <string name="setting_animation_title">Activer les animations</string>
@@ -546,6 +637,25 @@
     <string name="setting_game_menu_alpha_desc">Définir l\'opacité de la fenêtre flottante du menu du jeu</string>
     <string name="setting_reboot_tip">Ce paramètre a été modifié, mais nécessite un redémarrage de l\'application pour prendre effet !</string>
     <string name="setting_zink_driver_adreno">Le lanceur a détecté que votre appareil est équipé d\'un GPU Adreno, activer cette option pourrait empêcher le rendu Zink de fonctionner correctement, êtes-vous sûr de vouloir activer cette option ?</string>
+
+    <string-array name="setting_lwjgl_version_entries">
+    <item>@string/setting_lwjgl_version_3_3_6</item>
+    <item>@string/setting_lwjgl_version_3_4_1</item>
+    </string-array>
+    <string-array name="setting_lwjgl_version_values">
+    <item>3.3.6</item>
+    <item>3.4.1</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_entries">
+    <item>@string/setting_game_graphics_api_auto</item>
+    <item>@string/setting_game_graphics_api_opengl</item>
+    <item>@string/setting_game_graphics_api_vulkan</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_values">
+    <item>auto</item>
+    <item>opengl</item>
+    <item>vulkan</item>
+    </string-array>
     <!-- Game -->
     <string name="game_exit_message">L\'application/le jeu a quitté avec le code %d.</string>
     <string name="game_singnal_message">L\'application/le jeu s\'est arrêté en raison du signal fatal %d.</string>
@@ -567,20 +677,22 @@
     <string name="download_ui_platform">Rechercher la plateforme</string>
     <string name="download_ui_sort_by">Trier par</string>
     <string name="download_ui_category">Filtrer par catégorie</string>
-    <string name="download_ui_modloader">Mod Loader</string>
+    <string name="download_ui_view_grid">Grille</string>
+    <string name="download_ui_view_list">Liste</string>
+    <string name="download_ui_modloader">Chargeur de modules</string>
     <string name="download_ui_sort_by_relevant">Pertinence</string>
     <string name="download_ui_sort_by_total_downloads">Téléchargements totaux</string>
     <string name="download_ui_sort_by_popularity">Popularité</string>
     <string name="download_ui_sort_by_recently_created">Récemment créé</string>
     <string name="download_ui_sort_by_recently_updated">Récemment mis à jour</string>
+    <string name="mod_forge">Forge</string>
+    <string name="mod_neoforge">NéoForge</string>
+    <string name="mod_fabric">Tissu</string>
+    <string name="mod_quilt">Édredon</string>
     <string name="download_info_downloads">Téléchargements:</string>
     <string name="download_info_author">Auteur:</string>
     <string name="download_info_date">Date de création:</string>
     <string name="download_info_modloader">Compatible avec:</string>
-    <string name="mod_fabric">Fabric</string>
-    <string name="mod_forge">Forge</string>
-    <string name="mod_neoforge">NeoForge</string>
-    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">Type de dépendance:</string>
     <string name="download_info_load_screenshot">Afficher la capture d\'écran</string>
     <string name="download_search_failed">Échec de la recherche de ressources!</string>
@@ -653,6 +765,7 @@
     <string name="splash_screen_jre8">Environnement Java 8, Minecraft 1.16- dépend de Java 8.</string>
     <string name="splash_screen_jre17">Environnement Java 17, Minecraft 1.17+ dépend de Java 17.</string>
     <string name="splash_screen_jre21">Environnement Java 21, Minecraft 1.20.5+ dépend de Java 21.</string>
+    <string name="splash_screen_jre25">Environnement Java 25, Minecraft 26.1+ dépend de Java 25.</string>
     <string name="splash_screen_apply">Accepter et installer</string>
     <!-- About -->
     <string name="about_tab">À propos de %s</string>
@@ -698,4 +811,219 @@
     <!-- Sponsorship Related -->
     <string name="request_sponsorship_title">Soutenez mon développement</string>
     <string name="request_sponsorship_message">La plupart du contenu de ce logiciel a été développé et maintenu par moi seul. Si vous trouvez ce logiciel utile et que vos conditions le permettent, j\'espère que vous pourrez envisager de me parrainer pour que j\'ai plus de motivation à continuer à développer et à améliorer, merci pour votre soutien !</string>
+    <!-- Category filter strings -->
+    <string name="category_simplistic">Simpliste</string>
+    <string name="category_themed">Thème</string>
+    <string name="category_tweaks">Ajustements</string>
+    <string name="category_rp_feature_audio">Audio</string>
+    <string name="category_addons">Modules complémentaires</string>
+    <string name="category_ae2">Énergétique appliquée 2</string>
+    <string name="category_blood_magic">Magie du sang</string>
+    <string name="category_buildcraft">Construction</string>
+    <string name="category_crafttweaker">CraftTweaker</string>
+    <string name="category_create">Créer</string>
+    <string name="category_farmers_delight">Le délice du fermier</string>
+    <string name="category_forestry">Sylviculture</string>
+    <string name="category_galacticraft">Vaisseau Galactique</string>
+    <string name="category_industrial_craft">Artisanat Industriel</string>
+    <string name="category_integrated_dynamics">Dynamique intégrée</string>
+    <string name="category_kubejs">KubeJS</string>
+    <string name="category_refined_storage">Rangement raffiné</string>
+    <string name="category_thaumcraft">Thaumcraft</string>
+    <string name="category_thermal_expansion">Dilatation thermique</string>
+    <string name="category_tinkers_construct">Construction du bricoleur</string>
+    <string name="category_twilight_forest">Forêt du Crépuscule</string>
+    <string name="category_api_and_library">API et bibliothèque</string>
+    <string name="category_armor_tools_weapons">Armure, outils et armes</string>
+    <string name="category_bug_fixes">Corrections de bugs</string>
+    <string name="category_cosmetic">Cosmétique</string>
+    <string name="category_creative_mode">Mode créatif</string>
+    <string name="category_education">Éducation</string>
+    <string name="category_horror">Horreur</string>
+    <string name="category_map_and_info">Carte et informations</string>
+    <string name="category_mcreator">MCréateur</string>
+    <string name="category_modjam">ModJam 2025</string>
+    <string name="category_server_utility">Utilitaire de serveur</string>
+    <string name="category_twitch_integration">Intégration Twitch</string>
+    <string name="category_utility_qol">Utilité et qualité de vie</string>
+    <string name="category_genetics">Génétique</string>
+    <string name="category_player_transport">Transport des joueurs</string>
+    <string name="category_processing">Traitement</string>
+    <string name="category_expert">Expert</string>
+    <string name="category_hardcore">Inconditionnel</string>
+    <string name="category_rlcraft">RLCraft</string>
+    <string name="category_small_light">Petit / Léger</string>
+    <string name="category_vanilla_plus">Vanille+</string>
+    <string name="category_economy">Économie</string>
+    <string name="category_management">Gestion</string>
+    <string name="category_minigame">Mini-jeu</string>
+    <string name="category_transportation">Transport</string>
+    <string name="category_modded">Modifié</string>
+    <string name="category_realistic">Réaliste</string>
+    <string name="category_vanilla_like">Vanille</string>
+    <string name="category_8x_or_lower">8x ou moins</string>
+    <string name="category_48x">48x</string>
+    <string name="category_512x_or_higher">512x ou plus</string>
+    <string name="category_rp_feature">Fonctionnalité</string>
+    <string name="category_shader_feature">Fonctionnalité</string>
+    <string name="category_shader_performance">Impact sur les performances</string>
+    <string name="download_ui_environment">Environnement</string>
+    <string name="download_ui_resolution">Résolution</string>
+    <string name="download_ui_shader_loader">Chargeur</string>
+    <string name="category_rp_feature_blocks">Blocs</string>
+    <string name="category_rp_feature_core_shaders">Shaders de base</string>
+    <string name="category_rp_feature_entities">Entités</string>
+    <string name="category_rp_feature_environment">Environnement</string>
+    <string name="category_rp_feature_equipment">Équipement</string>
+    <string name="category_rp_feature_fonts">Polices</string>
+    <string name="category_rp_feature_gui">Interface graphique</string>
+    <string name="category_rp_feature_items">Articles</string>
+    <string name="category_rp_feature_locale">Lieu</string>
+    <string name="category_rp_feature_models">Modèles</string>
+    <string name="category_datapacks">Packs de données</string>
+    <string name="category_font_packs">Packs de polices</string>
+    <string name="category_medieval">Médiéval</string>
+    <string name="category_shader_loader_iris">Iris</string>
+    <string name="category_shader_loader_optifine">OptiFine</string>
+    <string name="category_shader_loader_vanilla">Shader Vanille</string>
+    <string name="category_shader_loader_canvas">Toile</string>
+    <string name="category_env_client">Client</string>
+    <string name="category_env_server">Serveur</string>
+    <string name="download_ui_filter_title">Filtre</string>
+    <string name="download_ui_filter_apply">Appliquer</string>
+    <string name="download_ui_filter_clear">Clair</string>
+    <string name="download_ui_filter_no_selection">Pas de filtre</string>
+    <string name="download_batch_selected_tag">Choisi</string>
+    <string name="download_batch_reset_selected">Réinitialiser la sélection</string>
+    <string name="download_batch_cancel_select">Annuler</string>
+    <string name="host_server_open_console">Ouvrir la console</string>
+    <string name="console_title">Console du serveur (actuellement, seuls Vanilla et Fabric peuvent s\'exécuter)</string>
+    <string name="console_ram">BÉLIER</string>
+    <string name="console_cpu">Processeur</string>
+    <string name="console_storage">DISQUE</string>
+    <string name="console_downloading">Téléchargement de Playit-Agent…</string>
+    <string name="console_waiting">[Console] En attente du démarrage du tunnel…</string>
+    <string name="console_status_idle">INACTIF</string>
+    <string name="console_status_running">EN COURS D\'EXÉCUTION</string>
+    <string name="console_status_auth">AUTORISATION NÉCESSAIRE</string>
+    <string name="console_status_connecting">DE LIAISON</string>
+    <string name="console_log_claim_prefix">Ouvrir pour s\'authentifier :</string>
+    <string name="console_log_tunnel_prefix">Tunnel prêt à</string>
+    <string name="console_log_download_start">Téléchargement du binaire Playit…</string>
+    <string name="console_log_download_done">Téléchargement terminé. Tunnel de départ…</string>
+
+    <!-- Server Console -->
+    <string name="console_setup_title">Configuration du serveur</string>
+    <string name="console_server_type">Type de serveur</string>
+    <string name="console_type_vanilla">Vanille</string>
+    <string name="console_type_paper">Papier</string>
+    <string name="console_type_fabric">Tissu</string>
+    <string name="console_mc_version">Version MC</string>
+    <string name="console_server_port">Port</string>
+    <string name="console_jvm_args">Arguments de la JVM</string>
+    <string name="console_start">▶ Démarrer</string>
+    <string name="console_restart">↻ Redémarrer</string>
+    <string name="console_stop">■ Arrêter</string>
+    <string name="console_jvm_args_short">JVM</string>
+    <string name="console_server_port_short">Port</string>
+    <string name="console_mc_version_short">Ver</string>
+    <string name="console_section_resources">Ressources système</string>
+    <string name="console_section_actions">Actes</string>
+    <string name="console_section_setup">Configuration du serveur</string>
+    <string name="console_fetch_versions">RÉCUPÉRER ▾</string>
+    <string name="console_fetching">Chargement…</string>
+    <string name="console_command_hint">Entrez la commande…</string>
+    <string name="console_send">Envoyer</string>
+
+    <!-- MobileGlues settings -->
+    <string name="setting_mg_category">Colles mobiles</string>
+    <string name="setting_mg_angle">Utiliser ANGLE comme pilote OpenGL ES</string>
+    <string name="setting_mg_no_error">Paramètre d\'erreur OpenGL</string>
+    <string name="setting_mg_ext_timer_query">Désactiver l&quot;extension \"timer_query\" recommandée</string>
+    <string name="setting_mg_ext_compute_shader">Activer l&quot;extension incomplète \"ARB_compute_shader\"</string>
+    <string name="setting_mg_ext_direct_state_access">Activer l&quot;extension avancée \"direct_state_access\"</string>
+    <string name="setting_mg_glsl_cache">Taille maximale du cache GLSL (entrez -1 pour désactiver)</string>
+    <string name="setting_mg_glsl_cache_desc">Unité : Mégaoctets (Mo)</string>
+    <string name="setting_mg_multidraw">Émulation MultiDraw</string>
+    <string name="setting_mg_angle_clear_workaround">Solution de contournement pour effacer la profondeur d\'ANGLE</string>
+    <string name="setting_mg_custom_gl_version">Version OpenGL cible personnalisée</string>
+    <string name="setting_mg_fsr1">(Expérimental) Activer le FSR1 intégré</string>
+    <string name="setting_mg_hide_f3">Masquer les MobileGlues de l\'écran F3</string>
+
+    <string-array name="setting_mg_angle_entries">
+    <item>Prefer Disabled</item>
+    <item>Prefer Enabled</item>
+    <item>Disable</item>
+    <item>Enable</item>
+    </string-array>
+    <string-array name="setting_mg_angle_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_no_error_entries">
+    <item>Auto</item>
+    <item>Do not ignore</item>
+    <item>Ignore shader/program error</item>
+    <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_mg_no_error_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_multidraw_entries">
+    <item>Auto</item>
+    <item>Prefer Indirect</item>
+    <item>Prefer BaseVertex</item>
+    <item>Prefer MultiDraw Indirect</item>
+    <item>Force DrawElements</item>
+    <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_mg_multidraw_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    </string-array>
+
+    <string-array name="setting_mg_angle_clear_entries">
+    <item>Disable</item>
+    <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_mg_angle_clear_values">
+    <item>0</item>
+    <item>1</item>
+    </string-array>
+
+    <string-array name="setting_mg_custom_gl_version_entries">
+    <item>Disabled</item>
+    <item>OpenGL 3.2</item>
+    <item>OpenGL 3.3</item>
+    <item>OpenGL 4.0</item>
+    <item>OpenGL 4.1</item>
+    <item>OpenGL 4.2</item>
+    <item>OpenGL 4.3</item>
+    <item>OpenGL 4.4</item>
+    <item>OpenGL 4.5</item>
+    <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_mg_custom_gl_version_values">
+    <item>0</item>
+    <item>32</item>
+    <item>33</item>
+    <item>40</item>
+    <item>41</item>
+    <item>42</item>
+    <item>43</item>
+    <item>44</item>
+    <item>45</item>
+    <item>46</item>
+    </string-array>
 </resources>

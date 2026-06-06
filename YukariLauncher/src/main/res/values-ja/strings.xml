@@ -30,6 +30,9 @@
     <string name="generic_keyboard">キーボード</string>
     <string name="generic_waiting">お待ちください</string>
     <string name="generic_select">選択</string>
+    <string name="generic_select_all">すべて選択</string>
+    <string name="generic_deselect_all">すべての選択を解除</string>
+    <string name="generic_cancel">キャンセル</string>
     <string name="generic_default">デフォルト</string>
     <string name="generic_loading">読み込み中</string>
     <string name="generic_optional">オプション</string>
@@ -77,6 +80,7 @@
     <string name="version_snapshot">スナップショット</string>
     <string name="version_alpha">アルファ</string>
     <string name="version_beta">ベータ</string>
+    <string name="version_april_fools">エイプリルフール</string>
     <string name="force_exit_confirm">強制終了しますか？</string>
     <string name="autoram_info_msg">メモリを %d MB に設定しました</string>
     <string name="memory_warning_msg">利用可能なメモリ（%d）が割り当てられたメモリ（%d）より少ないため、ゲームがクラッシュする可能性があります。クラッシュする場合は設定を変更してください！</string>
@@ -98,9 +102,9 @@
     <string name="input_preview_tip">入力プレビューボックス、ソフトウェアキーボードの入力をキャプチャしています（参考用）：</string>
     <string name="dl_tampered_manifest_title">ファイル検証警告</string>
     <string name="dl_tampered_manifest"><![CDATA[ミラー上のゲームバージョンマニフェストが公式のMojangバージョンマニフェストと一致しません。改ざんされている可能性があります。<br/>
-        <b>これは安全ではありません。続行すると個人情報が危険にさらされる可能性があります。</b><br/>
-        それでもミラーを使用する場合は「マニフェストチェックをオフにする」を押してからダウンロードを再開してください。<br/>
-        公式のダウンロードソースを使用する場合は「公式サイトに切り替える」を押してからダウンロードを再開してください。<br/>]]></string>
+    <b>これは安全ではありません。続行すると個人情報が危険にさらされる可能性があります。</b><br/>
+    それでもミラーを使用する場合は「マニフェストチェックをオフにする」を押してからダウンロードを再開してください。<br/>
+    公式のダウンロードソースを使用する場合は「公式サイトに切り替える」を押してからダウンロードを再開してください。<br/>]]></string>
     <string name="dl_turn_off_manifest_checks">ゲームバージョンリストのチェックをオフにする</string>
     <string name="dl_switch_to_official_site">公式ダウンロードソースに切り替える</string>
     <string name="notif_download_finished">ゲームの起動準備ができました</string>
@@ -130,6 +134,9 @@
     <string name="mod_check_progress_message">Modをチェック中（%d / %d）</string>
     <string name="mod_check_touch_controller">Touch Controller Mod（%s）がインストールされていることを検出しました。ランチャーはこのModに適応するためにコントロールプロキシを有効にする準備ができています。</string>
     <string name="mod_check_physics">現在使用中の物理Mod（%s）はパッチが適用されていません（libPhysXJniBindings_64.soをx86_64アーキテクチャからarm64に置き換え）。起動時にクラッシュします。</string>
+    <string name="mod_check_physics_downloading">Physics モッドのライブラリをダウンロード中: %s</string>
+    <string name="mod_check_physics_failed">Physics モッドに必要なライブラリのダウンロードに失敗しました (%s)。</string>
+    <string name="mod_check_physics_debug">デバッグ: %s</string>
     <string name="mod_check_mcef">MCEF（%s）はAndroid上で動作しません。通常、WebDisplays/In-game Browser（ブラウザ）の前提依存関係として使用されます。</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare（%s）はシングルプレイヤーモードで直接実行できません。サーバー（Termuxなど）で実行する必要があります。そうしないとゲームがクラッシュします。</string>
     <string name="mod_check_yes_steve_model">Yes Steve Model（%s）2.2.2以上はAndroid上で動作しません。</string>
@@ -139,15 +146,18 @@
     <string name="mod_check_axiom_downloading">Axiomネイティブライブラリをダウンロード中: %s</string>
     <string name="mod_check_axiom_failed">Axiom（%s）に必要なネイティブライブラリのダウンロードに失敗しました。</string>
     <string name="mod_check_axiom_debug">デバッグ: %s</string>
-    <string name="mod_check_download_progress">Downloading: %s</string>
+    <string name="mod_check_sable_downloading">Sable ネイティブライブラリをダウンロード中…</string>
+    <string name="mod_check_sable_failed">Sable のネイティブライブラリのダウンロードに失敗しました (モッド: %s)</string>
+    <string name="mod_check_sable_debug">デバッグ情報: %s</string>
+    <string name="mod_check_download_progress">ダウンロード中: %s</string>
     <string name="mod_check_download_bytes">%s / %s</string>
-    <string name="mod_check_download_speed">Speed: %s/s</string>
-    <string name="mod_check_download_retry_title">Download Failed</string>
-    <string name="mod_check_download_retry_message">Failed to download required native library for %s.\nWould you like to retry?</string>
-    <string name="mod_check_download_retry">Retry</string>
-    <string name="mod_check_download_skip">Skip</string>
-    <string name="mod_check_no_network_library">No internet connection. Required native library for %s cannot be downloaded.\nYou can disable the compatibility check for this mod to continue, or cancel to abort.</string>
-    <string name="mod_check_disable_check">Disable this mod</string>
+    <string name="mod_check_download_speed">速度: %s/s</string>
+    <string name="mod_check_download_retry_title">ダウンロードに失敗しました</string>
+    <string name="mod_check_download_retry_message">%s に必要なネイティブ ライブラリをダウンロードできませんでした。\n再試行しますか?</string>
+    <string name="mod_check_download_retry">リトライ</string>
+    <string name="mod_check_download_skip">スキップ</string>
+    <string name="mod_check_no_network_library">インターネット接続がありません。 %s に必要なネイティブ ライブラリをダウンロードできません。\nこの MOD の互換性チェックを無効にして続行するか、キャンセルして中止できます。</string>
+    <string name="mod_check_disable_check">このMODを無効にする</string>
     <!-- Controls -->
     <string name="control_primary">左クリック</string>
     <string name="control_secondary">右クリック</string>
@@ -170,6 +180,10 @@
     <string name="customctrl_selectdefault">デフォルトコントロールレイアウトを選択</string>
     <string name="customctrl_export">保存して共有</string>
     <string name="customctrl_passthru">マウス透過</string>
+    <string name="customctrl_repeatedly">繰り返し</string>
+    <string name="customctrl_repeatedly_cps">1 秒あたりのクリック数 (CPS)</string>
+    <string name="customctrl_repeatedly_delay">長押しの遅延</string>
+    <string name="customctrl_repeatedly_delay_value">%d ミリ秒</string>
     <string name="customctrl_swipeable">スワイプ可能</string>
     <string name="customctrl_forward_lock">フォワードロック</string>
     <string name="customctrl_absolute_tracking">強制指追跡</string>
@@ -206,9 +220,9 @@
     <string name="controls_tip_set_default">コントロールレイアウトを長押ししてデフォルトに設定！</string>
     <string name="replacement_customcontrol">コントロールレイアウトを置き換え</string>
     <string name="custom_control_title">コントロールレイアウト管理</string>
-    <string name="controller_button_a" translatable="false">A</string>
+    <string name="controller_button_a" translatable="false">あ</string>
     <string name="controller_button_b" translatable="false">B</string>
-    <string name="controller_button_x" translatable="false">X</string>
+    <string name="controller_button_x" translatable="false">×</string>
     <string name="controller_button_y" translatable="false">Y</string>
     <string name="controller_button_start">スタート</string>
     <string name="controller_button_trigger_left">左トリガー</string>
@@ -230,6 +244,7 @@
 
     <!-- Version -->
     <string name="version_manager_title">バージョン管理</string>
+    <string name="version_manager_search_hint">バージョンを検索</string>
     <string name="version_no_versions">インストールされているバージョンがありません</string>
     <string name="version_install_new">新規バージョンをインストール</string>
     <string name="version_install_new_modloader">新規バージョンに %s をインストール</string>
@@ -253,6 +268,22 @@
     <string name="version_manager_shortcuts_crash_report_path">クラッシュレポートフォルダ</string>
     <string name="version_manager_rename">バージョン名変更</string>
     <string name="version_manager_copy">バージョン複製</string>
+    <string name="version_manager_export_modpack">Modpack をエクスポート</string>
+    <string name="version_manager_export_modpack_modrinth">モドリンス (.mrpack)</string>
+    <string name="version_manager_export_modpack_curseforge">CurseForge (.zip)</string>
+    <string name="version_manager_export_modpack_exporting">MODパックをエクスポート中…</string>
+    <string name="version_manager_export_modpack_success">Modpack をエクスポートしました: %s</string>
+    <string name="version_manager_export_modpack_include_title">含めるパス</string>
+    <string name="version_manager_export_modpack_include_message">含めるフォルダー/ファイルを入力してください（ゲームディレクトリからの相対パス）。空欄の場合はすべて含めます。</string>
+    <string name="version_manager_export_modpack_exclude_title">除外するパス</string>
+    <string name="version_manager_export_modpack_exclude_message">除外するフォルダー/ファイルを入力してください（ゲームディレクトリからの相対パス）。初期値: logs, crash-reports。</string>
+    <string name="version_manager_export_modpack_paths_hint">例: mods, config, options.txt</string>
+    <string name="version_manager_export_modpack_expand_all">すべて展開</string>
+    <string name="version_manager_export_modpack_collapse_all">すべて折りたたむ</string>
+    <string name="version_manager_export_modpack_name_title">Modpack 名</string>
+    <string name="version_manager_export_modpack_version_title">Modpack バージョン</string>
+    <string name="version_manager_export_modpack_author_title">Modpack 作成者</string>
+    <string name="version_manager_export_modpack_select_required">含めるファイルまたはフォルダーを少なくとも1つ選択してください。</string>
     <string name="version_manager_copy_tip">現在のバージョンを新しいバージョンとして複製します。バージョン分離はデフォルトで有効になります。以下の「全ファイルをコピー」が有効な場合、現在のバージョンで生成されたすべてのファイル（リソースパック、セーブデータ、ゲーム設定など）もコピーされます。</string>
     <string name="version_manager_copy_all">全ファイルをコピー</string>
     <string name="version_manager_delete">バージョン削除</string>
@@ -342,7 +373,7 @@
     <string name="install_auto_select">ランチャーに決定させる</string>
     <string name="multirt_runtime_corrupt">Java Runtime Environmentが破損しています</string>
     <string name="multirt_runtime_incompatiblearch">互換性のないアーキテクチャ: %s</string>
-    <string name="multirt_config_title">Java Runtime Environment</string>
+    <string name="multirt_config_title">Java ランタイム環境</string>
     <string name="multirt_progress_caching">キャッシュ中…</string>
     <string name="multirt_config_setdefault">デフォルトに設定</string>
     <string name="multirt_nocompatiblert">互換性のあるJava Runtime Environmentが見つかりません。このバージョンにはJava %d以降が必要です</string>
@@ -364,6 +395,8 @@
     <string name="custom_background_add">背景画像を追加</string>
     <string name="custom_background_title">ランチャー背景画像をカスタマイズ</string>
     <string name="custom_background_desc">ランチャー背景アイコン管理インターフェースを開き、お気に入りの背景画像を追加して、異なるインターフェースに異なる背景を設定できます</string>
+    <string name="custom_background_blur_title">ランチャー背景ぼかし</string>
+    <string name="custom_background_blur_desc">カスタム背景のぼかし量を 0（オフ）〜25（最大）で設定します</string>
     <string name="custom_background_main_menu">メインメニュー</string>
     <string name="custom_background_in_game">ゲーム内インターフェース</string>
     <string name="custom_background_dialog_message">「選択」ボタンをクリックして、この画像を %s の背景として設定します</string>
@@ -382,6 +415,7 @@
     <string name="file_message">このファイルに対して実行する操作を選択してください</string>
     <string name="file_folder_message">このフォルダに対して実行する操作を選択してください</string>
     <string name="file_added">ファイルを追加しました</string>
+    <string name="file_cancel_multi_select">キャンセル</string>
     <string name="file_delete">このファイルを削除しますか？</string>
     <string name="file_delete_dir">このフォルダを削除しますか？</string>
     <string name="file_delete_dir_message">フォルダを削除すると、このフォルダ内のすべてのファイルも削除されます。このフォルダに重要なファイルが含まれている場合は、この操作をキャンセルしてください！</string>
@@ -405,7 +439,35 @@
     <string name="main_open_main_dir">メインディレクトリを開く</string>
     <string name="main_install_jar_file">.jarファイルを実行</string>
     <string name="main_share_logs">ログファイルを共有</string>
+    <!-- Host Server Feature Strings -->
     <string name="main_host_server">Host a Server</string>
+    <string name="host_server_info_title">Playit.gg トンネル</string>
+    <string name="host_server_info_desc">ローカルの Minecraft サーバーを公開するトンネルを作成します。以下のアドレスでフレンドが接続できます。</string>
+    <string name="host_server_local_port">ローカルポート</string>
+    <string name="host_server_port_hint">25565</string>
+    <string name="host_server_port_note">注: claim 後に playit.gg ダッシュボードでトンネルポートを設定してください。</string>
+    <string name="host_server_start">トンネル開始</string>
+    <string name="host_server_stop">トンネル停止</string>
+    <string name="host_server_status_title">トンネル状態</string>
+    <string name="host_server_status_label">状態:</string>
+    <string name="host_server_status_idle">待機中</string>
+    <string name="host_server_status_starting">起動中…</string>
+    <string name="host_server_status_auth">認証が必要</string>
+    <string name="host_server_status_running">実行中</string>
+    <string name="host_server_auth_required">エージェントを claim してください:</string>
+    <string name="host_server_open_browser">Claim URL を開く</string>
+    <string name="host_server_tunnel_ready">トンネルアドレス:</string>
+    <string name="host_server_copy_address">アドレスをコピー</string>
+    <string name="host_server_copied">アドレスをクリップボードにコピーしました</string>
+    <string name="host_server_open_dashboard">ダッシュボードを開く</string>
+    <string name="host_server_log_title">エージェントログ</string>
+    <string name="host_server_clear_log">ログをクリア</string>
+    <string name="host_server_invalid_port">無効なポート番号です (1〜65535)</string>
+    <string name="host_server_no_browser">ブラウザーアプリが見つかりません</string>
+    <string name="host_server_start_failed">トンネルの起動に失敗しました</string>
+    <string name="host_server_address_unknown">アドレスを検出できませんでした — ダッシュボードを開いてください</string>
+    <string name="host_server_notification_permission_denied">バックグラウンドサービスには通知権限が必要です</string>
+    <string name="option_host_server">サーバーホスト（Playit トンネル）</string>
     <string name="main_launch">ゲーム起動</string>
     <string name="setting_category_control">コントロール設定</string>
     <string name="setting_category_virtual_mouse">仮想マウス</string>
@@ -424,6 +486,12 @@
     <string name="setting_category_experimental_patches">実験的パッチ</string>
     <string name="setting_category_support">外部サポート</string>
     <string name="setting_renderer_title">レンダラー</string>
+    <string name="setting_game_graphics_api_title">ゲーム描画 API</string>
+    <string name="setting_game_graphics_api_desc">Minecraft がゲーム内の描画バックエンドを選択する方法を選びます。</string>
+    <string name="setting_game_graphics_api_auto">自動</string>
+    <string name="setting_game_graphics_api_opengl">OpenGL</string>
+    <string name="setting_game_graphics_api_vulkan">バルカン</string>
+    <string name="setting_game_graphics_api_vulkan_unsupported">お使いの端末は Vulkan 1.2+ をサポートしていないため、Vulkan を選択できません。</string>
     <string name="setting_renderer_from_plugins">%s プラグインから</string>
     <string name="setting_renderer_local_import_title">ローカルレンダラーインポート</string>
     <string name="setting_renderer_local_import_desc">ソフトウェアレンダリングプラグインのインストールに加えて、ランチャーはレンダラープラグインをローカルにインポートすることもサポートしています。ただし、一部のデバイスではローカルレンダラープラグインが使用できない場合があるため、慎重に使用してください！</string>
@@ -488,6 +556,8 @@
     <string name="setting_java_select_runtime_default">現在のデフォルトランタイム環境</string>
     <string name="setting_java_args_title">JVM起動引数</string>
     <string name="setting_java_args_desc">Minecraft起動時に追加されるJVM引数です。自信がない場合は変更しないことをお勧めします。ゲームがクラッシュする可能性があります</string>
+    <string name="setting_game_args_title">ゲーム起動引数</string>
+    <string name="setting_game_args_desc">既定の Minecraft 起動引数の後ろに追加される追加引数（例: --demo）</string>
     <string name="setting_java_memory_title">メモリ割り当て</string>
     <string name="setting_java_memory_desc">Minecraftに割り当てるメモリ量を制御します</string>
     <string name="setting_java_memory_info">現在のメモリ使用量: %s / %s, 空きメモリ: %s</string>
@@ -516,6 +586,11 @@
     <string name="setting_version_isolation_desc">ゲームバージョンのバージョン分離を有効にします\n無効の場合、ゲームパスは .minecraft/ になります\n有効の場合、ゲームパスは .minecraft/versions/&lt;バージョン名&gt;/ に変わります</string>
     <string name="setting_version_custom_info_title">カスタム情報</string>
     <string name="setting_version_custom_info_desc">カスタム情報はゲームのメインメニューの左下隅とF3デバッグ画面の左上隅に表示されます。 [zl_version] フィールドを追加すると、ランチャーはそれをランチャーバージョン番号に置き換えます。</string>
+    <string name="setting_lwjgl_version_title">LWJGLのバージョン</string>
+    <string name="setting_lwjgl_version_desc">ゲーム起動時に使用するLWJGLのバージョンを選択します</string>
+    <string name="setting_lwjgl_version_3_3_6">LWJGL 3.3.6</string>
+    <string name="setting_lwjgl_version_3_4_1">LWJGL 3.4.1</string>
+    <string name="pedit_lwjgl_version">LWJGLのバージョン</string>
     <string name="setting_set_game_language_title">ゲーム言語を自動設定</string>
     <string name="setting_set_game_language_desc">ゲーム起動時に選択された言語にゲーム言語を自動的に設定します</string>
     <string name="setting_set_game_language_list">ゲーム言語を設定</string>
@@ -526,6 +601,8 @@
     <string name="setting_launcher_theme_system">システムテーマに従う</string>
     <string name="setting_launcher_theme_light">ライトモード</string>
     <string name="setting_launcher_theme_dark">ダークモード</string>
+    <string name="setting_launcher_theme_battery">バッテリー節約ダーク</string>
+    <string name="setting_launcher_theme_auto_time">時間で自動切替</string>
     <string name="setting_enable_log_output_title">ゲーム起動時にログ出力を開く</string>
     <string name="setting_enable_log_output_desc">アプリケーションがゲームを正式に起動する際にログ出力インターフェースを有効にします</string>
     <string name="setting_animation_title">アニメーションを有効にする</string>
@@ -560,6 +637,25 @@
     <string name="setting_game_menu_alpha_desc">ゲームメニューのフローティングウィンドウの不透明度を設定します</string>
     <string name="setting_reboot_tip">この設定は変更されましたが、適用にはアプリの再起動が必要です！</string>
     <string name="setting_zink_driver_adreno">ランチャーはお使いのデバイスにAdreno GPUが搭載されていることを検出しました。このオプションを有効にするとZinkレンダラーが正しく動作しなくなる可能性があります。このオプションを有効にしますか？</string>
+
+    <string-array name="setting_lwjgl_version_entries">
+    <item>@string/setting_lwjgl_version_3_3_6</item>
+    <item>@string/setting_lwjgl_version_3_4_1</item>
+    </string-array>
+    <string-array name="setting_lwjgl_version_values">
+    <item>3.3.6</item>
+    <item>3.4.1</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_entries">
+    <item>@string/setting_game_graphics_api_auto</item>
+    <item>@string/setting_game_graphics_api_opengl</item>
+    <item>@string/setting_game_graphics_api_vulkan</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_values">
+    <item>auto</item>
+    <item>opengl</item>
+    <item>vulkan</item>
+    </string-array>
     <!-- Game -->
     <string name="game_exit_message">アプリケーション/ゲームはコード %d で終了しました。</string>
     <string name="game_singnal_message">アプリケーション/ゲームは致命的なシグナル %d により中止されました。</string>
@@ -581,20 +677,22 @@
     <string name="download_ui_platform">検索プラットフォーム</string>
     <string name="download_ui_sort_by">並び順</string>
     <string name="download_ui_category">カテゴリフィルター</string>
+    <string name="download_ui_view_grid">グリッド</string>
+    <string name="download_ui_view_list">リスト</string>
     <string name="download_ui_modloader">Modローダー</string>
     <string name="download_ui_sort_by_relevant">関連性</string>
     <string name="download_ui_sort_by_total_downloads">総ダウンロード数</string>
     <string name="download_ui_sort_by_popularity">人気</string>
     <string name="download_ui_sort_by_recently_created">新着順</string>
     <string name="download_ui_sort_by_recently_updated">最近更新された順</string>
+    <string name="mod_forge">フォージ</string>
+    <string name="mod_neoforge">ネオフォージ</string>
+    <string name="mod_fabric">ファブリック</string>
+    <string name="mod_quilt">キルト</string>
     <string name="download_info_downloads">ダウンロード数:</string>
     <string name="download_info_author">作者:</string>
     <string name="download_info_date">作成日:</string>
     <string name="download_info_modloader">互換性:</string>
-    <string name="mod_fabric">Fabric</string>
-    <string name="mod_forge">Forge</string>
-    <string name="mod_neoforge">NeoForge</string>
-    <string name="mod_quilt">Quilt</string>
     <string name="download_info_dependencies">依存関係タイプ:</string>
     <string name="download_info_load_screenshot">スクリーンショットを表示</string>
     <string name="download_search_failed">リソースの検索に失敗しました！</string>
@@ -713,75 +811,94 @@
     <!-- Sponsorship Related -->
     <string name="request_sponsorship_title">開発を支援する</string>
     <string name="request_sponsorship_message">このソフトウェアのコンテンツのほとんどは私一人で開発・保守しています。このソフトウェアが役に立ち、支援できる状況にあるのであれば、スポンサーを検討していただけると、継続的な開発と改善のモチベーションが高まります。ご支援ありがとうございます！</string>
-
-    <string name="version_april_fools">エイプリルフール</string>
-    <string name="mod_check_physics_downloading">Physics モッドのライブラリをダウンロード中: %s</string>
-    <string name="mod_check_physics_failed">Physics モッドに必要なライブラリのダウンロードに失敗しました (%s)。</string>
-    <string name="mod_check_physics_debug">デバッグ: %s</string>
-    <string name="mod_check_sable_downloading">Sable ネイティブライブラリをダウンロード中…</string>
-    <string name="mod_check_sable_failed">Sable のネイティブライブラリのダウンロードに失敗しました (モッド: %s)</string>
-    <string name="mod_check_sable_debug">デバッグ情報: %s</string>
-    <string name="version_manager_search_hint">バージョンを検索</string>
-    <string name="version_manager_export_modpack">Modpack をエクスポート</string>
-    <string name="version_manager_export_modpack_modrinth">Modrinth (.mrpack)</string>
-    <string name="version_manager_export_modpack_curseforge">CurseForge (.zip)</string>
-    <string name="version_manager_export_modpack_success">Modpack をエクスポートしました: %s</string>
-    <string name="version_manager_export_modpack_include_title">含めるパス</string>
-    <string name="version_manager_export_modpack_include_message">含めるフォルダー/ファイルを入力してください（ゲームディレクトリからの相対パス）。空欄の場合はすべて含めます。</string>
-    <string name="version_manager_export_modpack_exclude_title">除外するパス</string>
-    <string name="version_manager_export_modpack_exclude_message">除外するフォルダー/ファイルを入力してください（ゲームディレクトリからの相対パス）。初期値: logs, crash-reports。</string>
-    <string name="version_manager_export_modpack_paths_hint">例: mods, config, options.txt</string>
-    <string name="version_manager_export_modpack_expand_all">すべて展開</string>
-    <string name="version_manager_export_modpack_collapse_all">すべて折りたたむ</string>
-    <string name="version_manager_export_modpack_name_title">Modpack 名</string>
-    <string name="version_manager_export_modpack_version_title">Modpack バージョン</string>
-    <string name="version_manager_export_modpack_author_title">Modpack 作成者</string>
-    <string name="version_manager_export_modpack_select_required">含めるファイルまたはフォルダーを少なくとも1つ選択してください。</string>
-    <string name="custom_background_blur_title">ランチャー背景ぼかし</string>
-    <string name="custom_background_blur_desc">カスタム背景のぼかし量を 0（オフ）〜25（最大）で設定します</string>
-    <string name="host_server_info_title">Playit.gg トンネル</string>
-    <string name="host_server_info_desc">ローカルの Minecraft サーバーを公開するトンネルを作成します。以下のアドレスでフレンドが接続できます。</string>
-    <string name="host_server_local_port">ローカルポート</string>
-    <string name="host_server_port_hint">25565</string>
-    <string name="host_server_port_note">注: claim 後に playit.gg ダッシュボードでトンネルポートを設定してください。</string>
-    <string name="host_server_start">トンネル開始</string>
-    <string name="host_server_stop">トンネル停止</string>
-    <string name="host_server_status_title">トンネル状態</string>
-    <string name="host_server_status_label">状態:</string>
-    <string name="host_server_status_idle">待機中</string>
-    <string name="host_server_status_starting">起動中…</string>
-    <string name="host_server_status_auth">認証が必要</string>
-    <string name="host_server_status_running">実行中</string>
-    <string name="host_server_auth_required">エージェントを claim してください:</string>
-    <string name="host_server_open_browser">Claim URL を開く</string>
-    <string name="host_server_tunnel_ready">トンネルアドレス:</string>
-    <string name="host_server_copy_address">アドレスをコピー</string>
-    <string name="host_server_copied">アドレスをクリップボードにコピーしました</string>
-    <string name="host_server_open_dashboard">ダッシュボードを開く</string>
-    <string name="host_server_log_title">エージェントログ</string>
-    <string name="host_server_clear_log">ログをクリア</string>
-    <string name="host_server_invalid_port">無効なポート番号です (1〜65535)</string>
-    <string name="host_server_no_browser">ブラウザーアプリが見つかりません</string>
-    <string name="host_server_start_failed">トンネルの起動に失敗しました</string>
-    <string name="host_server_address_unknown">アドレスを検出できませんでした — ダッシュボードを開いてください</string>
-    <string name="host_server_notification_permission_denied">バックグラウンドサービスには通知権限が必要です</string>
-    <string name="option_host_server">サーバーホスト（Playit トンネル）</string>
-    <string name="setting_game_graphics_api_title">ゲーム描画 API</string>
-    <string name="setting_game_graphics_api_desc">Minecraft がゲーム内の描画バックエンドを選択する方法を選びます。</string>
-    <string name="setting_game_graphics_api_auto">自動</string>
-    <string name="setting_game_graphics_api_opengl">OpenGL</string>
-    <string name="setting_game_graphics_api_vulkan">Vulkan</string>
-    <string name="setting_game_graphics_api_vulkan_unsupported">お使いの端末は Vulkan 1.2+ をサポートしていないため、Vulkan を選択できません。</string>
-    <string name="setting_game_args_title">ゲーム起動引数</string>
-    <string name="setting_game_args_desc">既定の Minecraft 起動引数の後ろに追加される追加引数（例: --demo）</string>
-    <string name="setting_launcher_theme_battery">バッテリー節約ダーク</string>
-    <string name="setting_launcher_theme_auto_time">時間で自動切替</string>
+    <!-- Category filter strings -->
+    <string name="category_simplistic">単純化した</string>
+    <string name="category_themed">テーマ別</string>
+    <string name="category_tweaks">微調整</string>
+    <string name="category_rp_feature_audio">オーディオ</string>
+    <string name="category_addons">アドオン</string>
+    <string name="category_ae2">応用エネルギー学 2</string>
+    <string name="category_blood_magic">ブラッドマジック</string>
+    <string name="category_buildcraft">ビルドクラフト</string>
+    <string name="category_crafttweaker">クラフトツイーカー</string>
+    <string name="category_create">作成する</string>
+    <string name="category_farmers_delight">農家の喜び</string>
+    <string name="category_forestry">林業</string>
+    <string name="category_galacticraft">ギャラクティクラフト</string>
+    <string name="category_industrial_craft">工芸品</string>
+    <string name="category_integrated_dynamics">統合ダイナミクス</string>
+    <string name="category_kubejs">KubeJS</string>
+    <string name="category_refined_storage">洗練されたストレージ</string>
+    <string name="category_thaumcraft">タウムクラフト</string>
+    <string name="category_thermal_expansion">熱膨張</string>
+    <string name="category_tinkers_construct">ティンカーの構築物</string>
+    <string name="category_twilight_forest">トワイライトフォレスト</string>
+    <string name="category_api_and_library">APIとライブラリ</string>
+    <string name="category_armor_tools_weapons">鎧、道具、武器</string>
+    <string name="category_bug_fixes">バグ修正</string>
+    <string name="category_cosmetic">化粧品</string>
+    <string name="category_creative_mode">クリエイティブモード</string>
+    <string name="category_education">教育</string>
+    <string name="category_horror">ホラー</string>
+    <string name="category_map_and_info">地図と情報</string>
+    <string name="category_mcreator">Mクリエイター</string>
+    <string name="category_modjam">モッドジャム 2025</string>
+    <string name="category_server_utility">サーバーユーティリティ</string>
+    <string name="category_twitch_integration">Twitchの統合</string>
+    <string name="category_utility_qol">ユーティリティとQoL</string>
+    <string name="category_genetics">遺伝学</string>
+    <string name="category_player_transport">プレーヤーのトランスポート</string>
+    <string name="category_processing">処理</string>
+    <string name="category_expert">専門家</string>
+    <string name="category_hardcore">ハードコア</string>
+    <string name="category_rlcraft">RLCクラフト</string>
+    <string name="category_small_light">小型・軽量</string>
+    <string name="category_vanilla_plus">バニラ+</string>
+    <string name="category_economy">経済</string>
+    <string name="category_management">管理</string>
+    <string name="category_minigame">ミニゲーム</string>
+    <string name="category_transportation">交通機関</string>
+    <string name="category_modded">改造済み</string>
+    <string name="category_realistic">現実的な</string>
+    <string name="category_vanilla_like">バニラライク</string>
+    <string name="category_8x_or_lower">8倍以下</string>
+    <string name="category_48x">48倍</string>
+    <string name="category_512x_or_higher">512x以上</string>
+    <string name="category_rp_feature">特徴</string>
+    <string name="category_shader_feature">特徴</string>
+    <string name="category_shader_performance">パフォーマンスへの影響</string>
+    <string name="download_ui_environment">環境</string>
+    <string name="download_ui_resolution">解決</string>
+    <string name="download_ui_shader_loader">ローダ</string>
+    <string name="category_rp_feature_blocks">ブロック</string>
+    <string name="category_rp_feature_core_shaders">コアシェーダー</string>
+    <string name="category_rp_feature_entities">エンティティ</string>
+    <string name="category_rp_feature_environment">環境</string>
+    <string name="category_rp_feature_equipment">装置</string>
+    <string name="category_rp_feature_fonts">フォント</string>
+    <string name="category_rp_feature_gui">GUI</string>
+    <string name="category_rp_feature_items">アイテム</string>
+    <string name="category_rp_feature_locale">ロケール</string>
+    <string name="category_rp_feature_models">モデル</string>
+    <string name="category_datapacks">データパック</string>
+    <string name="category_font_packs">フォントパック</string>
+    <string name="category_medieval">中世</string>
+    <string name="category_shader_loader_iris">虹彩</string>
+    <string name="category_shader_loader_optifine">オプティファイン</string>
+    <string name="category_shader_loader_vanilla">バニラシェーダー</string>
+    <string name="category_shader_loader_canvas">キャンバス</string>
+    <string name="category_env_client">クライアント</string>
+    <string name="category_env_server">サーバ</string>
+    <string name="download_ui_filter_title">フィルター</string>
+    <string name="download_ui_filter_apply">適用する</string>
+    <string name="download_ui_filter_clear">クリア</string>
+    <string name="download_ui_filter_no_selection">フィルターなし</string>
     <string name="download_batch_selected_tag">選択済み</string>
     <string name="download_batch_reset_selected">選択をリセット</string>
     <string name="download_batch_cancel_select">キャンセル</string>
     <string name="host_server_open_console">コンソールを開く</string>
     <string name="console_title">サーバーコンソール（現在は Vanilla と Fabric のみ対応）</string>
-    <string name="console_ram">RAM</string>
+    <string name="console_ram">ラム</string>
     <string name="console_cpu">CPU</string>
     <string name="console_storage">ディスク</string>
     <string name="console_downloading">playit-agent をダウンロード中…</string>
@@ -794,11 +911,13 @@
     <string name="console_log_tunnel_prefix">トンネル準備完了:</string>
     <string name="console_log_download_start">playit バイナリをダウンロード中…</string>
     <string name="console_log_download_done">ダウンロード完了。トンネルを起動します…</string>
+
+    <!-- Server Console -->
     <string name="console_setup_title">サーバー設定</string>
     <string name="console_server_type">サーバー種類</string>
-    <string name="console_type_vanilla">Vanilla</string>
-    <string name="console_type_paper">Paper</string>
-    <string name="console_type_fabric">Fabric</string>
+    <string name="console_type_vanilla">バニラ</string>
+    <string name="console_type_paper">紙</string>
+    <string name="console_type_fabric">ファブリック</string>
     <string name="console_mc_version">MC バージョン</string>
     <string name="console_server_port">ポート</string>
     <string name="console_jvm_args">JVM 引数</string>
@@ -806,8 +925,8 @@
     <string name="console_restart">↻ 再起動</string>
     <string name="console_stop">■ 停止</string>
     <string name="console_jvm_args_short">JVM</string>
-    <string name="console_server_port_short">Port</string>
-    <string name="console_mc_version_short">Ver</string>
+    <string name="console_server_port_short">ポート</string>
+    <string name="console_mc_version_short">バージョン</string>
     <string name="console_section_resources">システムリソース</string>
     <string name="console_section_actions">アクション</string>
     <string name="console_section_setup">サーバー設定</string>
@@ -816,4 +935,95 @@
     <string name="console_command_hint">コマンドを入力…</string>
     <string name="console_send">送信</string>
 
+    <!-- MobileGlues settings -->
+    <string name="setting_mg_category">モバイルグルー</string>
+    <string name="setting_mg_angle">ANGLE を OpenGL ES ドライバーとして使用する</string>
+    <string name="setting_mg_no_error">OpenGLエラー設定</string>
+    <string name="setting_mg_ext_timer_query">推奨される「timer_query」拡張機能を無効にする</string>
+    <string name="setting_mg_ext_compute_shader">不完全な「ARB_compute_shader」拡張機能を有効にする</string>
+    <string name="setting_mg_ext_direct_state_access">高度な「direct_state_access」拡張機能を有効にする</string>
+    <string name="setting_mg_glsl_cache">最大 GLSL キャッシュ サイズ (無効にするには -1 を入力します)</string>
+    <string name="setting_mg_glsl_cache_desc">単位: メガバイト (MB)</string>
+    <string name="setting_mg_multidraw">マルチドローエミュレーション</string>
+    <string name="setting_mg_angle_clear_workaround">ANGLE Depth 明確な回避策</string>
+    <string name="setting_mg_custom_gl_version">カスタム ターゲット OpenGL バージョン</string>
+    <string name="setting_mg_fsr1">(実験的) 組み込み FSR1 を有効にする</string>
+    <string name="setting_mg_hide_f3">F3 画面から MobileGlues を非表示にする</string>
+
+    <string-array name="setting_mg_angle_entries">
+    <item>Prefer Disabled</item>
+    <item>Prefer Enabled</item>
+    <item>Disable</item>
+    <item>Enable</item>
+    </string-array>
+    <string-array name="setting_mg_angle_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_no_error_entries">
+    <item>Auto</item>
+    <item>Do not ignore</item>
+    <item>Ignore shader/program error</item>
+    <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_mg_no_error_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_multidraw_entries">
+    <item>Auto</item>
+    <item>Prefer Indirect</item>
+    <item>Prefer BaseVertex</item>
+    <item>Prefer MultiDraw Indirect</item>
+    <item>Force DrawElements</item>
+    <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_mg_multidraw_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    </string-array>
+
+    <string-array name="setting_mg_angle_clear_entries">
+    <item>Disable</item>
+    <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_mg_angle_clear_values">
+    <item>0</item>
+    <item>1</item>
+    </string-array>
+
+    <string-array name="setting_mg_custom_gl_version_entries">
+    <item>Disabled</item>
+    <item>OpenGL 3.2</item>
+    <item>OpenGL 3.3</item>
+    <item>OpenGL 4.0</item>
+    <item>OpenGL 4.1</item>
+    <item>OpenGL 4.2</item>
+    <item>OpenGL 4.3</item>
+    <item>OpenGL 4.4</item>
+    <item>OpenGL 4.5</item>
+    <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_mg_custom_gl_version_values">
+    <item>0</item>
+    <item>32</item>
+    <item>33</item>
+    <item>40</item>
+    <item>41</item>
+    <item>42</item>
+    <item>43</item>
+    <item>44</item>
+    <item>45</item>
+    <item>46</item>
+    </string-array>
 </resources>

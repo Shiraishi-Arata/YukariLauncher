@@ -939,9 +939,9 @@
     <string name="setting_mg_category">MobileGlues</string>
     <string name="setting_mg_angle">Use ANGLE as OpenGL ES driver</string>
     <string name="setting_mg_no_error">OpenGL Error Setting</string>
-    <string name="setting_mg_ext_timer_query">Disable Recommended \'timer_query\' Extension</string>
-    <string name="setting_mg_ext_compute_shader">Enable Incomplete \'ARB_compute_shader\' Extension</string>
-    <string name="setting_mg_ext_direct_state_access">Enable Advanced \'direct_state_access\' Extension</string>
+    <string name="setting_mg_ext_timer_query">Disable Recommended &quot;timer_query&quot; Extension</string>
+    <string name="setting_mg_ext_compute_shader">Enable Incomplete &quot;ARB_compute_shader&quot; Extension</string>
+    <string name="setting_mg_ext_direct_state_access">Enable Advanced &quot;direct_state_access&quot; Extension</string>
     <string name="setting_mg_glsl_cache">Max GLSL Cache Size (enter -1 to disable)</string>
     <string name="setting_mg_glsl_cache_desc">Unit: Megabytes (MB)</string>
     <string name="setting_mg_multidraw">MultiDraw Emulation</string>
