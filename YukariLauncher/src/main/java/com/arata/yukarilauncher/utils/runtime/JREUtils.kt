@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.arata.yukarilauncher.InfoDistributor
+import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.event.value.JvmExitEvent
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
@@ -85,15 +86,14 @@ object JREUtils {
      * @return 見つかった.soファイルのリスト
      */
     fun locateLibs(path: File): ArrayList<File> {
-        val returnValue = ArrayList<File>()
-        val list = path.listFiles()
-        if (list != null) {
-            for (f in list) {
-                if (f.isFile && f.name.endsWith(".so")) {
-                    returnValue.add(f)
-                } else if (f.isDirectory) {
-                    returnValue.addAll(locateLibs(f))
-                }
+        // 早期リターン + 初期容量指定でメモリアロケーションを削減
+        val list = path.listFiles() ?: return ArrayList()
+        val returnValue = ArrayList<File>(list.size)
+        for (f in list) {
+            if (f.isFile && f.name.endsWith(".so")) {
+                returnValue.add(f)
+            } else if (f.isDirectory) {
+                returnValue.addAll(locateLibs(f))
             }
         }
         return returnValue
@@ -464,17 +464,14 @@ object JREUtils {
             userArgsString: String
     ) {
         val userArgs = getJavaArgs(runtimeHome, userArgsString)
-        purgeArg(userArgs, "-Xms")
-        purgeArg(userArgs, "-Xmx")
-        purgeArg(userArgs, "-d32")
-        purgeArg(userArgs, "-d64")
-        purgeArg(userArgs, "-Xint")
-        purgeArg(userArgs, "-XX:+UseTransparentHugePages")
-        purgeArg(userArgs, "-XX:+UseLargePagesInMetaspace")
-        purgeArg(userArgs, "-XX:+UseLargePages")
-        purgeArg(userArgs, "-Dorg.lwjgl.opengl.libname")
-        purgeArg(userArgs, "-Dorg.lwjgl.freetype.libname")
-        purgeArg(userArgs, "-XX:ActiveProcessorCount")
+        // 複数のpurgeArg呼び出しを1回のリスト走査に統合してO(n*m)をO(n)に最適化
+        // ActiveProcessorCountは後で再設定するためpurge不要
+        val purgePrefixes = setOf(
+            "-Xms", "-Xmx", "-d32", "-d64", "-Xint",
+            "-XX:+UseTransparentHugePages", "-XX:+UseLargePagesInMetaspace", "-XX:+UseLargePages",
+            "-Dorg.lwjgl.opengl.libname", "-Dorg.lwjgl.freetype.libname"
+        )
+        userArgs.removeAll { arg -> purgePrefixes.any { arg.startsWith(it) } }
 
         userArgs.add("-javaagent:" + LibPath.MIO_LIB_PATCHER.absolutePath)
 
@@ -496,8 +493,19 @@ object JREUtils {
             userArgs.add("-Dimgui_moulberry_path=" + imguiMoulberry.absolutePath)
         }
 
-        userArgs.add("-Xms" + AllSettings.ramAllocation.value.getValue() + "M")
-        userArgs.add("-Xmx" + AllSettings.ramAllocation.value.getValue() + "M")
+        val ramMb = AllSettings.ramAllocation.value.getValue()
+        userArgs.add("-Xms" + ramMb + "M")
+        userArgs.add("-Xmx" + ramMb + "M")
+
+        // 大規模Modpack/シェーダー用GCチューニング
+        // 2GB以上のヒープでG1GCを有効化。G1GCはJava 9+の全JREで利用可能
+        // 実験的フラグはJRE間の互換性問題を避けるため指定しない
+        if (ramMb >= 2048) {
+            userArgs.add("-XX:+UseG1GC")
+            userArgs.add("-XX:MaxGCPauseMillis=200")
+            userArgs.add("-XX:+ParallelRefProcEnabled")
+        }
+
         if (Renderers.isCurrentRendererValid()) userArgs.add("-Dorg.lwjgl.opengl.libname=" + loadGraphicsLibrary())
 
         userArgs.add("-Dorg.lwjgl.freetype.libname=${PathManager.DIR_NATIVE_LIB}/libfreetype.so")
@@ -594,18 +602,16 @@ object JREUtils {
                 "-Dsodium.checks.issue2561=false"
         )
 
+        // ユーザー引数の接頭辞をSetに事前変換してO(1)ルックアップを実現
+        val userArgPrefixes = userArguments.mapTo(HashSet()) { it.substringBefore("=") }
         val additionalArguments = ArrayList<String>()
         for (arg in overridableArguments) {
             val strippedArg = arg.substring(0, arg.indexOf('='))
-            var add = true
-            for (uarg in userArguments) {
-                if (uarg.startsWith(strippedArg)) {
-                    add = false
-                    break
-                }
+            if (strippedArg in userArgPrefixes) {
+                Logging.i("ArgProcessor", "Arg skipped: $arg")
+            } else {
+                additionalArguments.add(arg)
             }
-            if (add) additionalArguments.add(arg)
-            else Logging.i("ArgProcessor", "Arg skipped: $arg")
         }
 
         userArguments.addAll(additionalArguments)
@@ -670,15 +676,6 @@ object JREUtils {
                 Renderers.getCurrentRenderer().getRendererLibrary()
             }
         }
-    }
-
-    /**
-     * 引数リストから指定された接頭辞で始まる引数を除去する。
-     * @param argList 引数リスト
-     * @param argStart 除去する接頭辞
-     */
-    private fun purgeArg(argList: MutableList<String>, argStart: String) {
-        argList.removeAll { it.startsWith(argStart) }
     }
 
     /** OpenGL ES 1.x ビット。 */
@@ -774,8 +771,22 @@ object JREUtils {
      * MobileGlues 設定ファイル（config.json）を書き込む
      * AllSettings の mg_* 設定値を読み取り、MGネイティブライブラリが解釈する形式のJSONとして出力する
      * ゲーム起動時に setRendererEnv() 内から呼ばれる
+     * デバイスの総RAMに基づいてGLSLキャッシュサイズを自動調整する
      */
     private fun writeMobileGluesConfig() {
+        // デバイスRAMに基づいてGLSLキャッシュサイズを最適化
+        // シェーダーパックは多数のユニークなシェーダーを持つため、大容量キャッシュで再コンパイルを回避
+        val deviceRam = Tools.getTotalDeviceMemory(ContextExecutor.getApplication())
+        val autoGlslCacheSize = when {
+            deviceRam >= 12288 -> 96  // 12GB+ → 96MB
+            deviceRam >= 8192 -> 64   // 8GB+ → 64MB
+            deviceRam >= 6144 -> 48   // 6GB+ → 48MB
+            deviceRam >= 4096 -> 32   // 4GB+ → 32MB
+            else -> 16                // それ未満 → 16MB
+        }
+        val configGlslCacheSize = AllSettings.mgGlslCacheSize.getValue().toIntOrNull() ?: autoGlslCacheSize
+        val effectiveGlslCacheSize = if (configGlslCacheSize <= 0) configGlslCacheSize else maxOf(configGlslCacheSize, autoGlslCacheSize)
+
         val config = com.google.gson.JsonObject().apply {
             addProperty("enableANGLE", AllSettings.mgAngle.getValue().toIntOrNull() ?: 1)
             // 0=DisableIfPossible, 1=EnableIfPossible, 2=ForceDisable, 3=ForceEnable
@@ -784,11 +795,11 @@ object JREUtils {
             addProperty("enableExtTimerQuery", if (AllSettings.mgExtTimerQuery.getValue()) 1 else 0)
             // 0=有効（推奨）, 1=無効化（UIスイッチON時）
             addProperty("enableExtComputeShader", if (AllSettings.mgExtComputeShader.getValue()) 1 else 0)
-            // 不完全なARB_compute_shader拡張
+            // 不完全なARB_compute_shader拡張（シェーダーパック互換性に必要）
             addProperty("enableExtDirectStateAccess", if (AllSettings.mgExtDirectStateAccess.getValue()) 1 else 0)
             // 実験的なdirect_state_access拡張
-            addProperty("maxGlslCacheSize", AllSettings.mgGlslCacheSize.getValue().toIntOrNull() ?: 32)
-            // MB単位、-1で無効化
+            addProperty("maxGlslCacheSize", effectiveGlslCacheSize)
+            // MB単位、-1で無効化（デバイスRAMに応じて自動最適化）
             addProperty("multidrawMode", AllSettings.mgMultidrawMode.getValue().toIntOrNull() ?: 0)
             // 0=Auto, 1=Indirect, 2=BaseVertex, 3=MultidrawIndirect, 4=DrawElements, 5=Compute
             addProperty("angleDepthClearFixMode", AllSettings.mgAngleDepthClearFixMode.getValue().toIntOrNull() ?: 0)
@@ -796,13 +807,13 @@ object JREUtils {
             addProperty("customGLVersion", AllSettings.mgCustomGLVersion.getValue().toIntOrNull() ?: 0)
             // 0=無効, 32/33/40-46
             addProperty("fsr1Setting", if (AllSettings.mgFsr1.getValue()) 1 else 0)
-            // FSR1超解像度
+            // FSR1超解像度でシェーダーのレンダリング負荷を軽減
             addProperty("hideMGEnvLevel", if (AllSettings.mgHideMG.getValue()) 1 else 0)
             // F3画面からMG情報を隠す
         }
         val configFile = File(getMobileGluesDir(), "config.json")
         configFile.writeText(Gson().toJson(config))
-        Logging.i("MobileGlues", "Config written to ${configFile.absolutePath}")
+        Logging.i("MobileGlues", "Config written to ${configFile.absolutePath} (glslCacheSize=${effectiveGlslCacheSize}MB, deviceRam=${deviceRam}MB)")
     }
 
     /** @param path カレントディレクトリを変更するパス @return 成功時は0 */

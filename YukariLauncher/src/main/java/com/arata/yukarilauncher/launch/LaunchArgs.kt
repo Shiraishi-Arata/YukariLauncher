@@ -108,21 +108,22 @@ class LaunchArgs(
     private fun getVersionSpecificNativesDir(): File =
         File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
 
-    private fun getLwjglNativeDirs(): List<File> {
+    // LWJGLネイティブディレクトリをキャッシュして起動時のファイルシステムアクセスを削減
+    private val lwjglNativeDirs: List<File> by lazy {
         val lwjglVersion = minecraftVersion.getLWJGLVersion()
         val supportedAbis = Build.SUPPORTED_ABIS.takeIf { it.isNotEmpty() } ?: arrayOf("arm64-v8a")
-        return supportedAbis
+        supportedAbis
             .map { abi -> File(PathManager.DIR_DATA, "lwjgl/$lwjglVersion/native/$abi") }
             .filter { nativeDir -> File(nativeDir, "liblwjgl.so").exists() }
     }
 
     private fun getLwjglNativeLibraryPath(): String =
-        getLwjglNativeDirs().joinToString(":") { it.absolutePath }
+        lwjglNativeDirs.joinToString(":") { it.absolutePath }
 
     private fun getNativeLibrarySearchPath(): String {
         val libraryDirs = ArrayList<String>()
         getVersionSpecificNativesDir().takeIf { it.exists() }?.let { libraryDirs.add(it.absolutePath) }
-        getLwjglNativeDirs().forEach { libraryDirs.add(it.absolutePath) }
+        lwjglNativeDirs.forEach { libraryDirs.add(it.absolutePath) }
         PathManager.DIR_MOD_LIBRARY.takeIf { it.isNotEmpty() }?.let { libraryDirs.add(it) }
         libraryDirs.add(PathManager.DIR_NATIVE_LIB)
         return libraryDirs.joinToString(":")
