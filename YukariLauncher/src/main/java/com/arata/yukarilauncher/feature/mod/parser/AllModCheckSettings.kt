@@ -17,5 +17,6 @@ enum class AllModCheckSettings(val unit: StringSettingUnit) {
     BORDERLESS_WINDOW(StringSettingUnit("modCheckBorderlessWindow", "0")),
     AXIOM(StringSettingUnit("modCheckAxiom", "0")),
     SABLE(StringSettingUnit("modCheckSable", "0")),
-    FLASHBACK(StringSettingUnit("modCheckSable", "0"))
+    FLASHBACK(StringSettingUnit("modCheckSable", "0")),
+    VEIL(StringSettingUnit("modCheckVeil", "0"))
 }

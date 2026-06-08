@@ -408,22 +408,23 @@
 
                         <TextView
                             android:id="@+id/mg_fsr1_title"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_marginEnd="@dimen/_8sdp"
-                            android:layout_toStartOf="@+id/mg_fsr1"
                             android:text="@string/setting_mg_fsr1"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
                             android:textColor="?attr/colorOnSurface" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/mg_fsr1"
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/mg_fsr1_value"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_fsr1_title"
+                            android:layout_alignParentStart="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            app:useMaterialThemeColors="true" />
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
                     </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
 
                     <!-- F3画面からMGを隠す -->

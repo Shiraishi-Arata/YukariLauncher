@@ -42,6 +42,7 @@ class ModChecker {
         var hasBorderlesswindow: Boolean = false
         var hasSable: Boolean = false
         var hasFlashBack: Boolean = false
+        var hasVeil: Boolean = false
 
 /**
  * Booleanする
@@ -72,6 +73,7 @@ class ModChecker {
             hasBorderlesswindow = parcel.readInt().toBoolean()
             hasSable = parcel.readInt().toBoolean()
             hasFlashBack = parcel.readInt().toBoolean()
+            hasVeil = parcel.readInt().toBoolean()
         }
 
 /**
@@ -93,6 +95,7 @@ class ModChecker {
             dest.writeInt(hasBorderlesswindow.getInt())
             dest.writeInt(hasSable.getInt())
             dest.writeInt(hasFlashBack.getInt())
+            dest.writeInt(hasVeil.getInt())
         }
 
         companion object CREATOR : Parcelable.Creator<ModCheckResult> {
@@ -277,6 +280,15 @@ class ModChecker {
                                     )
                                 )
                             }
+                        }
+                    }
+                    "veil" -> {
+                        if (!modResult.hasVeil) {
+                            modResult.hasVeil = true
+                            modCheckSettings[AllModCheckSettings.VEIL] = Pair(
+                                "1",
+                                context.getString(R.string.mod_check_veil, mod.file.name)
+                            )
                         }
                     }
                     "flashback" -> {

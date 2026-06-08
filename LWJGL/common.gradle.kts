@@ -5,7 +5,8 @@ group = "org.lwjgl.glfw"
 
 configurations.getByName("default").isCanBeResolved = true
 
-tasks.jar {
+val jarTask = tasks.named<Jar>("jar")
+jarTask.configure {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveBaseName.set("lwjgl-glfw-classes")
     destinationDirectory.set(file("../../YukariLauncher/src/main/assets/components/lwjgl/$lwjglVersion/"))
@@ -59,24 +60,4 @@ tasks.register<Zip>("packageZip") {
     }
     archiveFileName.set("$lwjglVersion.zip")
     destinationDirectory.set(layout.buildDirectory.dir("distributions"))
-}
-
-spotless {
-    java {
-        target("src/**/*.java")
-        importOrder("android", "androidx", "com", "io", "java", "javax", "net", "org")
-        removeUnusedImports()
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }

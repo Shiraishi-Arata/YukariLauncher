@@ -84,8 +84,8 @@ class AllSettings {
         // 0=無効, 32=3.2, 33=3.3, 40=4.0, 41=4.1, 42=4.2, 43=4.3, 44=4.4, 45=4.5, 46=4.6
 
         @JvmStatic
-        val mgFsr1 = BooleanSettingUnit("mg_fsr1", false)
-        // FSR1（FidelityFX Super Resolution）を有効化
+        val mgFsr1 = StringSettingUnit("mg_fsr1", "0")
+        // FSR1（FidelityFX Super Resolution）品質設定: 0=無効, 1=Performance, 2=Balanced, 3=Quality, 4=UltraQuality
 
         @JvmStatic
         val mgHideMG = BooleanSettingUnit("mg_hide_mg", false)

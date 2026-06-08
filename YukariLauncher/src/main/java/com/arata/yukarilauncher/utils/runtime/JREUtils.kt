@@ -806,8 +806,8 @@ object JREUtils {
             // 0=Disable, 1=Mode1
             addProperty("customGLVersion", AllSettings.mgCustomGLVersion.getValue().toIntOrNull() ?: 0)
             // 0=無効, 32/33/40-46
-            addProperty("fsr1Setting", if (AllSettings.mgFsr1.getValue()) 1 else 0)
-            // FSR1超解像度でシェーダーのレンダリング負荷を軽減
+            addProperty("fsr1Setting", AllSettings.mgFsr1.getValue().toIntOrNull() ?: 0)
+            // 0=無効, 1=Performance, 2=Balanced, 3=Quality, 4=UltraQuality
             addProperty("hideMGEnvLevel", if (AllSettings.mgHideMG.getValue()) 1 else 0)
             // F3画面からMG情報を隠す
             addProperty("enableFrameGeneration", if (AllSettings.mgFrameGeneration.getValue()) 1 else 0)

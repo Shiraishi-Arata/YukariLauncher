@@ -8,6 +8,9 @@ pluginManagement {
         google()
         mavenCentral()
     }
+    plugins {
+        id("com.diffplug.spotless") version "6.25.0"
+    }
 }
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"

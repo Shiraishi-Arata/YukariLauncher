@@ -395,11 +395,14 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
         }
 
         // FSR1
-        SwitchSettingsWrapper(
+        ListSettingsWrapper(
             context,
             AllSettings.mgFsr1,
             binding.mgFsr1Layout,
-            binding.mgFsr1
+            binding.mgFsr1Title,
+            binding.mgFsr1Value,
+            R.array.setting_mg_fsr1_entries,
+            R.array.setting_mg_fsr1_values
         )
 
         // F3画面からMGを隠す
