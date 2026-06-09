@@ -37,14 +37,30 @@ class ModrinthCommonUtils {
  */
         private fun getCategories(filters: Filters): String {
             val facets = mutableListOf<String>()
+
             filters.modloader?.let {
                 facets.add("[\"categories:${it.modrinthName}\"]")
             }
-            val catNames = filters.categories.mapNotNull { it.modrinthName }
+
+            val envValues = mutableListOf<String>()
+            if (Category.ENV_CLIENT in filters.categories) {
+                envValues.add("\"client_side:required\"")
+                envValues.add("\"client_side:optional\"")
+            }
+            if (Category.ENV_SERVER in filters.categories) {
+                envValues.add("\"server_side:required\"")
+                envValues.add("\"server_side:optional\"")
+            }
+            if (envValues.isNotEmpty()) {
+                facets.add(envValues.joinToString(prefix = "[", postfix = "]"))
+            }
+
+            val catNames = filters.categories.filter { it != Category.ENV_CLIENT && it != Category.ENV_SERVER }.mapNotNull { it.modrinthName }
             if (catNames.isNotEmpty()) {
                 facets.add(catNames.joinToString(prefix = "[", postfix = "]") { "\"categories:$it\"" })
             }
-            return facets.joinToString("")
+
+            return facets.joinToString(",")
         }
 
         /**
@@ -143,8 +159,9 @@ class ModrinthCommonUtils {
  * getResultsする
  */
         internal fun getResults(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
-            val selectedMR = filters.categories.firstOrNull { it.modrinthName != null }
-            if (filters.categories.isNotEmpty() && selectedMR == null) {
+            val nonEnvCategories = filters.categories.filter { it != Category.ENV_CLIENT && it != Category.ENV_SERVER }
+            val selectedMR = nonEnvCategories.firstOrNull { it.modrinthName != null }
+            if (nonEnvCategories.isNotEmpty() && selectedMR == null) {
                 throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 

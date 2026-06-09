@@ -149,12 +149,15 @@ abstract class AbstractResourceDownloadFragment(
                         selectedMcVersionView.text = version
                         mFilters.mcVersion = version
                         selectVersionDialog.dismiss()
+                        search()
                     }
                 })
                 selectVersionDialog.show()
             }
             selectedMcVersionView.setOnLongClickListener {
                 selectedMcVersionView.text = null
+                mFilters.mcVersion = null
+                search()
                 true
             }
         }
@@ -188,7 +191,7 @@ abstract class AbstractResourceDownloadFragment(
             }
 
             setSpinner(sortSpinner, mSortAdapter)
-            setSpinnerListener<Sort>(sortSpinner) { mFilters.sort = it }
+            setSpinnerListener<Sort>(sortSpinner) { mFilters.sort = it; search() }
 
             initSpinnerIndex()
             applyPlatformTheme(recommendedPlatform)
@@ -241,6 +244,7 @@ abstract class AbstractResourceDownloadFragment(
     }
 
     private fun applyCurrentVersionFilter() {
+        if (classify == Classify.MODPACK) return
         val versionInfo = VersionsManager.getCurrentVersion()?.getVersionInfo() ?: return
         val mcVersion = versionInfo.minecraftVersion
         if (mcVersion.isNotBlank()) {

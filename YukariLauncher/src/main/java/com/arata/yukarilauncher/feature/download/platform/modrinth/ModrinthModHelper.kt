@@ -39,8 +39,9 @@ class ModrinthModHelper {
  * modLikeSearchする
  */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
-            val selectedMR = filters.categories.firstOrNull { it.modrinthName != null }
-            if (filters.categories.isNotEmpty() && selectedMR == null) {
+            val nonEnvCategories = filters.categories.filter { it != Category.ENV_CLIENT && it != Category.ENV_SERVER }
+            val selectedMR = nonEnvCategories.firstOrNull { it.modrinthName != null }
+            if (nonEnvCategories.isNotEmpty() && selectedMR == null) {
                 throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 

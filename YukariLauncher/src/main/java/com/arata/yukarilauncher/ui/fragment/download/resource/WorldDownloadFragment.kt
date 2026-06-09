@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.feature.download.enums.Classify
+import com.arata.yukarilauncher.feature.download.enums.Platform
 import com.arata.yukarilauncher.feature.download.install.UnpackWorldZipHelper
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.Companion.getWorldPath
 import com.arata.yukarilauncher.task.Task
@@ -25,7 +26,8 @@ import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.WORLD,
-    false
+    false,
+    Platform.CURSEFORGE
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
