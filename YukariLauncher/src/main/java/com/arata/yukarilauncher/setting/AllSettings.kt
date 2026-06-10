@@ -93,7 +93,7 @@ class AllSettings {
 
         @JvmStatic
         val mgFrameGeneration = BooleanSettingUnit("mg_frame_generation", false)
-        // フレーム生成（FG）でFPSを向上
+        // FSR3フレーム生成（FG）でFPSを向上
 
         // コントロール設定
         @JvmStatic

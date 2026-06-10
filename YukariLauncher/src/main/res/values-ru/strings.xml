@@ -947,8 +947,8 @@
     <string name="setting_mg_multidraw">Эмуляция MultiDraw</string>
     <string name="setting_mg_angle_clear_workaround">УГОЛ Глубина Очистить Обходной путь</string>
     <string name="setting_mg_custom_gl_version">Пользовательская целевая версия OpenGL</string>
-    <string name="setting_mg_frame_generation">(Экспериментально) Включить генерацию кадров</string>
-    <string name="setting_mg_frame_generation_warning">Генерация кадров является экспериментальной функцией. Она может вызывать визуальные артефакты в сценах с быстрым движением и увеличивать расход батареи. Всё равно включить?</string>
+    <string name="setting_mg_frame_generation">(Экспериментально) Включить генерацию кадров FSR 3</string>
+    <string name="setting_mg_frame_generation_warning">Генерация кадров FSR 3 является экспериментальной функцией. Она может вызывать визуальные артефакты в сценах с быстрым движением и увеличивать расход батареи. Всё равно включить?</string>
     <string name="setting_mg_fsr1">(Экспериментально) Включить встроенный FSR1</string>
     <string name="setting_mg_hide_f3">Скрыть MobileGlues с экрана F3</string>
 

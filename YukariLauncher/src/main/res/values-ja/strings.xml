@@ -947,8 +947,8 @@
     <string name="setting_mg_multidraw">マルチドローエミュレーション</string>
     <string name="setting_mg_angle_clear_workaround">ANGLE Depth 明確な回避策</string>
     <string name="setting_mg_custom_gl_version">カスタム ターゲット OpenGL バージョン</string>
-    <string name="setting_mg_frame_generation">(実験的) フレーム生成（FG）を有効にする</string>
-    <string name="setting_mg_frame_generation_warning">フレーム生成は実験的機能です。高速な動きのあるシーンで画質低下やバッテリー消費の増加を引き起こす可能性があります。それでも有効にしますか？</string>
+    <string name="setting_mg_frame_generation">(実験的) FSR3 フレーム生成（FG）を有効にする</string>
+    <string name="setting_mg_frame_generation_warning">FSR3 フレーム生成は実験的機能です。高速な動きのあるシーンで画質低下やバッテリー消費の増加を引き起こす可能性があります。それでも有効にしますか？</string>
     <string name="setting_mg_fsr1">(実験的) 組み込み FSR1 を有効にする</string>
     <string name="setting_mg_hide_f3">F3 画面から MobileGlues を非表示にする</string>
 

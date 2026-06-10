@@ -372,7 +372,7 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
             binding.mgExtDirectStateAccess
         )
 
-        // フレーム生成（FG）
+        // FSR3フレーム生成（FG）
         val fgWarning = SwitchSettingsWrapper(
             context,
             AllSettings.mgFrameGeneration,

@@ -947,8 +947,8 @@
     <string name="setting_mg_multidraw">Mô phỏng MultiDraw</string>
     <string name="setting_mg_angle_clear_workaround">Giải pháp rõ ràng về độ sâu ANGLE</string>
     <string name="setting_mg_custom_gl_version">Phiên bản OpenGL mục tiêu tùy chỉnh</string>
-    <string name="setting_mg_frame_generation">(Thử nghiệm) Kích hoạt Frame Generation</string>
-    <string name="setting_mg_frame_generation_warning">Frame Generation là tính năng thử nghiệm. Nó có thể gây ra hiện tượng giả trong các cảnh chuyển động nhanh và tăng mức tiêu thụ pin. Vẫn bật?</string>
+    <string name="setting_mg_frame_generation">(Thử nghiệm) Kích hoạt FSR 3 Frame Generation</string>
+    <string name="setting_mg_frame_generation_warning">FSR 3 Frame Generation là tính năng thử nghiệm. Nó có thể gây ra hiện tượng giả trong các cảnh chuyển động nhanh và tăng mức tiêu thụ pin. Vẫn bật?</string>
     <string name="setting_mg_fsr1">(Thử nghiệm) Kích hoạt FSR1 tích hợp</string>
     <string name="setting_mg_hide_f3">Ẩn MobileGlues khỏi màn hình F3</string>
 

@@ -947,8 +947,8 @@
     <string name="setting_mg_multidraw">محاكاة MultiDraw</string>
     <string name="setting_mg_angle_clear_workaround">ANGLE Depth Clear الحل البديل</string>
     <string name="setting_mg_custom_gl_version">إصدار OpenGL المستهدف المخصص</string>
-    <string name="setting_mg_frame_generation">(تجريبي) تمكين توليد الإطارات</string>
-    <string name="setting_mg_frame_generation_warning">توليد الإطارات هي ميزة تجريبية. قد تسبب تشوهات بصرية في المشاهد سريعة الحركة وتزيد من استهلاك البطارية. هل تريد التمكين على أي حال؟</string>
+    <string name="setting_mg_frame_generation">(تجريبي) تمكين توليد إطارات FSR 3</string>
+    <string name="setting_mg_frame_generation_warning">توليد إطارات FSR 3 هي ميزة تجريبية. قد تسبب تشوهات بصرية في المشاهد سريعة الحركة وتزيد من استهلاك البطارية. هل تريد التمكين على أي حال؟</string>
     <string name="setting_mg_fsr1">(تجريبي) تمكين FSR1 المدمج</string>
     <string name="setting_mg_hide_f3">إخفاء MobileGlues من شاشة F3</string>
 

@@ -947,8 +947,8 @@
     <string name="setting_mg_multidraw">Émulation MultiDraw</string>
     <string name="setting_mg_angle_clear_workaround">Solution de contournement pour effacer la profondeur d\'ANGLE</string>
     <string name="setting_mg_custom_gl_version">Version OpenGL cible personnalisée</string>
-    <string name="setting_mg_frame_generation">(Expérimental) Activer la génération d\'images</string>
-    <string name="setting_mg_frame_generation_warning">La génération d\'images est expérimentale. Elle peut provoquer des artefacts visuels dans les scènes à mouvement rapide et augmenter la consommation de la batterie. Activer quand même ?</string>
+    <string name="setting_mg_frame_generation">(Expérimental) Activer la génération d\'images FSR 3</string>
+    <string name="setting_mg_frame_generation_warning">La génération d\'images FSR 3 est expérimentale. Elle peut provoquer des artefacts visuels dans les scènes à mouvement rapide et augmenter la consommation de la batterie. Activer quand même ?</string>
     <string name="setting_mg_fsr1">(Expérimental) Activer le FSR1 intégré</string>
     <string name="setting_mg_hide_f3">Masquer les MobileGlues de l\'écran F3</string>
 

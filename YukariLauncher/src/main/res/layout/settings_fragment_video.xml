@@ -368,7 +368,7 @@
                             app:useMaterialThemeColors="true" />
                     </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
 
-                    <!-- フレーム生成（FG） -->
+                    <!-- FSR3フレーム生成（FG） -->
                     <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
                         android:id="@+id/mg_frame_generation_layout"
                         android:layout_width="match_parent"
