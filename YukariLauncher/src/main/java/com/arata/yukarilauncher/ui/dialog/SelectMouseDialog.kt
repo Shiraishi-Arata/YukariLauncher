@@ -11,6 +11,7 @@ import com.arata.yukarilauncher.ui.subassembly.filelist.FileRecyclerViewCreator
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.file.FileTools.Companion.mkdirs
+import com.arata.yukarilauncher.utils.mouse.CursorPackUtils
 import java.io.File
 
 /**
@@ -39,7 +40,7 @@ class SelectMouseDialog(
         FileRecyclerViewCreator(
             context,
             mMouseListView,
-            { position: Int, fileItemBean: FileItemBean ->
+            { _: Int, fileItemBean: FileItemBean ->
                 val file = fileItemBean.file
                 file?.apply {
                     if (exists() && YLTools.isSupportedMouseSource(this)) {
@@ -47,11 +48,6 @@ class SelectMouseDialog(
                         listener.onSelectedListener()
                         dismiss()
                     }
-                }
-                if (position == 0) {
-                    AllSettings.customMouse.put("").save()
-                    listener.onSelectedListener()
-                    this.dismiss()
                 }
             },
             null,
@@ -71,11 +67,21 @@ class SelectMouseDialog(
             showFile = true,
             showFolder = true
         )
-        fileItemBeans.add(0, FileItemBean(
-            context.getString(R.string.custom_mouse_default),
-            context.getDrawable(R.drawable.ic_mouse_pointer)
-        ))
+        applyCustomMouseIcons(fileItemBeans)
         return fileItemBeans
+    }
+
+    /**
+     * カーソルパックの一覧項目にパック内のdefaultカーソルを表示する
+     */
+    private fun applyCustomMouseIcons(fileItemBeans: MutableList<FileItemBean>) {
+        fileItemBeans.forEach { itemBean ->
+            itemBean.file?.let { file ->
+                CursorPackUtils.loadDefaultCursorDrawable(file)?.let { drawable ->
+                    itemBean.image = drawable
+                }
+            }
+        }
     }
 
     /**

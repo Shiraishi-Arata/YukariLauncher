@@ -116,6 +116,32 @@ public final class CursorPackUtils {
     }
 
     /**
+     * カーソルパックの一覧表示用に、標準カーソル（default/left_ptr/arrow）のDrawableを読み込む
+     */
+    @Nullable
+    public static Drawable loadDefaultCursorDrawable(File source) {
+        if (source == null || !source.exists()) return null;
+        if (source.isDirectory()) {
+            source = findDefaultCursorCandidate(source);
+            if (source == null) return null;
+        }
+
+        if (ImageUtils.isImage(source)) {
+            return Drawable.createFromPath(source.getAbsolutePath());
+        }
+
+        return decodeXCursorDrawable(source);
+    }
+
+    /**
+     * ディレクトリから一覧表示に使う標準カーソル候補を検索する
+     */
+    @Nullable
+    public static File findDefaultCursorCandidate(File directory) {
+        return findCursorCandidate(directory, new String[]{"default", "left_ptr", "arrow", "cursor", "pointer"});
+    }
+
+    /**
      * ディレクトリからカーソル候補ファイルを検索する（デフォルトは標準矢印カーソル）
      */
     @Nullable
@@ -129,9 +155,16 @@ public final class CursorPackUtils {
      */
     @Nullable
     public static File findCursorCandidate(File directory, int cursorType) {
+        return findCursorCandidate(directory, getPreferredNames(cursorType));
+    }
+
+    /**
+     * ディレクトリから指定された優先名に適したカーソルファイルを検索する
+     */
+    @Nullable
+    private static File findCursorCandidate(File directory, String[] preferredNames) {
         if (directory == null || !directory.isDirectory()) return null;
 
-        String[] preferredNames = getPreferredNames(cursorType);
         List<File> allFiles = collectFiles(directory);
 
         for (String preferred : preferredNames) {

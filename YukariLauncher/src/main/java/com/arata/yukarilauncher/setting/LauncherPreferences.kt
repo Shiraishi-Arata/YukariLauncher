@@ -6,16 +6,24 @@ import android.graphics.Rect
 import android.os.Build
 import com.arata.yukarilauncher.utils.platform.Architecture
 import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.unpack.Jre
 import com.arata.yukarilauncher.ui.activity.BaseActivity
+import com.arata.yukarilauncher.utils.mouse.CursorPackUtils
+import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.runtime.JREUtils
 import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
+import java.io.File
 
 /** ランチャーの設定を管理するオブジェクト。 */
 object LauncherPreferences {
+    const val DEFAULT_MOUSE_PACK_NAME = "default"
+    private const val DEFAULT_MOUSE_PACK_ARCHIVE = "$DEFAULT_MOUSE_PACK_NAME.zip"
+
     /** 設定を読み込む。 */
     fun loadPreferences() {
+        installDefaultCustomMouse()
         val argLwjglLibname = "-Dorg.lwjgl.opengl.libname="
         val javaArgs = AllSettings.javaArgs.getValue()
         for (arg in JREUtils.parseJavaArguments(javaArgs)) {
@@ -24,6 +32,35 @@ object LauncherPreferences {
             }
         }
         reloadRuntime()
+    }
+
+    /** 同梱カーソルパックをマウスディレクトリへ展開し、未選択時のデフォルトにする。 */
+    private fun installDefaultCustomMouse() {
+        runCatching {
+            val mouseRoot = File(PathManager.DIR_CUSTOM_MOUSE).apply {
+                if (!exists()) mkdirs()
+            }
+            val defaultMouseDir = File(mouseRoot, DEFAULT_MOUSE_PACK_NAME)
+            if (!CursorPackUtils.isSupportedCursorSource(defaultMouseDir)) {
+                if (defaultMouseDir.exists()) defaultMouseDir.deleteRecursively()
+                val archiveFile = File(mouseRoot, DEFAULT_MOUSE_PACK_ARCHIVE)
+                Tools.copyAssetFile(
+                    ContextExecutor.getApplication(),
+                    DEFAULT_MOUSE_PACK_ARCHIVE,
+                    mouseRoot.absolutePath,
+                    DEFAULT_MOUSE_PACK_ARCHIVE,
+                    true
+                )
+                CursorPackUtils.extractCursorArchive(archiveFile, mouseRoot)
+                archiveFile.delete()
+            }
+
+            if (!Settings.Manager.contains(AllSettings.customMouse.key) || AllSettings.customMouse.getValue().isEmpty()) {
+                AllSettings.customMouse.put(DEFAULT_MOUSE_PACK_NAME).save()
+            }
+        }.onFailure { e ->
+            Logging.w("LauncherPreferences", "Failed to install bundled default cursor pack", e)
+        }
     }
 
     /** ランタイム設定を再読み込みする。 */

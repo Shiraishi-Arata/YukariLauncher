@@ -124,7 +124,7 @@ class AllSettings {
         val virtualMouseStart = BooleanSettingUnit("mouse_start", true)
 
         @JvmStatic
-        val customMouse = StringSettingUnit("custom_mouse", "")
+        val customMouse = StringSettingUnit("custom_mouse", LauncherPreferences.DEFAULT_MOUSE_PACK_NAME)
 
         @JvmStatic
         val enableGyro = BooleanSettingUnit("enableGyro", false)

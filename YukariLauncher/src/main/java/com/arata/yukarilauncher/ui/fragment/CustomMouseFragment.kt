@@ -10,7 +10,6 @@ import android.widget.Toast
 import android.graphics.drawable.Animatable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.arata.anim.AnimPlayer
 import com.arata.anim.animations.Animations
@@ -145,13 +144,23 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
             showFile = true,
             showFolder = true
         )
-        fileItemBeans.add(0, FileItemBean(
-            getString(R.string.custom_mouse_default),
-            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_mouse_pointer)
-        ))
+        applyCustomMouseIcons(fileItemBeans)
         TaskExecutors.runInUIThread {
             fileRecyclerViewCreator?.loadData(fileItemBeans)
             refreshIcon()
+        }
+    }
+
+    /**
+     * カーソルパックの一覧項目にパック内のdefaultカーソルを表示する
+     */
+    private fun applyCustomMouseIcons(fileItemBeans: MutableList<FileItemBean>) {
+        fileItemBeans.forEach { itemBean ->
+            itemBean.file?.let { file ->
+                CursorPackUtils.loadDefaultCursorDrawable(file)?.let { drawable ->
+                    itemBean.image = drawable
+                }
+            }
         }
     }
 
@@ -189,33 +198,27 @@ class CustomMouseFragment : FragmentWithAnim(R.layout.fragment_custom_mouse) {
             )
         }
 
-        fileRecyclerViewCreator = FileRecyclerViewCreator(requireActivity(), binding.recyclerView, { position: Int, fileItemBean: FileItemBean ->
+        fileRecyclerViewCreator = FileRecyclerViewCreator(requireActivity(), binding.recyclerView, { _: Int, fileItemBean: FileItemBean ->
                 val file = fileItemBean.file
                 val fileName = file?.name
-                val isDefaultMouse = position == 0
 
                 val filesButton = FilesButton()
                 filesButton.setButtonVisibility(false, false,
-                    !isDefaultMouse, !isDefaultMouse, !isDefaultMouse, (isDefaultMouse || YLTools.isSupportedMouseSource(file)))
+                    true, true, true, YLTools.isSupportedMouseSource(file))
 
-                var message = getString(R.string.file_message)
-                if (isDefaultMouse) message += """
-     
-     ${getString(R.string.custom_mouse_message_default)}
-     """.trimIndent()
-                filesButton.setMessageText(message)
+                filesButton.setMessageText(getString(R.string.file_message))
                 filesButton.setMoreButtonText(getString(R.string.generic_select))
 
                 val filesDialog = FilesDialog(requireActivity(), filesButton, Task.runTask { loadData() }, mousePath(), file)
                 filesDialog.setMoreButtonClick {
-                    if (!isDefaultMouse && !YLTools.isSupportedMouseSource(file)) {
+                    if (!YLTools.isSupportedMouseSource(file)) {
                         Toast.makeText(requireActivity(), getString(R.string.generic_input_invalid), Toast.LENGTH_SHORT).show()
                         return@setMoreButtonClick
                     }
-                    AllSettings.customMouse.put(fileName ?: "").save()
+                    AllSettings.customMouse.put(fileName ?: return@setMoreButtonClick).save()
                     refreshIcon()
                     Toast.makeText(requireActivity(),
-                        StringUtils.insertSpace(getString(R.string.custom_mouse_added), (fileName ?: getString(R.string.custom_mouse_default))),
+                        StringUtils.insertSpace(getString(R.string.custom_mouse_added), fileName),
                         Toast.LENGTH_SHORT).show()
                     filesDialog.dismiss()
                 }
