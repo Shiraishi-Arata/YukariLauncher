@@ -9,6 +9,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -47,6 +49,8 @@ import com.arata.yukarilauncher.feature.accounts.AccountsManager
 import com.arata.yukarilauncher.feature.accounts.LocalAccountUtils
 import com.arata.yukarilauncher.feature.background.BackgroundManager
 import com.arata.yukarilauncher.feature.background.BackgroundType
+import com.arata.yukarilauncher.feature.discord.DiscordPrefs
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.mod.modpack.install.InstallExtra
@@ -387,6 +391,8 @@ class LauncherActivity : BaseActivity() {
             UpdateUtils.checkDownloadedPackage(this@LauncherActivity, false, true)
             null
         }.execute()
+
+        startDiscordRpc()
     }
 
     /** フラグメント管理の初期化を行います。戻るボタンの処理と初期フラグメントの設定を行います */
@@ -517,16 +523,19 @@ class LauncherActivity : BaseActivity() {
     private fun launchGame(version: Version) {
         LocalAccountUtils.checkUsageAllowed(object : LocalAccountUtils.CheckResultListener {
             override fun onUsageAllowed() {
+                sendGameRpc(version)
                 LaunchGame.preLaunch(this@LauncherActivity, version)
             }
             override fun onUsageDenied() {
                 if (!AllSettings.localAccountReminders.getValue()) {
+                    sendGameRpc(version)
                     LaunchGame.preLaunch(this@LauncherActivity, version)
                 } else {
                     LocalAccountUtils.openDialog(
                         this@LauncherActivity,
                         { checked ->
                             LocalAccountUtils.saveReminders(checked)
+                            sendGameRpc(version)
                             LaunchGame.preLaunch(this@LauncherActivity, version)
                         },
                         getString(R.string.account_no_microsoft_account) + getString(R.string.account_purchase_minecraft_account_tip),
@@ -535,6 +544,68 @@ class LauncherActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun startDiscordRpc() {
+        DiscordRpcManager.connect()
+    }
+
+    private fun sendGameRpc(version: Version) {
+        if (!DiscordPrefs.isRpcEnabled()) return
+        val versionName = version.getVersionName()
+        val versionInfo = version.getVersionInfo()
+        val modLoader = versionInfo?.loaderInfo?.firstOrNull()?.name ?: ""
+        val mcVersion = versionInfo?.minecraftVersion ?: ""
+        val enabledMods = File(version.getGameDir(), "mods")
+            .takeIf { it.exists() }
+            ?.listFiles { f -> f.extension == "jar" }
+            ?.size ?: 0
+
+        val iconBytes = resolveVersionIconBytes(version)
+        DiscordRpcManager.updateGamePresence(versionName, modLoader, mcVersion, enabledMods, iconBytes)
+    }
+
+    private fun resolveVersionIconBytes(version: Version): ByteArray? {
+        val iconFile = VersionsManager.getVersionIconFile(version)
+        if (iconFile.exists()) {
+            return try {
+                val fis = java.io.FileInputStream(iconFile)
+                fis.use { it.readBytes() }
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        val versionInfo = version.getVersionInfo()
+        val loaderResId = versionInfo?.loaderInfo?.firstOrNull()?.let { loader ->
+            when (loader.name.lowercase()) {
+                "fabric" -> R.drawable.ic_fabric
+                "forge" -> R.drawable.ic_anvil
+                "quilt" -> R.drawable.ic_quilt
+                "neoforge" -> R.drawable.ic_neoforge
+                "optifine" -> R.drawable.ic_optifine
+                "liteloader" -> R.drawable.ic_chicken_old
+                else -> null
+            }
+        } ?: R.drawable.ic_minecraft
+
+        val drawable = ContextCompat.getDrawable(this, loaderResId) ?: return null
+        return drawableToPngBytes(drawable)
+    }
+
+    private fun drawableToPngBytes(drawable: Drawable): ByteArray {
+        val bitmap = android.graphics.Bitmap.createBitmap(
+            drawable.intrinsicWidth.coerceAtLeast(1),
+            drawable.intrinsicHeight.coerceAtLeast(1),
+            android.graphics.Bitmap.Config.ARGB_8888
+        )
+        val canvas = android.graphics.Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        val stream = java.io.ByteArrayOutputStream()
+        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream)
+        stream.close()
+        return stream.toByteArray()
     }
 
     /** メインメニューの背景画像またはビデオをリフレッシュして表示します */

@@ -52,6 +52,7 @@ import com.arata.yukarilauncher.feature.background.BackgroundManager
 import com.arata.yukarilauncher.feature.background.BackgroundType
 import com.arata.yukarilauncher.feature.log.Logger
 import com.arata.yukarilauncher.feature.log.Logging
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.version.Version
 import com.arata.yukarilauncher.feature.version.VersionInfo
 import com.arata.yukarilauncher.launch.LaunchGame
@@ -604,12 +605,30 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
     /** JVM終了イベントを処理し、サービスを停止してアクティビティを終了します */
     @Subscribe
     fun event(event: JvmExitEvent) {
+        Logging.i("DiscordRPC", "JvmExitEvent received, exitCode=${event.exitCode}")
         runOnUiThread {
             GameService.setActive(false)
+            Logging.i("DiscordRPC", "JvmExitEvent: sending broadcast for RPC update")
+            val rpcIntent = Intent("com.arata.yukarilauncher.action.RPC_UPDATE")
+            rpcIntent.putExtra("command", "update_launcher")
+            rpcIntent.putExtra("quitLauncher", AllSettings.quitLauncher.getValue())
+            sendBroadcast(rpcIntent)
             stopService(Intent(this, GameService::class.java))
             if (AllSettings.quitLauncher.getValue()) {
+                Logging.i("DiscordRPC", "JvmExitEvent: quitLauncher=true, sleeping 200ms then killing")
+                try {
+                    Thread.sleep(200)
+                } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                }
                 YLTools.killProcess()
             } else {
+                Logging.i("DiscordRPC", "JvmExitEvent: quitLauncher=false, finishing activity")
+                try {
+                    Thread.sleep(200)
+                } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                }
                 finish()
             }
         }

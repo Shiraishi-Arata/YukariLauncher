@@ -1,7 +1,10 @@
 package com.arata.yukarilauncher
 
 import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
@@ -11,8 +14,8 @@ import androidx.core.app.ActivityCompat
 import com.arata.yukarilauncher.InfoDistributor
 import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.context.LocaleHelper
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.log.Logging
-import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.activity.ErrorActivity
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.PathManager
@@ -32,6 +35,8 @@ class PojavApplication : Application() {
     companion object {
         /** クラッシュレポートのタグ名。 */
         const val CRASH_REPORT_TAG = "YukariCrashReport"
+        /** Discord RPC更新用のブロードキャストアクション。 */
+        const val ACTION_RPC_UPDATE = "com.arata.yukarilauncher.action.RPC_UPDATE"
     }
 
     /**
@@ -92,15 +97,46 @@ class PojavApplication : Application() {
         }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        // Discord RPC更新用のブロードキャストレシーバーを登録
+        // RECEIVER_NOT_EXPORTED: 同一アプリ内からのみ受信可能（Android 14+の暗黙的ブロードキャスト制限に対応）
+        val filter = IntentFilter(ACTION_RPC_UPDATE)
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(rpcReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(rpcReceiver, filter)
+        }
+    }
+
+    /**
+     * Discord RPC更新用のブロードキャストレシーバー。
+     * :gameプロセスから送信されたRPC更新Intentを受信し、
+     * :launcherプロセス（WebSocketが存在するプロセス）でRPCを更新します。
+     */
+    private val rpcReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val command = intent.getStringExtra("command")
+            if (command == "update_launcher") {
+                Logging.i("DiscordRPC", "PojavApplication: broadcast received, updating RPC to launcher presence")
+                DiscordRpcManager.updateLauncherPresence()
+                // quitLauncher=trueの場合、RPC更新後に300ms待機してランチャープロセスを終了
+                if (intent.getBooleanExtra("quitLauncher", false)) {
+                    try { Thread.sleep(300) } catch (_: InterruptedException) {}
+                    Logging.i("DiscordRPC", "PojavApplication: quitLauncher=true, killing process")
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                }
+            }
+        }
     }
 
     /**
      * アプリケーション終了時に呼び出されます。
-     * ContextExecutorのクリーンアップを行います。
+     * ContextExecutorのクリーンアップとブロードキャストレシーバーの登録解除を行います。
      */
     override fun onTerminate() {
         super.onTerminate()
         ContextExecutor.clearApplication()
+        try { unregisterReceiver(rpcReceiver) } catch (_: Exception) {}
     }
 
     /**

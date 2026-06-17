@@ -1044,4 +1044,15 @@
         <item>45</item>
         <item>46</item>
     </string-array>
+
+    <!-- Discord RPC -->
+    <string name="setting_discord_rpc_title">Discord Rich Presence</string>
+    <string name="setting_discord_rpc_desc">Show what you\'re playing on Discord</string>
+    <string name="setting_discord_add_token">Login with Discord</string>
+    <string name="setting_discord_add_token_desc">Log in to Discord to enable Rich Presence</string>
+    <string name="setting_discord_logout">Logout</string>
+    <string name="setting_discord_logout_desc">Disconnect from Discord Rich Presence</string>
+    <string name="setting_discord_logout_confirm">Are you sure you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

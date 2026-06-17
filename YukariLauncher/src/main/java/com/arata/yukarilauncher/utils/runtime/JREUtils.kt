@@ -1,6 +1,7 @@
 package com.arata.yukarilauncher.utils.runtime
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.system.ErrnoException
 import android.system.Os
@@ -530,6 +531,12 @@ object JREUtils {
 
         val exitCode = VMLauncher.launchJVM(userArgs.toTypedArray())
         Logger.appendToLog("Java Exit code: $exitCode")
+        try {
+            activity.sendBroadcast(Intent("com.arata.yukarilauncher.action.RPC_UPDATE").apply {
+                putExtra("command", "update_launcher")
+                putExtra("quitLauncher", AllSettings.quitLauncher.getValue())
+            })
+        } catch (_: Exception) {}
         if (exitCode != 0) {
             ErrorActivity.showExitMessage(activity, exitCode, false)
         }

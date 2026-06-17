@@ -235,7 +235,7 @@ class AllSettings {
         val enableLogOutput = BooleanSettingUnit("enableLogOutput", false)
 
         @JvmStatic
-        val quitLauncher = BooleanSettingUnit("quitLauncher", true)
+        val quitLauncher = BooleanSettingUnit("quitLauncher", false)
 
         @JvmStatic
         val acceptPreReleaseUpdates = BooleanSettingUnit("acceptPreReleaseUpdates", false)

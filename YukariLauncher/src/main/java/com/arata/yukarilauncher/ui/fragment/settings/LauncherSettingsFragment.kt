@@ -6,16 +6,25 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebStorage
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.arata.anim.AnimPlayer
 import com.arata.anim.animations.Animations
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.SettingsFragmentLauncherBinding
 import com.arata.yukarilauncher.event.single.MainBackgroundChangeEvent
 import com.arata.yukarilauncher.event.single.PageOpacityChangeEvent
+import com.arata.yukarilauncher.feature.discord.DiscordAccount
+import com.arata.yukarilauncher.feature.discord.DiscordPrefs
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.update.UpdateUtils
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.fragment.CustomBackgroundFragment
 import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim
+import com.arata.yukarilauncher.ui.fragment.showDiscordLoginDialog
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.BaseSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.ListSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SeekBarSettingsWrapper
@@ -208,12 +217,124 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
             binding.notificationPermissionRequest
         )
         setupNotificationRequestPreference(notificationPermissionRequest)
+
+        setupDiscordRpc()
+    }
+
+    private fun setupDiscordRpc() {
+        val context = requireContext()
+
+        binding.discordRpcSwitch.isChecked = DiscordPrefs.isRpcEnabled()
+        binding.discordRpcSwitch.setOnCheckedChangeListener { _, isChecked ->
+            DiscordPrefs.setRpcEnabled(isChecked)
+            binding.discordAccountSection.visibility = if (isChecked) View.VISIBLE else View.GONE
+            if (isChecked) {
+                startRpcService()
+            } else {
+                stopRpcService()
+            }
+        }
+        binding.discordAccountSection.visibility = if (DiscordPrefs.isRpcEnabled()) View.VISIBLE else View.GONE
+
+        binding.discordAddTokenLayout.setOnClickListener {
+            val selectedId = DiscordPrefs.getSelectedAccountId()
+            if (selectedId != null) {
+                AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogTheme)
+                    .setTitle(R.string.setting_discord_logout)
+                    .setMessage(R.string.setting_discord_logout_confirm)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        DiscordPrefs.clearLoginData()
+                        // WebViewのlocalStorageも消去（次回ログイン時に古いセッションが復元されるのを防止）
+                        try { WebStorage.getInstance().deleteAllData() } catch (_: Exception) {}
+                        refreshDiscordAccounts()
+                        stopRpcService()
+                    }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
+            } else {
+                showAddTokenDialog()
+            }
+        }
+
+        refreshDiscordAccounts()
+    }
+
+    private fun refreshDiscordAccounts() {
+        val context = requireContext()
+        val accounts = DiscordPrefs.getAccounts()
+        val selectedId = DiscordPrefs.getSelectedAccountId()
+
+        // Update login/logout button text based on account state
+        if (selectedId != null) {
+            binding.discordAddTokenTitle.setText(R.string.setting_discord_logout)
+            binding.discordAddTokenSummary.setText(R.string.setting_discord_logout_desc)
+        } else {
+            binding.discordAddTokenTitle.setText(R.string.setting_discord_add_token)
+            binding.discordAddTokenSummary.setText(R.string.setting_discord_add_token_desc)
+        }
+
+        binding.discordAccountList.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = DiscordAccountAdapter(accounts)
+        }
+    }
+
+    private fun showAddTokenDialog() {
+        val activity = requireActivity()
+        showDiscordLoginDialog(activity) {
+            refreshDiscordAccounts()
+        }
+    }
+
+    private fun startRpcService() {
+        DiscordRpcManager.connect()
+    }
+
+    private fun stopRpcService() {
+        DiscordRpcManager.disconnect()
+    }
+
+    private fun restartRpcService() {
+        DiscordRpcManager.reconnect()
+    }
+
+    private class DiscordAccountAdapter(
+        private val accounts: List<DiscordAccount>
+    ) : RecyclerView.Adapter<DiscordAccountAdapter.ViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_discord_account, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val account = accounts[position]
+            holder.username.text = account.displayName
+            if (account.globalName != null) {
+                holder.discriminator.visibility = View.GONE
+            } else {
+                holder.discriminator.visibility = View.VISIBLE
+                holder.discriminator.text = "#${account.discriminator}"
+            }
+        }
+
+        override fun getItemCount() = accounts.size
+
+        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val username: TextView = view.findViewById(R.id.account_username)
+            val discriminator: TextView = view.findViewById(R.id.account_discriminator)
+        }
     }
 
 
     /**
      * ビュー破棄時にブラー更新ハンドラーのコールバックを削除します。
      */
+    override fun onResume() {
+        super.onResume()
+        refreshDiscordAccounts()
+    }
+
     override fun onDestroyView() {
         blurUpdateHandler.removeCallbacks(blurUpdateRunnable)
         super.onDestroyView()

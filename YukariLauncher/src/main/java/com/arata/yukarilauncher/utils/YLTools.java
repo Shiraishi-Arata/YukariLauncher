@@ -38,6 +38,7 @@ import com.arata.yukarilauncher.InfoDistributor;
 import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.context.ContextExecutor;
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.task.Task;
@@ -150,6 +151,16 @@ public final class YLTools {
                 .setTitle(R.string.option_force_close)
                 .setMessage(R.string.force_exit_confirm)
                 .setConfirmClickListener(checked -> {
+                    Logging.i(InfoDistributor.LAUNCHER_NAME, "Force close confirmed, sending broadcast to launcher process...");
+                    Intent rpcIntent = new Intent("com.arata.yukarilauncher.action.RPC_UPDATE");
+                    rpcIntent.putExtra("command", "update_launcher");
+                    rpcIntent.putExtra("quitLauncher", AllSettings.Companion.getQuitLauncher().getValue());
+                    ctx.sendBroadcast(rpcIntent);
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                     try {
                         YLTools.killProcess();
                     } catch (Throwable th) {

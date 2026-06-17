@@ -131,7 +131,7 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-            
+
         <activity
             android:name="com.arata.yukarilauncher.ui.activity.HostServerActivity"
             android:exported="false"

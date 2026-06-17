@@ -39,6 +39,7 @@ import com.arata.yukarilauncher.feature.MCOptions
 import com.arata.yukarilauncher.feature.OldVersionsUtils
 import com.arata.yukarilauncher.feature.PojavProfile
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.log.Logger
 import com.arata.yukarilauncher.feature.version.Version
@@ -1073,6 +1074,8 @@ object Tools {
     fun isAndroid8OrHigher(): Boolean = SDK_INT >= 26
 
     fun fullyExit() {
+        DiscordRpcManager.updateLauncherPresence()
+        try { Thread.sleep(200) } catch (_: InterruptedException) {}
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 
