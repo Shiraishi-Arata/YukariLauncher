@@ -65,6 +65,12 @@ class DiscordWebSocketImpl : DiscordWebSocket {
     /** 再接続成功時に呼ばれるコールバック */
     var onReconnected: (() -> Unit)? = null
 
+    /** READY (Dispatch)受信時に呼ばれるコールバック（初回接続と再接続の両方） */
+    var onReady: (() -> Unit)? = null
+
+    /** 最大再接続試行回数に達した時に呼ばれるコールバック */
+    var onDisconnected: (() -> Unit)? = null
+
     /**
      * Discord Gatewayに接続します。既存の接続があれば切断してから新規接続します。
      * @param token Discord認証トークン
@@ -123,6 +129,9 @@ class DiscordWebSocketImpl : DiscordWebSocket {
     private fun scheduleReconnect() {
         if (reconnectAttempts >= maxReconnectAttempts) {
             Logging.e("DiscordWS", "Max reconnect attempts reached")
+            webSocket = null
+            ready = false
+            onDisconnected?.invoke()
             return
         }
         val delay = (reconnectAttempts + 1) * 2000L
@@ -239,12 +248,16 @@ class DiscordWebSocketImpl : DiscordWebSocket {
         }
     }
 
-    /** Helloフレーム：ハートビート間隔を設定し、Identifyを送信します。 */
+    /** Helloフレーム：ハートビート間隔を設定し、IdentifyまたはResumeを送信します。 */
     private fun handleHello(json: JSONObject) {
         val data = json.optJSONObject("d")
         heartbeatInterval = data?.optLong("heartbeat_interval", 41250L) ?: 41250L
         startHeartbeat()
-        identify(token!!)
+        if (sessionId != null && !intentionalDisconnect) {
+            attemptResume()
+        } else {
+            identify(token!!)
+        }
     }
 
     /** Dispatchフレーム：READYイベントを受信したらセッションIDを保存します。 */
@@ -254,7 +267,16 @@ class DiscordWebSocketImpl : DiscordWebSocket {
         if (t == "READY" && data != null) {
             sessionId = data.optString("session_id")
             ready = true
+            reconnectAttempts = 0
             Logging.i("DiscordWS", "Ready - session_id: $sessionId")
+            onReady?.invoke()
+        }
+        if (t == "RESUMED") {
+            ready = true
+            reconnectAttempts = 0
+            Logging.i("DiscordWS", "Session resumed")
+            onReconnected?.invoke()
+            onReady?.invoke()
         }
     }
 

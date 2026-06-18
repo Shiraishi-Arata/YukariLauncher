@@ -102,6 +102,11 @@ class GameService : Service() {
         @JvmStatic
         fun setActive(active: Boolean) {
             isActive = active
+            if (active) {
+                GameStateMonitor.notifyGameStarted()
+            } else {
+                GameStateMonitor.notifyGameStopped()
+            }
         }
     }
 }

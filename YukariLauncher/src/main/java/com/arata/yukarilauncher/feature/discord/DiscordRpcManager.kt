@@ -1,6 +1,7 @@
 package com.arata.yukarilauncher.feature.discord
 
 import com.arata.yukarilauncher.InfoDistributor
+import com.arata.yukarilauncher.feature.GameStateMonitor
 import com.arata.yukarilauncher.feature.discord.gateway.Activity
 import com.arata.yukarilauncher.feature.discord.gateway.Assets
 import com.arata.yukarilauncher.feature.discord.gateway.DiscordWebSocket
@@ -55,6 +56,24 @@ object DiscordRpcManager {
     @Volatile
     private var inGame = false
 
+    /** GameStateMonitorのリスナーが登録済みかどうか */
+    private var monitorRegistered = false
+
+    /** ゲーム状態変更リスナー */
+    private val gameStateListener = GameStateMonitor.Listener { running ->
+        if (running) {
+            Logging.i("DiscordRPC", "GameStateMonitor: game started")
+            inGame = true
+            if (connected) sendGamePresence()
+        } else {
+            Logging.i("DiscordRPC", "GameStateMonitor: game stopped")
+            inGame = false
+            // connect()のガード条件（connected && isConnected()）が既存接続を維持し、
+            // 再接続中の場合は新規WebSocketを作成してランチャープレゼンスに戻す
+            connect()
+        }
+    }
+
     /** 最後に起動したゲームの情報（プレゼンス再送用） */
     private var lastGameVersion: String = ""
     private var lastGameModLoader: String = ""
@@ -64,46 +83,70 @@ object DiscordRpcManager {
     /**
      * Discord Gatewayに接続し、認証・画像キャッシュ・プレゼンス設定を行います。
      * RPCが無効、またはアカウント未選択の場合は何も行いません。
+     * connectedフラグはWebSocketの実際の状態に基づいてのみ更新されます。
      */
     fun connect() {
-        if (connected) return
+        // 既に接続済みの場合はスキップ
+        if (connected && webSocket?.isConnected() == true) return
         if (!DiscordPrefs.isRpcEnabled()) return
         val accountId = DiscordPrefs.getSelectedAccountId() ?: return
         val account = DiscordPrefs.getAccounts().find { it.id == accountId } ?: return
 
         launcherActivityStartTime = System.currentTimeMillis()
-        connected = true
-
         imagePaths = DiscordPrefs.getImagePaths()
 
+        // 既存のWebSocketを破棄してから新規作成
+        val oldWs = webSocket
+        webSocket = null
+        connected = false
+        scope.launch { oldWs?.disconnect() }
+
         val ws = DiscordWebSocketImpl()
-        ws.onReconnected = { resendCurrentPresence() }
+        ws.onReady = {
+            // READY受信時（初回接続・再接続の両方）にフラグを復帰してプレゼンスを再送
+            connected = true
+            // WebSocket復帰時にゲームが実行中ならゲームプレゼンス、そうでなければランチャープレゼンス
+            resendCurrentPresence()
+        }
+        ws.onDisconnected = {
+            // 内部リコネクトが最大試行回数に達したらフラグを落とす
+            connected = false
+        }
         webSocket = ws
+
+        // GameStateMonitorのリスナー登録（重複防止）
+        if (!monitorRegistered) {
+            GameStateMonitor.addListener(gameStateListener)
+            monitorRegistered = true
+            // 既にゲームが実行中の場合は即座に状態を反映
+            if (GameStateMonitor.isGameRunning()) {
+                inGame = true
+            }
+        }
 
         scope.launch {
             try {
                 ws.connect(account.token)
             } catch (e: Exception) {
                 Logging.e("DiscordRPC", "Connection error: ${e.message}")
-                connected = false
             }
         }
 
-        // 接続完了を待機してから画像キャッシュとプレゼンスを初期化
+        // 接続完了を待機して画像キャッシュを初期化（プレゼンスはonReadyで送信）
         scope.launch {
             delay(1000)
             var retries = 0
-            while (retries < 20 && !ws.isConnected()) {
+            while (retries < 60 && !ws.isConnected()) {
                 delay(500)
                 retries++
             }
             if (ws.isConnected()) {
                 Logging.i("DiscordRPC", "Connected to Discord gateway")
                 refreshImageCache()
-                if (!inGame) updateLauncherPresence()
             } else {
-                Logging.e("DiscordRPC", "Timed out waiting for connection")
-                connected = false
+                // タイムアウトしてもconnected=falseのまま。
+                // READY受信時のonReadyが後でconnectedをtrueにしてプレゼンスを送信する。
+                Logging.w("DiscordRPC", "Connection pending, will complete via onReady callback")
             }
         }
     }
@@ -159,6 +202,10 @@ object DiscordRpcManager {
     fun disconnect() {
         inGame = false
         connected = false
+        if (monitorRegistered) {
+            GameStateMonitor.removeListener(gameStateListener)
+            monitorRegistered = false
+        }
         scope.launch {
             webSocket?.disconnect()
             webSocket = null

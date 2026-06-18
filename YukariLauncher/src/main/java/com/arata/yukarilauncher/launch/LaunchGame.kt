@@ -171,10 +171,12 @@ class LaunchGame {
 
             JREUtils.redirectAndPrintJRELog()
 
-            launch(activity, account, minecraftVersion, javaRuntime, customArgs)
-
-            // 実際には上記の関数でゲームがクラッシュしてもストールするが、念のため
-            GameService.setActive(false)
+            try {
+                launch(activity, account, minecraftVersion, javaRuntime, customArgs)
+            } finally {
+                // ゲーム終了を確実に通知（launch()が例外を投げても実行される）
+                GameService.setActive(false)
+            }
         }
 
         /**

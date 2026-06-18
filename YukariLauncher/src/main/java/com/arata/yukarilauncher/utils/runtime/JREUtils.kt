@@ -13,6 +13,7 @@ import com.arata.yukarilauncher.InfoDistributor
 import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.event.value.JvmExitEvent
+import com.arata.yukarilauncher.feature.GameStateMonitor
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathManager
 import com.arata.yukarilauncher.feature.log.Logging
@@ -529,7 +530,12 @@ object JREUtils {
         chdir((gameVersion ?: ProfilePathHome.getGameHome()).let { if (it is String) it else (it as Version).getGameDir().absolutePath })
         userArgs.add(0, "java")
 
-        val exitCode = VMLauncher.launchJVM(userArgs.toTypedArray())
+        GameStateMonitor.notifyGameStarted()
+        val exitCode = try {
+            VMLauncher.launchJVM(userArgs.toTypedArray())
+        } finally {
+            GameStateMonitor.notifyGameStopped()
+        }
         Logger.appendToLog("Java Exit code: $exitCode")
         try {
             activity.sendBroadcast(Intent("com.arata.yukarilauncher.action.RPC_UPDATE").apply {
