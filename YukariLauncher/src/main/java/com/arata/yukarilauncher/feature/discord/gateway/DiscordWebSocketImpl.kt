@@ -71,6 +71,9 @@ class DiscordWebSocketImpl : DiscordWebSocket {
     /** 最大再接続試行回数に達した時に呼ばれるコールバック */
     var onDisconnected: (() -> Unit)? = null
 
+    /** カスタムステータス更新時のコールバック（テキスト、またはnull=解除） */
+    var onCustomStatusUpdate: ((String?) -> Unit)? = null
+
     /**
      * Discord Gatewayに接続します。既存の接続があれば切断してから新規接続します。
      * @param token Discord認証トークン
@@ -269,6 +272,8 @@ class DiscordWebSocketImpl : DiscordWebSocket {
             ready = true
             reconnectAttempts = 0
             Logging.i("DiscordWS", "Ready - session_id: $sessionId")
+            // カスタムステータスをREADYイベントのpresencesから抽出
+            parseCustomStatusFromPresences(data)
             onReady?.invoke()
         }
         if (t == "RESUMED") {
@@ -278,6 +283,42 @@ class DiscordWebSocketImpl : DiscordWebSocket {
             onReconnected?.invoke()
             onReady?.invoke()
         }
+        if (t == "PRESENCE_UPDATE" && data != null) {
+            // 自身のプレゼンス更新からカスタムステータスを抽出
+            parseCustomStatusFromPresence(data)
+        }
+    }
+
+    /** READYイベントのpresences配列から自分自身のカスタムステータスを抽出します。 */
+    private fun parseCustomStatusFromPresences(readyData: JSONObject) {
+        val userId = readyData.optJSONObject("user")?.optString("id") ?: return
+        val presences = readyData.optJSONArray("presences") ?: return
+        for (i in 0 until presences.length()) {
+            val presence = presences.optJSONObject(i) ?: continue
+            val presenceUser = presence.optJSONObject("user") ?: continue
+            if (presenceUser.optString("id") == userId) {
+                parseCustomStatusFromPresence(presence)
+                return
+            }
+        }
+    }
+
+    /** 単一のpresenceオブジェクトからカスタムステータスを抽出します。 */
+    private fun parseCustomStatusFromPresence(presence: JSONObject) {
+        val activities = presence.optJSONArray("activities") ?: kotlin.run {
+            onCustomStatusUpdate?.invoke(null)
+            return
+        }
+        for (i in 0 until activities.length()) {
+            val activity = activities.optJSONObject(i) ?: continue
+            if (activity.optInt("type", -1) == 4) {
+                val status = activity.optString("state", null)?.ifEmpty { null }
+                Logging.i("DiscordWS", "Custom status: $status")
+                onCustomStatusUpdate?.invoke(status)
+                return
+            }
+        }
+        onCustomStatusUpdate?.invoke(null)
     }
 
     /** 定期的なハートビート送信を開始します。 */

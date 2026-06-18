@@ -59,6 +59,26 @@ object DiscordRpcManager {
     /** GameStateMonitorのリスナーが登録済みかどうか */
     private var monitorRegistered = false
 
+    /** カスタムステータス変更リスナー */
+    private val customStatusListeners = mutableListOf<((String?) -> Unit)>()
+
+    /** カスタムステータス変更時に通知を受け取るリスナーを追加します。 */
+    fun addCustomStatusListener(listener: (String?) -> Unit) {
+        customStatusListeners.add(listener)
+    }
+
+    /** カスタムステータス変更リスナーを削除します。 */
+    fun removeCustomStatusListener(listener: (String?) -> Unit) {
+        customStatusListeners.remove(listener)
+    }
+
+    /** 現在のカスタムステータス（カスタムステータスが設定されていない場合はnull） */
+    @Volatile
+    private var customStatus: String? = null
+
+    /** カスタムステータスを取得します。 */
+    fun getCustomStatus(): String? = customStatus
+
     /** ゲーム状態変更リスナー */
     private val gameStateListener = GameStateMonitor.Listener { running ->
         if (running) {
@@ -107,6 +127,29 @@ object DiscordRpcManager {
             connected = true
             // WebSocket復帰時にゲームが実行中ならゲームプレゼンス、そうでなければランチャープレゼンス
             resendCurrentPresence()
+        }
+        ws.onCustomStatusUpdate = { status ->
+            customStatus = status
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                customStatusListeners.toList().forEach { it(status) }
+            }
+        }
+        // 接続完了時にREST APIからカスタムステータスを取得（callbackはメインスレッド）
+        val statusToken = account.token
+        scope.launch {
+            var retries = 0
+            while (retries < 60 && !ws.isConnected()) {
+                delay(500)
+                retries++
+            }
+            if (ws.isConnected()) {
+                DiscordAccountManager.fetchCustomStatus(statusToken) { status ->
+                    if (customStatus != status) {
+                        customStatus = status
+                        customStatusListeners.toList().forEach { it(status) }
+                    }
+                }
+            }
         }
         ws.onDisconnected = {
             // 内部リコネクトが最大試行回数に達したらフラグを落とす

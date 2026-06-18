@@ -17,6 +17,10 @@ data class DiscordAccount(
     val globalName: String? = null,
     /** ディスクリミネーター（#0000形式） */
     val discriminator: String,
+    /** アバターハッシュ。CDN URL: https://cdn.discordapp.com/avatars/{id}/{avatar}.png */
+    val avatar: String? = null,
+    /** バナーハッシュ。CDN URL: https://cdn.discordapp.com/banners/{id}/{banner}.png */
+    val banner: String? = null,
     /** 認証トークン */
     val token: String
 ) : Parcelable, Serializable {
@@ -24,11 +28,27 @@ data class DiscordAccount(
     /** UI表示用の名前。globalNameがなければusernameをフォールバック。 */
     val displayName: String get() = globalName ?: username
 
+    /** Discord CDNのアバターURL。avatarがnullの場合はnullを返す */
+    val avatarUrl: String?
+        get() = if (avatar != null) {
+            val ext = if (avatar!!.startsWith("a_")) "gif" else "png"
+            "https://cdn.discordapp.com/avatars/$id/$avatar.$ext?size=128"
+        } else null
+
+    /** Discord CDNのバナーURL。bannerがnullの場合はnullを返す */
+    val bannerUrl: String?
+        get() = if (banner != null) {
+            val ext = if (banner!!.startsWith("a_")) "gif" else "png"
+            "https://cdn.discordapp.com/banners/$id/$banner.$ext?size=480"
+        } else null
+
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString(),
         parcel.readString() ?: "",
+        parcel.readString(),
+        parcel.readString(),
         parcel.readString() ?: ""
     )
 
@@ -37,6 +57,8 @@ data class DiscordAccount(
         parcel.writeString(username)
         parcel.writeString(globalName)
         parcel.writeString(discriminator)
+        parcel.writeString(avatar)
+        parcel.writeString(banner)
         parcel.writeString(token)
     }
 

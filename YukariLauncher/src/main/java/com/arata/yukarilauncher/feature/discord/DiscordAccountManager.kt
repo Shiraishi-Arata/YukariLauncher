@@ -39,6 +39,36 @@ object DiscordAccountManager {
     data class LoginResult(val success: Boolean, val account: DiscordAccount? = null, val error: String? = null)
 
     /**
+     * 現在のカスタムステータスをDiscord APIから取得します。
+     * @param token Discord認証トークン
+     * @param callback カスタムステータスのテキスト（未設定時はnull）を受け取るコールバック（メインスレッドで実行）
+     */
+    fun fetchCustomStatus(token: String, callback: (String?) -> Unit) {
+        Task.runTask {
+            try {
+                val request = Request.Builder()
+                    .url("$API_BASE/users/@me/settings")
+                    .header("Authorization", token)
+                    .build()
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    Handler(Looper.getMainLooper()).post { callback(null) }
+                    return@runTask null
+                }
+                val json = JSONObject(response.body?.string() ?: "")
+                val status = json.optJSONObject("custom_status")
+                val text = status?.optString("text", null)?.ifEmpty { null }
+                Logging.i("DiscordAccountManager", "Custom status from API: $text")
+                Handler(Looper.getMainLooper()).post { callback(text) }
+            } catch (e: Exception) {
+                Logging.e("DiscordAccountManager", "Failed to fetch custom status", e)
+                Handler(Looper.getMainLooper()).post { callback(null) }
+            }
+            null
+        }.execute()
+    }
+
+    /**
      * トークンを使用してDiscordログインを試行します。
      * トークンの検証後、有効な場合はアカウントを保存します。
      * @param token Discord認証トークン
@@ -217,6 +247,8 @@ object DiscordAccountManager {
                 username = json.getString("username"),
                 globalName = json.optString("global_name", null)?.ifEmpty { null },
                 discriminator = json.optString("discriminator", "0"),
+                avatar = json.optString("avatar", null)?.ifEmpty { null },
+                banner = json.optString("banner", null)?.ifEmpty { null },
                 token = token
             )
             DiscordPrefs.addAccount(account)

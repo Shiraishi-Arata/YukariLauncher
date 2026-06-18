@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebStorage
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,8 @@ import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapp
 import com.arata.yukarilauncher.utils.CleanUpCache.Companion.start
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.ui.activity.LauncherActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -41,6 +44,7 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
     private lateinit var binding: SettingsFragmentLauncherBinding
     private var parentFragment: FragmentWithAnim? = null
     private val blurUpdateHandler = Handler(Looper.getMainLooper())
+    private var customStatusListener: ((String?) -> Unit)? = null
     private val blurUpdateRunnable = Runnable {
         EventBus.getDefault().post(MainBackgroundChangeEvent())
     }
@@ -257,6 +261,12 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
         }
 
         refreshDiscordAccounts()
+
+        // カスタムステータス変更時にアカウントリストを更新
+        customStatusListener = { _ ->
+            refreshDiscordAccounts()
+        }
+        customStatusListener?.let { DiscordRpcManager.addCustomStatusListener(it) }
     }
 
     private fun refreshDiscordAccounts() {
@@ -309,20 +319,44 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val account = accounts[position]
-            holder.username.text = account.displayName
-            if (account.globalName != null) {
-                holder.discriminator.visibility = View.GONE
+            val isSelected = account.id == DiscordPrefs.getSelectedAccountId()
+            holder.displayName.text = account.displayName
+
+            val baseUsername = if (account.discriminator != "0") "${account.username}#${account.discriminator}" else "@${account.username}"
+            val status = if (isSelected) DiscordRpcManager.getCustomStatus() else null
+            holder.username.text = if (status != null) "$baseUsername • $status" else baseUsername
+
+            val avatarUrl = account.avatarUrl
+            if (avatarUrl != null) {
+                Glide.with(holder.avatar)
+                    .load(avatarUrl)
+                    .transform(CircleCrop())
+                    .placeholder(R.drawable.ic_discord)
+                    .error(R.drawable.ic_discord)
+                    .into(holder.avatar)
             } else {
-                holder.discriminator.visibility = View.VISIBLE
-                holder.discriminator.text = "#${account.discriminator}"
+                holder.avatar.setImageResource(R.drawable.ic_discord)
+            }
+
+            val bannerUrl = account.bannerUrl
+            if (bannerUrl != null) {
+                Glide.with(holder.banner)
+                    .load(bannerUrl)
+                    .placeholder(R.drawable.discord_profile_banner)
+                    .error(R.drawable.discord_profile_banner)
+                    .into(holder.banner)
+            } else {
+                holder.banner.setImageResource(R.drawable.discord_profile_banner)
             }
         }
 
         override fun getItemCount() = accounts.size
 
         class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val banner: ImageView = view.findViewById(R.id.profile_banner)
+            val avatar: ImageView = view.findViewById(R.id.account_avatar)
+            val displayName: TextView = view.findViewById(R.id.account_display_name)
             val username: TextView = view.findViewById(R.id.account_username)
-            val discriminator: TextView = view.findViewById(R.id.account_discriminator)
         }
     }
 
@@ -337,6 +371,8 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
 
     override fun onDestroyView() {
         blurUpdateHandler.removeCallbacks(blurUpdateRunnable)
+        customStatusListener?.let { DiscordRpcManager.removeCustomStatusListener(it) }
+        customStatusListener = null
         super.onDestroyView()
     }
 
