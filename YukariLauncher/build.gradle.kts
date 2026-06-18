@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") version "2.3.20"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.20"
     id("stringfog")
     id("com.diffplug.spotless")
 }
@@ -192,6 +193,7 @@ android {
         prefab = true
         buildConfig = true
         viewBinding = true
+        compose = true
     }
 
     buildToolsVersion = "35.0.0"
@@ -308,6 +310,15 @@ dependencies {
     implementation("com.getkeepsafe.taptargetview:taptargetview:1.14.0")
     implementation("io.github.petterpx:floatingx:2.3.3")
     implementation("org.greenrobot:eventbus:3.3.1")
+
+    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2") {
         exclude(group = "com.google.code.gson", module = "gson")
     }

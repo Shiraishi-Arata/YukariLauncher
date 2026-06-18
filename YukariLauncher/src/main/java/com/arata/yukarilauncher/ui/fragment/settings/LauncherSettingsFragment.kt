@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebStorage
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +16,11 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.SettingsFragmentLauncherBinding
 import com.arata.yukarilauncher.event.single.MainBackgroundChangeEvent
 import com.arata.yukarilauncher.event.single.PageOpacityChangeEvent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import com.arata.yukarilauncher.feature.discord.DiscordAccount
 import com.arata.yukarilauncher.feature.discord.DiscordPrefs
+import com.arata.yukarilauncher.feature.discord.DiscordProfileCard
 import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.update.UpdateUtils
 import com.arata.yukarilauncher.setting.AllSettings
@@ -33,8 +34,6 @@ import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapp
 import com.arata.yukarilauncher.utils.CleanUpCache.Companion.start
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.ui.activity.LauncherActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -241,26 +240,6 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
         }
         binding.discordAccountSection.visibility = if (DiscordPrefs.isRpcEnabled()) View.VISIBLE else View.GONE
 
-        binding.discordAddTokenLayout.setOnClickListener {
-            val selectedId = DiscordPrefs.getSelectedAccountId()
-            if (selectedId != null) {
-                AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogTheme)
-                    .setTitle(R.string.setting_discord_logout)
-                    .setMessage(R.string.setting_discord_logout_confirm)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        DiscordPrefs.clearLoginData()
-                        // WebViewのlocalStorageも消去（次回ログイン時に古いセッションが復元されるのを防止）
-                        try { WebStorage.getInstance().deleteAllData() } catch (_: Exception) {}
-                        refreshDiscordAccounts()
-                        stopRpcService()
-                    }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
-            } else {
-                showAddTokenDialog()
-            }
-        }
-
         refreshDiscordAccounts()
 
         // カスタムステータス変更時にアカウントリストを更新
@@ -296,20 +275,25 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
     private fun refreshDiscordAccounts() {
         val context = requireContext()
         val accounts = DiscordPrefs.getAccounts()
-        val selectedId = DiscordPrefs.getSelectedAccountId()
-
-        // Update login/logout button text based on account state
-        if (selectedId != null) {
-            binding.discordAddTokenTitle.setText(R.string.setting_discord_logout)
-            binding.discordAddTokenSummary.setText(R.string.setting_discord_logout_desc)
-        } else {
-            binding.discordAddTokenTitle.setText(R.string.setting_discord_add_token)
-            binding.discordAddTokenSummary.setText(R.string.setting_discord_add_token_desc)
-        }
 
         binding.discordAccountList.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = DiscordAccountAdapter(accounts)
+            adapter = DiscordAccountAdapter(
+                accounts = accounts,
+                onLoginClick = { showAddTokenDialog() },
+                onLogoutClick = {
+                    AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogTheme)
+                        .setTitle(R.string.setting_discord_logout)
+                        .setMessage(R.string.setting_discord_logout_confirm)
+                        .setPositiveButton(R.string.yes) { _, _ ->
+                            DiscordPrefs.clearLoginData()
+                            try { WebStorage.getInstance().deleteAllData() } catch (_: Exception) {}
+                            stopRpcService()
+                        }
+                        .setNegativeButton(R.string.no, null)
+                        .show()
+                }
+            )
         }
     }
 
@@ -333,55 +317,69 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
     }
 
     private class DiscordAccountAdapter(
-        private val accounts: List<DiscordAccount>
+        private val accounts: List<DiscordAccount>,
+        private val onLoginClick: (() -> Unit)? = null,
+        private val onLogoutClick: (() -> Unit)? = null
     ) : RecyclerView.Adapter<DiscordAccountAdapter.ViewHolder>() {
 
+        private val darkColorScheme = androidx.compose.material3.darkColorScheme(
+            primary = Color(0xFF8D42EB),
+            onPrimary = Color(0xFFECEBFF),
+            surface = Color(0xFF06071B),
+            onSurface = Color(0xFFECEBFF),
+            surfaceContainerHigh = Color(0xFF161330),
+            surfaceContainer = Color(0xFF191733),
+            primaryContainer = Color(0xFF191733),
+            onPrimaryContainer = Color(0xFFECEBFF),
+            secondaryContainer = Color(0xFF251A48)
+        )
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_discord_account, parent, false)
-            return ViewHolder(view)
+            val composeView = ComposeView(parent.context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
+            return ViewHolder(composeView)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            if (accounts.isEmpty()) {
+                holder.composeView.setContent {
+                    androidx.compose.material3.MaterialTheme(colorScheme = darkColorScheme) {
+                        DiscordProfileCard(
+                            account = null,
+                            customStatus = null,
+                            isSelected = false,
+                            showLogin = true,
+                            onLoginClick = onLoginClick
+                        )
+                    }
+                }
+                return
+            }
             val account = accounts[position]
             val isSelected = account.id == DiscordPrefs.getSelectedAccountId()
-            holder.displayName.text = account.displayName
-
-            val baseUsername = if (account.discriminator != "0") "${account.username}#${account.discriminator}" else "@${account.username}"
             val status = if (isSelected) DiscordRpcManager.getCustomStatus() else null
-            holder.username.text = if (status != null) "$baseUsername • $status" else baseUsername
-
-            val avatarUrl = account.avatarUrl
-            if (avatarUrl != null) {
-                Glide.with(holder.avatar)
-                    .load(avatarUrl)
-                    .transform(CircleCrop())
-                    .placeholder(R.drawable.ic_discord)
-                    .error(R.drawable.ic_discord)
-                    .into(holder.avatar)
-            } else {
-                holder.avatar.setImageResource(R.drawable.ic_discord)
-            }
-
-            val bannerUrl = account.bannerUrl
-            if (bannerUrl != null) {
-                Glide.with(holder.banner)
-                    .load(bannerUrl)
-                    .placeholder(R.drawable.discord_profile_banner)
-                    .error(R.drawable.discord_profile_banner)
-                    .into(holder.banner)
-            } else {
-                holder.banner.setImageResource(R.drawable.discord_profile_banner)
+            val hasSelectedAccount = DiscordPrefs.getSelectedAccountId() != null
+            holder.composeView.setContent {
+                androidx.compose.material3.MaterialTheme(colorScheme = darkColorScheme) {
+                    DiscordProfileCard(
+                        account = account,
+                        customStatus = status,
+                        isSelected = isSelected,
+                        showLogin = !hasSelectedAccount,
+                        onLoginClick = if (!hasSelectedAccount) onLoginClick else null,
+                        onLogoutClick = if (isSelected) onLogoutClick else null
+                    )
+                }
             }
         }
 
-        override fun getItemCount() = accounts.size
+        override fun getItemCount() = if (accounts.isEmpty()) 1 else accounts.size
 
-        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val banner: ImageView = view.findViewById(R.id.profile_banner)
-            val avatar: ImageView = view.findViewById(R.id.account_avatar)
-            val displayName: TextView = view.findViewById(R.id.account_display_name)
-            val username: TextView = view.findViewById(R.id.account_username)
-        }
+        class ViewHolder(val composeView: ComposeView) : RecyclerView.ViewHolder(composeView)
     }
 
 
