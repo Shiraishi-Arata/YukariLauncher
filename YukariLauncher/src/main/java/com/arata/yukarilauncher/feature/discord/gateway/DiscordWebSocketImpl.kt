@@ -289,14 +289,16 @@ class DiscordWebSocketImpl : DiscordWebSocket {
         }
     }
 
+    private var currentUserId: String? = null
+
     /** READYイベントのpresences配列から自分自身のカスタムステータスを抽出します。 */
     private fun parseCustomStatusFromPresences(readyData: JSONObject) {
-        val userId = readyData.optJSONObject("user")?.optString("id") ?: return
+        currentUserId = readyData.optJSONObject("user")?.optString("id") ?: return
         val presences = readyData.optJSONArray("presences") ?: return
         for (i in 0 until presences.length()) {
             val presence = presences.optJSONObject(i) ?: continue
             val presenceUser = presence.optJSONObject("user") ?: continue
-            if (presenceUser.optString("id") == userId) {
+            if (presenceUser.optString("id") == currentUserId) {
                 parseCustomStatusFromPresence(presence)
                 return
             }
@@ -305,6 +307,10 @@ class DiscordWebSocketImpl : DiscordWebSocket {
 
     /** 単一のpresenceオブジェクトからカスタムステータスを抽出します。 */
     private fun parseCustomStatusFromPresence(presence: JSONObject) {
+        val presenceUser = presence.optJSONObject("user")
+        if (presenceUser != null && currentUserId != null) {
+            if (presenceUser.optString("id") != currentUserId) return
+        }
         val activities = presence.optJSONArray("activities") ?: kotlin.run {
             onCustomStatusUpdate?.invoke(null)
             return
