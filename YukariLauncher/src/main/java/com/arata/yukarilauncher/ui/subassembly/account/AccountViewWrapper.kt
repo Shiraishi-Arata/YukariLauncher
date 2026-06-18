@@ -12,7 +12,7 @@ import com.arata.yukarilauncher.ui.fragment.AccountFragment
 import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.skin.SkinLoader
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 
 /**
  * アカウント情報表示ビューをラップするクラス

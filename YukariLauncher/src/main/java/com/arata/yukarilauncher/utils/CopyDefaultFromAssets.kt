@@ -2,7 +2,7 @@ package com.arata.yukarilauncher.utils
 
 import android.content.Context
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 import java.io.IOException
 
@@ -14,7 +14,7 @@ class CopyDefaultFromAssets {
          */
         @JvmStatic
         @Throws(IOException::class)
-        fun copyFromAssets(context: Context?) {
+        fun copyFromAssets(context: Context) {
             // デフォルトのコントロールレイアウト
             if (checkDirectoryEmpty(PathManager.DIR_CTRLMAP_PATH)) {
                 Tools.copyAssetFile(context, "yukari.json", PathManager.DIR_CTRLMAP_PATH, false)

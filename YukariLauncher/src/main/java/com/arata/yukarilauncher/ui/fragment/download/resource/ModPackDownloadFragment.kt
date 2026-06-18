@@ -10,7 +10,6 @@ import com.arata.anim.animations.Animations
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.event.value.InstallLocalModpackEvent
 import com.arata.yukarilauncher.feature.download.enums.Classify
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.feature.mod.modpack.install.InstallExtra
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
@@ -18,8 +17,8 @@ import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils.Companion.setViewAnim
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -29,7 +28,6 @@ import org.greenrobot.eventbus.EventBus
 class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.MODPACK,
-    CategoryUtils.getModPackCategory(),
     true
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
@@ -40,23 +38,20 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension(null)) { uris: List<Uri>? ->
-            uris?.let { uriList ->
-                uriList[0].let { result ->
-                    if (!isTaskRunning()) {
-                        val dialog = YLTools.showTaskRunningDialog(requireContext())
-                        Task.runTask {
-                            FileTools.copyFileInBackground(requireContext(), result, PathManager.DIR_CACHE.absolutePath)
-                        }.ended(TaskExecutors.getAndroidUI()) { modPackFile ->
-                            modPackFile?.let {
-                                EventBus.getDefault().post(InstallLocalModpackEvent(InstallExtra(true, it.absolutePath)))
-                            }
-                        }.onThrowable { e ->
-                            Tools.showErrorRemote(e)
-                        }.finallyTask(TaskExecutors.getAndroidUI()) {
-                            dialog.dismiss()
-                        }.execute()
+            if (!uris.isNullOrEmpty() && !isTaskRunning()) {
+                val uri = uris[0]
+                val dialog = YLTools.showTaskRunningDialog(requireContext())
+                Task.runTask {
+                    FileTools.copyFileInBackground(requireContext(), uri, PathManager.DIR_CACHE.absolutePath)
+                }.ended(TaskExecutors.getAndroidUI()) { modPackFile ->
+                    modPackFile?.let {
+                        EventBus.getDefault().post(InstallLocalModpackEvent(InstallExtra(true, it.absolutePath)))
                     }
-                }
+                }.onThrowable { e ->
+                    Tools.showErrorRemote(e)
+                }.finallyTask(TaskExecutors.getAndroidUI()) {
+                    dialog.dismiss()
+                }.execute()
             }
         }
     }
@@ -68,7 +63,7 @@ class ModPackDownloadFragment(parentFragment: Fragment? = null) : AbstractResour
         installButton.setOnClickListener {
             if (!isTaskRunning()) {
                 Toast.makeText(requireActivity(), getString(R.string.select_modpack_local_tip), Toast.LENGTH_SHORT).show()
-                openDocumentLauncher?.launch(null)
+                openDocumentLauncher?.launch(Unit)
             } else {
                 setViewAnim(installButton, Animations.Shake)
                 Toast.makeText(requireActivity(), getString(R.string.tasks_ongoing), Toast.LENGTH_SHORT).show()

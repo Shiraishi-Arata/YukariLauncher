@@ -1,7 +1,6 @@
 package com.arata.yukarilauncher.feature.download.platform.curseforge
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.download.Filters
 import com.arata.yukarilauncher.feature.download.InfoCache
 import com.arata.yukarilauncher.feature.download.enums.Category
@@ -16,13 +15,16 @@ import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.feature.download.utils.PlatformUtils.Companion.safeRun
 import com.arata.yukarilauncher.feature.download.utils.VersionTypeUtils
 import com.arata.yukarilauncher.feature.log.Logging
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
+import com.arata.yukarilauncher.utils.GsonJsonUtils
 import com.arata.yukarilauncher.utils.MCVersionRegex.Companion.RELEASE_REGEX
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
-import net.kdt.pojavlaunch.utils.GsonJsonUtils
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+
 import java.io.IOException
+import java.net.URLEncoder
 import java.util.TreeSet
 import java.util.function.Consumer
 
@@ -50,7 +52,9 @@ class CurseForgeCommonUtils {
             params["sortField"] = filters.sort.curseforge
             params["sortOrder"] = "desc"
             params["pageSize"] = CURSEFORGE_SEARCH_COUNT
-            filters.category.curseforgeID?.let { if (filters.category != Category.ALL) params["categoryId"] = it }
+            filters.categories.firstOrNull { it.curseforgeID != null }?.curseforgeID?.let {
+                params["categoryId"] = it
+            }
             filters.mcVersion?.let { if (it.isNotEmpty()) params["gameVersion"] = it }
             params["index"] = index
         }
@@ -127,16 +131,25 @@ class CurseForgeCommonUtils {
  * getResultsする
  */
         internal fun getResults(api: ApiHandler, lastResult: SearchResult, filters: Filters, classId: Int, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.curseforgeID == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedCF = filters.categories.firstOrNull { it.curseforgeID != null }
+            if (filters.categories.isNotEmpty() && selectedCF == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             val params = HashMap<String, Any>()
             putDefaultParams(params, filters, lastResult.previousCount)
             params["classId"] = classId
 
-            val response = api.get("mods/search", params, JsonObject::class.java) ?: return null
-            val dataArray = response.getAsJsonArray("data") ?: return null
+            val response = api.get("mods/search", params, JsonObject::class.java)
+            if (response == null) {
+                Logging.e("CurseForgeCommonUtils", "mods/search returned null (likely 403 - API key lacks search permissions)")
+                return null
+            }
+            val dataArray = response.getAsJsonArray("data")
+            if (dataArray == null) {
+                Logging.e("CurseForgeCommonUtils", "mods/search response has no 'data' array: ${response}")
+                return null
+            }
 
             val infoItems: MutableList<InfoItem> = ArrayList()
             for (data in dataArray) {
@@ -162,7 +175,7 @@ class CurseForgeCommonUtils {
             val allowModDistribution = dataObject.get("allowModDistribution")
             // Gsonはnullを自動的にfalseにキャストするため、問題が発生する
             // そのため、allowModDistributionフラグがnullでない場合のみチェックする
-            if (!allowModDistribution.isJsonNull && !allowModDistribution.asBoolean) {
+            if (allowModDistribution != null && !allowModDistribution.isJsonNull && !allowModDistribution.asBoolean) {
                 Logging.i("CurseForgeCommonUtils", "Skipping project ${dataObject["name"].asString} because curseforge sucks")
                 return null
             }
@@ -179,6 +192,7 @@ class CurseForgeCommonUtils {
                 YLTools.getDate(dataObject.get("dateCreated").asString),
                 getIconUrl(dataObject),
                 getAllCategories(dataObject).toList(),
+                updatedDate = try { YLTools.getDate(dataObject.get("dateModified").asString) } catch (_: Exception) { null }
             )
         }
 
@@ -295,7 +309,8 @@ class CurseForgeCommonUtils {
             if (fallbackResponse != null && !fallbackResponse["data"].isJsonNull) {
                 val modData = fallbackResponse["data"].asJsonObject
                 val id = modData["id"].asInt
-                return "https://edge.forgecdn.net/files/${id / 1000}/${id % 1000}/${modData["fileName"].asString}"
+                val encodedName = URLEncoder.encode(modData["fileName"].asString, "UTF-8").replace("+", "%20")
+                return "https://edge.forgecdn.net/files/${id / 1000}/${id % 1000}/$encodedName"
             }
 
             return null

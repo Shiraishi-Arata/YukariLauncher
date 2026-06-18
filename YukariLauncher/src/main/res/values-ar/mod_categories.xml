@@ -6,7 +6,7 @@
     <string name="category_dimensions">الأبعاد</string>
     <string name="category_ores_resources">المعادن والموارد</string>
     <string name="category_structures">الهياكل</string>
-    <string name="category_technology">التقنية</string>
+    <string name="category_technology">تقنية</string>
     <string name="category_item_fluid_energy_transport">الأنابيب واللوجستيات</string>
     <string name="category_automation">التلقائي</string>
     <string name="category_energy">الطاقة</string>
@@ -16,26 +16,27 @@
     <string name="category_transport">النقل</string>
     <string name="category_storage">التخزين</string>
     <string name="category_magic">السحر</string>
-    <string name="category_adventure">المغامرة</string>
+    <string name="category_adventure">مغامرة وأدوار</string>
     <string name="category_decoration">الزخرفة</string>
     <string name="category_mobs">الكائنات</string>
     <string name="category_equipment">العتاد</string>
     <string name="category_information">المعلومات</string>
-    <string name="category_social">الخادم</string>
+    <string name="category_social">اجتماعي</string>
     <string name="category_utility">الأدوات</string>
     <string name="category_library">المكتبة</string>
     <string name="category_game_mechanics">آليات اللعبة</string>
     <string name="category_optimization">التحسين</string>
+    <string name="category_performance">أداء</string>
     <!-- Modpack -->
     <string name="category_multiplayer">متعدد اللاعبين</string>
     <string name="category_challenging">صعب</string>
-    <string name="category_combat">قتال</string>
+    <string name="category_combat">قتال / PvP</string>
     <string name="category_quests">مهام</string>
     <string name="category_exploration">استكشاف</string>
-    <string name="category_mini_game">ألعاب صغيرة</string>
+    <string name="category_mini_game">لعبة صغيرة</string>
     <string name="category_sci_fi">خيال علمي</string>
     <string name="category_skyblock">سكاي بلوك</string>
-    <string name="category_vanilla">تحسينات الإصدار العادي</string>
+    <string name="category_vanilla">فانيلا</string>
     <string name="category_map_based">مبني على الخريطة</string>
     <string name="category_lightweight">خفيف</string>
     <string name="category_extra_large">كبير جدا</string>
@@ -50,11 +51,11 @@
     <string name="category_miscellaneous">متنوع</string>
     <string name="category_512x">512x وما فوق</string>
     <!-- World -->
-    <string name="category_world_adventure">وضع المغامرة</string>
-    <string name="category_survival">وضع البقاء</string>
-    <string name="category_creation">وضع الإبداع</string>
-    <string name="category_game_map">تحديات اللعبة</string>
-    <string name="category_modded_world">خرائط التعديلات</string>
+    <string name="category_world_adventure">مغامرة</string>
+    <string name="category_survival">بقاء</string>
+    <string name="category_creation">إبداع</string>
+    <string name="category_game_map">خريطة اللعبة</string>
+    <string name="category_modded_world">عالم معدل</string>
     <string name="category_parkour">باركور</string>
     <string name="category_puzzle">ألغاز</string>
     <!-- Shader -->

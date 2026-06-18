@@ -10,17 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.event.sticky.MinecraftVersionValueEvent;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.subassembly.filelist.FileItemBean;
 import com.arata.yukarilauncher.ui.subassembly.filelist.FileRecyclerViewCreator;
-
-import net.kdt.pojavlaunch.JMinecraftVersionList;
-import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.utils.FilteredSubList;
-
-import org.greenrobot.eventbus.EventBus;
+import com.arata.yukarilauncher.utils.FilteredSubList;
+import com.arata.yukarilauncher.value.JMinecraftVersionList;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.greenrobot.eventbus.EventBus;
 
 import kotlin.Pair;
 

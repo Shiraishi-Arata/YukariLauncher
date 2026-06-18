@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.arata.yukarilauncher.R
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 
 /**
  * アニメーション効果付きのButton。

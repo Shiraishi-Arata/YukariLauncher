@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="#000000">
 
-        <net.kdt.pojavlaunch.customcontrols.keyboard.TouchCharInput
+        <com.arata.yukarilauncher.ui.subassembly.customcontrols.keyboard.TouchCharInput
             android:id="@+id/awt_touch_char"
             android:layout_width="1dp"
             android:layout_height="1dp"
@@ -20,7 +20,7 @@
             android:inputType="textFilter|textImeMultiLine|textAutoComplete|textAutoCorrect"
             tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
-        <net.kdt.pojavlaunch.AWTCanvasView
+        <com.arata.yukarilauncher.ui.view.AWTCanvasView
             android:id="@+id/texture_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

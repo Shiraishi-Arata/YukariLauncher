@@ -13,16 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.flexbox.FlexboxLayout;
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.databinding.ItemControlListViewBinding;
 import com.arata.yukarilauncher.databinding.ItemFileListViewBinding;
 import com.arata.yukarilauncher.task.Task;
 import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.dialog.ControlInfoDialog;
 import com.arata.yukarilauncher.utils.stringutils.StringUtils;
-
-import net.kdt.pojavlaunch.Tools;
+import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
 import java.util.List;

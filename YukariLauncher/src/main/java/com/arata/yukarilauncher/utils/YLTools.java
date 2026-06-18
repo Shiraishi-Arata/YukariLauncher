@@ -36,19 +36,18 @@ import androidx.fragment.app.FragmentTransaction;
 import com.arata.yukarilauncher.BuildConfig;
 import com.arata.yukarilauncher.InfoDistributor;
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.context.ContextExecutor;
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.task.Task;
 import com.arata.yukarilauncher.task.TaskExecutors;
 import com.arata.yukarilauncher.ui.dialog.TipDialog;
-import com.arata.yukarilauncher.utils.mouse.CursorPackUtils;
 import com.arata.yukarilauncher.ui.fragment.FragmentWithAnim;
 import com.arata.yukarilauncher.utils.file.FileTools;
+import com.arata.yukarilauncher.utils.mouse.CursorPackUtils;
 import com.arata.yukarilauncher.utils.path.PathManager;
-
-import net.kdt.pojavlaunch.Tools;
-import org.lwjgl.glfw.CallbackBridge;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,6 +63,8 @@ import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.Locale;
 import java.util.zip.ZipOutputStream;
+
+import org.lwjgl.glfw.CallbackBridge;
 
 public final class YLTools {
     private YLTools() {
@@ -150,6 +151,16 @@ public final class YLTools {
                 .setTitle(R.string.option_force_close)
                 .setMessage(R.string.force_exit_confirm)
                 .setConfirmClickListener(checked -> {
+                    Logging.i(InfoDistributor.LAUNCHER_NAME, "Force close confirmed, sending broadcast to launcher process...");
+                    Intent rpcIntent = new Intent("com.arata.yukarilauncher.action.RPC_UPDATE");
+                    rpcIntent.putExtra("command", "update_launcher");
+                    rpcIntent.putExtra("quitLauncher", AllSettings.Companion.getQuitLauncher().getValue());
+                    ctx.sendBroadcast(rpcIntent);
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                     try {
                         YLTools.killProcess();
                     } catch (Throwable th) {

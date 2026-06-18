@@ -27,7 +27,6 @@ class EditTextSettingsWrapper(
         editText.apply {
             setText(unit.getValue())
             inputType = InputType.TYPE_CLASS_TEXT
-            gravity = Gravity.TOP or Gravity.START
             setOnEditorActionListener { _, _, _ ->
                 clearFocus()
                 false
@@ -59,6 +58,16 @@ class EditTextSettingsWrapper(
     fun setMaxLength(maxLength: Int): EditTextSettingsWrapper {
         val filters = arrayOf<InputFilter>(LengthFilter(maxLength))
         editText.filters = filters
+        return this
+    }
+
+    /**
+     * 入力欄のテキストの配置（gravity）を設定する。
+     * @param gravity 設定するGravity値
+     * @return 自身のインスタンス
+     */
+    fun setInputGravity(gravity: Int): EditTextSettingsWrapper {
+        editText.gravity = gravity
         return this
     }
 

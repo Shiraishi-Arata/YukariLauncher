@@ -21,9 +21,10 @@ open class ModInfoItem(
     uploadDate: Date,
     iconUrl: String?,
     category: List<Category>,
-    val modloaders: List<ModLoader>
+    val modloaders: List<ModLoader>,
+    updatedDate: Date? = null
 ) : InfoItem(
-    classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category
+    classify, platform, projectId, slug, author, title, description, downloadCount, uploadDate, iconUrl, category, updatedDate
 ) {
 /**
  * toStringする

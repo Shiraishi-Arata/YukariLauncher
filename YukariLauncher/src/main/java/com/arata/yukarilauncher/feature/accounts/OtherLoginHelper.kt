@@ -8,7 +8,7 @@ import com.arata.yukarilauncher.feature.login.OtherLoginApi
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.SelectRoleDialog
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.value.MinecraftAccount
 import java.util.Objects
 
 /**

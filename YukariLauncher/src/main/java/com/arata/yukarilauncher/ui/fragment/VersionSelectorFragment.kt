@@ -15,9 +15,9 @@ import com.arata.yukarilauncher.databinding.FragmentVersionBinding
 import com.arata.yukarilauncher.ui.subassembly.versionlist.VersionSelectedListener
 import com.arata.yukarilauncher.ui.subassembly.versionlist.VersionType
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.JMinecraftVersionList
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.tasks.AsyncVersionList
+import com.arata.yukarilauncher.value.JMinecraftVersionList
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.task.AsyncVersionList
 
 /**
  * Minecraftバージョン選択フラグメント

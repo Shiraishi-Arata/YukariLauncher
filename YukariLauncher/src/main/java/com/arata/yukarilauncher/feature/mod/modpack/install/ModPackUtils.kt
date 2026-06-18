@@ -8,9 +8,9 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.mod.models.MCBBSPackMeta
 import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
 import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.models.CurseManifest
-import net.kdt.pojavlaunch.modloaders.modpacks.models.ModrinthIndex
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.models.CurseManifest
+import com.arata.yukarilauncher.feature.mod.modpack.models.ModrinthIndex
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -66,10 +66,10 @@ class ModPackUtils {
         fun verifyManifest(manifest: CurseManifest): Boolean { //检测是否为curseforge整合包(通过manifest.json内的数据进行判断)
             if ("minecraftModpack" != manifest.manifestType) return false
             if (manifest.manifestVersion != 1) return false
-            if (manifest.minecraft == null) return false
-            if (manifest.minecraft.version == null) return false
-            if (manifest.minecraft.modLoaders == null) return false
-            return manifest.minecraft.modLoaders.isNotEmpty()
+            val mc = manifest.minecraft ?: return false
+            if (mc.version == null) return false
+            val modLoaders = mc.modLoaders ?: return false
+            return modLoaders.isNotEmpty()
         }
 
         @JvmStatic

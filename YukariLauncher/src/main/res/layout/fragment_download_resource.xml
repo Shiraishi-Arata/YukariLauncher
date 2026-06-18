@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:padding="@dimen/_8sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/download_layout"
@@ -113,15 +114,25 @@
             app:layout_constraintStart_toStartOf="@id/operate_layout"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/operate_main_layout"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/menu_overlay"
+            android:layout_margin="@dimen/_12sdp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/shadowView"
             app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/operate_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent">
 
             <TextView
                 android:id="@+id/search_title"
@@ -284,65 +295,13 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/category_layout"
+                    <LinearLayout
+                        android:id="@+id/filter_sections_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_marginHorizontal="@dimen/_8sdp">
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:orientation="vertical" />
 
-                        <TextView
-                            android:id="@+id/category_textview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/download_ui_category"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <com.skydoves.powerspinner.PowerSpinnerView
-                            android:id="@+id/category_spinner"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/_40sdp"
-                            android:background="@drawable/background_edit_box"
-                            android:paddingHorizontal="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/category_textview"
-                            app:spinner_arrow_tint="@color/primary_text"
-                            app:spinner_popup_background="@drawable/background_edit_box"
-                            app:spinner_popup_height="@dimen/_200sdp"
-                            tools:paddingVertical="@dimen/_12sdp" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/modloader_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_marginHorizontal="@dimen/_8sdp">
-
-                        <TextView
-                            android:id="@+id/modloader_textview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/download_ui_modloader"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <com.skydoves.powerspinner.PowerSpinnerView
-                            android:id="@+id/modloader_spinner"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/_40sdp"
-                            android:background="@drawable/background_edit_box"
-                            android:paddingHorizontal="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/modloader_textview"
-                            app:spinner_arrow_tint="@color/primary_text"
-                            app:spinner_popup_background="@drawable/background_edit_box"
-                            app:spinner_popup_height="@dimen/_200sdp"
-                            tools:paddingVertical="@dimen/_12sdp" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </ScrollView>
 
@@ -354,8 +313,18 @@
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/generic_reset"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/return_button"
+                app:layout_constraintEnd_toStartOf="@+id/view_toggle"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <com.arata.yukarilauncher.ui.view.AnimButton
+                android:id="@+id/view_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_8sdp"
+                android:text="@string/download_ui_view_grid"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/return_button"
+                app:layout_constraintStart_toEndOf="@+id/reset" />
 
             <com.arata.yukarilauncher.ui.view.AnimButton
                 android:id="@+id/return_button"
@@ -366,8 +335,10 @@
                 android:text="@string/generic_return"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/reset" />
+                app:layout_constraintStart_toEndOf="@+id/view_toggle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

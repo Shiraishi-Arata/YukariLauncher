@@ -19,16 +19,10 @@ package org.jackhuang.hmcl.ui.versions;
 
 import static org.jackhuang.hmcl.util.Pair.pair;
 
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.feature.download.enums.Classify;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt;
-
-import net.kdt.pojavlaunch.Tools;
-
-import org.jackhuang.hmcl.util.Pair;
-import org.jackhuang.hmcl.util.StringUtils;
-import org.jackhuang.hmcl.util.io.IOUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.jackhuang.hmcl.util.Pair;
+import org.jackhuang.hmcl.util.StringUtils;
+import org.jackhuang.hmcl.util.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * mod_data.txtのパーサー

@@ -11,10 +11,6 @@ import android.widget.Toast;
 import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.task.TaskExecutors;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -24,6 +20,10 @@ import java.util.StringJoiner;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 public class StringUtils {
 

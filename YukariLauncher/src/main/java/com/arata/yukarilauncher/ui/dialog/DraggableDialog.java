@@ -1,6 +1,6 @@
 package com.arata.yukarilauncher.ui.dialog;
 
-import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
+import static com.arata.yukarilauncher.Tools.currentDisplayMetrics;
 
 import android.view.View;
 import android.view.Window;

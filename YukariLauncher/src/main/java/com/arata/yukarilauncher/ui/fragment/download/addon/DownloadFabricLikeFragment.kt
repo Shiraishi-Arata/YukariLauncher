@@ -9,8 +9,8 @@ import com.arata.yukarilauncher.feature.mod.modloader.ModVersionListAdapter
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.subassembly.modlist.ModListFragment
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.FabricVersion
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modloader.FabricVersion
 import com.arata.yukarilauncher.feature.mod.modloader.FabricLikeUtils
 import com.arata.yukarilauncher.ui.fragment.InstallGameFragment.Companion.BUNDLE_MC_VERSION
 import org.greenrobot.eventbus.EventBus
@@ -121,8 +121,8 @@ abstract class DownloadFabricLikeFragment(val utils: FabricLikeUtils, val icon: 
             EventBus.getDefault().postSticky(
                 SelectInstallTaskEvent(
                     utils.addon,
-                    loaderVersion,
-                    utils.getDownloadTask(mcVersion, loaderVersion)
+                    loaderVersion!!,
+                    utils.getDownloadTask(mcVersion, loaderVersion!!)
                 )
             )
             YLTools.onBackPressed(requireActivity())

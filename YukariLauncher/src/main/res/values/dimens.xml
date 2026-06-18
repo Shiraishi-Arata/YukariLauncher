@@ -12,4 +12,7 @@
     <dimen name="padding_input_top">@dimen/_11sdp</dimen>
     <!--  Dialog min width  -->
     <dimen name="dialog_min_width">@dimen/_480sdp</dimen>
+    <!--  Icon sizes  -->
+    <dimen name="_36sdp">36dp</dimen>
+    <dimen name="_48sdp">48dp</dimen>
 </resources>

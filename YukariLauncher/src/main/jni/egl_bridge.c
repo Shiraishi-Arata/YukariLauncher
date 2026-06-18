@@ -71,13 +71,13 @@ EXTERNAL_API void pojavTerminate() {
     }
 }
 
-JNIEXPORT void JNICALL Java_net_kdt_pojavlaunch_utils_JREUtils_setupBridgeWindow(JNIEnv* env, ABI_COMPAT jclass clazz, jobject surface) {
+JNIEXPORT void JNICALL Java_com_arata_yukarilauncher_utils_runtime_JREUtils_setupBridgeWindow(JNIEnv* env, ABI_COMPAT jclass clazz, jobject surface) {
     pojav_environ->pojavWindow = ANativeWindow_fromSurface(env, surface);
     if (br_setup_window) br_setup_window();
 }
 
 JNIEXPORT void JNICALL
-Java_net_kdt_pojavlaunch_utils_JREUtils_releaseBridgeWindow(ABI_COMPAT JNIEnv *env, ABI_COMPAT jclass clazz) {
+Java_com_arata_yukarilauncher_utils_runtime_JREUtils_releaseBridgeWindow(ABI_COMPAT JNIEnv *env, ABI_COMPAT jclass clazz) {
     ANativeWindow_release(pojav_environ->pojavWindow);
 }
 
@@ -124,7 +124,7 @@ int pojavInitOpenGL() {
 
     load_vulkan();
 
-    if (strncmp("opengles", renderer, 8) == 0 || !strcmp(renderer, "nggl4es")) 
+    if (strncmp("opengles", renderer, 8) == 0 || !strcmp(renderer, "nggl4es") || !strcmp(renderer, "ltw")) 
     {
         pojav_environ->config_renderer = RENDERER_GL4ES;
         set_gl_bridge_tbl();
@@ -162,11 +162,19 @@ int pojavInitOpenGL() {
     
     if (!strcmp(renderer, "kopper_zink")) 
     {
-        pojav_environ->config_renderer = RENDERER_VK_ZINK;
+        /*
+         * Kopper Zink is shipped as a Mesa EGL/GLX stack (libEGL_mesa +
+         * libglxshim), not as an OSMesa renderer. Using the OSMesa bridge here
+         * makes the loader search libglxshim for OSMesa* entry points and leaves
+         * the context bridge with NULL OSMesa function pointers. Route Kopper
+         * through the EGL bridge so it resolves EGL symbols from POJAVEXEC_EGL
+         * and exposes desktop GL through the renderer library.
+         */
+        pojav_environ->config_renderer = RENDERER_GL4ES;
         load_vulkan();
         setenv("GALLIUM_DRIVER", "zink", 1);
         setenv("MESA_ANDROID_NO_KMS_SWRAST", "1", 1);
-        set_osm_bridge_tbl();
+        set_gl_bridge_tbl();
     }
     
     if (!strcmp(renderer, "gallium_virgl"))

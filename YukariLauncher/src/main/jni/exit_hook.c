@@ -262,7 +262,7 @@ static bool init_exit_hook() {
 }
 
 JNIEXPORT void JNICALL
-Java_net_kdt_pojavlaunch_utils_JREUtils_initializeGameExitHook(JNIEnv *env, jclass clazz) {
+Java_com_arata_yukarilauncher_utils_runtime_JREUtils_initializeGameExitHook(JNIEnv *env, jclass clazz) {
     bool hookReady = init_exit_hook();
     if(!hookReady){
         // If we can't hook, register atexit(). This won't report a proper error code,

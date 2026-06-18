@@ -4,8 +4,8 @@ import com.google.gson.JsonObject
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.utils.path.UrlManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream

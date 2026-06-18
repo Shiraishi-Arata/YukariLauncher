@@ -6,7 +6,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") version "2.3.20"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.20"
     id("stringfog")
+    id("com.diffplug.spotless")
 }
 apply(plugin = "stringfog")
 
@@ -123,17 +125,21 @@ android {
                     afterEvaluate {
                         val task = tasks.named("merge${variantName}Assets").get() as MergeSourceSetFolders
                         task.doLast {
-                            val arch = System.getProperty("arch", "all")
                             val assetsDir = task.outputDir.get().asFile
+
+                            // Remove JRE and LWJGL from APK assets (downloaded at runtime)
                             val jreList = listOf("jre-8", "jre-17", "jre-21", "jre-25")
-                            println("arch:$arch")
                             jreList.forEach { jreVersion ->
                                 val runtimeDir = File("$assetsDir/components/$jreVersion")
-                                println("runtimeDir:${runtimeDir.absolutePath}")
-                                runtimeDir.listFiles()?.forEach {
-                                    if (arch != "all" && it.name != "version" && !it.name.contains("universal") && it.name != "bin-${arch}.tar.xz") {
-                                        println("delete:${it} : ${it.delete()}")
-                                    }
+                                if (runtimeDir.exists()) {
+                                    println("delete jre assets:${runtimeDir} : ${runtimeDir.deleteRecursively()}")
+                                }
+                            }
+                            val lwjglVersions = listOf("lwjgl/3.3.6", "lwjgl/3.4.1")
+                            lwjglVersions.forEach { lwjglDir ->
+                                val lwjglAssetDir = File("$assetsDir/components/$lwjglDir")
+                                if (lwjglAssetDir.exists()) {
+                                    println("delete lwjgl assets:${lwjglAssetDir} : ${lwjglAssetDir.deleteRecursively()}")
                                 }
                             }
                         }
@@ -187,6 +193,7 @@ android {
         prefab = true
         buildConfig = true
         viewBinding = true
+        compose = true
     }
 
     buildToolsVersion = "35.0.0"
@@ -195,6 +202,23 @@ android {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        importOrder("android", "androidx", "com", "io", "java", "javax", "net", "org")
+        removeUnusedImports()
+    }
+    kotlin {
+        target("src/**/*.kt")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ij_kotlin_imports_layout" to "^android,^androidx,^com,^io,^java,^javax,^net,^org,*",
+                "ktlint_standard" to "disabled"
+            )
+        )
     }
 }
 
@@ -286,7 +310,20 @@ dependencies {
     implementation("com.getkeepsafe.taptargetview:taptargetview:1.14.0")
     implementation("io.github.petterpx:floatingx:2.3.3")
     implementation("org.greenrobot:eventbus:3.3.1")
+
+    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2") {
         exclude(group = "com.google.code.gson", module = "gson")
     }
+
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-client-okhttp:3.0.3")
+    implementation("io.ktor:ktor-client-websockets:3.0.3")
 }

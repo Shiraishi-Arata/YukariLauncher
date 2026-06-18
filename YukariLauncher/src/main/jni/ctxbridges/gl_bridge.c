@@ -19,6 +19,13 @@ static const char* g_LogTag = "GLBridge";
 static __thread gl_render_window_t* currentBundle;
 static EGLDisplay g_EglDisplay;
 
+static bool is_desktop_gl_renderer() {
+    const char* renderer = getenv("POJAV_RENDERER");
+    return renderer != NULL &&
+           (!strncmp(renderer, "opengles3_desktopgl", 19) ||
+            !strcmp(renderer, "kopper_zink"));
+}
+
 bool gl_init() {
     dlsym_EGL();
     g_EglDisplay = eglGetDisplay_p(EGL_DEFAULT_DISPLAY);
@@ -93,7 +100,7 @@ gl_render_window_t* gl_init_context(gl_render_window_t *share) {
     {
         EGLBoolean bindResult;
 
-        if (!strncmp(getenv("POJAV_RENDERER"), "opengles3_desktopgl", 19))
+        if (is_desktop_gl_renderer())
         {
             printf("EGLBridge: Binding to OpenGL\n");
             bindResult = eglBindAPI_p(EGL_OPENGL_API);

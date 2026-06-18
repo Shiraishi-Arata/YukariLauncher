@@ -6,7 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.VersionInfo
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 /**

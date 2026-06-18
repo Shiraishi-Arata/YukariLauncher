@@ -10,7 +10,7 @@ import com.arata.yukarilauncher.feature.download.item.SearchResult
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper
 import com.arata.yukarilauncher.feature.download.platform.PlatformNotSupportedException
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 import java.io.File
 
 class ModrinthHelper : AbstractPlatformHelper(ApiHandler("https://api.modrinth.com/v2")) {

@@ -10,14 +10,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.arata.yukarilauncher.R;
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.feature.log.Logging;
 import com.arata.yukarilauncher.ui.dialog.ProgressDialog;
 import com.arata.yukarilauncher.utils.YLTools;
 import com.arata.yukarilauncher.utils.path.UrlManager;
-
-import net.kdt.pojavlaunch.Tools;
-
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +25,8 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
+
+import org.apache.commons.io.FileUtils;
 
 import okhttp3.Call;
 import okhttp3.Callback;

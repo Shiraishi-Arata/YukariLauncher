@@ -122,6 +122,37 @@
                         android:textColor="?attr/colorOnSurface" />
                 </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
 
+                <!-- LWJGL Version -->
+                <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                    android:id="@+id/lwjgl_version_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:paddingHorizontal="@dimen/_12sdp">
+
+                    <TextView
+                        android:id="@+id/lwjgl_version_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/setting_lwjgl_version_title"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:id="@+id/lwjgl_version_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lwjgl_version_title"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/setting_lwjgl_version_3_3_6"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
         </com.google.android.material.card.MaterialCardView>
 

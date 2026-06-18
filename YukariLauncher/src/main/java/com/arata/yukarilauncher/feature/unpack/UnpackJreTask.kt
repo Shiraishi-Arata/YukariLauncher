@@ -3,9 +3,9 @@ package com.arata.yukarilauncher.feature.unpack
 import android.content.Context
 import android.content.res.AssetManager
 import com.arata.yukarilauncher.feature.log.Logging
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.multirt.MultiRTUtils
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
 
 class UnpackJreTask(val context: Context, val jre: Jre) : AbstractUnpackTask() {
     private lateinit var assetManager: AssetManager

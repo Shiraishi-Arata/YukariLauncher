@@ -9,11 +9,11 @@ import com.arata.yukarilauncher.feature.mod.modloader.ModVersionListAdapter
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.subassembly.modlist.ModListFragment
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.mod.modloader.ForgeDownloadTask
 import com.arata.yukarilauncher.feature.version.install.Addon
 import com.arata.yukarilauncher.ui.fragment.InstallGameFragment.Companion.BUNDLE_MC_VERSION
-import net.kdt.pojavlaunch.modloaders.ForgeUtils
+import com.arata.yukarilauncher.feature.mod.modloader.ForgeUtils
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
 import java.util.function.Consumer

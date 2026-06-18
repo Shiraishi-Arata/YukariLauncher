@@ -23,20 +23,22 @@ import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.http.NetworkUtils
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.JMinecraftVersionList
-import net.kdt.pojavlaunch.Logger
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.authenticator.microsoft.PresentedException
-import net.kdt.pojavlaunch.lifecycle.ContextAwareDoneListener
-import net.kdt.pojavlaunch.multirt.MultiRTUtils
-import net.kdt.pojavlaunch.plugins.FFmpegPlugin
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper
-import net.kdt.pojavlaunch.services.GameService
-import net.kdt.pojavlaunch.tasks.AsyncMinecraftDownloader
-import net.kdt.pojavlaunch.tasks.MinecraftDownloader
-import net.kdt.pojavlaunch.utils.JREUtils
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.value.JMinecraftVersionList
+import com.arata.yukarilauncher.feature.log.Logger
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.login.DoneListener
+import com.arata.yukarilauncher.feature.login.ErrorListener
+import com.arata.yukarilauncher.feature.login.PresentedException
+import com.arata.yukarilauncher.context.ContextAwareDoneListener
+import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
+import com.arata.yukarilauncher.plugins.FFmpegPlugin
+import com.arata.yukarilauncher.task.ProgressKeeper
+import com.arata.yukarilauncher.feature.GameService
+import com.arata.yukarilauncher.task.AsyncMinecraftDownloader
+import com.arata.yukarilauncher.task.MinecraftDownloader
+import com.arata.yukarilauncher.utils.runtime.JREUtils
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.greenrobot.eventbus.EventBus
 
 class LaunchGame {
@@ -90,29 +92,33 @@ class LaunchGame {
 
             AccountsManager.performLogin(
                 context, AccountsManager.currentAccount!!,
-                { _ ->
-                    EventBus.getDefault().post(AccountUpdateEvent())
-                    TaskExecutors.runInUIThread {
-                        Toast.makeText(context, context.getString(R.string.account_login_done), Toast.LENGTH_SHORT).show()
+                object : DoneListener {
+                    override fun onLoginDone(account: MinecraftAccount) {
+                        EventBus.getDefault().post(AccountUpdateEvent())
+                        TaskExecutors.runInUIThread {
+                            Toast.makeText(context, context.getString(R.string.account_login_done), Toast.LENGTH_SHORT).show()
+                        }
+                        // ログイン完了、ゲームを正式に起動
+                        launch()
                     }
-                    // ログイン完了、ゲームを正式に起動
-                    launch()
                 },
-                { exception ->
-                    val errorMessage = if (exception is PresentedException) exception.toString(context)
-                    else exception.message
+                object : ErrorListener {
+                    override fun onLoginError(exception: Throwable) {
+                        val errorMessage = if (exception is PresentedException) exception.toString(context)
+                        else exception.message
 
-                    TaskExecutors.runInUIThread {
-                        TipDialog.Builder(context)
-                            .setTitle(R.string.generic_error)
-                            .setMessage("${context.getString(R.string.account_login_skip)}\r\n$errorMessage")
-                            .setWarning()
-                            .setConfirmClickListener { launch(true) }
-                            .setCenterMessage(false)
-                            .showDialog()
+                        TaskExecutors.runInUIThread {
+                            TipDialog.Builder(context)
+                                .setTitle(R.string.generic_error)
+                                .setMessage("${context.getString(R.string.account_login_skip)}\r\n$errorMessage")
+                                .setWarning()
+                                .setConfirmClickListener { launch(true) }
+                                .setCenterMessage(false)
+                                .showDialog()
+                        }
+
+                        setGameProgress(false)
                     }
-
-                    setGameProgress(false)
                 }
             )
             setGameProgress(true)
@@ -165,10 +171,12 @@ class LaunchGame {
 
             JREUtils.redirectAndPrintJRELog()
 
-            launch(activity, account, minecraftVersion, javaRuntime, customArgs)
-
-            // 実際には上記の関数でゲームがクラッシュしてもストールするが、念のため
-            GameService.setActive(false)
+            try {
+                launch(activity, account, minecraftVersion, javaRuntime, customArgs)
+            } finally {
+                // ゲーム終了を確実に通知（launch()が例外を投げても実行される）
+                GameService.setActive(false)
+            }
         }
 
         /**

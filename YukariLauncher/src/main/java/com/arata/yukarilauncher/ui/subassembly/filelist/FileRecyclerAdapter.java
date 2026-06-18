@@ -11,13 +11,13 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.arata.yukarilauncher.R;
 import com.arata.yukarilauncher.databinding.ItemFileListViewBinding;
 import com.arata.yukarilauncher.utils.file.FileTools;
 import com.arata.yukarilauncher.utils.image.ImageUtils;
 import com.arata.yukarilauncher.utils.stringutils.StringUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -4,36 +4,44 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Toast
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.RadioButton
 import android.widget.TextView
+import android.widget.Toast
+
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.flexbox.FlexboxLayout
+
 import com.arata.yukarilauncher.R
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.databinding.ItemVersionBinding
 import com.arata.yukarilauncher.databinding.ViewVersionManagerBinding
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathManager
 import com.arata.yukarilauncher.feature.mod.modpack.export.ExportPathPickerDialog
 import com.arata.yukarilauncher.feature.mod.modpack.export.ModPackExportHelper
 import com.arata.yukarilauncher.feature.version.Version
-import com.arata.yukarilauncher.feature.version.utils.VersionIconUtils
 import com.arata.yukarilauncher.feature.version.VersionsManager
+import com.arata.yukarilauncher.feature.version.utils.VersionIconUtils
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.EditTextDialog
+import com.arata.yukarilauncher.ui.dialog.ProgressDialog
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.ui.fragment.FilesFragment
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileDeletionHandler
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
+import com.google.android.flexbox.FlexboxLayout
+
+import java.io.File
+import java.util.concurrent.Callable
+import java.util.concurrent.CancellationException
+import java.util.concurrent.ExecutionException
 
 /**
  * バージョン一覧のRecyclerViewアダプター
@@ -274,6 +282,10 @@ class VersionAdapter(
                 context.getString(R.string.version_manager_export_modpack_modrinth),
                 context.getString(R.string.version_manager_export_modpack_curseforge)
             )
+            val icons = intArrayOf(
+                R.drawable.ic_modrinth,
+                R.drawable.ic_curseforge
+            )
             val types = arrayOf(
                 ModPackExportHelper.ExportType.MODRINTH,
                 ModPackExportHelper.ExportType.CURSEFORGE
@@ -281,7 +293,17 @@ class VersionAdapter(
 
             AlertDialog.Builder(context, R.style.CustomAlertDialogTheme)
                 .setTitle(R.string.version_manager_export_modpack)
-                .setItems(labels) { _, which ->
+                .setAdapter(object : android.widget.BaseAdapter() {
+                    override fun getCount() = labels.size
+                    override fun getItem(p: Int) = labels[p]
+                    override fun getItemId(p: Int) = p.toLong()
+                    override fun getView(p: Int, cv: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                        val v = cv ?: android.view.LayoutInflater.from(context).inflate(android.R.layout.activity_list_item, parent, false)
+                        v.findViewById<android.widget.TextView>(android.R.id.text1).text = labels[p]
+                        v.findViewById<android.widget.ImageView>(android.R.id.icon).setImageResource(icons[p])
+                        return v
+                    }
+                }) { _, which ->
                     showExportFilterDialog(version, types[which])
                 }.show()
         }
@@ -323,8 +345,8 @@ class VersionAdapter(
                     val packName = nameEditText.text.toString()
                     EditTextDialog.Builder(context)
                         .setTitle(R.string.version_manager_export_modpack_version_title)
-                        .setHintText(version.getVersionInfo()?.minecraftVersion ?: "1.0.0")
-                        .setEditText(version.getVersionInfo()?.minecraftVersion ?: "1.0.0")
+                        .setHintText("1.0")
+                        .setEditText("1.0")
                         .setAsRequired()
                         .setConfirmListener { versionEditText, _ ->
                             val packVersion = versionEditText.text.toString()
@@ -361,20 +383,49 @@ class VersionAdapter(
             options: ModPackExportHelper.ExportOptions
         ) {
             val context = parentFragment.requireActivity()
-            Task.runTask {
+            var exportFuture: java.util.concurrent.Future<*>? = null
+
+            val dialog = ProgressDialog(context) {
+                exportFuture?.cancel(true)
+                true
+            }
+            dialog.updateText(context.getString(R.string.version_manager_export_modpack_exporting))
+
+            TaskExecutors.runInUIThread { dialog.show() }
+
+            exportFuture = TaskExecutors.getDefault().submit(java.util.concurrent.Callable<File?> {
+                TaskExecutors.runInUIThread { dialog.show() }
                 ModPackExportHelper.export(version, exportType, options)
-            }.setExecutor(TaskExecutors.getDefault())
-                .ended(TaskExecutors.getAndroidUI()) { file ->
-                    if (file == null || !file.exists()) return@ended
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.version_manager_export_modpack_success, file.absolutePath),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    FileTools.shareFile(context, file)
-                }.onThrowable(TaskExecutors.getAndroidUI()) {
-                    Tools.showError(context, it)
-                }.execute()
+            })
+
+            TaskExecutors.getDefault().submit {
+                try {
+                    val file = exportFuture?.get() as? File
+                    TaskExecutors.runInUIThread {
+                        dialog.dismiss()
+                        if (file != null && file.exists()) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.version_manager_export_modpack_success, file.absolutePath),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            FileTools.shareFile(context, file)
+                        }
+                    }
+                } catch (e: java.util.concurrent.CancellationException) {
+                    TaskExecutors.runInUIThread { dialog.dismiss() }
+                } catch (e: java.util.concurrent.ExecutionException) {
+                    TaskExecutors.runInUIThread {
+                        dialog.dismiss()
+                        Tools.showError(context, e.cause ?: e)
+                    }
+                } catch (e: Exception) {
+                    TaskExecutors.runInUIThread {
+                        dialog.dismiss()
+                        Tools.showError(context, e)
+                    }
+                }
+            }
         }
 
         /**

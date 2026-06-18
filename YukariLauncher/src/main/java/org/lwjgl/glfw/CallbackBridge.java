@@ -7,9 +7,9 @@ import android.view.Choreographer;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
-import net.kdt.pojavlaunch.GrabListener;
-import net.kdt.pojavlaunch.LwjglGlfwKeycode;
 import com.arata.yukarilauncher.ui.activity.MainActivity;
+import com.arata.yukarilauncher.ui.view.GrabListener;
+import com.arata.yukarilauncher.utils.LwjglGlfwKeycode;
 
 import java.util.ArrayList;
 
@@ -290,8 +290,4 @@ public class CallbackBridge {
     @Keep @CriticalNative private static native void nativeSendScreenSize(int width, int height);
     @Keep public static native void nativeSetWindowAttrib(int attrib, int value);
     @Keep public static native int getCurrentFps();
-
-    static {
-        System.loadLibrary("pojavexec");
-    }
 }

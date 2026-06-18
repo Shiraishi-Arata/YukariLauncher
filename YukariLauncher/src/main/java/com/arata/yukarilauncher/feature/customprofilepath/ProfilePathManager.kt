@@ -8,7 +8,7 @@ import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.ui.subassembly.customprofilepath.ProfileItem
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 import java.io.FileWriter
 

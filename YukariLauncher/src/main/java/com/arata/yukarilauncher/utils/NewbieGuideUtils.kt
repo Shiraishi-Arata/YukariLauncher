@@ -11,7 +11,7 @@ import com.google.gson.JsonParser
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.log.Logging.e
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.FileWriter
 
 class NewbieGuideUtils {

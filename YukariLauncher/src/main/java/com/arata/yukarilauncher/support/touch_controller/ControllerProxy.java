@@ -7,8 +7,6 @@ import android.system.Os;
 import com.arata.yukarilauncher.InfoDistributor;
 import com.arata.yukarilauncher.feature.log.Logging;
 
-import net.kdt.pojavlaunch.Logger;
-
 import top.fifthlight.touchcontroller.proxy.client.LauncherProxyClient;
 import top.fifthlight.touchcontroller.proxy.client.MessageTransport;
 import top.fifthlight.touchcontroller.proxy.client.android.transport.UnixSocketTransportKt;
@@ -37,7 +35,8 @@ public final class ControllerProxy {
                 VibrationHandler handler = new VibrationHandler(vibrator);
                 client.setVibrationHandler(handler);
                 client.run();
-                Logger.appendToLog("TouchController: TouchController Proxy Client has been created!");
+                Logging.i("TouchController", "TouchController Proxy Client has been created!");
+                //Logger.appendToLog("TouchController: TouchController Proxy Client has been created!");
                 proxyClient = client;
             } catch (Throwable ex) {
                 Logging.w("TouchController", "TouchController proxy client create failed", ex);

@@ -25,18 +25,17 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.Window
 import android.view.WindowManager
 import android.widget.CompoundButton
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.arata.anim.AnimPlayer
 import com.arata.anim.animations.Animations
+import com.arata.yukarilauncher.MinecraftGLSurface
 import com.arata.yukarilauncher.R
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.databinding.ActivityGameBinding
 import com.arata.yukarilauncher.databinding.ViewControlMenuBinding
@@ -44,12 +43,16 @@ import com.arata.yukarilauncher.databinding.ViewGameMenuBinding
 import com.arata.yukarilauncher.event.single.RefreshHotbarEvent
 import com.arata.yukarilauncher.event.value.HotbarChangeEvent
 import com.arata.yukarilauncher.event.value.JvmExitEvent
+import com.arata.yukarilauncher.feature.GameService
 import com.arata.yukarilauncher.feature.MCOptions
 import com.arata.yukarilauncher.feature.ProfileLanguageSelector
+import com.arata.yukarilauncher.feature.awt.AWTInputBridge
+import com.arata.yukarilauncher.feature.awt.EfficientAndroidLWJGLKeycode
 import com.arata.yukarilauncher.feature.background.BackgroundManager
 import com.arata.yukarilauncher.feature.background.BackgroundType
+import com.arata.yukarilauncher.feature.log.Logger
 import com.arata.yukarilauncher.feature.log.Logging
-import com.arata.yukarilauncher.feature.network.HostServerService
+import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.version.Version
 import com.arata.yukarilauncher.feature.version.VersionInfo
 import com.arata.yukarilauncher.launch.LaunchGame
@@ -58,6 +61,7 @@ import com.arata.yukarilauncher.plugins.driver.DriverPluginManager
 import com.arata.yukarilauncher.renderer.Renderers
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.setting.AllStaticSettings
+import com.arata.yukarilauncher.setting.LauncherPreferences
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.KeyboardDialog
@@ -65,28 +69,26 @@ import com.arata.yukarilauncher.ui.dialog.SelectControlsDialog
 import com.arata.yukarilauncher.ui.dialog.SelectMouseDialog
 import com.arata.yukarilauncher.ui.fragment.settings.VideoSettingsFragment
 import com.arata.yukarilauncher.ui.subassembly.adapter.ObjectSpinnerAdapter
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlButtonMenuListener
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.ControlLayout
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.CustomControls
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.EditorExitable
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.keyboard.LwjglCharSender
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.keyboard.TouchCharInput
+import com.arata.yukarilauncher.ui.subassembly.customcontrols.mouse.GyroControl
 import com.arata.yukarilauncher.ui.subassembly.hotbar.HotbarType
 import com.arata.yukarilauncher.ui.subassembly.hotbar.HotbarUtils
 import com.arata.yukarilauncher.ui.subassembly.menu.ControlMenu
 import com.arata.yukarilauncher.ui.subassembly.menu.MenuUtils
 import com.arata.yukarilauncher.ui.subassembly.view.FloatingLoggerWindow
 import com.arata.yukarilauncher.ui.subassembly.view.GameMenuViewWrapper
+import com.arata.yukarilauncher.utils.LwjglGlfwKeycode
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.AnimUtils
 import com.arata.yukarilauncher.utils.file.FileTools
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
-import net.kdt.pojavlaunch.*
-import net.kdt.pojavlaunch.customcontrols.ControlButtonMenuListener
-import net.kdt.pojavlaunch.customcontrols.ControlLayout
-import net.kdt.pojavlaunch.customcontrols.CustomControls
-import net.kdt.pojavlaunch.customcontrols.EditorExitable
-import net.kdt.pojavlaunch.customcontrols.keyboard.LwjglCharSender
-import net.kdt.pojavlaunch.customcontrols.keyboard.TouchCharInput
-import net.kdt.pojavlaunch.customcontrols.mouse.GyroControl
-import net.kdt.pojavlaunch.prefs.LauncherPreferences
-import net.kdt.pojavlaunch.services.GameService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.lwjgl.glfw.CallbackBridge
@@ -225,7 +227,7 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
         CallbackBridge.addGrabListener(binding.mainGameRenderView)
         mGyroControl = GyroControl(this)
 
-        val window = window
+        val window = window ?: return
         window.setBackgroundDrawable(
             if (AllSettings.alternateSurface.getValue()) null
             else ColorDrawable(Color.BLACK)
@@ -285,7 +287,7 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
 
             title = "Minecraft ${minecraftVersion!!.getVersionName()}"
 
-            val mVersionInfo = Tools.getVersionInfo(minecraftVersion!!)
+            val mVersionInfo = Tools.getVersionInfo(minecraftVersion!!.getVersionName())
             isInputStackCall = mVersionInfo.arguments != null
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall)
 
@@ -302,23 +304,27 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
             binding.mainDrawerOptions.addDrawerListener(mMenuSettingsInitListener!!)
             binding.mainDrawerOptions.closeDrawers()
 
-            binding.mainGameRenderView.setSurfaceReadyListener {
-                try {
-                    if (AllSettings.virtualMouseStart.getValue()) {
-                        binding.mainTouchpad.post { binding.mainTouchpad.switchState() }
+            binding.mainGameRenderView.setSurfaceReadyListener(object : MinecraftGLSurface.SurfaceReadyListener {
+                override fun isReady() {
+                    try {
+                        if (AllSettings.virtualMouseStart.getValue()) {
+                            binding.mainTouchpad.post { binding.mainTouchpad.switchState() }
+                        }
+                        LaunchGame.runGame(this@MainActivity, minecraftVersion!!, mVersionInfo)
+                    } catch (e: Throwable) {
+                        Tools.showErrorRemote(e)
                     }
-                    LaunchGame.runGame(this, minecraftVersion!!, mVersionInfo)
-                } catch (e: Throwable) {
-                    Tools.showErrorRemote(e)
                 }
-            }
+            })
 
-            binding.mainGameRenderView.setOnRenderingStartedListener {
-                stopVideoBackground()
-                BackgroundManager.clearBackgroundImage(binding.backgroundView)
-                Logging.i("Rendering Game", "The game rendering has started, " +
-                        "and the background image has been cleared to prevent certain issues from occurring.")
-            }
+            binding.mainGameRenderView.setOnRenderingStartedListener(object : MinecraftGLSurface.OnRenderingStartedListener {
+                override fun isStarted() {
+                    stopVideoBackground()
+                    BackgroundManager.clearBackgroundImage(binding.backgroundView)
+                    Logging.i("Rendering Game", "The game rendering has started, " +
+                            "and the background image has been cleared to prevent certain issues from occurring.")
+                }
+            })
 
             if (AllSettings.enableLogOutput.getValue()) {
                 floatingLogger?.show()
@@ -419,10 +425,10 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
         mMenuSettingsInitListener?.closeSpinner()
         CallbackBridge.removeGrabListener(binding.mainTouchpad)
         CallbackBridge.removeGrabListener(binding.mainGameRenderView)
-        window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        window?.decorView?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         stopVideoBackground()
         ContextExecutor.clearActivity()
-        Logger.setLogListener(null)
+        Logger.setLogListener {}
         floatingLogger?.hide()
         floatingLogger = null
         _binding = null
@@ -503,7 +509,7 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
     /** グローバルレイアウト変更時にキーボードの表示状態を検出し、入力プレビューの表示を切り替えます */
     override fun onGlobalLayout() {
         val rect = Rect()
-        val decorView = window.decorView
+        val decorView = window?.decorView ?: return
         decorView.getWindowVisibleDisplayFrame(rect)
 
         val screenHeight = decorView.height
@@ -599,12 +605,30 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
     /** JVM終了イベントを処理し、サービスを停止してアクティビティを終了します */
     @Subscribe
     fun event(event: JvmExitEvent) {
+        Logging.i("DiscordRPC", "JvmExitEvent received, exitCode=${event.exitCode}")
         runOnUiThread {
             GameService.setActive(false)
+            Logging.i("DiscordRPC", "JvmExitEvent: sending broadcast for RPC update")
+            val rpcIntent = Intent("com.arata.yukarilauncher.action.RPC_UPDATE")
+            rpcIntent.putExtra("command", "update_launcher")
+            rpcIntent.putExtra("quitLauncher", AllSettings.quitLauncher.getValue())
+            sendBroadcast(rpcIntent)
             stopService(Intent(this, GameService::class.java))
             if (AllSettings.quitLauncher.getValue()) {
+                Logging.i("DiscordRPC", "JvmExitEvent: quitLauncher=true, sleeping 200ms then killing")
+                try {
+                    Thread.sleep(200)
+                } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                }
                 YLTools.killProcess()
             } else {
+                Logging.i("DiscordRPC", "JvmExitEvent: quitLauncher=false, finishing activity")
+                try {
+                    Thread.sleep(200)
+                } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                }
                 finish()
             }
         }

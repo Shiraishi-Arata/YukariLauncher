@@ -82,6 +82,382 @@
                         app:tint="?attr/colorOnSurfaceVariant" />
                 </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
 
+                <!-- MobileGlues 詳細設定（レンダラー選択時に展開） -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/mg_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- GLSLキャッシュサイズ -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_glsl_cache_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_glsl_cache_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/setting_mg_glsl_cache"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_glsl_cache_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_glsl_cache_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:text="@string/setting_mg_glsl_cache_desc"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <EditText
+                        android:id="@+id/mg_glsl_cache_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_below="@+id/mg_glsl_cache_desc"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:background="?attr/colorSurfaceContainerHigh" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- ANGLEドライバー設定 -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_angle_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_angle_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_angle"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_angle_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_angle_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- OpenGLエラー設定 -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_no_error_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_no_error_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_no_error"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_no_error_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_no_error_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- マルチドローエミュレーション -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_multidraw_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_multidraw_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_multidraw"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_multidraw_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_multidraw_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- ANGLE深度クリア回避策 -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_angle_clear_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_angle_clear_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_angle_clear_workaround"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_angle_clear_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_angle_clear_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- カスタムOpenGLバージョン -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_custom_gl_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_custom_gl_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_custom_gl_version"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_custom_gl_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_custom_gl_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- ARB_compute_shader拡張 -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_ext_compute_shader_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_ext_compute_shader_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_ext_compute_shader"
+                            android:text="@string/setting_mg_ext_compute_shader"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_ext_compute_shader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- timer_query拡張（推奨） -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_ext_timer_query_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_ext_timer_query_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_ext_timer_query"
+                            android:text="@string/setting_mg_ext_timer_query"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_ext_timer_query"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- direct_state_access拡張 -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_ext_direct_state_access_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_ext_direct_state_access_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_ext_direct_state_access"
+                            android:text="@string/setting_mg_ext_direct_state_access"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_ext_direct_state_access"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- FSR3フレーム生成（FG） -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_frame_generation_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_frame_generation_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_frame_generation"
+                            android:text="@string/setting_mg_frame_generation"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_frame_generation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- FSR1（超解像度） -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_fsr1_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_fsr1_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="@string/setting_mg_fsr1"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/mg_fsr1_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mg_fsr1_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                    <!-- F3画面からMGを隠す -->
+                    <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
+                        android:id="@+id/mg_hide_f3_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:paddingHorizontal="@dimen/_12sdp">
+
+                        <TextView
+                            android:id="@+id/mg_hide_f3_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@+id/mg_hide_f3"
+                            android:text="@string/setting_mg_hide_f3"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/mg_hide_f3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:useMaterialThemeColors="true" />
+                    </com.arata.yukarilauncher.ui.layout.AnimRelativeLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
                 <!-- Game graphics API -->
                 <com.arata.yukarilauncher.ui.layout.AnimRelativeLayout
                     android:id="@+id/game_graphics_api_layout"
@@ -578,5 +954,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </com.google.android.material.card.MaterialCardView>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/info_view_pager"
@@ -37,52 +38,64 @@
             app:layout_constraintStart_toStartOf="@id/operate_layout"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/operate_main_layout"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/menu_overlay"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="@dimen/_12sdp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/shadowView">
+            app:layout_constraintStart_toEndOf="@id/shadowView"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.arata.yukarilauncher.ui.view.AnimButton
-                android:id="@+id/return_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_8sdp"
-                android:text="@string/generic_return"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <com.arata.yukarilauncher.ui.view.AnimButton
-                android:id="@+id/support_development"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:text="@string/about_button_support_development"
-                app:layout_constraintBottom_toTopOf="@id/return_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <com.arata.yukarilauncher.ui.view.AnimTextView
-                android:id="@+id/app_info"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/operate_main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_8sdp"
-                android:padding="@dimen/_8sdp"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.arata.yukarilauncher.ui.view.AnimButton
+                    android:id="@+id/return_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:text="@string/generic_return"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.arata.yukarilauncher.ui.view.AnimButton
+                    android:id="@+id/support_development"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:text="@string/about_button_support_development"
+                    app:layout_constraintBottom_toTopOf="@id/return_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <com.arata.yukarilauncher.ui.view.AnimTextView
+                    android:id="@+id/app_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:padding="@dimen/_8sdp"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

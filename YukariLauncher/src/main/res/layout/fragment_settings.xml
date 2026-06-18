@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginVertical="@dimen/_4sdp"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="?attr/colorSurfaceContainer"
             app:strokeColor="?attr/colorOutline"

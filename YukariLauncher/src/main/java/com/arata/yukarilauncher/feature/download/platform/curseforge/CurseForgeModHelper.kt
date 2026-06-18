@@ -23,9 +23,9 @@ import com.arata.yukarilauncher.feature.download.utils.VersionTypeUtils
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.utils.MCVersionRegex.Companion.RELEASE_REGEX
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
-import net.kdt.pojavlaunch.utils.GsonJsonUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
+import com.arata.yukarilauncher.utils.GsonJsonUtils
 import java.util.TreeSet
 
 class CurseForgeModHelper {
@@ -44,8 +44,9 @@ class CurseForgeModHelper {
  * modLikeSearchする
  */
         internal fun modLikeSearch(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: Int, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.curseforgeID == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val selectedCF = filters.categories.firstOrNull { it.curseforgeID != null }
+            if (filters.categories.isNotEmpty() && selectedCF == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             PlatformUtils.searchModLikeWithChinese(filters, type == CurseForgeCommonUtils.CURSEFORGE_MOD_CLASS_ID)?.let {
@@ -57,8 +58,16 @@ class CurseForgeModHelper {
             params["classId"] = type
             filters.modloader?.let { params["modLoaderTypes"] = "[${it.curseforgeId}]" }
 
-            val response = api.get("mods/search", params, JsonObject::class.java) ?: return null
-            val dataArray = response.getAsJsonArray("data") ?: return null
+            val response = api.get("mods/search", params, JsonObject::class.java)
+            if (response == null) {
+                Logging.e("CurseForgeModHelper", "mods/search returned null (likely 403 - API key lacks search permissions)")
+                return null
+            }
+            val dataArray = response.getAsJsonArray("data")
+            if (dataArray == null) {
+                Logging.e("CurseForgeModHelper", "mods/search response has no 'data' array: ${response}")
+                return null
+            }
 
             val infoItems: MutableList<InfoItem> = ArrayList()
             for (data in dataArray) {
@@ -77,7 +86,8 @@ class CurseForgeModHelper {
                             item.uploadDate,
                             item.iconUrl,
                             item.category,
-                            getModLoaders(dataElement.getAsJsonArray("latestFilesIndexes"))
+                            getModLoaders(dataElement.getAsJsonArray("latestFilesIndexes")),
+                            item.updatedDate
                         )
                     )
                 }

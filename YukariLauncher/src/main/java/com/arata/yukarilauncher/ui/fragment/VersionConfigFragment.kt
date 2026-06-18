@@ -35,9 +35,9 @@ import com.arata.yukarilauncher.utils.file.FileTools.Companion.copyFileInBackgro
 import com.skydoves.powerspinner.DefaultSpinnerAdapter
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.multirt.MultiRTUtils
-import net.kdt.pojavlaunch.multirt.Runtime
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
+import com.arata.yukarilauncher.utils.runtime.Runtime
 import org.greenrobot.eventbus.EventBus
 import kotlin.enums.EnumEntries
 
@@ -123,7 +123,7 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                 mTempConfig?.setGameArgs(getEditableValue(text))
             }
 
-            initSpinners(isolationType, rendererSpinner, driverSpinner, runtimeSpinner)
+            initSpinners(isolationType, rendererSpinner, driverSpinner, runtimeSpinner, lwjglVersionSpinner)
         }
 
         val versionConfig = currentVersion.getVersionConfig()
@@ -165,6 +165,7 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
         binding.rendererSpinner.dismiss()
         binding.driverSpinner.dismiss()
         binding.runtimeSpinner.dismiss()
+        binding.lwjglVersionSpinner.dismiss()
     }
 
     /**
@@ -362,7 +363,7 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                 jvmArgsEdit.setText(config.getJavaArgs())
                 gameArgsEdit.setText(config.getGameArgs())
 
-                val runtimes = MultiRTUtils.getRuntimes()
+                val runtimes = MultiRTUtils.runtimes
                 val runtimeNames: MutableList<String> = ArrayList()
                 runtimes.forEach { v: Runtime ->
                     runtimeNames.add(String.format("%s - %s", v.name, v.versionString ?: getString(R.string.multirt_runtime_corrupt)))
@@ -385,6 +386,28 @@ class VersionConfigFragment : FragmentWithAnim(R.layout.fragment_version_config)
                             val runtime = runtimes[i1]
                             config.setJavaDir(if (runtime.versionString == null) "" else Tools.LAUNCHERPROFILES_RTPREFIX + runtime.name)
                         }
+                    })
+
+                val lwjglVersions = listOf("3.3.6", "3.4.1")
+                val lwjglNames = listOf(
+                    getString(R.string.setting_lwjgl_version_3_3_6),
+                    getString(R.string.setting_lwjgl_version_3_4_1)
+                )
+                val lwjglList = ArrayList(lwjglNames)
+                lwjglList.add(getString(R.string.generic_default))
+                var lwjglIndex = lwjglList.size - 1
+                if (config.getLwjglVersion().isNotEmpty()) {
+                    val index = lwjglVersions.indexOf(config.getLwjglVersion())
+                    if (index != -1) lwjglIndex = index
+                }
+                val lwjglAdapter = DefaultSpinnerAdapter(lwjglVersionSpinner)
+                lwjglAdapter.setItems(lwjglList)
+                lwjglVersionSpinner.setSpinnerAdapter(lwjglAdapter)
+                lwjglVersionSpinner.selectItemByIndex(lwjglIndex)
+                lwjglVersionSpinner.setOnSpinnerItemSelectedListener(
+                    OnSpinnerItemSelectedListener { _: Int, _: String?, i1: Int, _: String? ->
+                        if (i1 == lwjglList.size - 1) config.setLwjglVersion("")
+                        else config.setLwjglVersion(lwjglVersions[i1])
                     })
             }
         }

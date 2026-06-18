@@ -11,12 +11,12 @@ import com.arata.yukarilauncher.feature.version.Version
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.LibPath
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.AWTCanvasView
-import net.kdt.pojavlaunch.JMinecraftVersionList
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.multirt.Runtime
-import net.kdt.pojavlaunch.utils.JSONUtils
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.ui.view.AWTCanvasView
+import com.arata.yukarilauncher.value.JMinecraftVersionList
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.utils.runtime.Runtime
+import com.arata.yukarilauncher.utils.JSONUtils
+import com.arata.yukarilauncher.value.MinecraftAccount
 import org.jackhuang.hmcl.util.versioning.VersionNumber
 import java.io.File
 
@@ -43,16 +43,16 @@ class LaunchArgs(
         argsList.addAll(getMinecraftJVMArgs())
         if (!hasClasspathInJvmArgs) {
             argsList.add("-cp")
-            argsList.add("${Tools.getLWJGL3ClassPath()}:$launchClassPath")
+            argsList.add("${Tools.getLWJGL3ClassPath(minecraftVersion.getLWJGLVersion())}:$launchClassPath")
         }
 
         if (runtime.javaVersion > 8) {
             argsList.add("--add-exports")
-            val pkg: String = versionInfo.mainClass.substring(0, versionInfo.mainClass.lastIndexOf("."))
+            val pkg: String = versionInfo.mainClass!!.substring(0, versionInfo.mainClass!!.lastIndexOf("."))
             argsList.add("$pkg/$pkg=ALL-UNNAMED")
         }
 
-        argsList.add(versionInfo.mainClass)
+        argsList.add(versionInfo.mainClass ?: "")
         argsList.addAll(getMinecraftClientArgs())
 
         return argsList
@@ -75,8 +75,8 @@ class LaunchArgs(
         prepareImGuiMoulberryNativeFallback()
 
         if (AccountUtils.isOtherLoginAccount(account)) {
-            if (account.otherBaseUrl.contains("auth.mc-user.com")) {
-                argsList.add("-javaagent:${LibPath.NIDE_8_AUTH.absolutePath}=${account.otherBaseUrl.replace("https://auth.mc-user.com:233/", "")}")
+            if (account.otherBaseUrl!!.contains("auth.mc-user.com")) {
+                argsList.add("-javaagent:${LibPath.NIDE_8_AUTH.absolutePath}=${account.otherBaseUrl!!.replace("https://auth.mc-user.com:233/", "")}")
                 argsList.add("-Dnide8auth.client=true")
             } else {
                 argsList.add("-javaagent:${LibPath.AUTHLIB_INJECTOR.absolutePath}=${account.otherBaseUrl}")
@@ -89,30 +89,44 @@ class LaunchArgs(
         val configFilePath = if (is7) LibPath.LOG4J_XML_1_7 else LibPath.LOG4J_XML_1_12
         argsList.add("-Dlog4j.configurationFile=${configFilePath.absolutePath}")
 
-        // ライブラリパス文字列を構築する
-        val versionSpecificNativesDir = File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
-        val libraryPath = StringBuilder()
-        if (versionSpecificNativesDir.exists()) {
-            libraryPath.append(versionSpecificNativesDir.absolutePath).append(":")
-        }
-        if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
-            libraryPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
-        }
-        libraryPath.append(PathManager.DIR_NATIVE_LIB)
+        val libraryPath = getNativeLibrarySearchPath()
         argsList.add("-Djava.library.path=$libraryPath")
 
         // JNAブートライブラリパス（一部のModが依存するJNAで使用）
-        val jnaPath = StringBuilder()
-        if (versionSpecificNativesDir.exists()) {
-            jnaPath.append(versionSpecificNativesDir.absolutePath).append(":")
+        argsList.add("-Djna.boot.library.path=$libraryPath")
+
+        // LWJGL専用のネイティブライブラリ検索パス
+        getLwjglNativeLibraryPath().takeIf { it.isNotEmpty() }?.let { lwjglNativeLibraryPath ->
+            argsList.add("-Dorg.lwjgl.library.path=$lwjglNativeLibraryPath")
+            argsList.add("-Dorg.lwjgl.librarypath=$lwjglNativeLibraryPath")
         }
-        if (PathManager.DIR_MOD_LIBRARY.isNotEmpty()) {
-            jnaPath.append(PathManager.DIR_MOD_LIBRARY).append(":")
-        }
-        jnaPath.append(PathManager.DIR_NATIVE_LIB)
-        argsList.add("-Djna.boot.library.path=$jnaPath")
 
         return argsList
+    }
+
+
+    private fun getVersionSpecificNativesDir(): File =
+        File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
+
+    // LWJGLネイティブディレクトリをキャッシュして起動時のファイルシステムアクセスを削減
+    private val lwjglNativeDirs: List<File> by lazy {
+        val lwjglVersion = minecraftVersion.getLWJGLVersion()
+        val supportedAbis = Build.SUPPORTED_ABIS.takeIf { it.isNotEmpty() } ?: arrayOf("arm64-v8a")
+        supportedAbis
+            .map { abi -> File(PathManager.DIR_DATA, "lwjgl/$lwjglVersion/native/$abi") }
+            .filter { nativeDir -> File(nativeDir, "liblwjgl.so").exists() }
+    }
+
+    private fun getLwjglNativeLibraryPath(): String =
+        lwjglNativeDirs.joinToString(":") { it.absolutePath }
+
+    private fun getNativeLibrarySearchPath(): String {
+        val libraryDirs = ArrayList<String>()
+        getVersionSpecificNativesDir().takeIf { it.exists() }?.let { libraryDirs.add(it.absolutePath) }
+        lwjglNativeDirs.forEach { libraryDirs.add(it.absolutePath) }
+        PathManager.DIR_MOD_LIBRARY.takeIf { it.isNotEmpty() }?.let { libraryDirs.add(it) }
+        libraryDirs.add(PathManager.DIR_NATIVE_LIB)
+        return libraryDirs.joinToString(":")
     }
 
     /**
@@ -134,8 +148,16 @@ class LaunchArgs(
         hasClasspathInJvmArgs = false
         versionInfo.arguments?.let {
             fun Any.processJvmArg(): String? = (this as? String)?.let { argument ->
+                // Keep version JSON-provided native paths from overriding the richer path
+                // assembled in getJavaArgs(); otherwise LWJGL natives can disappear.
                 if (argument.startsWith("-Djava.library.path=")) {
-                    return@let "-Djava.library.path=${PathManager.DIR_NATIVE_LIB}"
+                    return@let "-Djava.library.path=${getNativeLibrarySearchPath()}"
+                }
+                if (argument.startsWith("-Dorg.lwjgl.library.path=") ||
+                    argument.startsWith("-Dorg.lwjgl.librarypath=")) {
+                    return@let getLwjglNativeLibraryPath().takeIf { it.isNotEmpty() }?.let { lwjglNativeLibraryPath ->
+                        argument.substringBefore("=") + "=$lwjglNativeLibraryPath"
+                    }
                 }
 
                 when {
@@ -151,7 +173,7 @@ class LaunchArgs(
 
                     argument == "\${classpath}" -> {
                         hasClasspathInJvmArgs = true
-                        "${Tools.getLWJGL3ClassPath()}:$launchClassPath"
+                        "${Tools.getLWJGL3ClassPath(minecraftVersion.getLWJGLVersion())}:$launchClassPath"
                     }
 
                     else -> argument
@@ -162,7 +184,7 @@ class LaunchArgs(
                 arg.processJvmArg()?.let(minecraftArgs::add)
             }
         }
-        return JSONUtils.insertJSONValueList(minecraftArgs.toTypedArray<String>(), varArgMap)
+        return JSONUtils.insertJSONValueList(minecraftArgs.toTypedArray<String>(), varArgMap as Map<String, String>)
     }
 
     /**
@@ -180,9 +202,9 @@ class LaunchArgs(
         verArgMap["clientid"] = account.clientToken
         // アンダースコア付きのバリアントとの互換性を維持
         verArgMap["client_id"] = account.clientToken
-        verArgMap["auth_xuid"] = account.xuid
+        verArgMap["auth_xuid"] = account.xuid ?: ""
         verArgMap["assets_root"] = ProfilePathHome.getAssetsHome()
-        verArgMap["assets_index_name"] = versionInfo.assets
+        verArgMap["assets_index_name"] = versionInfo.assets ?: ""
         verArgMap["game_assets"] = ProfilePathHome.getAssetsHome()
         verArgMap["game_directory"] = gameDirPath.absolutePath
         verArgMap["user_properties"] = "{}"
@@ -200,7 +222,7 @@ class LaunchArgs(
         val minecraftArgs: MutableList<String> = ArrayList()
         versionInfo.arguments?.apply {
             // Minecraft 1.13+ 対応
-            game.forEach { if (it is String) minecraftArgs.add(it) }
+            game?.forEach { if (it is String) minecraftArgs.add(it) }
         }
 
         val finalArgs = JSONUtils.insertJSONValueList(
@@ -220,10 +242,10 @@ class LaunchArgs(
      */
     private fun setLauncherInfo(verArgMap: MutableMap<String, String>) {
         verArgMap["launcher_name"] = InfoDistributor.LAUNCHER_NAME
-        verArgMap["launcher_version"] = YLTools.getVersionName()
+        verArgMap["launcher_version"] = YLTools.getVersionName() ?: ""
         verArgMap["version_type"] = minecraftVersion.getCustomInfo()
             .takeIf { it.isNotEmpty() && it.isNotBlank() }
-            ?: versionInfo.type
+            ?: (versionInfo.type ?: "release")
     }
 
 

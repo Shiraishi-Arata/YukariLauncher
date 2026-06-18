@@ -5,9 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.utils.runtime.RuntimeSelectedListener
-import net.kdt.pojavlaunch.multirt.MultiRTUtils
-import net.kdt.pojavlaunch.multirt.RTRecyclerViewAdapter
-import net.kdt.pojavlaunch.multirt.Runtime
+import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
+import com.arata.yukarilauncher.utils.runtime.RTRecyclerViewAdapter
+import com.arata.yukarilauncher.utils.runtime.Runtime
 
 /**
  * Javaランタイム選択ダイアログ
@@ -22,7 +22,7 @@ class SelectRuntimeDialog(
         setTitleText(R.string.install_select_jre_environment)
         setMessageText(R.string.install_recommend_use_jre8)
 
-        val runtimes: MutableList<Runtime> = ArrayList(MultiRTUtils.getRuntimes())
+        val runtimes: MutableList<Runtime> = ArrayList(MultiRTUtils.runtimes)
         if (runtimes.isNotEmpty()) runtimes.add(Runtime("auto"))
         val adapter = RTRecyclerViewAdapter(runtimes, listener, this)
         recyclerView.layoutManager = LinearLayoutManager(context)

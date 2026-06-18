@@ -56,10 +56,12 @@ class ControlInfoDialog(
                 editControlInfoDialog.setOnConfirmClickListener { fileName: String, controlInfoData: ControlInfoData ->
                     val controlFile = File(PathManager.DIR_CTRLMAP_PATH, fileName)
                     loadCustomControlsFromFile(context, controlFile)?.let { customControls ->
-                        customControls.mControlInfoDataList.name = controlInfoData.name
-                        customControls.mControlInfoDataList.author = controlInfoData.author
-                        customControls.mControlInfoDataList.version = controlInfoData.version
-                        customControls.mControlInfoDataList.desc = controlInfoData.desc
+                        val dataList = customControls.mControlInfoDataList ?: ControlInfoData()
+                        customControls.mControlInfoDataList = dataList
+                        dataList.name = controlInfoData.name
+                        dataList.author = controlInfoData.author
+                        dataList.version = controlInfoData.version
+                        dataList.desc = controlInfoData.desc
 
                         saveToFile(context, customControls, controlFile)
                     }

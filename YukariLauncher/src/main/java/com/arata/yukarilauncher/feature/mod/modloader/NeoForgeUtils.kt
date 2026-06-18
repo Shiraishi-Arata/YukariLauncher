@@ -1,7 +1,7 @@
 package com.arata.yukarilauncher.feature.mod.modloader
 
-import net.kdt.pojavlaunch.modloaders.ForgeVersionListHandler
-import net.kdt.pojavlaunch.utils.DownloadUtils
+import com.arata.yukarilauncher.feature.mod.modloader.ForgeVersionListHandler
+import com.arata.yukarilauncher.utils.http.DownloadUtils
 import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import java.io.IOException
@@ -31,11 +31,11 @@ class NeoForgeUtils {
                 metaDataUrl,
                 name,
                 force,
-            ) { input: String? ->
+            ) { input: String ->
                 try {
                     val handler = ForgeVersionListHandler()
                     saxParser.parse(InputSource(StringReader(input)), handler)
-                    return@downloadStringCached handler.versions
+                    handler.versions
                 } catch (e: SAXException) {
                     throw DownloadUtils.ParseException(e)
                 } catch (e: IOException) {

@@ -9,15 +9,15 @@ import androidx.fragment.app.Fragment
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.context.ContextExecutor
 import com.arata.yukarilauncher.feature.download.enums.Classify
+import com.arata.yukarilauncher.feature.download.enums.Platform
 import com.arata.yukarilauncher.feature.download.install.UnpackWorldZipHelper
 import com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.Companion.getWorldPath
-import com.arata.yukarilauncher.feature.download.utils.CategoryUtils
 import com.arata.yukarilauncher.task.Task
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 
 /**
  * ワールドデータをダウンロードするためのフラグメントです。
@@ -26,8 +26,8 @@ import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
 class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResourceDownloadFragment(
     parentFragment,
     Classify.WORLD,
-    CategoryUtils.getWorldCategory(),
-    false
+    false,
+    Platform.CURSEFORGE
 ) {
     private var openDocumentLauncher: ActivityResultLauncher<Any>? = null
 
@@ -37,22 +37,21 @@ class WorldDownloadFragment(parentFragment: Fragment? = null) : AbstractResource
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openDocumentLauncher = registerForActivityResult(OpenDocumentWithExtension("zip")) { uris: List<Uri>? ->
-            uris?.let { uriList ->
-                uriList[0].let { result ->
-                    val dialog = YLTools.showTaskRunningDialog(requireContext())
-                    Task.runTask {
-                        val worldFile = FileTools.copyFileInBackground(requireContext(), result, getWorldPath().absolutePath)
-                        runCatching {
-                            UnpackWorldZipHelper.unpackFile(worldFile, getWorldPath())
-                        }.getOrElse {
-                            ContextExecutor.showToast(R.string.download_install_unpack_world_error, Toast.LENGTH_SHORT)
-                        }
-                    }.onThrowable { e ->
-                        Tools.showErrorRemote(e)
-                    }.finallyTask(TaskExecutors.getAndroidUI()) {
-                        dialog.dismiss()
-                    }.execute()
-                }
+            if (!uris.isNullOrEmpty()) {
+                val uri = uris[0]
+                val dialog = YLTools.showTaskRunningDialog(requireContext())
+                Task.runTask {
+                    val worldFile = FileTools.copyFileInBackground(requireContext(), uri, getWorldPath().absolutePath)
+                    runCatching {
+                        UnpackWorldZipHelper.unpackFile(worldFile, getWorldPath())
+                    }.getOrElse {
+                        ContextExecutor.showToast(R.string.download_install_unpack_world_error, Toast.LENGTH_SHORT)
+                    }
+                }.onThrowable { e ->
+                    Tools.showErrorRemote(e)
+                }.finallyTask(TaskExecutors.getAndroidUI()) {
+                    dialog.dismiss()
+                }.execute()
             }
         }
     }

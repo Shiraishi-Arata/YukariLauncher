@@ -8,7 +8,7 @@ import com.arata.yukarilauncher.event.single.SettingsChangeEvent
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.setting.unit.AbstractSettingUnit
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.lang.reflect.Type

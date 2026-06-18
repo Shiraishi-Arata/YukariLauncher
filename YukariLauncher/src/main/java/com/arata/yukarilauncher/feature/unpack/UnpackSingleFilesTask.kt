@@ -5,7 +5,7 @@ import android.os.Build
 import com.arata.yukarilauncher.feature.log.Logging.e
 import com.arata.yukarilauncher.utils.CopyDefaultFromAssets.Companion.copyFromAssets
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 class UnpackSingleFilesTask(val context: Context) : AbstractUnpackTask() {

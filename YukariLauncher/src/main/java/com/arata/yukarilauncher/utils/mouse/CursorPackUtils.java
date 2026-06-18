@@ -9,11 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.arata.yukarilauncher.utils.image.ImageUtils;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -25,13 +20,18 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 
 public final class CursorPackUtils {
     private static final int XCURSOR_MAGIC = 0x72756358;
@@ -116,6 +116,32 @@ public final class CursorPackUtils {
     }
 
     /**
+     * カーソルパックの一覧表示用に、標準カーソル（default/left_ptr/arrow）のDrawableを読み込む
+     */
+    @Nullable
+    public static Drawable loadDefaultCursorDrawable(File source) {
+        if (source == null || !source.exists()) return null;
+        if (source.isDirectory()) {
+            source = findDefaultCursorCandidate(source);
+            if (source == null) return null;
+        }
+
+        if (ImageUtils.isImage(source)) {
+            return Drawable.createFromPath(source.getAbsolutePath());
+        }
+
+        return decodeXCursorDrawable(source);
+    }
+
+    /**
+     * ディレクトリから一覧表示に使う標準カーソル候補を検索する
+     */
+    @Nullable
+    public static File findDefaultCursorCandidate(File directory) {
+        return findCursorCandidate(directory, new String[]{"default", "left_ptr", "arrow", "cursor", "pointer"});
+    }
+
+    /**
      * ディレクトリからカーソル候補ファイルを検索する（デフォルトは標準矢印カーソル）
      */
     @Nullable
@@ -129,9 +155,16 @@ public final class CursorPackUtils {
      */
     @Nullable
     public static File findCursorCandidate(File directory, int cursorType) {
+        return findCursorCandidate(directory, getPreferredNames(cursorType));
+    }
+
+    /**
+     * ディレクトリから指定された優先名に適したカーソルファイルを検索する
+     */
+    @Nullable
+    private static File findCursorCandidate(File directory, String[] preferredNames) {
         if (directory == null || !directory.isDirectory()) return null;
 
-        String[] preferredNames = getPreferredNames(cursorType);
         List<File> allFiles = collectFiles(directory);
 
         for (String preferred : preferredNames) {

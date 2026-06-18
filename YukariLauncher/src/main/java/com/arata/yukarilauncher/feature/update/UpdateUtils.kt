@@ -19,8 +19,8 @@ import com.arata.yukarilauncher.utils.http.CallUtils.CallbackListener
 import com.arata.yukarilauncher.utils.http.NetworkUtils
 import com.arata.yukarilauncher.utils.path.UrlManager
 import com.arata.yukarilauncher.utils.stringutils.StringUtils
-import net.kdt.pojavlaunch.Architecture
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.utils.platform.Architecture
+import com.arata.yukarilauncher.Tools
 import okhttp3.Call
 import okhttp3.Response
 import org.apache.commons.io.FileUtils

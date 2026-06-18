@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:orientation="vertical"
+    android:padding="@dimen/_8sdp"
     tools:ignore="ContentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -187,6 +188,28 @@
                         app:spinner_popup_max_height="@dimen/_240sdp"
                         tools:paddingVertical="@dimen/_12sdp" />
 
+                    <TextView
+                        android:id="@+id/lwjgl_version_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="@string/pedit_lwjgl_version"
+                        app:layout_constraintStart_toStartOf="@+id/lwjgl_version_spinner"
+                        app:layout_constraintTop_toBottomOf="@+id/driver_spinner" />
+
+                    <com.skydoves.powerspinner.PowerSpinnerView
+                        android:id="@+id/lwjgl_version_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:background="@drawable/background_item"
+                        android:padding="@dimen/padding_heavy"
+                        app:layout_constraintTop_toBottomOf="@+id/lwjgl_version_title"
+                        app:spinner_arrow_tint="@color/primary_text"
+                        app:spinner_item_height="@dimen/_40sdp"
+                        app:spinner_popup_background="@drawable/background_edit_box"
+                        app:spinner_popup_max_height="@dimen/_240sdp"
+                        tools:paddingVertical="@dimen/_12sdp" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
@@ -322,15 +345,25 @@
             app:layout_constraintStart_toStartOf="@id/operate_layout"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/operate_main_layout"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/menu_overlay"
+            android:layout_margin="@dimen/_12sdp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/shadowView"
             app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/operate_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent">
 
             <com.arata.yukarilauncher.ui.layout.AnimConstraintLayout
                 android:id="@+id/icon_layout"
@@ -396,6 +429,8 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

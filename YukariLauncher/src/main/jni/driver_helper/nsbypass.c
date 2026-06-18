@@ -70,11 +70,16 @@ static void* find_branch_label(void* func_start) {
 
 bool linker_ns_load(const char* lib_search_path) {
 #ifdef ADRENO_POSSIBLE
-    loader_dlopen_t loader_dlopen = find_branch_label(&dlopen);
+    void* real_dlopen = dlsym(RTLD_DEFAULT, "dlopen");
+    if (!real_dlopen) {
+        __android_log_print(ANDROID_LOG_ERROR, "NSBypass", "Failed to find real dlopen via dlsym");
+        return false;
+    }
+    loader_dlopen_t loader_dlopen = find_branch_label(real_dlopen);
     size_t page_size = get_page_size();
     mprotect(loader_dlopen, page_size, PROT_READ | PROT_WRITE | PROT_EXEC);
 
-    void* ld_android_handle = loader_dlopen("ld-android.so", RTLD_LAZY, &dlopen);
+    void* ld_android_handle = loader_dlopen("ld-android.so", RTLD_LAZY, real_dlopen);
     if (!ld_android_handle)
         return false;
 

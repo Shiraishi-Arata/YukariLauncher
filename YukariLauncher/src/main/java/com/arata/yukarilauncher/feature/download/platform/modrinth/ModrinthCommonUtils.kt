@@ -18,8 +18,8 @@ import com.arata.yukarilauncher.feature.download.utils.VersionTypeUtils
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.stringutils.StringUtilsKt
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.mod.modpack.api.ApiHandler
 import java.util.StringJoiner
 import java.util.TreeSet
 
@@ -36,14 +36,31 @@ class ModrinthCommonUtils {
  * getCategoriesする
  */
         private fun getCategories(filters: Filters): String {
-            val categories = mutableListOf<String>().apply {
-                filters.modloader?.let { add(it.modrinthName) }
-                if (filters.category != Category.ALL) {
-                    add(filters.category.modrinthName!!)
-                }
+            val facets = mutableListOf<String>()
+
+            filters.modloader?.let {
+                facets.add("[\"categories:${it.modrinthName}\"]")
             }
-            return if (categories.isEmpty()) ""
-            else categories.joinToString { "[\"categories:$it\"]" }
+
+            val envValues = mutableListOf<String>()
+            if (Category.ENV_CLIENT in filters.categories) {
+                envValues.add("\"client_side:required\"")
+                envValues.add("\"client_side:optional\"")
+            }
+            if (Category.ENV_SERVER in filters.categories) {
+                envValues.add("\"server_side:required\"")
+                envValues.add("\"server_side:optional\"")
+            }
+            if (envValues.isNotEmpty()) {
+                facets.add(envValues.joinToString(prefix = "[", postfix = "]"))
+            }
+
+            val catNames = filters.categories.filter { it != Category.ENV_CLIENT && it != Category.ENV_SERVER }.mapNotNull { it.modrinthName }
+            if (catNames.isNotEmpty()) {
+                facets.add(catNames.joinToString(prefix = "[", postfix = "]") { "\"categories:$it\"" })
+            }
+
+            return facets.joinToString(",")
         }
 
         /**
@@ -142,8 +159,10 @@ class ModrinthCommonUtils {
  * getResultsする
  */
         internal fun getResults(api: ApiHandler, lastResult: SearchResult, filters: Filters, type: String, classify: Classify): SearchResult? {
-            if (filters.category != Category.ALL && filters.category.modrinthName == null) {
-                throw PlatformNotSupportedException("The platform does not support the ${filters.category} category!")
+            val nonEnvCategories = filters.categories.filter { it != Category.ENV_CLIENT && it != Category.ENV_SERVER }
+            val selectedMR = nonEnvCategories.firstOrNull { it.modrinthName != null }
+            if (nonEnvCategories.isNotEmpty() && selectedMR == null) {
+                throw PlatformNotSupportedException("The platform does not support the selected categories!")
             }
 
             val response = api.get("search", getParams(lastResult, filters, type), JsonObject::class.java) ?: return null
@@ -210,6 +229,7 @@ class ModrinthCommonUtils {
                 YLTools.getDate(hit.get("date_created").asString),
                 getIconUrl(hit),
                 getAllCategories(hit).toList(),
+                updatedDate = try { YLTools.getDate(hit.get("updated").asString) } catch (_: Exception) { null }
             )
         }
 
@@ -236,7 +256,8 @@ class ModrinthCommonUtils {
                     hit.get("downloads").asLong,
                     YLTools.getDate(hit.get("published").asString),
                     getIconUrl(hit),
-                    getAllCategories(hit).toList()
+                    getAllCategories(hit).toList(),
+                    updatedDate = try { YLTools.getDate(hit.get("updated").asString) } catch (_: Exception) { null }
                 )
             }
             return null

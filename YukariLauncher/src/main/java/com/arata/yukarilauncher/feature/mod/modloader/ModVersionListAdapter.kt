@@ -11,8 +11,8 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.ItemFileListViewBinding
 import com.arata.yukarilauncher.feature.download.item.VersionItem
 import com.arata.yukarilauncher.utils.anim.ViewAnimUtils
-import net.kdt.pojavlaunch.modloaders.FabricVersion
-import net.kdt.pojavlaunch.modloaders.OptiFineUtils.OptiFineVersion
+import com.arata.yukarilauncher.feature.mod.modloader.FabricVersion
+import com.arata.yukarilauncher.feature.mod.modloader.OptiFineUtils.OptiFineVersion
 
 class ModVersionListAdapter(
     private val iconDrawable: Int,

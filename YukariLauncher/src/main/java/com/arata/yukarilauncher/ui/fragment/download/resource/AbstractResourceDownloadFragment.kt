@@ -1,15 +1,24 @@
 package com.arata.yukarilauncher.ui.fragment.download.resource
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -20,6 +29,9 @@ import com.arata.yukarilauncher.databinding.FragmentDownloadResourceBinding
 import com.arata.yukarilauncher.event.value.DownloadPageEvent
 import com.arata.yukarilauncher.event.value.DownloadPageEvent.PageSwapEvent.Companion.IN
 import com.arata.yukarilauncher.event.value.DownloadPageEvent.PageSwapEvent.Companion.OUT
+import com.arata.yukarilauncher.feature.download.FilterConfig
+import com.arata.yukarilauncher.feature.download.FilterOption
+import com.arata.yukarilauncher.feature.download.FilterSection
 import com.arata.yukarilauncher.feature.download.Filters
 import com.arata.yukarilauncher.feature.download.InfoAdapter
 import com.arata.yukarilauncher.feature.download.SelfReferencingFuture
@@ -45,29 +57,24 @@ import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.anim.AnimUtils.Companion.setVisibilityAnim
 import com.skydoves.powerspinner.PowerSpinnerView
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.Future
 
-/**
- * リソースダウンロード用の抽象フラグメントです。
- * プラットフォームからの検索、フィルタリング、バッチダウンロード機能を提供します。
- */
 abstract class AbstractResourceDownloadFragment(
     parentFragment: Fragment?,
     private val classify: Classify,
-    private val categoryList: List<Category>,
     private val showModloader: Boolean,
-    private val recommendedPlatform: Platform = Platform.CURSEFORGE
+    private val recommendedPlatform: Platform = Platform.MODRINTH
 ) : FragmentWithAnim(R.layout.fragment_download_resource) {
     private lateinit var binding: FragmentDownloadResourceBinding
 
     private lateinit var mPlatformAdapter: ObjectSpinnerAdapter<Platform>
     private lateinit var mSortAdapter: ObjectSpinnerAdapter<Sort>
-    private lateinit var mCategoryAdapter: ObjectSpinnerAdapter<Category>
-    private lateinit var mModLoaderAdapter: ObjectSpinnerAdapter<ModLoader>
     private var mCurrentPlatform: Platform = Platform.CURSEFORGE
+    private var mAccentColor: Int = Platform.CURSEFORGE.accentColor
+    private var isGridView = false
     private val mFilters: Filters = Filters()
 
     private val mInfoAdapter = InfoAdapter(parentFragment,
@@ -87,15 +94,8 @@ abstract class AbstractResourceDownloadFragment(
     private var selectMode = false
     private val selectedMods: MutableMap<String, InfoItem> = LinkedHashMap()
 
-    /**
-     * インストールボタンの初期化を行います。
-     * @param installButton インストールボタン
-     */
     abstract fun initInstallButton(installButton: Button)
 
-    /**
-     * フラグメントのビューを生成します。
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -103,21 +103,16 @@ abstract class AbstractResourceDownloadFragment(
     ): View {
         binding = FragmentDownloadResourceBinding.inflate(layoutInflater)
 
-        mPlatformAdapter = ObjectSpinnerAdapter(binding.platformSpinner) { platform -> platform.pName }
+        mPlatformAdapter = ObjectSpinnerAdapter(
+            binding.platformSpinner,
+            { platform -> ContextCompat.getDrawable(requireContext(), platform.iconResId) },
+            { platform -> platform.pName }
+        )
         mSortAdapter = ObjectSpinnerAdapter(binding.sortSpinner) { sort -> getString(sort.resNameID) }
-        mCategoryAdapter = ObjectSpinnerAdapter(binding.categorySpinner) { category -> getString(category.resNameID) }
-        mModLoaderAdapter = ObjectSpinnerAdapter(binding.modloaderSpinner) { modloader ->
-            if (modloader == ModLoader.ALL) getString(R.string.generic_all)
-            else modloader.loaderName
-        }
 
         return binding.root
     }
 
-    /**
-     * ビュー作成後の初期化処理を行います。
-     * スピナーの設定、検索ボタン、フィルターの初期化を行います。
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
             recyclerView.apply {
@@ -147,7 +142,6 @@ abstract class AbstractResourceDownloadFragment(
                 false
             }
 
-            // バージョン選択ダイアログを開く
             selectedMcVersionView.setOnClickListener {
                 val selectVersionDialog = SelectVersionDialog(requireContext())
                 selectVersionDialog.setOnVersionSelectedListener(object : VersionSelectedListener() {
@@ -155,21 +149,21 @@ abstract class AbstractResourceDownloadFragment(
                         selectedMcVersionView.text = version
                         mFilters.mcVersion = version
                         selectVersionDialog.dismiss()
+                        search()
                     }
                 })
                 selectVersionDialog.show()
             }
             selectedMcVersionView.setOnLongClickListener {
                 selectedMcVersionView.text = null
+                mFilters.mcVersion = null
+                search()
                 true
             }
         }
 
-        // スピナーを初期化
         mPlatformAdapter.setItems(Platform.entries)
         mSortAdapter.setItems(Sort.entries)
-        mCategoryAdapter.setItems(categoryList)
-        mModLoaderAdapter.setItems(ModLoader.entries)
 
         binding.apply {
             initInstallButton(binding.installButton)
@@ -191,35 +185,39 @@ abstract class AbstractResourceDownloadFragment(
             setSpinnerListener<Platform>(platformSpinner) {
                 if (mCurrentPlatform == it) return@setSpinnerListener
                 mCurrentPlatform = it
+                applyPlatformTheme(it)
+                buildFilterSections()
                 search()
             }
 
             setSpinner(sortSpinner, mSortAdapter)
-            setSpinnerListener<Sort>(sortSpinner) { mFilters.sort = it }
-
-            setSpinner(categorySpinner, mCategoryAdapter)
-            setSpinnerListener<Category>(binding.categorySpinner) { mFilters.category = it }
-
-            modloaderLayout.visibility = if (showModloader) {
-                setSpinner(modloaderSpinner, mModLoaderAdapter)
-                setSpinnerListener<ModLoader>(modloaderSpinner) {
-                    mFilters.modloader = it.takeIf { loader -> loader != ModLoader.ALL }
-                }
-                View.VISIBLE
-            } else {
-                mFilters.modloader = null
-                View.GONE
-            }
+            setSpinnerListener<Sort>(sortSpinner) { mFilters.sort = it; search() }
 
             initSpinnerIndex()
+            applyPlatformTheme(recommendedPlatform)
             applyCurrentVersionFilter()
+            buildFilterSections()
 
             reset.setOnClickListener {
                 nameEdit.setText("")
                 initSpinnerIndex()
                 binding.selectedMcVersionView.text = null
                 mFilters.mcVersion = null
-                if (showModloader) mFilters.modloader = null
+                mFilters.categories.clear()
+                mFilters.modloader = null
+                uncheckAllFilterSections()
+            }
+
+            viewToggle.setOnClickListener {
+                isGridView = !isGridView
+                val spanCount = if (isGridView) 2 else 1
+                recyclerView.layoutManager = if (isGridView) {
+                    GridLayoutManager(requireContext(), spanCount)
+                } else {
+                    LinearLayoutManager(requireContext())
+                }
+                mInfoAdapter.setGridView(isGridView)
+                viewToggle.text = getString(if (isGridView) R.string.download_ui_view_list else R.string.download_ui_view_grid)
             }
 
             returnButton.setOnClickListener { YLTools.onBackPressed(requireActivity()) }
@@ -229,11 +227,6 @@ abstract class AbstractResourceDownloadFragment(
         applySelectionState()
     }
 
-    /**
-     * スピナーの設定を行います。
-     * @param spinner スピナービュー
-     * @param adapter スピナーアダプター
-     */
     private fun setSpinner(spinner: PowerSpinnerView, adapter: ObjectSpinnerAdapter<*>) {
         spinner.apply {
             setSpinnerAdapter(adapter)
@@ -242,22 +235,16 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * スピナーの初期インデックスを設定します。
-     */
     private fun initSpinnerIndex() {
         binding.apply {
             platformSpinner.selectItemByIndex(recommendedPlatform.ordinal)
             sortSpinner.selectItemByIndex(0)
-            categorySpinner.selectItemByIndex(0)
-            if (showModloader) modloaderSpinner.selectItemByIndex(0)
         }
+        mFilters.categories.clear()
     }
 
-    /**
-     * 現在のMinecraftバージョンをフィルターに適用します。
-     */
     private fun applyCurrentVersionFilter() {
+        if (classify == Classify.MODPACK) return
         val versionInfo = VersionsManager.getCurrentVersion()?.getVersionInfo() ?: return
         val mcVersion = versionInfo.minecraftVersion
         if (mcVersion.isNotBlank()) {
@@ -272,29 +259,387 @@ abstract class AbstractResourceDownloadFragment(
             ?: return
 
         mFilters.modloader = matchedLoader
-        binding.modloaderSpinner.selectItemByIndex(matchedLoader.ordinal)
+        val container = binding.filterSectionsContainer
+        for (i in 0 until container.childCount) {
+            val child = container.getChildAt(i)
+            if (child is ViewGroup) findAndCheckRadioForModloader(child, matchedLoader)
+        }
     }
 
-    /**
-     * フラグメント開始時にEventBusを登録します。
-     */
+    private fun findAndCheckRadioForModloader(viewGroup: ViewGroup, loader: ModLoader) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            when (child) {
+                is RadioButton -> {
+                    if (child.tag == loader) child.isChecked = true
+                }
+                is ViewGroup -> findAndCheckRadioForModloader(child, loader)
+            }
+        }
+    }
+
+    private fun buildFilterSections() {
+        val container = binding.filterSectionsContainer
+        container.removeAllViews()
+
+        val sections = FilterConfig.getSections(mCurrentPlatform, classify)
+        if (sections.isEmpty()) {
+            container.visibility = View.GONE
+            return
+        }
+        container.visibility = View.VISIBLE
+
+        sections.forEach { section ->
+            val sectionView = createSectionView(section)
+            container.addView(sectionView)
+        }
+    }
+
+    private fun createSectionView(section: FilterSection): View {
+        val context = requireContext()
+        val container = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = resources.getDimensionPixelSize(R.dimen._8sdp)
+                setMargins(
+                    resources.getDimensionPixelSize(R.dimen._8sdp),
+                    topMargin,
+                    resources.getDimensionPixelSize(R.dimen._8sdp),
+                    0
+                )
+            }
+        }
+
+        val headerLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            gravity = Gravity.CENTER_VERTICAL
+        }
+
+        val expandArrow = ImageView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                resources.getDimensionPixelSize(R.dimen._18sdp),
+                resources.getDimensionPixelSize(R.dimen._18sdp)
+            )
+            setImageResource(R.drawable.ic_spinner_arrow_right)
+            imageTintList = ColorStateList.valueOf(mAccentColor)
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            rotation = 90f
+        }
+        headerLayout.addView(expandArrow)
+
+        val titleView = TextView(context).apply {
+            text = getString(section.titleResId)
+            setTextColor(mAccentColor)
+            textSize = resources.getDimension(R.dimen._13ssp)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        headerLayout.addView(titleView)
+        container.addView(headerLayout)
+
+        val contentContainer = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val isModloader = section.titleResId == R.string.download_ui_modloader
+
+        if (isModloader) {
+            val radioGroup = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+            var lastChecked: RadioButton? = null
+
+            section.options.forEach { option ->
+                val row = LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    gravity = Gravity.CENTER_VERTICAL
+                    setPadding(resources.getDimensionPixelSize(R.dimen._8sdp), 0, 0, 0)
+                }
+
+                val radio = RadioButton(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    buttonTintList = ColorStateList.valueOf(mAccentColor)
+                    isChecked = if (option.modLoader != null) {
+                        mFilters.modloader == option.modLoader
+                    } else {
+                        mFilters.modloader == null
+                    }
+                    tag = option.modLoader
+                    setOnClickListener {
+                        if (isChecked) {
+                            lastChecked?.isChecked = false
+                            isChecked = true
+                            lastChecked = this
+                            mFilters.modloader = tag as? ModLoader
+                            applyFilterUpdate()
+                        }
+                    }
+                }
+                row.addView(radio)
+
+                val label = TextView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                    setPadding(resources.getDimensionPixelSize(R.dimen._4sdp), 0, 0, 0)
+                    text = getString(option.nameResId)
+                    setTextColor(ContextCompat.getColor(context, R.color.primary_text))
+                    textSize = resources.getDimension(R.dimen._12ssp)
+                }
+                row.addView(label)
+
+                if (radio.isChecked) lastChecked = radio
+                radioGroup.addView(row)
+            }
+            contentContainer.addView(radioGroup)
+        } else {
+            section.options.forEach { option ->
+                val optionView = createOptionView(option, 0)
+                contentContainer.addView(optionView)
+            }
+        }
+
+        container.addView(contentContainer)
+
+        headerLayout.setOnClickListener {
+            val isVisible = contentContainer.visibility == View.VISIBLE
+            contentContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+            expandArrow.rotation = if (isVisible) 0f else 90f
+        }
+
+        return container
+    }
+
+    private fun createOptionView(option: FilterOption, depth: Int): View {
+        val context = requireContext()
+        val indentStep = Tools.dpToPx(24f).toInt()
+        val paddingLeft = resources.getDimensionPixelSize(R.dimen._8sdp) + depth * indentStep
+
+        if (option.children != null && option.children.isNotEmpty()) {
+            val groupContainer = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            val hasSelfCategories = option.categories.isNotEmpty()
+            val headerLayout = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(paddingLeft, 0, 0, 0)
+                setOnClickListener {
+                    val childContainer = groupContainer.getChildAt(1) as? View
+                    if (childContainer != null) {
+                        childContainer.visibility = if (childContainer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                        updateExpandArrow(it, childContainer.visibility == View.VISIBLE)
+                    }
+                }
+            }
+
+            val checkBox = CheckBox(context).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                buttonTintList = ColorStateList.valueOf(mAccentColor)
+                isChecked = option.categories.any { it in mFilters.categories }
+                if (hasSelfCategories) {
+                    setOnCheckedChangeListener { _, isChecked ->
+                        toggleCategories(option.categories, isChecked)
+                        applyFilterUpdate()
+                    }
+                } else {
+                    visibility = View.INVISIBLE
+                }
+            }
+            headerLayout.addView(checkBox)
+
+            val label = TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
+                setPadding(resources.getDimensionPixelSize(R.dimen._4sdp), 0, 0, 0)
+                text = getString(option.nameResId)
+                setTextColor(ContextCompat.getColor(context, R.color.primary_text))
+                textSize = resources.getDimension(R.dimen._12ssp)
+            }
+            headerLayout.addView(label)
+
+            val expandArrow = ImageView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    resources.getDimensionPixelSize(R.dimen._18sdp),
+                    resources.getDimensionPixelSize(R.dimen._18sdp)
+                )
+                setImageResource(R.drawable.ic_spinner_arrow_right)
+                imageTintList = ColorStateList.valueOf(mAccentColor)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            headerLayout.addView(expandArrow)
+
+            groupContainer.addView(headerLayout)
+
+            val childContainer = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                visibility = View.GONE
+            }
+
+            option.children.forEach { child ->
+                val childView = createOptionView(child, depth + 1)
+                childContainer.addView(childView)
+            }
+
+            groupContainer.addView(childContainer)
+
+            headerLayout.tag = childContainer
+
+            return groupContainer
+        }
+
+        val row = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(paddingLeft, 0, 0, 0)
+        }
+
+        val checkBox = CheckBox(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            buttonTintList = ColorStateList.valueOf(mAccentColor)
+            isChecked = option.categories.any { it in mFilters.categories }
+            setOnCheckedChangeListener { _, isChecked ->
+                toggleCategories(option.categories, isChecked)
+                applyFilterUpdate()
+            }
+        }
+        row.addView(checkBox)
+
+        val label = TextView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+            setPadding(resources.getDimensionPixelSize(R.dimen._4sdp), 0, 0, 0)
+            text = getString(option.nameResId)
+            setTextColor(ContextCompat.getColor(context, R.color.primary_text))
+            textSize = resources.getDimension(R.dimen._12ssp)
+        }
+        row.addView(label)
+
+        return row
+    }
+
+    private fun updateExpandArrow(header: View, expanded: Boolean) {
+        val headerGroup = header as? ViewGroup ?: return
+        val arrow = headerGroup.getChildAt(headerGroup.childCount - 1) as? ImageView ?: return
+        arrow.rotation = if (expanded) 90f else 0f
+    }
+
+    private fun toggleCategories(categories: List<Category>, add: Boolean) {
+        if (add) {
+            categories.forEach { cat ->
+                if (cat !in mFilters.categories) mFilters.categories.add(cat)
+            }
+        } else {
+            mFilters.categories.removeAll(categories)
+        }
+    }
+
+    private fun applyFilterUpdate() {
+        search()
+    }
+
+    private fun uncheckAllFilterSections() {
+        val container = binding.filterSectionsContainer
+        for (i in 0 until container.childCount) {
+            val sectionView = container.getChildAt(i) as? ViewGroup ?: continue
+            uncheckAllCheckboxes(sectionView)
+        }
+    }
+
+    private fun uncheckAllCheckboxes(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            when (child) {
+                is CheckBox -> child.isChecked = false
+                is ViewGroup -> uncheckAllCheckboxes(child)
+            }
+        }
+    }
+
+    private fun applyPlatformTheme(platform: Platform) {
+        mAccentColor = platform.accentColor
+        val color = mAccentColor
+        val colorStateList = ColorStateList.valueOf(color)
+        binding.apply {
+            searchView.imageTintList = colorStateList
+            installButton.setTextColor(color)
+            batchSelectButton.setTextColor(color)
+            resetSelectedModsButton.setTextColor(color)
+            platformSpinner.arrowDrawable?.setTint(color)
+            sortSpinner.arrowDrawable?.setTint(color)
+            platformSpinner.setHintTextColor(colorStateList)
+            selectedMcVersionView.setTextColor(color)
+            nameEdit.setTextColor(color)
+            nameEdit.setHintTextColor(colorStateList)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
 
-    /**
-     * フラグメント停止時にスピナーを閉じ、EventBusの登録を解除します。
-     */
     override fun onStop() {
         closeSpinner()
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
-    /**
-     * 検索完了時のUI更新処理を行います。
-     */
     private fun onSearchFinished() {
         binding.apply {
             setStatusText(false)
@@ -303,10 +648,6 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * 検索エラー時のUI更新処理を行います。
-     * @param error エラーコード
-     */
     private fun onSearchError(error: Int) {
         binding.apply {
             statusText.text = when (error) {
@@ -320,10 +661,6 @@ abstract class AbstractResourceDownloadFragment(
         setStatusText(true)
     }
 
-    /**
-     * スライドインアニメーションを実行します。
-     * @param animPlayer アニメーションプレイヤー
-     */
     override fun slideIn(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operateLayout, Animations.BounceInLeft))
@@ -331,10 +668,6 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * スライドアウトアニメーションを実行します。
-     * @param animPlayer アニメーションプレイヤー
-     */
     override fun slideOut(animPlayer: AnimPlayer) {
         binding.apply {
             animPlayer.apply(AnimPlayer.Entry(operateLayout, Animations.FadeOutRight))
@@ -342,26 +675,14 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * ステータステキストの表示を切り替えます。
-     * @param shouldShow 表示するかどうか
-     */
     private fun setStatusText(shouldShow: Boolean) {
         setVisibilityAnim(binding.statusText, shouldShow)
     }
 
-    /**
-     * ローディングレイアウトの表示を切り替えます。
-     * @param shouldShow 表示するかどうか
-     */
     private fun setLoadingLayout(shouldShow: Boolean) {
         setVisibilityAnim(binding.loadingLayout, shouldShow)
     }
 
-    /**
-     * RecyclerViewの表示を切り替えます。
-     * @param shouldShow 表示するかどうか
-     */
     private fun setRecyclerView(shouldShow: Boolean) {
         binding.apply {
             recyclerView.visibility = if (shouldShow) View.VISIBLE else View.GONE
@@ -369,28 +690,15 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * スピナーのアイテム選択リスナーを設定します。
-     * @param spinnerView スピナービュー
-     * @param func 選択時のコールバック
-     */
     private fun <E> setSpinnerListener(spinnerView: PowerSpinnerView, func: (E) -> Unit) {
         spinnerView.setOnSpinnerItemSelectedListener<E> { _, _, _, newItem -> func(newItem) }
     }
 
-    /**
-     * 全てのスピナーを閉じます。
-     */
     private fun closeSpinner() {
         binding.platformSpinner.dismiss()
         binding.sortSpinner.dismiss()
-        binding.categorySpinner.dismiss()
-        binding.modloaderSpinner.dismiss()
     }
 
-    /**
-     * 前回の検索状態をクリアしてから検索を実行します。
-     */
     private fun search() {
         setStatusText(false)
         setRecyclerView(false)
@@ -406,16 +714,10 @@ abstract class AbstractResourceDownloadFragment(
             .startOnExecutor(TaskExecutors.getDefault())
     }
 
-    /**
-     * アダプター内のアイテム数が0の場合に検索を実行します。
-     */
     private fun checkSearch() {
         if (mInfoAdapter.itemCount == 0) search()
     }
 
-    /**
-     * 選択状態をUIに反映します。
-     */
     private fun applySelectionState() {
         mInfoAdapter.setSelectMode(selectMode) { item ->
             if (selectedMods.containsKey(item.projectId)) selectedMods.remove(item.projectId)
@@ -433,9 +735,6 @@ abstract class AbstractResourceDownloadFragment(
         binding.resetSelectedModsButton.visibility = if (selectedMods.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    /**
-     * 選択されたModの依存関係を解決し、確認ダイアログを表示します。
-     */
     private fun resolveAndConfirmSelectedMods() {
         val currentVersion = VersionsManager.getCurrentVersion()?.getVersionInfo()
         val currentMcVersion = currentVersion?.minecraftVersion
@@ -485,13 +784,6 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * 指定されたバージョンの依存関係を解決します。
-     * @param version バージョン情報
-     * @param mcVersion Minecraftバージョン
-     * @param loaderNames ローダー名のセット
-     * @return 解決されたダウンロードアイテムのリスト
-     */
     private fun resolveDependencies(version: VersionItem, mcVersion: String, loaderNames: Set<String>): List<BatchModDownloadConfirmDialog.ResolvedDownloadItem> {
         if (version !is ModVersionItem) return emptyList()
         return version.dependencies.mapNotNull { dependency ->
@@ -506,13 +798,6 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * 互換性のある最新バージョンを選択します。
-     * @param versions バージョンリスト
-     * @param mcVersion Minecraftバージョン
-     * @param loaderNames ローダー名のセット
-     * @return 互換性のある最新バージョン、見つからない場合はnull
-     */
     private fun pickLatestCompatibleVersion(
         versions: List<VersionItem>,
         mcVersion: String,
@@ -528,10 +813,6 @@ abstract class AbstractResourceDownloadFragment(
             .maxByOrNull { it.uploadDate.time }
     }
 
-    /**
-     * バッチダウンロードの保存先ディレクトリを取得します。
-     * @return 保存先ディレクトリ
-     */
     private fun getBatchDownloadTargetDir(): java.io.File {
         return when (classify) {
             Classify.MOD -> com.arata.yukarilauncher.feature.download.platform.AbstractPlatformHelper.getModsPath()
@@ -542,12 +823,6 @@ abstract class AbstractResourceDownloadFragment(
         }.apply { mkdirs() }
     }
 
-    /**
-     * 選択されたアイテムをインストールします。
-     * @param info アイテム情報
-     * @param version バージョン情報
-     * @param target インストール先ファイル
-     */
     private fun installSelectedItem(info: InfoItem, version: VersionItem, target: java.io.File) {
         when (classify) {
             Classify.MOD -> info.platform.helper.installMod(info, version, target, target.absolutePath)
@@ -558,20 +833,12 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * RecyclerViewの有効/無効を切り替えるイベントを処理します。
-     * @param event RecyclerView有効化イベント
-     */
     @Subscribe
     fun event(event: DownloadPageEvent.RecyclerEnableEvent) {
         binding.recyclerView.isEnabled = event.enable
         closeSpinner()
     }
 
-    /**
-     * ページ切り替えイベントを処理し、対応するアニメーションを実行します。
-     * @param event ページ切り替えイベント
-     */
     @Subscribe
     fun event(event: DownloadPageEvent.PageSwapEvent) {
         closeSpinner()
@@ -585,26 +852,15 @@ abstract class AbstractResourceDownloadFragment(
         }
     }
 
-    /**
-     * ページ破棄イベントを処理し、スピナーを閉じます。
-     * @param event ページ破棄イベント
-     */
     @Subscribe
     fun event(event: DownloadPageEvent.PageDestroyEvent) {
         closeSpinner()
     }
 
-    /**
-     * 検索APIを呼び出す内部タスククラスです。
-     */
     private inner class SearchApiTask(
         private val mPreviousResult: SearchResult?
     ) : SelfReferencingFuture.FutureInterface {
 
-        /**
-         * 非同期で検索を実行します。
-         * @param myFuture 自身のFuture
-         */
         override fun run(myFuture: Future<*>) {
             runCatching {
                 val result: SearchResult? = mCurrentPlatform.helper.search(classify, mFilters, mPreviousResult ?: SearchResult())
@@ -655,9 +911,6 @@ abstract class AbstractResourceDownloadFragment(
     }
 
     companion object {
-        /**
-         * 空のアイテムリストです。
-         */
         private val MOD_ITEMS_EMPTY: MutableList<InfoItem> = ArrayList()
 
         const val ERROR_INTERNAL: Int = 0

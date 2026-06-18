@@ -9,16 +9,16 @@ import com.arata.yukarilauncher.feature.mod.modloader.ModVersionListAdapter
 import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.subassembly.modlist.ModListFragment
 import com.arata.yukarilauncher.utils.YLTools
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.mod.modloader.OptiFineDownloadTask
 import com.arata.yukarilauncher.feature.version.install.Addon
 import com.arata.yukarilauncher.ui.fragment.InstallGameFragment.Companion.BUNDLE_MC_VERSION
-import net.kdt.pojavlaunch.modloaders.OptiFineUtils
-import net.kdt.pojavlaunch.modloaders.OptiFineUtils.OptiFineVersion
-import net.kdt.pojavlaunch.modloaders.OptiFineUtils.OptiFineVersions
+import com.arata.yukarilauncher.feature.mod.modloader.OptiFineUtils
+import com.arata.yukarilauncher.feature.mod.modloader.OptiFineUtils.OptiFineVersion
+import com.arata.yukarilauncher.feature.mod.modloader.OptiFineUtils.OptiFineVersions
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.Future
-import java.util.function.Consumer
+
 
 /**
  * OptiFineをダウンロードするためのフラグメントです。
@@ -103,14 +103,14 @@ class DownloadOptiFineFragment : ModListFragment() {
         val mcVersion = arguments?.getString(BUNDLE_MC_VERSION) ?: throw IllegalArgumentException("The Minecraft version is not passed")
 
         val mOptiFineVersions: MutableMap<String, MutableList<OptiFineVersion>> = HashMap()
-        optiFineVersions.optifineVersions.forEach(Consumer<List<OptiFineVersion>> { optiFineVersionList: List<OptiFineVersion> ->  // バージョンリストを階層的に走査し、Minecraftバージョン + OptiFineバージョンのMapに合成
-            currentTask?.apply { if (isCancelled) return@Consumer }
+        optiFineVersions.optifineVersions!!.forEach { optiFineVersionList: List<OptiFineVersion> ->
+            currentTask?.apply { if (isCancelled) return@forEach }
 
-            optiFineVersionList.forEach(Consumer Consumer2@{ optiFineVersion: OptiFineVersion ->
-                currentTask?.apply { if (isCancelled) return@Consumer2 }
-                addIfAbsent(mOptiFineVersions, optiFineVersion.minecraftVersion.removePrefix("Minecraft").trim(), optiFineVersion)
-            })
-        })
+            optiFineVersionList.forEach { optiFineVersion: OptiFineVersion ->
+                currentTask?.apply { if (isCancelled) return@forEach }
+                addIfAbsent(mOptiFineVersions, optiFineVersion.minecraftVersion!!.removePrefix("Minecraft").trim(), optiFineVersion)
+            }
+        }
 
         if (currentTask!!.isCancelled) return
 
@@ -127,7 +127,7 @@ class DownloadOptiFineFragment : ModListFragment() {
             EventBus.getDefault().postSticky(
                 SelectInstallTaskEvent(
                     Addon.OPTIFINE,
-                    optifineVersion.versionName,
+                    optifineVersion.versionName!!,
                     OptiFineDownloadTask(optifineVersion)
                 )
             )

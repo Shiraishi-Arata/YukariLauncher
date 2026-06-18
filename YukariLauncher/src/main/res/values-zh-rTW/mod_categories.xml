@@ -16,26 +16,27 @@
     <string name="category_transport">運輸</string>
     <string name="category_storage">倉儲</string>
     <string name="category_magic">魔法</string>
-    <string name="category_adventure">冒險</string>
+    <string name="category_adventure">冒險與RPG</string>
     <string name="category_decoration">裝飾</string>
     <string name="category_mobs">生物</string>
     <string name="category_equipment">裝備</string>
     <string name="category_information">信息顯示</string>
-    <string name="category_social">伺服器</string>
+    <string name="category_social">社交</string>
     <string name="category_utility">改良</string>
     <string name="category_library">支援庫</string>
     <string name="category_game_mechanics">遊戲機制</string>
     <string name="category_optimization">效能優化</string>
+    <string name="category_performance">性能</string>
     <!-- Modpack -->
     <string name="category_multiplayer">多人</string>
     <string name="category_challenging">硬核</string>
-    <string name="category_combat">戰鬥</string>
+    <string name="category_combat">戰鬥 / PvP</string>
     <string name="category_quests">任務</string>
     <string name="category_exploration">探險</string>
     <string name="category_mini_game">小遊戲</string>
     <string name="category_sci_fi">科幻</string>
     <string name="category_skyblock">空島</string>
-    <string name="category_vanilla">原版改良</string>
+    <string name="category_vanilla">原版</string>
     <string name="category_map_based">基於地圖</string>
     <string name="category_lightweight">輕量</string>
     <string name="category_extra_large">大型</string>
@@ -50,11 +51,11 @@
     <string name="category_miscellaneous">其他</string>
     <string name="category_512x">512x 及更高</string>
     <!-- World -->
-    <string name="category_world_adventure">冒險模式</string>
-    <string name="category_survival">生存模式</string>
-    <string name="category_creation">創造模式</string>
-    <string name="category_game_map">遊戲挑戰</string>
-    <string name="category_modded_world">模組地圖</string>
+    <string name="category_world_adventure">冒險</string>
+    <string name="category_survival">生存</string>
+    <string name="category_creation">創造</string>
+    <string name="category_game_map">遊戲地圖</string>
+    <string name="category_modded_world">模組世界</string>
     <string name="category_parkour">跑酷</string>
     <string name="category_puzzle">解謎</string>
     <!-- Shader -->

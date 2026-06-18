@@ -19,7 +19,7 @@ class NGGL4ESRenderer : RendererInterface {
     /**
      * 表示名を取得する
      */
-    override fun getRendererName(): String = "Krypton Wrapper"
+    override fun getRendererName(): String = "Krypton Wrapper 0.4.5"
 
     /**
      * 環境変数を取得する

@@ -19,6 +19,7 @@ import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.plugins.driver.DriverPluginManager
 import com.arata.yukarilauncher.plugins.renderer.RendererPluginManager
 import com.arata.yukarilauncher.renderer.Renderers
+import com.arata.yukarilauncher.renderer.renderers.MobileGluesRenderer
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.setting.AllStaticSettings
 import com.arata.yukarilauncher.task.Task
@@ -26,6 +27,7 @@ import com.arata.yukarilauncher.task.TaskExecutors
 import com.arata.yukarilauncher.ui.dialog.LocalRendererPluginDialog
 import com.arata.yukarilauncher.ui.dialog.TipDialog
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.BaseSettingsWrapper
+import com.arata.yukarilauncher.ui.fragment.settings.wrapper.EditTextSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.ListSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SeekBarSettingsWrapper
 import com.arata.yukarilauncher.ui.fragment.settings.wrapper.SwitchSettingsWrapper
@@ -36,8 +38,8 @@ import com.arata.yukarilauncher.utils.path.UrlManager
 
 import com.google.android.material.materialswitch.MaterialSwitch
 
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.ui.activity.OpenDocumentWithExtension
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -273,8 +275,143 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
             }
         }
 
+        // MobileGlues 設定の初期化
+        initMobileGluesSettings(context)
+
         changeResolutionRatioPreview(AllSettings.resolutionRatio.getValue())
         computeVisibility()
+    }
+
+    /**
+     * MobileGlues レンダラー設定のUIを初期化する
+     */
+    private fun initMobileGluesSettings(context: android.content.Context) {
+        // GLSLキャッシュサイズ
+        EditTextSettingsWrapper(
+            AllSettings.mgGlslCacheSize,
+            binding.mgGlslCacheLayout,
+            binding.mgGlslCacheInput
+        )
+
+        // ANGLEドライバー
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgAngle,
+            binding.mgAngleLayout,
+            binding.mgAngleTitle,
+            binding.mgAngleValue,
+            R.array.setting_mg_angle_entries,
+            R.array.setting_mg_angle_values
+        )
+
+        // OpenGLエラー設定
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgNoError,
+            binding.mgNoErrorLayout,
+            binding.mgNoErrorTitle,
+            binding.mgNoErrorValue,
+            R.array.setting_mg_no_error_entries,
+            R.array.setting_mg_no_error_values
+        )
+
+        // マルチドローエミュレーション
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgMultidrawMode,
+            binding.mgMultidrawLayout,
+            binding.mgMultidrawTitle,
+            binding.mgMultidrawValue,
+            R.array.setting_mg_multidraw_entries,
+            R.array.setting_mg_multidraw_values
+        )
+
+        // ANGLE深度クリア回避策
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgAngleDepthClearFixMode,
+            binding.mgAngleClearLayout,
+            binding.mgAngleClearTitle,
+            binding.mgAngleClearValue,
+            R.array.setting_mg_angle_clear_entries,
+            R.array.setting_mg_angle_clear_values
+        )
+
+        // カスタムOpenGLバージョン
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgCustomGLVersion,
+            binding.mgCustomGlLayout,
+            binding.mgCustomGlTitle,
+            binding.mgCustomGlValue,
+            R.array.setting_mg_custom_gl_version_entries,
+            R.array.setting_mg_custom_gl_version_values
+        )
+
+        // ARB_compute_shader拡張
+        SwitchSettingsWrapper(
+            context,
+            AllSettings.mgExtComputeShader,
+            binding.mgExtComputeShaderLayout,
+            binding.mgExtComputeShader
+        )
+
+        // timer_query拡張（UIは反転: ON=推奨設定=有効）
+        SwitchSettingsWrapper(
+            context,
+            AllSettings.mgExtTimerQuery,
+            binding.mgExtTimerQueryLayout,
+            binding.mgExtTimerQuery
+        )
+
+        // direct_state_access拡張
+        SwitchSettingsWrapper(
+            context,
+            AllSettings.mgExtDirectStateAccess,
+            binding.mgExtDirectStateAccessLayout,
+            binding.mgExtDirectStateAccess
+        )
+
+        // FSR3フレーム生成（FG）
+        val fgWarning = SwitchSettingsWrapper(
+            context,
+            AllSettings.mgFrameGeneration,
+            binding.mgFrameGenerationLayout,
+            binding.mgFrameGeneration
+        )
+        fgWarning.setOnCheckedChangeListener { buttonView, isChecked, listener ->
+            if (isChecked) {
+                TipDialog.Builder(requireActivity())
+                    .setTitle(R.string.generic_warning)
+                    .setMessage(R.string.setting_mg_frame_generation_warning)
+                    .setWarning()
+                    .setCancelable(false)
+                    .setConfirmClickListener { listener.onSave() }
+                    .setCancelClickListener { buttonView.isChecked = false }
+                    .showDialog()
+            } else {
+                listener.onSave()
+            }
+        }
+
+        // FSR1
+        ListSettingsWrapper(
+            context,
+            AllSettings.mgFsr1,
+            binding.mgFsr1Layout,
+            binding.mgFsr1Title,
+            binding.mgFsr1Value,
+            R.array.setting_mg_fsr1_entries,
+            R.array.setting_mg_fsr1_values
+        )
+
+        // F3画面からMGを隠す
+        SwitchSettingsWrapper(
+            context,
+            AllSettings.mgHideMG,
+            binding.mgHideF3Layout,
+            binding.mgHideF3
+        )
     }
 
     /**
@@ -301,6 +438,10 @@ class VideoSettingsFragment : AbstractSettingsFragment(R.layout.settings_fragmen
     private fun computeVisibility() {
         binding.apply {
             binding.forceVsyncLayout.visibility = if (AllSettings.alternateSurface.getValue()) View.VISIBLE else View.GONE
+
+            // MobileGlues 詳細設定の表示/非表示（レンダラー選択に応じて展開）
+            val isMobileGlues = AllSettings.renderer.getValue() == MobileGluesRenderer.UNIQUE_IDENTIFIER
+            binding.mgContainer.visibility = if (isMobileGlues) View.VISIBLE else View.GONE
         }
     }
 

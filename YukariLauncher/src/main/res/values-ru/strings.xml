@@ -30,6 +30,9 @@
     <string name="generic_keyboard">Клавиатура</string>
     <string name="generic_waiting">Пожалуйста, подождите</string>
     <string name="generic_select">Выбрать</string>
+    <string name="generic_select_all">Выбрать все</string>
+    <string name="generic_deselect_all">Отменить выбор всех</string>
+    <string name="generic_cancel">Отмена</string>
     <string name="generic_default">По умолчанию</string>
     <string name="generic_loading">Загрузка</string>
     <string name="generic_optional">Необязательно</string>
@@ -77,6 +80,7 @@
     <string name="version_snapshot">Снимок</string>
     <string name="version_alpha">Альфа</string>
     <string name="version_beta">Бета</string>
+    <string name="version_april_fools">Первоапрельского дурака</string>
     <string name="force_exit_confirm">Вы уверены, что хотите принудительно закрыть?</string>
     <string name="autoram_info_msg">Память установлена на %d МБ</string>
     <string name="memory_warning_msg">Доступная память (%d) ниже выделенной (%d), это может привести к сбою игры. Если игра закроется, измените конфигурацию!</string>
@@ -91,15 +95,16 @@
     <string name="microsoft_login_retry_later">Ваши действия слишком часты, попробуйте позже</string>
     <string name="storage_required">%s требует подключения внешнего хранилища, пожалуйста, подключите его и перезапустите программу</string>
     <string name="dialog_select_jar">Выбрать файл Jar</string>
+    <string name="percent_format" translatable="false">%d%%</string>
     <string name="version_select_hint">Выбор версии (Долгий тап – сброс)</string>
     <string name="notif_error_occured">Произошла ошибка</string>
     <string name="notif_error_occured_desc">Нажмите, чтобы увидеть подробности</string>
     <string name="input_preview_tip">Предварительный просмотр ввода, перехват ввода с экранной клавиатуры, только для справки:</string>
     <string name="dl_tampered_manifest_title">Предупреждение о проверке файла</string>
     <string name="dl_tampered_manifest"><![CDATA[Список версий игры на зеркальном источнике не соответствует официальному списку версий Mojang, что может указывать на возможность подделки.<br/>
-        <b>Это небезопасно. Если вы продолжите, ваши личные данные могут быть под угрозой!</b><br/>
-        Если вы все равно хотите продолжить использование зеркального источника, нажмите "Закрыть проверку списка версий игры" и начните загрузку снова.<br/>
-        Если вы хотите использовать официальный источник загрузки, нажмите "Переключиться на официальный источник загрузки" и начните загрузку снова.<br/>]]></string>
+    <b>Это небезопасно. Если вы продолжите, ваши личные данные могут быть под угрозой!</b><br/>
+    Если вы все равно хотите продолжить использование зеркального источника, нажмите "Закрыть проверку списка версий игры" и начните загрузку снова.<br/>
+    Если вы хотите использовать официальный источник загрузки, нажмите "Переключиться на официальный источник загрузки" и начните загрузку снова.<br/>]]></string>
     <string name="dl_turn_off_manifest_checks">Отключить проверку списка версий игры</string>
     <string name="dl_switch_to_official_site">Переключиться на официальный источник загрузки</string>
     <string name="notif_download_finished">Игра готова к запуску</string>
@@ -129,12 +134,30 @@
     <string name="mod_check_progress_message">Проверка модов (%d / %d)</string>
     <string name="mod_check_touch_controller">Обнаружено, что мод Touch Controller (%s) установлен, загрузчик готов активировать прокси управления для адаптации мода.</string>
     <string name="mod_check_physics">Используемый в данный момент физический мод (%s) не запатчен (замена libPhysXJniBindings_64.so с архитектуры x86_64 на arm64), при запуске он будет аварийно завершаться.</string>
+    <string name="mod_check_physics_downloading">Загрузка библиотеки модов физики: %s</string>
+    <string name="mod_check_physics_failed">Не удалось загрузить необходимую библиотеку для мода физики (%s).</string>
+    <string name="mod_check_physics_debug">Отладка: %s</string>
     <string name="mod_check_mcef">MCEF (%s) не может работать на Android. Он обычно используется как предварительная зависимость для WebDisplays/In-game Browser (браузер).</string>
     <string name="mod_check_valkyrien_skies">Valkyrien Skies/Valkyrien Warfare (%s) не может запускаться напрямую в одиночном режиме. Вы должны запускать его на сервере (можно использовать Termux), иначе игра вылетит.</string>
     <string name="mod_check_yes_steve_model">Yes Steve Model (%s) 2.2.2+ не может работать на Android.</string>
     <string name="mod_check_imblocker">IMBlocker/In-GameIME (%s) не совместим с Android и вызывает сбой игры при запуске.</string>
     <string name="mod_check_replay_mod">ReplayMod (%s) требует FFmpeg для рендеринга видео. Пожалуйста, установите плагин FFmpeg отдельно\n%s\n%s</string>
     <string name="mod_check_borderlesswindow">Borderless Window (%s) не совместим с Android и вызывает сбой игры при запуске.</string>
+    <string name="mod_check_axiom_downloading">Загрузка собственной библиотеки Axiom: %s</string>
+    <string name="mod_check_axiom_failed">Не удалось загрузить необходимую собственную библиотеку для Axiom (%s).</string>
+    <string name="mod_check_axiom_debug">Отладка: %s</string>
+    <string name="mod_check_sable_downloading">Загрузка родной библиотеки Sable…</string>
+    <string name="mod_check_sable_failed">Не удалось загрузить собственную библиотеку для Sable (мод: %s).</string>
+    <string name="mod_check_sable_debug">Информация об отладке: %s</string>
+    <string name="mod_check_download_progress">Загрузка: %s</string>
+    <string name="mod_check_download_bytes">%SS</string>
+    <string name="mod_check_download_speed">Скорость: %s/с</string>
+    <string name="mod_check_download_retry_title">Загрузка не удалась</string>
+    <string name="mod_check_download_retry_message">Не удалось загрузить необходимую собственную библиотеку для %s.\nПовторить попытку?</string>
+    <string name="mod_check_download_retry">Повторить попытку</string>
+    <string name="mod_check_download_skip">Пропускать</string>
+    <string name="mod_check_no_network_library">Нет подключения к Интернету. Невозможно загрузить необходимую встроенную библиотеку для %s.\nВы можете отключить проверку совместимости для этого мода, чтобы продолжить, или отменить ее, чтобы прервать.</string>
+    <string name="mod_check_disable_check">Отключить этот мод</string>
     <!-- Controls -->
     <string name="control_primary">Левая кнопка</string>
     <string name="control_secondary">Правая кнопка</string>
@@ -157,6 +180,10 @@
     <string name="customctrl_selectdefault">Выбрать раскладку управления по умолчанию</string>
     <string name="customctrl_export">Сохранить и поделиться</string>
     <string name="customctrl_passthru">Прямой проход мыши</string>
+    <string name="customctrl_repeatedly">неоднократно</string>
+    <string name="customctrl_repeatedly_cps">Кликов в секунду (CPS)</string>
+    <string name="customctrl_repeatedly_delay">Длительная задержка нажатия</string>
+    <string name="customctrl_repeatedly_delay_value">%d мс</string>
     <string name="customctrl_swipeable">Прокручиваемый</string>
     <string name="customctrl_forward_lock">Блокировка движения вперед</string>
     <string name="customctrl_absolute_tracking">Принудительное отслеживание пальца</string>
@@ -193,6 +220,10 @@
     <string name="controls_tip_set_default">Нажмите и удерживайте макет управления, чтобы установить его в качестве макета управления по умолчанию!</string>
     <string name="replacement_customcontrol">Заменить раскладку управления</string>
     <string name="custom_control_title">Управление раскладками управления</string>
+    <string name="controller_button_a" translatable="false">А</string>
+    <string name="controller_button_b" translatable="false">Б</string>
+    <string name="controller_button_x" translatable="false">Х</string>
+    <string name="controller_button_y" translatable="false">Да</string>
     <string name="controller_button_start">Старт</string>
     <string name="controller_button_trigger_left">Левый триггер</string>
     <string name="controller_button_trigger_right">Правый триггер</string>
@@ -210,8 +241,10 @@
     <string name="controller_dpad_right">Правая кнопка D-pad</string>
     <string name="controller_remapper_operating_mode">Текущий режим</string>
     <string name="controller_remapper_expand_entry">Разверните, чтобы изменить код кнопки</string>
+
     <!-- Version -->
     <string name="version_manager_title">Управление версиями</string>
+    <string name="version_manager_search_hint">Поиск версий</string>
     <string name="version_no_versions">Нет установленных версий</string>
     <string name="version_install_new">Установить новую версию</string>
     <string name="version_install_new_modloader">Установить %s для новой версии</string>
@@ -235,9 +268,30 @@
     <string name="version_manager_shortcuts_crash_report_path">Папка с отчетами об ошибках</string>
     <string name="version_manager_rename">Переименовать версию</string>
     <string name="version_manager_copy">Копировать версию</string>
+    <string name="version_manager_export_modpack">Экспортировать модпак</string>
+    <string name="version_manager_export_modpack_modrinth">Модринт (.mrpack)</string>
+    <string name="version_manager_export_modpack_curseforge">CurseForge (.zip)</string>
+    <string name="version_manager_export_modpack_exporting">Экспорт модпака…</string>
+    <string name="version_manager_export_modpack_success">Пакет модов экспортирован в: %s.</string>
+    <string name="version_manager_export_modpack_include_title">Включить пути</string>
+    <string name="version_manager_export_modpack_include_message">Введите папки/файлы для включения (относительно каталога игры). Оставьте пустым, чтобы включить все.</string>
+    <string name="version_manager_export_modpack_exclude_title">Исключить пути</string>
+    <string name="version_manager_export_modpack_exclude_message">Введите папки/файлы, которые необходимо исключить (относительно каталога игры). По умолчанию: логи, отчеты о сбоях.</string>
+    <string name="version_manager_export_modpack_paths_hint">Пример: моды, конфиг, options.txt</string>
+    <string name="version_manager_export_modpack_expand_all">Развернуть все</string>
+    <string name="version_manager_export_modpack_collapse_all">Свернуть все</string>
+    <string name="version_manager_export_modpack_name_title">Название модпака</string>
+    <string name="version_manager_export_modpack_version_title">Версия модпака</string>
+    <string name="version_manager_export_modpack_author_title">Автор модпака</string>
+    <string name="version_manager_export_modpack_select_required">Пожалуйста, выберите хотя бы один файл или папку для включения.</string>
     <string name="version_manager_copy_tip">Копировать текучую версию в качестве новой, с по умолчанию включенным изоляцией версий. Если ниже включено "Копировать все файлы", то будут также скопированы все файлы, сгенерированные текучую версию (пакеты ресурсов, сохранения, настройки игры и др.).</string>
     <string name="version_manager_copy_all">Копировать все файлы</string>
     <string name="version_manager_delete">Удалить версию</string>
+    <string name="check_mod_updates">Проверьте наличие обновлений мода</string>
+    <string name="no_updates_found">Все моды актуальны.</string>
+    <string name="update_all">Обновить все</string>
+    <string name="mod_update_checking">Проверяю обновления модов...</string>
+    <string name="mod_update_downloading">Загрузка %1$s (%2$d%%)</string>
     <string name="version_manager_delete_tip">При удалении версии также будут удалены все файлы в каталог \"./versions/%s\", включая важные ресурсы, такие как сохранения игр, пакеты ресурсов, моды и другое. Даже если изоляция версий не включена. Поэтому обязательно создайте резервную копию перед выполнением этой операции!</string>
     <string name="version_manager_delete_tip_invalid">Текущая версия не содержит файл JSON версии, поэтому она считается недействительной. Вы не можете выбрать эту версию. Нажмите «Подтвердить», чтобы удалить эту ошибочную версию.</string>
     <string name="version_manager_task_in_progress">Задача в процессе, управление версиями временно недоступно</string>
@@ -341,6 +395,8 @@
     <string name="custom_background_add">Добавить фоновое изображение</string>
     <string name="custom_background_title">Пользовательское фоновое изображение лаунчера</string>
     <string name="custom_background_desc">Откройте интерфейс управления фоновыми изображениями, где вы сможете добавить свои любимые изображения и установить разные фоны для разных интерфейсов</string>
+    <string name="custom_background_blur_title">Размытие фона в лаунчере</string>
+    <string name="custom_background_blur_desc">Установите пользовательское размытие фона панели запуска от 0 (выкл.) до 25 (максимум).</string>
     <string name="custom_background_main_menu">Главное меню</string>
     <string name="custom_background_in_game">Игровой интерфейс</string>
     <string name="custom_background_dialog_message">Нажмите кнопку \"Выбрать\", чтобы установить это изображение в качестве фона для %s</string>
@@ -359,6 +415,7 @@
     <string name="file_message">Выберите действие, которое хотите выполнить с этим файлом</string>
     <string name="file_folder_message">Выберите действие, которое хотите выполнить с этой папкой</string>
     <string name="file_added">Файл успешно добавлен</string>
+    <string name="file_cancel_multi_select">Отмена</string>
     <string name="file_delete">Вы уверены, что хотите удалить этот файл?</string>
     <string name="file_delete_dir">Вы уверены, что хотите удалить эту папку?</string>
     <string name="file_delete_dir_message">При удалении папки будут удалены все файлы внутри неё. Если в этой папке есть важные файлы, отмените эту операцию!</string>
@@ -382,7 +439,35 @@
     <string name="main_open_main_dir">Открыть главную папку</string>
     <string name="main_install_jar_file">Запустить .jar файл</string>
     <string name="main_share_logs">Поделиться файлами логов</string>
+    <!-- Host Server Feature Strings -->
     <string name="main_host_server">Host a Server</string>
+    <string name="host_server_info_title">Playit.gg Туннель</string>
+    <string name="host_server_info_desc">Создайте общедоступный туннель для вашего локального сервера Minecraft. Друзья могут подключиться, используя адрес ниже.</string>
+    <string name="host_server_local_port">Местный порт</string>
+    <string name="host_server_port_hint">25565</string>
+    <string name="host_server_port_note">Примечание. После подачи заявки настройте порт туннеля на панели управления playit.gg.</string>
+    <string name="host_server_start">Запустить туннель</string>
+    <string name="host_server_stop">Остановить туннель</string>
+    <string name="host_server_status_title">Статус туннеля</string>
+    <string name="host_server_status_label">Статус:</string>
+    <string name="host_server_status_idle">Праздный</string>
+    <string name="host_server_status_starting">Начало…</string>
+    <string name="host_server_status_auth">Требуется аутентификация</string>
+    <string name="host_server_status_running">Бег</string>
+    <string name="host_server_auth_required">Заявите права на своего агента:</string>
+    <string name="host_server_open_browser">URL-адрес открытой заявки</string>
+    <string name="host_server_tunnel_ready">Адрес туннеля:</string>
+    <string name="host_server_copy_address">Копировать адрес</string>
+    <string name="host_server_copied">Адрес скопирован в буфер обмена</string>
+    <string name="host_server_open_dashboard">Открыть панель управления</string>
+    <string name="host_server_log_title">Журнал агента</string>
+    <string name="host_server_clear_log">Очистить журнал</string>
+    <string name="host_server_invalid_port">Неверный номер порта (1–65535).</string>
+    <string name="host_server_no_browser">Браузерное приложение не найдено</string>
+    <string name="host_server_start_failed">Не удалось запустить туннель</string>
+    <string name="host_server_address_unknown">Адрес не обнаружен – откройте панель управления</string>
+    <string name="host_server_notification_permission_denied">Разрешение на уведомление, необходимое для фоновой службы</string>
+    <string name="option_host_server">Хост-сервер (туннель Playit)</string>
     <string name="main_launch">Запустить игру</string>
     <string name="setting_category_control">Настройки управления</string>
     <string name="setting_category_virtual_mouse">Виртуальная мышь</string>
@@ -401,6 +486,12 @@
     <string name="setting_category_experimental_patches">Экспериментальные патчи</string>
     <string name="setting_category_support">Внешняя поддержка</string>
     <string name="setting_renderer_title">Рендерер</string>
+    <string name="setting_game_graphics_api_title">API игровой графики</string>
+    <string name="setting_game_graphics_api_desc">Выберите, как Minecraft выбирает серверную часть игровой графики.</string>
+    <string name="setting_game_graphics_api_auto">Авто</string>
+    <string name="setting_game_graphics_api_opengl">OpenGL</string>
+    <string name="setting_game_graphics_api_vulkan">Вулкан</string>
+    <string name="setting_game_graphics_api_vulkan_unsupported">Ваше устройство не сообщает о поддержке Vulkan 1.2+, поэтому Vulkan невозможно выбрать.</string>
     <string name="setting_renderer_from_plugins">Из плагина %s</string>
     <string name="setting_renderer_local_import_title">Локальный импорт рендерера</string>
     <string name="setting_renderer_local_import_desc">Помимо установки плагинов программного рендеринга, загрузчик также поддерживает локальный импорт плагинов рендерера. Однако некоторые устройства могут не поддерживать локальные плагины рендерера, будьте осторожны!</string>
@@ -465,6 +556,8 @@
     <string name="setting_java_select_runtime_default">Текущая среда выполнения по умолчанию</string>
     <string name="setting_java_args_title">Параметры запуска JVM</string>
     <string name="setting_java_args_desc">Дополнительные параметры JVM, добавляемые при запуске Minecraft. Не рекомендуется изменять без уверенности, так как это может привести к сбоям игры.</string>
+    <string name="setting_game_args_title">Аргументы запуска игры</string>
+    <string name="setting_game_args_desc">Дополнительные аргументы игры, добавляемые после аргументов запуска Minecraft по умолчанию (пример: --demo).</string>
     <string name="setting_java_memory_title">Выделение памяти</string>
     <string name="setting_java_memory_desc">Управление количеством памяти, выделяемой для Minecraft</string>
     <string name="setting_java_memory_info">Информация о текущем использовании памяти: %s / %s, свободный объем памяти: %s</string>
@@ -493,6 +586,11 @@
     <string name="setting_version_isolation_desc">Включить изоляцию версий для игры\nПри отключении путь к игре будет .minecraft/\nПри включении путь к игре изменится на .minecraft/versions/&lt;имя версии&gt;/</string>
     <string name="setting_version_custom_info_title">Пользовательская информация</string>
     <string name="setting_version_custom_info_desc">Пользовательская информация будет отображаться в нижнем левом углу главного меню игры и в верхнем левом углу экрана отладки F3. После добавления поля [zl_version] загрузчик заменит его на номер версии загрузчика.</string>
+    <string name="setting_lwjgl_version_title">Версия LWJGL</string>
+    <string name="setting_lwjgl_version_desc">Выберите версию LWJGL, которая будет использоваться при запуске игры.</string>
+    <string name="setting_lwjgl_version_3_3_6">ЛВЖГЛ 3.3.6</string>
+    <string name="setting_lwjgl_version_3_4_1">LWJGL 3.4.1</string>
+    <string name="pedit_lwjgl_version">Версия LWJGL</string>
     <string name="setting_set_game_language_title">Автоматическая настройка языка игры</string>
     <string name="setting_set_game_language_desc">При запуске игры автоматически устанавливать язык игры на выбранный</string>
     <string name="setting_set_game_language_list">Установить язык игры</string>
@@ -503,6 +601,8 @@
     <string name="setting_launcher_theme_system">Следовать системе</string>
     <string name="setting_launcher_theme_light">Светлая тема</string>
     <string name="setting_launcher_theme_dark">Темная тема</string>
+    <string name="setting_launcher_theme_battery">Экономия заряда батареи Темный</string>
+    <string name="setting_launcher_theme_auto_time">Авто по времени</string>
     <string name="setting_enable_log_output_title">Включить вывод логов при запуске игры</string>
     <string name="setting_enable_log_output_desc">Включить вывод логов при запуске игры перед началом её работы</string>
     <string name="setting_animation_title">Включить анимацию</string>
@@ -537,6 +637,25 @@
     <string name="setting_game_menu_alpha_desc">Установить непрозрачность всплывающего меню игры</string>
     <string name="setting_reboot_tip">Этот параметр был изменен, но для его применения необходимо перезапустить приложение!</string>
     <string name="setting_zink_driver_adreno">Лаунчер обнаружил, что ваше устройство оснащено GPU Adreno, включение этой опции может привести к неработоспособности рендерера Zink. Вы уверены, что хотите включить эту опцию?</string>
+
+    <string-array name="setting_lwjgl_version_entries">
+    <item>@string/setting_lwjgl_version_3_3_6</item>
+    <item>@string/setting_lwjgl_version_3_4_1</item>
+    </string-array>
+    <string-array name="setting_lwjgl_version_values">
+    <item>3.3.6</item>
+    <item>3.4.1</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_entries">
+    <item>@string/setting_game_graphics_api_auto</item>
+    <item>@string/setting_game_graphics_api_opengl</item>
+    <item>@string/setting_game_graphics_api_vulkan</item>
+    </string-array>
+    <string-array name="setting_game_graphics_api_values">
+    <item>auto</item>
+    <item>opengl</item>
+    <item>vulkan</item>
+    </string-array>
     <!-- Game -->
     <string name="game_exit_message">Приложение/игра завершилось с кодом %d.</string>
     <string name="game_singnal_message">Приложение/игра было прервано из-за критического сигнала %d.</string>
@@ -558,12 +677,18 @@
     <string name="download_ui_platform">Поиск платформы</string>
     <string name="download_ui_sort_by">Сортировать по</string>
     <string name="download_ui_category">Фильтр по категории</string>
+    <string name="download_ui_view_grid">Сетка</string>
+    <string name="download_ui_view_list">Список</string>
     <string name="download_ui_modloader">Загрузчик модов</string>
     <string name="download_ui_sort_by_relevant">Релевантность</string>
     <string name="download_ui_sort_by_total_downloads">Общее количество загрузок</string>
     <string name="download_ui_sort_by_popularity">Популярность</string>
     <string name="download_ui_sort_by_recently_created">Недавно создано</string>
     <string name="download_ui_sort_by_recently_updated">Недавно обновлено</string>
+    <string name="mod_forge">Кузница</string>
+    <string name="mod_neoforge">НеоФордж</string>
+    <string name="mod_fabric">Ткань</string>
+    <string name="mod_quilt">Одеяло</string>
     <string name="download_info_downloads">Загрузки:</string>
     <string name="download_info_author">Автор:</string>
     <string name="download_info_date">Дата создания:</string>
@@ -640,6 +765,7 @@
     <string name="splash_screen_jre8">Среда Java 8, Minecraft 1.16- зависит от Java 8.</string>
     <string name="splash_screen_jre17">Среда Java 17, Minecraft 1.17+ зависит от Java 17.</string>
     <string name="splash_screen_jre21">Среда Java 21, Minecraft 1.20.5+ зависит от Java 21.</string>
+    <string name="splash_screen_jre25">Среда Java 25, Minecraft 26.1+ зависит от Java 25.</string>
     <string name="splash_screen_apply">Согласиться и установить</string>
     <!-- About -->
     <string name="about_tab">О %s</string>
@@ -685,4 +811,221 @@
     <!-- Sponsorship Related -->
     <string name="request_sponsorship_title">Поддержите мою разработку</string>
     <string name="request_sponsorship_message">Большую часть этого программного обеспечения разработал и поддерживаю только я. Если вы считаете, что это программное обеспечение полезно для вас и у вас есть возможность, пожалуйста, рассмотрите возможность поддержки меня, чтобы у меня было больше мотивации продолжать разработку и улучшение. Спасибо за вашу поддержку!</string>
+    <!-- Category filter strings -->
+    <string name="category_simplistic">упрощенный</string>
+    <string name="category_themed">Тематический</string>
+    <string name="category_tweaks">Твики</string>
+    <string name="category_rp_feature_audio">Аудио</string>
+    <string name="category_addons">Аддоны</string>
+    <string name="category_ae2">Прикладная энергетика 2</string>
+    <string name="category_blood_magic">Магия крови</string>
+    <string name="category_buildcraft">Строитькрафт</string>
+    <string name="category_crafttweaker">КрафтТвикер</string>
+    <string name="category_create">Создавать</string>
+    <string name="category_farmers_delight">Фермерское наслаждение</string>
+    <string name="category_forestry">Лесное хозяйство</string>
+    <string name="category_galacticraft">Галактикрафт</string>
+    <string name="category_industrial_craft">Промышленное ремесло</string>
+    <string name="category_integrated_dynamics">Интегрированная динамика</string>
+    <string name="category_kubejs">КубеJS</string>
+    <string name="category_refined_storage">Изысканное хранилище</string>
+    <string name="category_thaumcraft">Таумкрафт</string>
+    <string name="category_thermal_expansion">Тепловое расширение</string>
+    <string name="category_tinkers_construct">Конструкция Тинкера</string>
+    <string name="category_twilight_forest">Сумеречный лес</string>
+    <string name="category_api_and_library">API и библиотека</string>
+    <string name="category_armor_tools_weapons">Доспехи, инструменты и оружие</string>
+    <string name="category_bug_fixes">Исправления ошибок</string>
+    <string name="category_cosmetic">Косметический</string>
+    <string name="category_creative_mode">Творческий режим</string>
+    <string name="category_education">Образование</string>
+    <string name="category_horror">Ужас</string>
+    <string name="category_map_and_info">Карта и информация</string>
+    <string name="category_mcreator">MCСоздатель</string>
+    <string name="category_modjam">МодДжем 2025</string>
+    <string name="category_server_utility">Серверная утилита</string>
+    <string name="category_twitch_integration">Интеграция с Twitch</string>
+    <string name="category_utility_qol">Утилита и качество жизни</string>
+    <string name="category_genetics">Генетика</string>
+    <string name="category_player_transport">Транспорт игрока</string>
+    <string name="category_processing">Обработка</string>
+    <string name="category_expert">Эксперт</string>
+    <string name="category_hardcore">Хардкор</string>
+    <string name="category_rlcraft">РЛКрафт</string>
+    <string name="category_small_light">Маленький/Легкий</string>
+    <string name="category_vanilla_plus">Ваниль+</string>
+    <string name="category_economy">Экономика</string>
+    <string name="category_management">Управление</string>
+    <string name="category_minigame">Мини-игра</string>
+    <string name="category_transportation">Транспорт</string>
+    <string name="category_modded">Модифицированный</string>
+    <string name="category_realistic">Реалистичный</string>
+    <string name="category_vanilla_like">Ванильный лайк</string>
+    <string name="category_8x_or_lower">8x или ниже</string>
+    <string name="category_48x">48x</string>
+    <string name="category_512x_or_higher">512x или выше</string>
+    <string name="category_rp_feature">Особенность</string>
+    <string name="category_shader_feature">Особенность</string>
+    <string name="category_shader_performance">Влияние на производительность</string>
+    <string name="download_ui_environment">Среда</string>
+    <string name="download_ui_resolution">Разрешение</string>
+    <string name="download_ui_shader_loader">Погрузчик</string>
+    <string name="category_rp_feature_blocks">Блоки</string>
+    <string name="category_rp_feature_core_shaders">Основные шейдеры</string>
+    <string name="category_rp_feature_entities">Сущности</string>
+    <string name="category_rp_feature_environment">Среда</string>
+    <string name="category_rp_feature_equipment">Оборудование</string>
+    <string name="category_rp_feature_fonts">Шрифты</string>
+    <string name="category_rp_feature_gui">графический интерфейс</string>
+    <string name="category_rp_feature_items">Предметы</string>
+    <string name="category_rp_feature_locale">Языковой стандарт</string>
+    <string name="category_rp_feature_models">Модели</string>
+    <string name="category_datapacks">Пакеты данных</string>
+    <string name="category_font_packs">Пакеты шрифтов</string>
+    <string name="category_medieval">Средневековый</string>
+    <string name="category_shader_loader_iris">Ирис</string>
+    <string name="category_shader_loader_optifine">ОптиФайн</string>
+    <string name="category_shader_loader_vanilla">Ванильный шейдер</string>
+    <string name="category_shader_loader_canvas">Холст</string>
+    <string name="category_env_client">Клиент</string>
+    <string name="category_env_server">Сервер</string>
+    <string name="download_ui_filter_title">Фильтр</string>
+    <string name="download_ui_filter_apply">Применять</string>
+    <string name="download_ui_filter_clear">Прозрачный</string>
+    <string name="download_ui_filter_no_selection">Без фильтра</string>
+    <string name="download_batch_selected_tag">Выбрано</string>
+    <string name="download_batch_reset_selected">Сбросить выбранное</string>
+    <string name="download_batch_cancel_select">Отмена</string>
+    <string name="host_server_open_console">Открыть консоль</string>
+    <string name="console_title">Консоль сервера (в настоящее время могут работать только Vanilla и Fabric)</string>
+    <string name="console_ram">БАРАН</string>
+    <string name="console_cpu">Процессор</string>
+    <string name="console_storage">ДИСК</string>
+    <string name="console_downloading">Загрузка playit-агента…</string>
+    <string name="console_waiting">[Консоль] Ожидание запуска туннеля…</string>
+    <string name="console_status_idle">ПРАЗДНЫЙ</string>
+    <string name="console_status_running">БЕГ</string>
+    <string name="console_status_auth">ТРЕБУЕТСЯ АВТОРИЗАЦИЯ</string>
+    <string name="console_status_connecting">ПОДКЛЮЧЕНИЕ</string>
+    <string name="console_log_claim_prefix">Открыт для аутентификации:</string>
+    <string name="console_log_tunnel_prefix">Туннель готов в</string>
+    <string name="console_log_download_start">Загрузка бинарного файла playit…</string>
+    <string name="console_log_download_done">Загрузка завершена. Запуск туннеля…</string>
+
+    <!-- Server Console -->
+    <string name="console_setup_title">Настройка сервера</string>
+    <string name="console_server_type">Тип сервера</string>
+    <string name="console_type_vanilla">Ваниль</string>
+    <string name="console_type_paper">Бумага</string>
+    <string name="console_type_fabric">Ткань</string>
+    <string name="console_mc_version">Версия MC</string>
+    <string name="console_server_port">Порт</string>
+    <string name="console_jvm_args">Аргументы JVM</string>
+    <string name="console_start">▶ Старт</string>
+    <string name="console_restart">↻ Перезагрузка</string>
+    <string name="console_stop">■ Стоп</string>
+    <string name="console_jvm_args_short">JVM</string>
+    <string name="console_server_port_short">Порт</string>
+    <string name="console_mc_version_short">Вер</string>
+    <string name="console_section_resources">Системные ресурсы</string>
+    <string name="console_section_actions">Действия</string>
+    <string name="console_section_setup">Настройка сервера</string>
+    <string name="console_fetch_versions">ВЫБРАТЬ ▾</string>
+    <string name="console_fetching">Загрузка…</string>
+    <string name="console_command_hint">Введите команду…</string>
+    <string name="console_send">Отправлять</string>
+
+    <!-- MobileGlues settings -->
+    <string name="setting_mg_category">МобильныйКлей</string>
+    <string name="setting_mg_angle">Используйте ANGLE в качестве драйвера OpenGL ES.</string>
+    <string name="setting_mg_no_error">Настройка ошибки OpenGL</string>
+    <string name="setting_mg_ext_timer_query">Отключить рекомендуемое расширение «timer_query»</string>
+    <string name="setting_mg_ext_compute_shader">Включить неполное расширение ARB_compute_shader</string>
+    <string name="setting_mg_ext_direct_state_access">Включить расширенное расширение «direct_state_access»</string>
+    <string name="setting_mg_glsl_cache">Максимальный размер кэша GLSL (введите -1, чтобы отключить)</string>
+    <string name="setting_mg_glsl_cache_desc">Единица измерения: Мегабайты (МБ)</string>
+    <string name="setting_mg_multidraw">Эмуляция MultiDraw</string>
+    <string name="setting_mg_angle_clear_workaround">УГОЛ Глубина Очистить Обходной путь</string>
+    <string name="setting_mg_custom_gl_version">Пользовательская целевая версия OpenGL</string>
+    <string name="setting_mg_frame_generation">(Экспериментально) Включить генерацию кадров FSR 3</string>
+    <string name="setting_mg_frame_generation_warning">Генерация кадров FSR 3 является экспериментальной функцией. Она может вызывать визуальные артефакты в сценах с быстрым движением и увеличивать расход батареи. Всё равно включить?</string>
+    <string name="setting_mg_fsr1">(Экспериментально) Включить встроенный FSR1</string>
+    <string name="setting_mg_hide_f3">Скрыть MobileGlues с экрана F3</string>
+
+    <string-array name="setting_mg_angle_entries">
+    <item>Prefer Disabled</item>
+    <item>Prefer Enabled</item>
+    <item>Disable</item>
+    <item>Enable</item>
+    </string-array>
+    <string-array name="setting_mg_angle_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_no_error_entries">
+    <item>Auto</item>
+    <item>Do not ignore</item>
+    <item>Ignore shader/program error</item>
+    <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_mg_no_error_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    </string-array>
+
+    <string-array name="setting_mg_multidraw_entries">
+    <item>Auto</item>
+    <item>Prefer Indirect</item>
+    <item>Prefer BaseVertex</item>
+    <item>Prefer MultiDraw Indirect</item>
+    <item>Force DrawElements</item>
+    <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_mg_multidraw_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    </string-array>
+
+    <string-array name="setting_mg_angle_clear_entries">
+    <item>Disable</item>
+    <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_mg_angle_clear_values">
+    <item>0</item>
+    <item>1</item>
+    </string-array>
+
+    <string-array name="setting_mg_custom_gl_version_entries">
+    <item>Disabled</item>
+    <item>OpenGL 3.2</item>
+    <item>OpenGL 3.3</item>
+    <item>OpenGL 4.0</item>
+    <item>OpenGL 4.1</item>
+    <item>OpenGL 4.2</item>
+    <item>OpenGL 4.3</item>
+    <item>OpenGL 4.4</item>
+    <item>OpenGL 4.5</item>
+    <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_mg_custom_gl_version_values">
+    <item>0</item>
+    <item>32</item>
+    <item>33</item>
+    <item>40</item>
+    <item>41</item>
+    <item>42</item>
+    <item>43</item>
+    <item>44</item>
+    <item>45</item>
+    <item>46</item>
+    </string-array>
 </resources>

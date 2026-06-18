@@ -12,13 +12,16 @@ class Filters {
     var mcVersion: String? = null
     var modloader: ModLoader? = null
     var sort: Sort = Sort.RELEVANT
-    var category: Category = Category.ALL
+    var categories: MutableList<Category> = mutableListOf()
+
+    val category: Category
+        get() = if (categories.isEmpty()) Category.ALL else categories.first()
 
     /**
      * フィルターの内容を文字列として返す
      * @return フィルター情報の文字列表現
      */
     override fun toString(): String {
-        return "Filters(name='$name', mcVersion=$mcVersion, modloader=$modloader, sort=$sort, category=$category)"
+        return "Filters(name='$name', mcVersion=$mcVersion, modloader=$modloader, sort=$sort, categories=$categories)"
     }
 }

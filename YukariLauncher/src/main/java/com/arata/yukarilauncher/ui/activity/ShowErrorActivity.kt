@@ -11,9 +11,9 @@ import android.os.Bundle
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import com.arata.yukarilauncher.R
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.lifecycle.ContextExecutorTask
-import net.kdt.pojavlaunch.utils.NotificationUtils
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.context.ContextExecutorTask
+import com.arata.yukarilauncher.utils.NotificationUtils
 import java.io.Serializable
 
 /**

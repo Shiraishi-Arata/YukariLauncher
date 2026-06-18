@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.arata.yukarilauncher.Tools;
 import com.arata.yukarilauncher.context.ContextExecutor;
 import com.arata.yukarilauncher.context.LocaleHelper;
 import com.arata.yukarilauncher.event.single.LauncherIgnoreNotchEvent;
@@ -17,9 +18,6 @@ import com.arata.yukarilauncher.plugins.PluginLoader;
 import com.arata.yukarilauncher.renderer.Renderers;
 import com.arata.yukarilauncher.setting.AllSettings;
 import com.arata.yukarilauncher.utils.StoragePermissionsUtils;
-
-import com.arata.yukarilauncher.ui.activity.MissingStorageActivity;
-import net.kdt.pojavlaunch.Tools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ContextExecutor.setActivity(this);
-        if (!Tools.checkStorageRoot()) {
+        if (!Tools.checkStorageRoot(this)) {
             startActivity(new Intent(this, MissingStorageActivity.class));
             finish();
         }

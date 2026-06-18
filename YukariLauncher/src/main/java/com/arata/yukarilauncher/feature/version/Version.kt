@@ -7,7 +7,7 @@ import com.arata.yukarilauncher.feature.mod.parser.ModChecker
 import com.arata.yukarilauncher.setting.AllSettings
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.path.PathManager
-import net.kdt.pojavlaunch.Tools
+import com.arata.yukarilauncher.Tools
 import java.io.File
 
 /**
@@ -122,6 +122,8 @@ class Version(
      * @return ゲーム引数文字列
      */
     fun getGameArgs(): String = versionConfig.getGameArgs()
+
+    fun getLWJGLVersion(): String = versionConfig.getLwjglVersion().getValueOrDefault(AllSettings.lwjglVersion.getValue())
 
     /**
      * @return 保存されているバージョン情報

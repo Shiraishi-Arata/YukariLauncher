@@ -5,11 +5,11 @@ import com.kdt.mcgui.ProgressLayout
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.task.Task
-import net.kdt.pojavlaunch.Tools
-import net.kdt.pojavlaunch.authenticator.listener.DoneListener
-import net.kdt.pojavlaunch.authenticator.listener.ErrorListener
-import net.kdt.pojavlaunch.authenticator.microsoft.MicrosoftBackgroundLogin
-import net.kdt.pojavlaunch.value.MinecraftAccount
+import com.arata.yukarilauncher.Tools
+import com.arata.yukarilauncher.feature.login.DoneListener
+import com.arata.yukarilauncher.feature.login.ErrorListener
+import com.arata.yukarilauncher.feature.login.MicrosoftBackgroundLogin
+import com.arata.yukarilauncher.value.MinecraftAccount
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
@@ -37,7 +37,7 @@ class AccountUtils {
             fun clearProgress() = ProgressLayout.clearProgress(ProgressLayout.LOGIN_ACCOUNT)
 
             Task.runTask {
-                OtherLoginHelper(account.otherBaseUrl, account.accountType, account.otherAccount, account.otherPassword,
+                OtherLoginHelper(account.otherBaseUrl!!, account.accountType!!, account.otherAccount!!, account.otherPassword!!,
                     object : OtherLoginHelper.OnLoginListener {
 /**
  * onLoadingする
@@ -104,7 +104,7 @@ class AccountUtils {
             return if (isMicrosoftAccount(account)) {
                 context.getString(R.string.account_microsoft_account)
             } else if (isOtherLoginAccount(account)) {
-                account.accountType
+                account.accountType ?: ""
             } else {
                 context.getString(R.string.account_local_account)
             }
