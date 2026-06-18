@@ -6,6 +6,7 @@ import com.arata.yukarilauncher.feature.discord.gateway.Activity
 import com.arata.yukarilauncher.feature.discord.gateway.Assets
 import com.arata.yukarilauncher.feature.discord.gateway.DiscordWebSocket
 import com.arata.yukarilauncher.feature.discord.gateway.DiscordWebSocketImpl
+import com.arata.yukarilauncher.feature.discord.gateway.Metadata
 import com.arata.yukarilauncher.feature.discord.gateway.Timestamps
 import com.arata.yukarilauncher.feature.log.Logging
 import kotlinx.coroutines.CoroutineScope
@@ -304,7 +305,9 @@ object DiscordRpcManager {
                 state = if (isIdle) "Idle" else "In Launcher",
                 timestamps = Timestamps(start = launcherActivityStartTime),
                 applicationId = if (useAssets) APPLICATION_ID else null,
-                assets = largeImg?.let { Assets(large_image = it, large_text = InfoDistributor.APP_NAME) }
+                assets = largeImg?.let { Assets(large_image = it, large_text = InfoDistributor.APP_NAME) },
+                buttons = buildButtonLabels(),
+                metadata = buildButtonMetadata()
             ),
             status = if (isIdle) "idle" else "online"
         )
@@ -386,7 +389,9 @@ object DiscordRpcManager {
                     large_text = details,
                     small_image = smallImg,
                     small_text = InfoDistributor.APP_NAME
-                ).takeIf { useAssets }
+                ).takeIf { useAssets },
+                buttons = buildButtonLabels(),
+                metadata = buildButtonMetadata()
             )
         )
         Logging.i("DiscordRPC", "sendGamePresence: completed")
@@ -408,4 +413,22 @@ object DiscordRpcManager {
 
     /** Discord Gatewayに接続されているかどうかを返します。 */
     fun isConnected(): Boolean = connected
+
+    private fun buildButtonLabels(): List<String>? {
+        val labels = mutableListOf("GitHub")
+        val customLabel = DiscordPrefs.getCustomButtonLabel()
+        if (customLabel.isNotBlank()) {
+            labels.add(customLabel)
+        }
+        return labels
+    }
+
+    private fun buildButtonMetadata(): Metadata? {
+        val urls = mutableListOf("https://github.com/Shiraishi-Arata")
+        val customUrl = DiscordPrefs.getCustomButtonUrl()
+        if (customUrl.isNotBlank()) {
+            urls.add(customUrl)
+        }
+        return Metadata(buttonUrls = urls)
+    }
 }

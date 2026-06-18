@@ -1053,6 +1053,9 @@
     <string name="setting_discord_logout">Logout</string>
     <string name="setting_discord_logout_desc">Disconnect from Discord Rich Presence</string>
     <string name="setting_discord_logout_confirm">Are you sure you want to log out?</string>
+    <string name="setting_discord_custom_button">Custom RPC Button</string>
+    <string name="setting_discord_custom_button_label">Button Label</string>
+    <string name="setting_discord_custom_button_url">Button URL</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

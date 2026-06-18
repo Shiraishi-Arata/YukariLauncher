@@ -17,6 +17,8 @@ object DiscordPrefs {
     private const val KEY_SELECTED_ACCOUNT = "discord_selected_account"
     private const val KEY_LAST_ACTIVITY = "discord_last_activity_time"
     private const val KEY_IMAGE_CACHE = "discord_image_cache"
+    private const val KEY_CUSTOM_BUTTON_LABEL = "discord_custom_button_label"
+    private const val KEY_CUSTOM_BUTTON_URL = "discord_custom_button_url"
 
     private val gson = Gson()
 
@@ -114,4 +116,16 @@ object DiscordPrefs {
     fun saveImagePaths(paths: Map<String, String>) {
         prefs().edit().putString(KEY_IMAGE_CACHE, gson.toJson(paths)).commit()
     }
+
+    /** カスタムボタンラベルを取得します。 */
+    fun getCustomButtonLabel(): String = prefs().getString(KEY_CUSTOM_BUTTON_LABEL, "") ?: ""
+
+    /** カスタムボタンラベルを設定します。 */
+    fun setCustomButtonLabel(label: String) = prefs().edit().putString(KEY_CUSTOM_BUTTON_LABEL, label).commit()
+
+    /** カスタムボタンURLを取得します。 */
+    fun getCustomButtonUrl(): String = prefs().getString(KEY_CUSTOM_BUTTON_URL, "") ?: ""
+
+    /** カスタムボタンURLを設定します。 */
+    fun setCustomButtonUrl(url: String) = prefs().edit().putString(KEY_CUSTOM_BUTTON_URL, url).commit()
 }

@@ -45,6 +45,7 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
     private var parentFragment: FragmentWithAnim? = null
     private val blurUpdateHandler = Handler(Looper.getMainLooper())
     private var customStatusListener: ((String?) -> Unit)? = null
+    private var customButtonTextWatchers: List<android.text.TextWatcher>? = null
     private val blurUpdateRunnable = Runnable {
         EventBus.getDefault().post(MainBackgroundChangeEvent())
     }
@@ -267,6 +268,29 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
             refreshDiscordAccounts()
         }
         customStatusListener?.let { DiscordRpcManager.addCustomStatusListener(it) }
+
+        // カスタムRPCボタンの設定
+        binding.customButtonLabel.setText(DiscordPrefs.getCustomButtonLabel())
+        binding.customButtonUrl.setText(DiscordPrefs.getCustomButtonUrl())
+
+        val buttonSaveHandler = Handler(Looper.getMainLooper())
+        val buttonSaveRunnable = Runnable {
+            DiscordPrefs.setCustomButtonLabel(binding.customButtonLabel.text?.toString() ?: "")
+            DiscordPrefs.setCustomButtonUrl(binding.customButtonUrl.text?.toString() ?: "")
+            DiscordRpcManager.reconnect()
+        }
+
+        val watcher = object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                buttonSaveHandler.removeCallbacks(buttonSaveRunnable)
+                buttonSaveHandler.postDelayed(buttonSaveRunnable, 1000L)
+            }
+        }
+        binding.customButtonLabel.addTextChangedListener(watcher)
+        binding.customButtonUrl.addTextChangedListener(watcher)
+        customButtonTextWatchers = listOf(watcher)
     }
 
     private fun refreshDiscordAccounts() {
@@ -373,6 +397,13 @@ class LauncherSettingsFragment() : AbstractSettingsFragment(R.layout.settings_fr
         blurUpdateHandler.removeCallbacks(blurUpdateRunnable)
         customStatusListener?.let { DiscordRpcManager.removeCustomStatusListener(it) }
         customStatusListener = null
+        customButtonTextWatchers?.let { watchers ->
+            watchers.forEach {
+                binding.customButtonLabel.removeTextChangedListener(it)
+                binding.customButtonUrl.removeTextChangedListener(it)
+            }
+        }
+        customButtonTextWatchers = null
         super.onDestroyView()
     }
 

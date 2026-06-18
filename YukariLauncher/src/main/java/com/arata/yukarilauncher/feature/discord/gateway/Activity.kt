@@ -21,7 +21,9 @@ data class Activity(
     /** メタデータ */
     val metadata: Metadata? = null,
     /** Application ID（アセット使用時に設定、nullの場合はKizzyのアイコンが表示される） */
-    val applicationId: String? = null
+    val applicationId: String? = null,
+    /** ボタンラベルのリスト（例: ["GitHub"]）。URLはmetadata.buttonUrlsで指定 */
+    val buttons: List<String>? = null
 )
 
 /** Rich Presenceの画像アセット。large_image/small_imageはexternal_asset_path（"mp:..."）を指定します。 */
@@ -44,8 +46,11 @@ data class Timestamps(
     val end: Long? = null
 )
 
-/** アクティビティメタデータ（ボタン等）。 */
+/** アクティビティメタデータ（ボタンURL等）。 */
 data class Metadata(
     val button_url: String? = null,
-    val button_label: String? = null
+    val button_label: String? = null,
+    val buttonUrls: List<String>? = null
 )
+
+

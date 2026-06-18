@@ -418,6 +418,20 @@ class DiscordWebSocketImpl : DiscordWebSocket {
                                 p.size?.let { put("size", JSONArray(it)) }
                             })
                         }
+                        activity.buttons?.let { btns ->
+                            put("buttons", JSONArray().apply {
+                                btns.forEach { put(it) }
+                            })
+                        }
+                        activity.metadata?.let { m ->
+                            m.buttonUrls?.let { urls ->
+                                put("metadata", JSONObject().apply {
+                                    put("button_urls", JSONArray().apply {
+                                        urls.forEach { put(it) }
+                                    })
+                                })
+                            }
+                        }
                     })
                 }
             })
