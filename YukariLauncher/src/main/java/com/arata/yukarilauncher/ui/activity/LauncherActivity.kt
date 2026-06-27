@@ -61,6 +61,7 @@ import com.arata.yukarilauncher.feature.update.UpdateUtils
 import com.arata.yukarilauncher.feature.version.Version
 import com.arata.yukarilauncher.feature.version.VersionsManager
 import com.arata.yukarilauncher.feature.version.install.GameInstaller
+import com.arata.yukarilauncher.feature.unpack.ComponentUpdateChecker
 import com.arata.yukarilauncher.feature.version.install.InstallTask
 import com.arata.yukarilauncher.plugins.renderer.RendererPlugin
 import com.arata.yukarilauncher.plugins.renderer.RendererPluginManager
@@ -389,6 +390,7 @@ class LauncherActivity : BaseActivity() {
 
         Task.runTask {
             UpdateUtils.checkDownloadedPackage(this@LauncherActivity, false, true)
+            ComponentUpdateChecker(this@LauncherActivity).checkForUpdate()
             null
         }.execute()
 

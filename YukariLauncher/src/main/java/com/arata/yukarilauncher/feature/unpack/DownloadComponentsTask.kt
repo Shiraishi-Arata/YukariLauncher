@@ -46,11 +46,6 @@ class DownloadComponentsTask(val context: Context, val component: Components) : 
             i("DownloadComponents", "${component.component}: not installed")
             return true
         }
-        val installedUrl = try { Tools.read(versionFile) } catch (_: Exception) { null }
-        if (installedUrl != component.downloadUrl) {
-            i("DownloadComponents", "${component.component}: version changed")
-            return true
-        }
         if (isLwjglComponentMissingNative()) {
             i("DownloadComponents", "${component.component}: missing native libs")
             return true
@@ -92,7 +87,6 @@ class DownloadComponentsTask(val context: Context, val component: Components) : 
             })
             requestEmptyParentDir(versionFile)
             extractZip(tempZip, targetDir)
-            versionFile.writeText(downloadUrl)
             tempZip.delete()
         }.getOrElse { e ->
             i("DownloadComponents", "Failed to download/extract ${component.component}", e)

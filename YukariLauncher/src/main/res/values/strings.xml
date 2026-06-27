@@ -133,6 +133,12 @@
     <string name="mod_failed_to_load_list">Failed to load version list!</string>
     <string name="mod_optifine_progress">Downloading %s</string>
     <string name="mod_check_dialog_title">Mod Check Report</string>
+    <string name="component_update_title">Component Update Available</string>
+    <string name="component_update_message">New versions of launcher components are available. Do you want to update now?</string>
+    <string name="component_update_first_time">Launcher components are not installed yet. Do you want to download and install them now?</string>
+    <string name="component_update_done_title">Update Complete</string>
+    <string name="component_update_done_message">Components have been successfully updated.</string>
+    <string name="component_update_failed_message">Update failed: %s</string>
     <string name="mod_check_progress_message">Checking mods (%d / %d)</string>
     <string name="mod_check_touch_controller">Detected that Touch Controller mod (%s) is installed, the launcher is ready to enable control proxy to adapt to the mod.</string>
     <string name="mod_check_physics">The currently used physics mod (%s) is unpatched (replacing libPhysXJniBindings_64.so from x86_64 architecture to arm64), will crash on launch.</string>

@@ -133,6 +133,12 @@
     <string name="mod_failed_to_load_list">バージョンリストの読み込みに失敗しました！</string>
     <string name="mod_optifine_progress">%s をダウンロード中</string>
     <string name="mod_check_dialog_title">Modチェックレポート</string>
+    <string name="component_update_title">コンポーネント更新があります</string>
+    <string name="component_update_message">ランチャーコンポーネントの新しいバージョンが利用可能です。今すぐ更新しますか？</string>
+    <string name="component_update_first_time">ランチャーコンポーネントがまだインストールされていません。今すぐダウンロードしてインストールしますか？</string>
+    <string name="component_update_done_title">更新完了</string>
+    <string name="component_update_done_message">コンポーネントが正常に更新されました。</string>
+    <string name="component_update_failed_message">更新に失敗しました: %s</string>
     <string name="mod_check_progress_message">Modをチェック中（%d / %d）</string>
     <string name="mod_check_touch_controller">Touch Controller Mod（%s）がインストールされていることを検出しました。ランチャーはこのModに適応するためにコントロールプロキシを有効にする準備ができています。</string>
     <string name="mod_check_physics">現在使用中の物理Mod（%s）はパッチが適用されていません（libPhysXJniBindings_64.soをx86_64アーキテクチャからarm64に置き換え）。起動時にクラッシュします。</string>
