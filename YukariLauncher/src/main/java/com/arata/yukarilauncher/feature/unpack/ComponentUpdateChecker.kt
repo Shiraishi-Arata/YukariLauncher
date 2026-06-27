@@ -57,7 +57,7 @@ class ComponentUpdateChecker(private val context: Context) {
 
                 if (outdatedComponents.isNotEmpty() || outdatedJres.isNotEmpty()) {
                     withContext(Dispatchers.Main) {
-                        showUpdateDialog()
+                        showUpdateDialog(outdatedComponents, outdatedJres)
                     }
                 }
             } catch (e: Exception) {
@@ -136,38 +136,31 @@ class ComponentUpdateChecker(private val context: Context) {
         return map
     }
 
-    private fun showUpdateDialog() {
+    private fun showUpdateDialog(outdatedComponents: List<Components>, outdatedJres: List<Jre>) {
         TipDialog.Builder(context)
             .setTitle(R.string.component_update_title)
             .setMessage(R.string.component_update_message)
             .setConfirm(R.string.update_dialog_yes)
             .setCancel(R.string.generic_cancel)
-            .setConfirmClickListener { startUpdate() }
+            .setConfirmClickListener { startUpdate(outdatedComponents, outdatedJres) }
             .setCancelable(false)
             .showDialog()
     }
 
-    private fun startUpdate() {
+    private fun startUpdate(outdatedComponents: List<Components>, outdatedJres: List<Jre>) {
         scope.launch {
             try {
-                val remoteText = DownloadUtils.downloadString(REMOTE_VERSION_URL)
-                val remote = parseVersions(remoteText)
                 val cacheDir = PathManager.DIR_CACHE
                 cacheDir.mkdirs()
 
-                val allUpdates = Components.entries.filter { it.downloadUrl != null && remote[componentKey(it)] != null } +
-                    Jre.entries.filter { remote[jreKey(it)] != null }
-                val total = allUpdates.size
+                val total = outdatedComponents.size + outdatedJres.size
                 if (total == 0) return@launch
 
                 ProgressKeeper.submitProgress("component_update", 0, R.string.component_update_title)
 
                 var done = 0
-                for (component in Components.entries) {
+                for (component in outdatedComponents) {
                     val url = component.downloadUrl ?: continue
-                    val key = componentKey(component)
-                    if (remote[key] == null) continue
-
                     val rootDir = if (component.privateDirectory) PathManager.DIR_DATA else PathManager.DIR_GAME_HOME
                     val targetDir = File(rootDir, component.component)
 
@@ -181,10 +174,7 @@ class ComponentUpdateChecker(private val context: Context) {
                     ProgressKeeper.submitProgress("component_update", done * 100 / total, R.string.component_update_title, done, total)
                 }
 
-                for (jre in Jre.entries) {
-                    val key = jreKey(jre)
-                    if (remote[key] == null) continue
-
+                for (jre in outdatedJres) {
                     val tempZip = File(cacheDir, "${jre.jrePath}.zip")
                     DownloadUtils.downloadFileMonitored(jre.downloadUrl, tempZip, null, object : Tools.DownloaderFeedback {
                         override fun updateProgress(curr: Long, max: Long) {
