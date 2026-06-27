@@ -45,6 +45,16 @@
             android:textStyle="bold" />
 
         <ToggleButton
+            android:id="@+id/floating_toggle_log_output"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="3dp"
+            android:checked="true"
+            android:textOff="@string/log_view_button_log_off"
+            android:textOn="@string/log_view_button_log_on"
+            android:textSize="8sp" />
+
+        <ToggleButton
             android:id="@+id/floating_toggle_autoscroll"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

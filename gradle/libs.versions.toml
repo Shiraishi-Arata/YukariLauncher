@@ -1,0 +1,93 @@
+[versions]
+agp = "8.12.3"
+kotlin = "2.3.20"
+composeBom = "2024.12.01"
+activityCompose = "1.9.3"
+coreKtx = "1.15.0"
+constraintlayout = "2.2.0"
+drawerlayout = "1.2.0"
+viewpager2 = "1.1.0"
+annotation = "1.9.1"
+paletteKtx = "1.0.0"
+material = "1.12.0"
+flexbox = "3.0.0"
+okhttp = "4.12.0"
+ktor = "3.0.3"
+glide = "4.16.0"
+glideTransformations = "4.3.0"
+coil = "2.7.0"
+toml4j = "0.7.2"
+commonmark = "0.24.0"
+htmlcleaner = "2.6.1"
+xz = "1.9"
+bytehook = "1.0.10"
+eventbus = "3.3.1"
+floatingx = "2.3.3"
+taptargetview = "1.14.0"
+powerspinner = "1.2.7"
+portraitSdp = "ed33e89cbc"
+portraitSsp = "6c02fd739b"
+extendedView = "1.0.0"
+gamepadRemapper = "2.0.3"
+virtualJoystick = "1.14"
+dslTablayout = "3.6.5"
+checkerboardDrawable = "1.0.2"
+stringfogXor = "5.0.0"
+touchcontroller = "0.0.2"
+javaxAnnotation = "1.3.2"
+commonsCodec = "1.17.1"
+spotless = "6.25.0"
+stringfogPlugin = "5.2.0"
+fooJay = "0.10.0"
+
+[libraries]
+javax-annotation-api = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commonsCodec" }
+androidx-drawerlayout = { group = "androidx.drawerlayout", name = "drawerlayout", version.ref = "drawerlayout" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "flexbox" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-transformations = { group = "jp.wasabeef", name = "glide-transformations", version.ref = "glideTransformations" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+toml4j = { group = "com.moandjiezana.toml", name = "toml4j", version.ref = "toml4j" }
+commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "commonmark" }
+htmlcleaner = { group = "net.sourceforge.htmlcleaner", name = "htmlcleaner", version.ref = "htmlcleaner" }
+xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
+bytehook = { group = "com.bytedance", name = "bytehook", version.ref = "bytehook" }
+eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
+floatingx = { group = "io.github.petterpx", name = "floatingx", version.ref = "floatingx" }
+taptargetview = { group = "com.getkeepsafe.taptargetview", name = "taptargetview", version.ref = "taptargetview" }
+powerspinner = { group = "com.github.skydoves", name = "powerspinner", version.ref = "powerspinner" }
+portrait-sdp = { group = "com.github.PojavLauncherTeam", name = "portrait-sdp", version.ref = "portraitSdp" }
+portrait-ssp = { group = "com.github.PojavLauncherTeam", name = "portrait-ssp", version.ref = "portraitSsp" }
+extended-view = { group = "com.github.Mathias-Boulay", name = "ExtendedView", version.ref = "extendedView" }
+gamepad-remapper = { group = "com.github.Mathias-Boulay", name = "android_gamepad_remapper", version.ref = "gamepadRemapper" }
+virtual-joystick-android = { group = "com.github.Mathias-Boulay", name = "virtual-joystick-android", version.ref = "virtualJoystick" }
+dsl-tablayout = { group = "com.github.angcyo.DslTablayout", name = "TabLayout", version.ref = "dslTablayout" }
+checkerboard-drawable = { group = "com.github.duanhong169", name = "checkerboarddrawable", version.ref = "checkerboardDrawable" }
+stringfog-xor = { group = "com.github.megatronking.stringfog", name = "xor", version.ref = "stringfogXor" }
+touchcontroller-proxy = { group = "top.fifthlight.touchcontroller", name = "proxy-client-android", version.ref = "touchcontroller" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+stringfog = { id = "stringfog", version.ref = "stringfogPlugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+fooJay = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "fooJay" }

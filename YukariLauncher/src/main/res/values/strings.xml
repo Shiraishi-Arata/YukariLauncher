@@ -121,6 +121,8 @@
     <string name="log_view_button_scroll_on">Auto-scroll: On</string>
     <string name="log_view_button_clear_log">Clear Log</string>
     <string name="log_view_label_log_output">Log Output:</string>
+    <string name="log_view_button_log_off">Log: OFF</string>
+    <string name="log_view_button_log_on">Log: ON</string>
     <string name="execute_jar_failed_to_read_file">Failed to read .jar file</string>
     <string name="execute_jar_incompatible_runtime">Executing .jar feature is incompatible with Java %d</string>
     <string name="open_link">Will access this link in the browser:</string>

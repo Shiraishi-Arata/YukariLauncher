@@ -121,6 +121,8 @@
     <string name="log_view_button_scroll_on">自動スクロール: ON</string>
     <string name="log_view_button_clear_log">ログをクリア</string>
     <string name="log_view_label_log_output">ログ出力:</string>
+    <string name="log_view_button_log_off">ログ: OFF</string>
+    <string name="log_view_button_log_on">ログ: ON</string>
     <string name="execute_jar_failed_to_read_file">.jarファイルの読み取りに失敗しました</string>
     <string name="execute_jar_incompatible_runtime">.jar実行機能は Java %d と互換性がありません</string>
     <string name="open_link">ブラウザでこのリンクにアクセスします:</string>

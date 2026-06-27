@@ -9,22 +9,13 @@ import androidx.annotation.Keep
  */
 @Keep
 object Logger {
-    /**
-     * 指定されたテキストをログに追記します。
-     * @param text 追記するログテキスト
-     */
+    @JvmStatic var enabled = true
+
     @JvmStatic external fun appendToLog(text: String)
     @JvmStatic external fun begin(logFilePath: String)
     @JvmStatic external fun setLogListener(logListener: eventLogListener?)
 
-    /**
-     * ログイベントを受け取るための関数型インターフェース。
-     */
     fun interface eventLogListener {
-        /**
-         * ログが記録されたときに呼び出されます。
-         * @param text 記録されたログテキスト
-         */
         fun onEventLogged(text: String)
     }
 }

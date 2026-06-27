@@ -92,6 +92,7 @@ class JavaGUILauncherActivity : BaseActivity(), View.OnTouchListener {
         }
 
         Logger.setLogListener { text ->
+            if (!Logger.enabled) return@setLogListener
             runOnUiThread {
                 floatingLogger?.appendLog("$text\n")
             }

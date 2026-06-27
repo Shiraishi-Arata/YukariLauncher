@@ -149,8 +149,9 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         mDialog = new MaterialAlertDialogBuilder(getContext())
                 .setTitle(getContext().getString(R.string.progresslayout_tasks_in_progress, ProgressKeeper.getTaskCount()))
                 .setView(popupContainer)
-                .setPositiveButton(R.string.generic_close, null)
+                .setCancelable(false)
                 .create();
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.setOnDismissListener(dialog -> handler.removeCallbacks(refreshPopupRunnable));
         mDialog.show();
 
@@ -209,6 +210,9 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
             if (tc > 0) {
                 mTaskNumberDisplayer.setText(String.valueOf(tc));
                 setVisibility(VISIBLE);
+                if (mDialog == null || !mDialog.isShowing()) {
+                    showProgressPopup();
+                }
             } else {
                 setVisibility(GONE);
                 if (mDialog != null && mDialog.isShowing()) mDialog.dismiss();

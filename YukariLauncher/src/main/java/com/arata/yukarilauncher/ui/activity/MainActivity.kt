@@ -247,6 +247,7 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
         window.decorView.viewTreeObserver.addOnGlobalLayoutListener(this)
 
         Logger.setLogListener { text ->
+            if (!Logger.enabled) return@setLogListener
             runOnUiThread {
                 floatingLogger?.appendLog("$text\n")
             }

@@ -1,17 +1,18 @@
-/**
- * プロジェクトの設定
- * プラグイン管理、依存関係解決、サブプロジェクトの構成を行います。
- */
 pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
     }
-    plugins {
-        id("com.diffplug.spotless") version "6.25.0"
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "stringfog") {
+                useModule("com.github.megatronking.stringfog:gradle-plugin:${requested.version}")
+            }
+        }
     }
 }
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
 }

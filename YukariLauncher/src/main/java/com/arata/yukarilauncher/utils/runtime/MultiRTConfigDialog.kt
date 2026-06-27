@@ -43,7 +43,7 @@ class MultiRTConfigDialog {
         mDialog = AlertDialog.Builder(activity, R.style.CustomAlertDialogTheme)
             .setTitle(R.string.multirt_config_title)
             .setView(mDialogView)
-            .setPositiveButton(R.string.multirt_import) { _, _ -> installJvmLauncher.launch(null) }
+            .setPositiveButton(R.string.multirt_import) { _, _ -> installJvmLauncher.launch(Any()) }
             .setNeutralButton(R.string.multirt_delete_runtime, null)
             .create()
 

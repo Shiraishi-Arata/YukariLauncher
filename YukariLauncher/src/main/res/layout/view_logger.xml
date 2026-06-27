@@ -25,10 +25,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
+        android:id="@+id/toggle_log_output"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:checked="true"
+        android:textOff="@string/log_view_button_log_off"
+        android:textOn="@string/log_view_button_log_on"
+        app:layout_constraintBottom_toBottomOf="@+id/top_log_view"
+        app:layout_constraintEnd_toStartOf="@+id/toggle_autoscroll"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ToggleButton
         android:id="@+id/toggle_autoscroll"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         android:textOff="@string/log_view_button_scroll_off"
         android:textOn="@string/log_view_button_scroll_on"
         app:layout_constraintBottom_toBottomOf="@+id/top_log_view"

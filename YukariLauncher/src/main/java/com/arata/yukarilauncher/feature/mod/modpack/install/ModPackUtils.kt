@@ -2,12 +2,10 @@ package com.arata.yukarilauncher.feature.mod.modpack.install
 
 import android.app.Activity
 import com.arata.yukarilauncher.R
-import com.arata.yukarilauncher.utils.LauncherProfiles
 import com.arata.yukarilauncher.feature.download.item.ModLoaderWrapper
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.mod.models.MCBBSPackMeta
-import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
-import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
+import com.arata.yukarilauncher.feature.version.install.HeadlessInstaller
 import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.mod.modpack.models.CurseManifest
 import com.arata.yukarilauncher.feature.mod.modpack.models.ModrinthIndex
@@ -100,11 +98,8 @@ class ModPackUtils {
  */
         fun startModLoaderInstall(modLoader: ModLoaderWrapper, activity: Activity, modInstallFile: File, customName: String) {
             modLoader.getInstallationIntent(activity, modInstallFile, customName)?.let { installIntent ->
-                SelectRuntimeUtils.selectRuntime(activity, activity.getString(R.string.version_install_new_modloader, modLoader.modLoader.loaderName)) { jreName ->
-                    LauncherProfiles.generateLauncherProfiles()
-                    installIntent.putExtra(JavaGUILauncherActivity.EXTRAS_JRE_NAME, jreName)
-                    activity.startActivity(installIntent)
-                }
+                val javaArgs = installIntent.getStringExtra("javaArgs") ?: return
+                HeadlessInstaller.install(activity, javaArgs, null, modLoader.modLoader.loaderName)
             }
         }
     }

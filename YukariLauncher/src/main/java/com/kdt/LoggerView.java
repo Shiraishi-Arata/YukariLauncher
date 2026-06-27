@@ -105,10 +105,16 @@ public class LoggerView extends ConstraintLayout {
         );
         binding.toggleAutoscroll.setChecked(true);
 
+        // ログ出力ON/OFFトグル
+        binding.toggleLogOutput.setChecked(Logger.getEnabled());
+        binding.toggleLogOutput.setOnCheckedChangeListener(
+                (button, isChecked) -> Logger.setEnabled(isChecked));
+
         // ログのリスナー設定
         mLogListener = new Logger.eventLogListener() {
             @Override
             public void onEventLogged(String text) {
+                if (!Logger.getEnabled()) return;
                 if (binding.logView.getVisibility() != VISIBLE) return;
                 post(() -> {
                     binding.logView.append(text + '\n');

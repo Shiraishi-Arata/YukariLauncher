@@ -16,9 +16,9 @@ import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.databinding.FragmentInstallGameBinding
 import com.arata.yukarilauncher.event.sticky.SelectInstallTaskEvent
 import com.arata.yukarilauncher.event.value.InstallGameEvent
-import com.arata.yukarilauncher.utils.LauncherProfiles
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.feature.version.install.Addon
+import com.arata.yukarilauncher.feature.version.install.HeadlessInstaller
 import com.arata.yukarilauncher.feature.version.install.InstallArgsUtils
 import com.arata.yukarilauncher.feature.version.install.InstallTask
 import com.arata.yukarilauncher.feature.version.install.InstallTaskItem
@@ -34,8 +34,6 @@ import com.arata.yukarilauncher.ui.fragment.download.addon.DownloadQuiltApiFragm
 import com.arata.yukarilauncher.ui.fragment.download.addon.DownloadQuiltFragment
 import com.arata.yukarilauncher.utils.YLTools
 import com.arata.yukarilauncher.utils.file.FileTools
-import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
-import com.arata.yukarilauncher.ui.activity.JavaGUILauncherActivity
 import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import org.greenrobot.eventbus.EventBus
@@ -284,7 +282,7 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
                 Addon.OPTIFINE -> {
                     val endTask: InstallTaskItem.EndTask = if (mapSize < 2) {
                         InstallTaskItem.EndTask { activity, file ->
-                            installInGUITask(activity, addon.addonName, taskPair.first) { intent, argUtils ->
+                            installHeadless(activity, addon.addonName, taskPair.first) { intent, argUtils ->
                                 argUtils.setOptiFine(intent, file, customVersionName)
                             }
                         }
@@ -297,21 +295,21 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
                 }
                 Addon.FORGE -> {
                     taskMap[addon] = InstallTaskItem(taskPair.first, false, taskPair.second) {  activity, file ->
-                        installInGUITask(activity, addon.addonName, taskPair.first) { intent, argUtils ->
+                        installHeadless(activity, addon.addonName, taskPair.first) { intent, argUtils ->
                             argUtils.setForge(intent, file, customVersionName)
                         }
                     }
                 }
                 Addon.NEOFORGE -> {
                     taskMap[addon] = InstallTaskItem(taskPair.first, false, taskPair.second) {  activity, file ->
-                        installInGUITask(activity, addon.addonName, taskPair.first) { intent, argUtils ->
+                        installHeadless(activity, addon.addonName, taskPair.first) { intent, argUtils ->
                             argUtils.setNeoForge(intent, file, customVersionName)
                         }
                     }
                 }
                 Addon.FABRIC -> {
                     taskMap[addon] = InstallTaskItem(taskPair.first, false, taskPair.second) {  activity, file ->
-                        installInGUITask(activity, addon.addonName, taskPair.first) { intent, argUtils ->
+                        installHeadless(activity, addon.addonName, taskPair.first) { intent, argUtils ->
                             argUtils.setFabric(intent, file, customVersionName)
                         }
                     }
@@ -338,20 +336,11 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
     }
 
     /**
-     * JavaGUIランチャー内でインストールを実行する
+     * ヘッドレス（GUI無し）でインストールを実行する
      */
     @Throws(Throwable::class)
-    private fun installInGUITask(activity: Activity, addonName: String, selectVersion: String, setArgs: (Intent, InstallArgsUtils) -> Unit) {
-        val intent = Intent(activity, JavaGUILauncherActivity::class.java)
-
-        val argUtils = InstallArgsUtils(mcVersion, selectVersion)
-        setArgs(intent, argUtils)
-
-        SelectRuntimeUtils.selectRuntime(activity, activity.getString(R.string.version_install_new_modloader, addonName)) { jreName ->
-            LauncherProfiles.generateLauncherProfiles()
-            intent.putExtra(JavaGUILauncherActivity.EXTRAS_JRE_NAME, jreName)
-            activity.startActivity(intent)
-        }
+    private fun installHeadless(activity: Activity, addonName: String, selectVersion: String, setArgs: (Intent, InstallArgsUtils) -> Unit) {
+        HeadlessInstaller.installWithArgs(activity, mcVersion, selectVersion, setArgs, addonName)
     }
 
     /**
