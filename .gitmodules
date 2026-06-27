@@ -2,3 +2,6 @@
 	path = MobileGlues
 	url = https://github.com/Shiraishi-Arata/MobileGlues
 	branch = main
+[submodule "MioLibPatcher"]
+	path = MioLibPatcher
+	url = https://github.com/Shiraishi-Arata/MioLibPatcher.git

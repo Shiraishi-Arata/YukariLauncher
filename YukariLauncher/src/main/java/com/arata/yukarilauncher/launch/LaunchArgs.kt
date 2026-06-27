@@ -19,6 +19,9 @@ import com.arata.yukarilauncher.utils.JSONUtils
 import com.arata.yukarilauncher.value.MinecraftAccount
 import org.jackhuang.hmcl.util.versioning.VersionNumber
 import java.io.File
+import java.io.FileOutputStream
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
 
 class LaunchArgs(
     private val account: MinecraftAccount,
@@ -85,6 +88,19 @@ class LaunchArgs(
 
         argsList.addAll(getCacioJavaArgs(runtime.javaVersion == 8))
 
+        // MioLibPatcher BootstrapJarLoader needs reflective access to Unsafe
+        argsList.add("--add-opens=java.base/sun.misc=ALL-UNNAMED")
+        argsList.add("--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED")
+        argsList.add("--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED")
+        argsList.add("--add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED")
+        argsList.add("--add-opens=jdk.unsupported/sun.misc=ALL-UNNAMED")
+
+        // Pre-load lazyyyy's bootstrap JAR into the boot classloader
+        // to avoid SIGSEGV from Instrumentation.appendToBootstrapClassLoaderSearch()
+        extractBootstrapClasspathJar()?.let { bootJar ->
+            argsList.add("-Xbootclasspath/a:$bootJar")
+        }
+
         val is7 = VersionNumber.compare(VersionNumber.asVersion(versionInfo.id ?: "0.0").canonical, "1.12") < 0
         val configFilePath = if (is7) LibPath.LOG4J_XML_1_7 else LibPath.LOG4J_XML_1_12
         argsList.add("-Dlog4j.configurationFile=${configFilePath.absolutePath}")
@@ -104,6 +120,39 @@ class LaunchArgs(
         return argsList
     }
 
+
+    /**
+     * Scan the launch classpath for lazYYYYY's core JAR, extract its embedded
+     * bootstrap JAR, and return the path for -Xbootclasspath/a: injection.
+     * This avoids the SIGSEGV that Instrumentation.appendToBootstrapClassLoaderSearch()
+     * triggers on Android Internal-17 JREs.
+     */
+    private fun extractBootstrapClasspathJar(): String? {
+        val bootstrapJarName = "lazyyyyy-lexforge-bootstrap.jar"
+        if (launchClassPath.isEmpty()) return null
+
+        try {
+            for (entry in launchClassPath.split(":")) {
+                val f = File(entry)
+                if (!f.isFile || !f.name.contains("lazyyyyy-lexforge-core")) continue
+                JarFile(f).use { jar ->
+                    val bootEntry: JarEntry = jar.getJarEntry(bootstrapJarName) ?: continue
+                    val tmp = File.createTempFile("lazyyyyy-bootstrap-", ".jar")
+                    tmp.deleteOnExit()
+                    jar.getInputStream(bootEntry).use { input ->
+                        FileOutputStream(tmp).use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    Logging.i("LaunchArgs", "Extracted $bootstrapJarName -> ${tmp.absolutePath}")
+                    return tmp.absolutePath
+                }
+            }
+        } catch (e: Exception) {
+            Logging.w("LaunchArgs", "Failed to extract $bootstrapJarName: $e")
+        }
+        return null
+    }
 
     private fun getVersionSpecificNativesDir(): File =
         File(PathManager.DIR_CACHE, "natives/${minecraftVersion.getVersionName()}")
