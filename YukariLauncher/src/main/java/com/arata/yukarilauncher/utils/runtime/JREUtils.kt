@@ -330,7 +330,7 @@ object JREUtils {
                         envMap["OSMESA_NO_FLUSH_FRONTBUFFER"] = "1"
                     }
                     "vulkan_zink" -> envMap["POJAV_RENDERER"] = "vulkan_zink"
-                    "freedreno" -> envMap["POJAV_RENDERER"] = "gallium_freedreno"
+                    "gallium_freedreno" -> envMap["POJAV_RENDERER"] = "gallium_freedreno"
                     "gallium_panfrost" -> envMap["POJAV_RENDERER"] = "gallium_panfrost"
                     "kopper_zink" -> {
                         envMap["POJAV_RENDERER"] = "kopper_zink"

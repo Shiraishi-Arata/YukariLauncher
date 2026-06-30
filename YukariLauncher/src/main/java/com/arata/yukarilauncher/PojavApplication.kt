@@ -18,6 +18,7 @@ import com.arata.yukarilauncher.feature.discord.DiscordRpcManager
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.ui.activity.ErrorActivity
 import com.arata.yukarilauncher.utils.YLTools
+import com.arata.yukarilauncher.plugins.PluginLoader
 import com.arata.yukarilauncher.utils.path.PathManager
 import com.arata.yukarilauncher.utils.file.FileUtils
 import com.arata.yukarilauncher.utils.platform.Architecture
@@ -96,6 +97,7 @@ class PojavApplication : Application() {
             startActivity(ferrorIntent)
         }
 
+        PluginLoader.loadAllPlugins(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         // Discord RPC更新用のブロードキャストレシーバーを登録

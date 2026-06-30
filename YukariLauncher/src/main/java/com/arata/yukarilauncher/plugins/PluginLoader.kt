@@ -33,6 +33,7 @@ object PluginLoader {
         if (isInitialized && !force) return
         isInitialized = true
 
+        Renderers.init(force)
         DriverPluginManager.initDriver(context, force)
         if (force) RendererPluginManager.clearPlugin()
 
