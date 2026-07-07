@@ -101,6 +101,7 @@ object DownloadUtils {
         FileUtils.ensureParentDirectory(outputFile)
 
         val conn = URL(urlInput).openConnection() as HttpURLConnection
+        conn.connectTimeout = UrlManager.TIME_OUT.first
         conn.readTimeout = UrlManager.TIME_OUT.first
         val readStr = conn.inputStream
         FileOutputStream(outputFile).use { fos ->
@@ -217,6 +218,8 @@ object DownloadUtils {
      */
     fun getContentLength(url: String): Long {
         val urlConnection = URL(url).openConnection() as HttpURLConnection
+        urlConnection.connectTimeout = UrlManager.TIME_OUT.first
+        urlConnection.readTimeout = UrlManager.TIME_OUT.first
         urlConnection.requestMethod = "HEAD"
         urlConnection.doInput = false
         urlConnection.doOutput = false

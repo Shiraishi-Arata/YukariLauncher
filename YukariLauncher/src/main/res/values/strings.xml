@@ -1053,6 +1053,85 @@
         <item>46</item>
     </string-array>
 
+    <!-- YLGL settings -->
+    <string name="setting_ylgl_no_error">OpenGL Error Setting</string>
+    <string name="setting_ylgl_ext_timer_query">Disable Recommended &quot;timer_query&quot; Extension</string>
+    <string name="setting_ylgl_ext_compute_shader">Enable Incomplete &quot;ARB_compute_shader&quot; Extension</string>
+    <string name="setting_ylgl_ext_direct_state_access">Enable Advanced &quot;direct_state_access&quot; Extension</string>
+    <string name="setting_ylgl_glsl_cache">Max GLSL Cache Size (enter -1 to disable)</string>
+    <string name="setting_ylgl_glsl_cache_desc">Unit: Megabytes (MB)</string>
+    <string name="setting_ylgl_multidraw">MultiDraw Emulation</string>
+    <string name="setting_ylgl_angle_clear_workaround">ANGLE Depth Clear Workaround</string>
+    <string name="setting_ylgl_custom_gl_version">Custom target OpenGL Version</string>
+    <string name="setting_ylgl_shader_cache">Enable Shader Cache</string>
+    <string name="setting_ylgl_ext_tessellation">Enable &quot;tessellation_shader&quot; Extension</string>
+    <string name="setting_ylgl_ext_geometry">Enable &quot;geometry_shader&quot; Extension</string>
+    <string name="setting_ylgl_debug_log">Enable Debug Logging</string>
+
+    <string-array name="setting_ylgl_no_error_entries">
+        <item>Auto</item>
+        <item>Do not ignore</item>
+        <item>Ignore shader/program error</item>
+        <item>Ignore shader/program/framebuffer error</item>
+    </string-array>
+    <string-array name="setting_ylgl_no_error_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="setting_ylgl_multidraw_entries">
+        <item>Auto</item>
+        <item>Prefer Indirect</item>
+        <item>Prefer BaseVertex</item>
+        <item>Prefer MultiDraw Indirect</item>
+        <item>Force DrawElements</item>
+        <item>Prefer Compute</item>
+    </string-array>
+    <string-array name="setting_ylgl_multidraw_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="setting_ylgl_angle_clear_entries">
+        <item>Disable</item>
+        <item>Enable workaround #1</item>
+    </string-array>
+    <string-array name="setting_ylgl_angle_clear_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="setting_ylgl_custom_gl_version_entries">
+        <item>Disabled</item>
+        <item>OpenGL 3.2</item>
+        <item>OpenGL 3.3</item>
+        <item>OpenGL 4.0</item>
+        <item>OpenGL 4.1</item>
+        <item>OpenGL 4.2</item>
+        <item>OpenGL 4.3</item>
+        <item>OpenGL 4.4</item>
+        <item>OpenGL 4.5</item>
+        <item>OpenGL 4.6</item>
+    </string-array>
+    <string-array name="setting_ylgl_custom_gl_version_values">
+        <item>0</item>
+        <item>32</item>
+        <item>33</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+    </string-array>
+
     <!-- Discord RPC -->
     <string name="setting_discord_rpc_title">Discord Rich Presence</string>
     <string name="setting_discord_rpc_desc">Show what you\'re playing on Discord</string>

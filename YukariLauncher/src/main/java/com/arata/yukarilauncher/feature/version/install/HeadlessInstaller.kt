@@ -1,30 +1,33 @@
 package com.arata.yukarilauncher.feature.version.install
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import android.os.Process
+import android.content.IntentFilter
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.log.Logging
-import com.arata.yukarilauncher.launch.LaunchArgs
-import com.arata.yukarilauncher.setting.AllSettings
-import com.arata.yukarilauncher.task.Task
+import com.arata.yukarilauncher.feature.version.install.forge.ForgeInstallTask
 import com.arata.yukarilauncher.task.TaskExecutors
-import com.arata.yukarilauncher.ui.dialog.TipDialog
+import com.arata.yukarilauncher.ui.activity.InstallerActivity
 import com.arata.yukarilauncher.utils.LauncherProfiles
-import com.arata.yukarilauncher.utils.runtime.JREUtils
 import com.arata.yukarilauncher.utils.runtime.MultiRTUtils
 import com.arata.yukarilauncher.utils.runtime.Runtime as JreRuntime
 import com.arata.yukarilauncher.utils.runtime.SelectRuntimeUtils
-import androidx.appcompat.app.AppCompatActivity
 import com.kdt.mcgui.ProgressLayout
-import com.arata.yukarilauncher.task.ProgressKeeper
 import java.io.File
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.zip.ZipFile
 
 object HeadlessInstaller {
 
-    private fun splitPreservingQuotes(str: String): List<String> {
+    const val ACTION_INSTALL_DONE = "com.arata.yukarilauncher.action.INSTALL_DONE"
+    const val EXTRA_JRE_NAME = "jre_name"
+
+    @JvmStatic
+    fun splitPreservingQuotes(str: String): List<String> {
         val result = mutableListOf<String>()
         val currentPart = StringBuilder()
         var inQuotes = false
@@ -93,23 +96,89 @@ object HeadlessInstaller {
         return MultiRTUtils.forceReread(nearestRuntimeName)
     }
 
-    /**
-     * 引数文字列からRuntimeを選択する。
-     */
-    private fun resolveRuntime(javaArgs: String, jreName: String?): JreRuntime? {
+    @JvmStatic
+    fun resolveRuntime(javaArgs: String, jreName: String? = null): JreRuntime? {
         if (jreName != null) {
             return MultiRTUtils.forceReread(jreName)
         }
         val argList = splitPreservingQuotes(javaArgs)
         val jarFile = findJarPath(argList)
         if (jarFile != null) {
-            return selectRuntimeForJar(jarFile) ?: MultiRTUtils.forceReread(AllSettings.defaultRuntime.getValue())
+            return selectRuntimeForJar(jarFile) ?: MultiRTUtils.forceReread(
+                com.arata.yukarilauncher.setting.AllSettings.defaultRuntime.getValue()
+            )
         }
-        return MultiRTUtils.forceReread(AllSettings.defaultRuntime.getValue())
+        return MultiRTUtils.forceReread(
+            com.arata.yukarilauncher.setting.AllSettings.defaultRuntime.getValue()
+        )
+    }
+
+    /**
+     * ForgeインストーラーをHMCL方式で実行する。
+     * @param activity Activity
+     * @param mcVersion Minecraftバージョン
+     * @param selectVersion 選択されたForgeバージョン
+     * @param installerJar インストーラーJARファイル
+     * @param customVersionName カスタムバージョン名
+     * @param loaderName ローダー表示名
+     */
+    @JvmStatic
+    fun installForge(
+        activity: Activity,
+        mcVersion: String,
+        selectVersion: String,
+        installerJar: File,
+        customVersionName: String,
+        loaderName: String
+    ) {
+        SelectRuntimeUtils.selectRuntime(
+            activity,
+            activity.getString(R.string.version_install_new_modloader, loaderName)
+        ) { jreName ->
+            LauncherProfiles.generateLauncherProfiles()
+
+            TaskExecutors.runInUIThread {
+                ProgressLayout.setProgress(
+                    ProgressLayout.INSTALL_RESOURCE, 0,
+                    R.string.generic_waiting
+                )
+            }
+
+            Thread({
+                try {
+                    val success = ForgeInstallTask.install(
+                        context = activity,
+                        installerJar = installerJar,
+                        loaderName = loaderName,
+                        customVersionName = customVersionName,
+                        mcVersion = mcVersion,
+                        jreName = jreName
+                    )
+                    TaskExecutors.runInUIThread {
+                        ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
+                        if (success) {
+                            Logging.i("HeadlessInstaller", "Forge installation completed")
+                        } else {
+                            Logging.e("HeadlessInstaller", "Forge installation failed")
+                        }
+                    }
+                } catch (e: Exception) {
+                    TaskExecutors.runInUIThread {
+                        ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
+                        Logging.e("HeadlessInstaller", "Forge installation error", e)
+                        Tools.showError(activity, e, true)
+                    }
+                }
+            }, "ForgeInstaller").apply {
+                isDaemon = true
+                start()
+            }
+        }
     }
 
     /**
      * ヘッドレス（GUI無し）でModLoaderインストーラーを実行する。
+     * JVMは:installerプロセスで起動し、System.exit()によるプロセス終了がメインプロセスに影響しない。
      * @param activity Activity
      * @param javaArgs インストーラーJVM引数文字列（InstallArgsUtilsが生成したもの）
      * @param jreName 使用するJRE名（nullの場合は自動選択）
@@ -122,54 +191,51 @@ object HeadlessInstaller {
         jreName: String?,
         addonName: String? = null
     ) {
-        val context = activity.applicationContext
-        Task.runTask {
-            try {
-                ProgressKeeper.submitProgress(
-                    ProgressLayout.INSTALL_RESOURCE, 0,
-                    R.string.generic_waiting
-                )
+        val installDone = AtomicBoolean(false)
 
-                val runtime = resolveRuntime(javaArgs, jreName)
-                if (runtime == null) {
-                    TaskExecutors.runInUIThread {
-                        TipDialog.Builder(activity)
-                            .setTitle(R.string.generic_error)
-                            .setMessage(R.string.multirt_nocompatiblert)
-                            .setWarning()
-                            .showDialog()
-                    }
-                    return@runTask null
-                }
-
-                val argList = splitPreservingQuotes(javaArgs)
-
-                val jvmArgList = mutableListOf<String>()
-                jvmArgList.add("-Djava.awt.headless=true")
-                jvmArgList.addAll(argList)
-
-                Logging.i("HeadlessInstaller", "Installing with JRE: ${runtime.name}")
-                Logging.i("HeadlessInstaller", "Args: ${jvmArgList.joinToString(" ")}")
-
-                JREUtils.launchWithUtils(
-                    activity as AppCompatActivity,
-                    runtime,
-                    null,
-                    jvmArgList,
-                    AllSettings.javaArgs.getValue()
-                )
-            } catch (e: Exception) {
-                Logging.e("HeadlessInstaller", "Installation failed", e)
-                TaskExecutors.runInUIThread {
-                    Tools.showError(activity, e, false)
-                }
-            } finally {
+        val installDoneReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (!installDone.compareAndSet(false, true)) return
+                try { activity.unregisterReceiver(this) } catch (_: IllegalArgumentException) {}
                 TaskExecutors.runInUIThread {
                     ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
+                    Logging.i("HeadlessInstaller", "Installer process finished")
                 }
             }
-            null
-        }.execute()
+        }
+
+        activity.registerReceiver(installDoneReceiver, IntentFilter(ACTION_INSTALL_DONE))
+
+        TaskExecutors.runInUIThread {
+            ProgressLayout.setProgress(
+                ProgressLayout.INSTALL_RESOURCE, 0,
+                R.string.generic_waiting
+            )
+        }
+
+        activity.startActivity(Intent(activity, InstallerActivity::class.java).apply {
+            putExtra("javaArgs", javaArgs)
+            jreName?.let { putExtra(EXTRA_JRE_NAME, it) }
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        })
+
+        Thread({
+            try {
+                Thread.sleep(TimeUnit.MINUTES.toMillis(10))
+                if (!installDone.compareAndSet(false, true)) return@Thread
+                try {
+                    activity.unregisterReceiver(installDoneReceiver)
+                } catch (_: IllegalArgumentException) {}
+                TaskExecutors.runInUIThread {
+                    ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
+                    Logging.w("HeadlessInstaller", "Installer timed out after 10 minutes")
+                }
+            } catch (_: InterruptedException) {
+            }
+        }, "InstallerWatchdog").apply {
+            isDaemon = true
+            start()
+        }
     }
 
     /**

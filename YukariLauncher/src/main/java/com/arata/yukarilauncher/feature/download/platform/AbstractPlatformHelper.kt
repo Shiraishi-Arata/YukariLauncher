@@ -129,11 +129,14 @@ abstract class AbstractPlatformHelper(val api: ApiHandler) {
 
                                     return@runTask null
                                 }.ended { filePair ->
-                                    filePair?.let {
-                                        ModPackUtils.startModLoaderInstall(it.first, ContextExecutor.getActivity(), it.second, customName)
+                                    if (filePair != null) {
+                                        ModPackUtils.startModLoaderInstall(filePair.first, ContextExecutor.getActivity(), filePair.second, customName)
+                                    } else {
+                                        ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
                                     }
                                 }.onThrowable { e ->
                                     Tools.showErrorRemote(context, R.string.modpack_install_download_failed, e)
+                                    ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
                                 }.execute()
                             }
 

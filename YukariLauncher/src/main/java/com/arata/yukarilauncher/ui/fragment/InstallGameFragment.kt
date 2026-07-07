@@ -294,10 +294,15 @@ class InstallGameFragment : FragmentWithAnim(R.layout.fragment_install_game), Vi
                     taskMap[addon] = InstallTaskItem(taskPair.first, mapSize > 1, taskPair.second, endTask)
                 }
                 Addon.FORGE -> {
-                    taskMap[addon] = InstallTaskItem(taskPair.first, false, taskPair.second) {  activity, file ->
-                        installHeadless(activity, addon.addonName, taskPair.first) { intent, argUtils ->
-                            argUtils.setForge(intent, file, customVersionName)
-                        }
+                    taskMap[addon] = InstallTaskItem(taskPair.first, false, taskPair.second) { activity, file ->
+                        HeadlessInstaller.installForge(
+                            activity = activity,
+                            mcVersion = mcVersion,
+                            selectVersion = taskPair.first,
+                            installerJar = file,
+                            customVersionName = customVersionName,
+                            loaderName = addon.addonName
+                        )
                     }
                 }
                 Addon.NEOFORGE -> {

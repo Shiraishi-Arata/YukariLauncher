@@ -97,9 +97,23 @@ class ModPackUtils {
  * startModLoaderInstallする
  */
         fun startModLoaderInstall(modLoader: ModLoaderWrapper, activity: Activity, modInstallFile: File, customName: String) {
-            modLoader.getInstallationIntent(activity, modInstallFile, customName)?.let { installIntent ->
-                val javaArgs = installIntent.getStringExtra("javaArgs") ?: return
-                HeadlessInstaller.install(activity, javaArgs, null, modLoader.modLoader.loaderName)
+            when (modLoader.modLoader) {
+                com.arata.yukarilauncher.feature.download.enums.ModLoader.FORGE -> {
+                    HeadlessInstaller.installForge(
+                        activity = activity,
+                        mcVersion = modLoader.minecraftVersion,
+                        selectVersion = modLoader.versionId ?: "",
+                        installerJar = modInstallFile,
+                        customVersionName = customName,
+                        loaderName = modLoader.modLoader.loaderName
+                    )
+                }
+                else -> {
+                    modLoader.getInstallationIntent(activity, modInstallFile, customName)?.let { installIntent ->
+                        val javaArgs = installIntent.getStringExtra("javaArgs") ?: return
+                        HeadlessInstaller.install(activity, javaArgs, null, modLoader.modLoader.loaderName)
+                    }
+                }
             }
         }
     }

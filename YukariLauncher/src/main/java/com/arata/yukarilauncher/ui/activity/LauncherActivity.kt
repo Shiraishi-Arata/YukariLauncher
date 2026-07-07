@@ -303,10 +303,11 @@ class LauncherActivity : BaseActivity() {
                 }.ended { filePair ->
                     if (filePair != null) {
                         ModPackUtils.startModLoaderInstall(filePair.first, this@LauncherActivity, filePair.second, customName)
+                    } else {
+                        ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
                     }
                 }.onThrowable(TaskExecutors.getAndroidUI()) { e ->
                     Tools.showErrorRemote(this@LauncherActivity, R.string.modpack_install_download_failed, e)
-                }.finallyTask(TaskExecutors.getAndroidUI()) {
                     ProgressLayout.clearProgress(ProgressLayout.INSTALL_RESOURCE)
                 }.execute()
                 true

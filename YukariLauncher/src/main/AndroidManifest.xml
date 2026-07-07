@@ -88,6 +88,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.arata.yukarilauncher.ui.activity.InstallerActivity"
+            android:process=":installer"
+            android:exported="false"
+            android:theme="@style/InstallerTheme" />
+        <activity
             android:name="com.arata.yukarilauncher.ui.activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:launchMode="singleTop"

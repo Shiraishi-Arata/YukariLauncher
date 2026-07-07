@@ -57,6 +57,8 @@ class InstallArgsUtils(private val mcVersion: String, private val loaderVersion:
      */
     @Throws(Throwable::class)
     fun setForge(intent: Intent, jarFile: File, customName: String) {
+        // JVMはin-processで動作するため、System.exit()を呼ぶとアプリ全体が終了する。
+        // javaagent (forge_installer.jar) がSystem.exit()を抑制してJVMを正常終了させる。
         forgeLikeCustomVersionName(jarFile, customName)
 
         val args = "-javaagent:${LibPath.FORGE_INSTALLER.absolutePath}=\"$loaderVersion\" -jar ${jarFile.absolutePath}"

@@ -86,7 +86,13 @@ class ModDownloader(destinationDirectory: File, private val mUseFileCount: Boole
     private fun awaitFinish(listener: OnFileDownloadedListener) {
         try {
             mDownloadPool.shutdown()
+            val startTime = System.currentTimeMillis()
+            val timeoutMs = 300_000L // 5 minutes max
             while (!mDownloadPool.awaitTermination(20, TimeUnit.MILLISECONDS) && !mTerminator.get()) {
+                if (System.currentTimeMillis() - startTime > timeoutMs) {
+                    mDownloadPool.shutdownNow()
+                    throw IOException("Mod download timed out after 5 minutes")
+                }
                 listener.downloaded()
             }
             if (mTerminator.get()) {

@@ -8,8 +8,8 @@ object ProgressKeeper {
 
     /** 進捗リスナーマップ */
     private val sProgressListeners = HashMap<String, MutableList<ProgressListener>>()
-    /** 進捗状態マップ */
-    private val sProgressStates = HashMap<String, ProgressState>()
+    /** 進捗状態マップ（挿入順を保持する LinkedHashMap） */
+    private val sProgressStates = LinkedHashMap<String, ProgressState>()
     /** タスクカウントリスナーリスト */
     private val sTaskCountListeners = ArrayList<TaskCountListener>()
 
