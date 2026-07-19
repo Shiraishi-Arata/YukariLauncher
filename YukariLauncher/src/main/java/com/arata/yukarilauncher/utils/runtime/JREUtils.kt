@@ -506,6 +506,11 @@ object JREUtils {
             userArgs.add("-XX:+UseG1GC")
             userArgs.add("-XX:MaxGCPauseMillis=200")
             userArgs.add("-XX:+ParallelRefProcEnabled")
+            // 大規模Modpackではヒープ枯渇時のServiceThreadクラッシュを防ぐ
+            if (ramMb >= 4096) {
+                userArgs.add("-XX:+ExitOnOutOfMemoryError")
+                userArgs.add("-XX:G1ReservePercent=15")
+            }
         }
 
         if (Renderers.isCurrentRendererValid()) userArgs.add("-Dorg.lwjgl.opengl.libname=" + loadGraphicsLibrary())

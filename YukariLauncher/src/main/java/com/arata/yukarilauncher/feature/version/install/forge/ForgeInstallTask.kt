@@ -107,6 +107,52 @@ object ForgeInstallTask {
                 }
                 Logging.i(TAG, "Extracted ${extracted.size} files from maven/")
 
+                // Download all missing libraries from install_profile.json and version.json
+                // Forge 1.20.1+ stores module JARs (fmlcore, forgespi, etc.) in these
+                // arrays rather than in maven/; they must be pre-fetched from Maven.
+                val pendingLibs = mutableSetOf<LibraryComponents>()
+                installProfileJson.getAsJsonArray("libraries")?.forEach { elem ->
+                    elem.asJsonObject?.get("name")?.takeIf { it.isJsonPrimitive }?.asString?.let {
+                        try { pendingLibs.add(fromDescriptor(it)) } catch (_: Exception) { }
+                    }
+                }
+                versionObj.getAsJsonArray("libraries")?.forEach { elem ->
+                    elem.asJsonObject?.get("name")?.takeIf { it.isJsonPrimitive }?.asString?.let {
+                        try { pendingLibs.add(fromDescriptor(it)) } catch (_: Exception) { }
+                    }
+                }
+                // Also scan --library JVM args for any additional paths not caught above
+                versionObj.getAsJsonObject("arguments")
+                    ?.getAsJsonArray("jvm")?.forEach { argElement ->
+                        val arg = argElement.takeIf { it.isJsonPrimitive }?.asString ?: return@forEach
+                        if (!arg.startsWith("--library=")) return@forEach
+                        val path = arg.substring("--library=".length)
+                            .replace("\${library_directory}/", "")
+                            .removePrefix("/")
+                        // Derive LibraryComponents from the Maven path
+                        try {
+                            // path = "net/minecraftforge/fmlcore/1.20.1-47.4.0/fmlcore-1.20.1-47.4.0.jar"
+                            val parts = path.split("/")
+                            if (parts.size >= 4) {
+                                val fileName = parts.last().removeSuffix(".jar").removeSuffix(".zip")
+                                val version = parts[parts.size - 2]
+                                val artifactId = parts[parts.size - 3]
+                                val groupId = parts.dropLast(3).joinToString(".")
+                                val classifier = fileName.removePrefix("$artifactId-$version").removePrefix("-").ifEmpty { null }
+                                pendingLibs.add(LibraryComponents(groupId, artifactId, version, classifier))
+                            }
+                        } catch (_: Exception) { }
+                    }
+                // Download each missing library from Maven repos
+                for (lib in pendingLibs) {
+                    val libFile = File(librariesDir, lib.toPath())
+                    if (libFile.isFile) continue
+                    Logging.i(TAG, "Downloading missing library: ${lib.descriptor}")
+                    if (!downloadFromMaven(lib, libFile)) {
+                        Logging.w(TAG, "Failed to download library: ${lib.descriptor}")
+                    }
+                }
+
                 // Parse data mappings — process in order to resolve interleaved variables
                 Logging.i(TAG, "Parsing data mappings")
                 val vars = mutableMapOf<String, String>()

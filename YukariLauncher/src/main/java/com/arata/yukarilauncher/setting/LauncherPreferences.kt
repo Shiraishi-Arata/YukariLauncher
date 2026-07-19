@@ -81,8 +81,9 @@ object LauncherPreferences {
         if (deviceRam < 4096) return 1144
         if (deviceRam < 6144) return 1536
         if (deviceRam < 8192) return 2048
-        if (deviceRam < 12288) return 3072
-        return 4096
+        if (deviceRam < 12288) return 4096
+        if (deviceRam < 16384) return 6144
+        return 8192
     }
 
     /** ノッチサイズを計算する。 @param activity ベースアクティビティ */

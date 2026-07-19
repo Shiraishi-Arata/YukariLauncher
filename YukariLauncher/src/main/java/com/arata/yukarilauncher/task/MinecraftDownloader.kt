@@ -327,16 +327,11 @@ class MinecraftDownloader {
             var url: String? = null
             var size = 0L
             var skipIfFailed = false
-            if (dependentLibrary.downloads != null) {
+            if (dependentLibrary.downloads != null && dependentLibrary.downloads!!.artifact != null) {
                 val artifact = dependentLibrary.downloads!!.artifact
-                if (artifact != null) {
-                    sha1 = artifact.sha1
-                    url = artifact.url
-                    size = artifact.size.toLong()
-                } else {
-                    Logging.i("NewMCDownloader", "Skipped library ${dependentLibrary.name} due to lack of artifact")
-                    continue
-                }
+                sha1 = artifact.sha1
+                url = artifact.url
+                size = artifact.size.toLong()
             }
             if (url == null) {
                 url = (dependentLibrary.url

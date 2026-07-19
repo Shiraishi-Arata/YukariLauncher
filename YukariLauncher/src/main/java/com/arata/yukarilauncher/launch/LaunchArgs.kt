@@ -43,7 +43,16 @@ class LaunchArgs(
         val argsList: MutableList<String> = ArrayList()
 
         argsList.addAll(getJavaArgs())
-        argsList.addAll(getMinecraftJVMArgs())
+        for (jvmArg in getMinecraftJVMArgs()) {
+            if (jvmArg.startsWith("--library=")) {
+                val libFile = File(jvmArg.substring("--library=".length))
+                if (!libFile.isFile) {
+                    Logging.w("LaunchArgs", "Skipping --library for missing file: ${libFile.absolutePath}")
+                    continue
+                }
+            }
+            argsList.add(jvmArg)
+        }
         if (!hasClasspathInJvmArgs) {
             argsList.add("-cp")
             argsList.add("${Tools.getLWJGL3ClassPath(minecraftVersion.getLWJGLVersion())}:$launchClassPath")
