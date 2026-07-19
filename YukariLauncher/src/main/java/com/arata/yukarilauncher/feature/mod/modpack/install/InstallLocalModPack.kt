@@ -18,6 +18,7 @@ import com.arata.yukarilauncher.utils.stringutils.StringUtils
 import com.arata.yukarilauncher.Tools
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 class InstallLocalModPack {
@@ -35,7 +36,7 @@ class InstallLocalModPack {
         ): ModLoaderWrapper? {
             try {
                 runCatching {
-                    ZipFile(zipFile)
+                    ZipFile(zipFile, ZipFile.OPEN_READ, Charset.forName("CP437"))
                 }.getOrElse {
                     Logging.e("Install local ModPack", "This file doesn't seem to be a proper archive", it)
                     TaskExecutors.runInUIThread {

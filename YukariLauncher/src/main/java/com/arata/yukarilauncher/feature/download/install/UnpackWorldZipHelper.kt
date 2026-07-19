@@ -5,6 +5,7 @@ import com.arata.yukarilauncher.utils.file.ZipUtils
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 class UnpackWorldZipHelper {
@@ -15,9 +16,9 @@ class UnpackWorldZipHelper {
         fun unpackFile(zipFile: File, targetPath: File) {
             val path = extractLevelPath(zipFile) ?: throw IOException()
             Logging.i("UnpackWorldZipHelper", "Found the level of the level.data file: $path")
-            ZipFile(zipFile).use {
+            ZipFile(zipFile, ZipFile.OPEN_READ, Charset.forName("CP437")).use {
                 val fileName = zipFile.name.removeSuffix(".${zipFile.extension}")
-                ZipUtils.zipExtract(ZipFile(zipFile), path, File(targetPath, fileName))
+                ZipUtils.zipExtract(ZipFile(zipFile, ZipFile.OPEN_READ, Charset.forName("CP437")), path, File(targetPath, fileName))
                 Logging.i("UnpackWorldZipHelper", "Decompression is complete")
             }
             FileUtils.deleteQuietly(zipFile)
@@ -39,7 +40,7 @@ class UnpackWorldZipHelper {
                 return null
             }
 
-            ZipFile(file).use { zip ->
+            ZipFile(file, ZipFile.OPEN_READ, Charset.forName("CP437")).use { zip ->
                 val entries = zip.entries().asSequence() //转换为序列，方便过滤
                 val levelDatEntry = entries.find { it.name.endsWith("level.dat", ignoreCase = true) }
                 if (levelDatEntry == null) {

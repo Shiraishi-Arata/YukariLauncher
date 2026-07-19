@@ -33,7 +33,11 @@ object ZipUtils {
 
         val dirNameLen = dirName.length
         while (zipEntries.hasMoreElements()) {
-            val zipEntry = zipEntries.nextElement()
+            val zipEntry = try {
+                zipEntries.nextElement()
+            } catch (e: IllegalArgumentException) {
+                continue
+            }
             val entryName = zipEntry.name
             if (!entryName.startsWith(dirName) || zipEntry.isDirectory) continue
             val zipDestination = File(destination, entryName.substring(dirNameLen))

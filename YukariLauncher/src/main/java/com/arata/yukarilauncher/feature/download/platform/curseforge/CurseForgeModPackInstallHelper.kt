@@ -27,6 +27,7 @@ import com.kdt.mcgui.ProgressLayout
 
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 import kotlin.math.max
@@ -62,7 +63,7 @@ class CurseForgeModPackInstallHelper {
  * installZipする
  */
         fun installZip(api: ApiHandler, zipFile: File, targetPath: File): ModLoaderWrapper? {
-            ZipFile(zipFile).use { modpackZipFile ->
+            ZipFile(zipFile, ZipFile.OPEN_READ, Charset.forName("CP437")).use { modpackZipFile ->
                 val curseManifest = Tools.GLOBAL_GSON.fromJson(
                     Tools.read(ZipUtils.getEntryStream(modpackZipFile, "manifest.json")),
                     CurseManifest::class.java

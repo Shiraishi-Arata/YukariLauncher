@@ -17,6 +17,7 @@ import com.arata.yukarilauncher.utils.file.ZipUtils
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.zip.ZipFile
@@ -31,7 +32,7 @@ class MCBBSModPack(private val context: Context, private val zipFile: File?) {
  */
     fun install(versionFolder: File): ModLoaderWrapper? {
         zipFile?.let {
-            ZipFile(this.zipFile).use { modpackZipFile ->
+            ZipFile(this.zipFile, ZipFile.OPEN_READ, Charset.forName("CP437")).use { modpackZipFile ->
                 val mcbbsPackMeta = Tools.GLOBAL_GSON.fromJson(
                     Tools.read(ZipUtils.getEntryStream(modpackZipFile, "mcbbs.packmeta")),
                     MCBBSPackMeta::class.java

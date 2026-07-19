@@ -14,6 +14,7 @@ import com.arata.yukarilauncher.feature.mod.modpack.models.ModrinthIndex
 import com.arata.yukarilauncher.task.DownloaderProgressWrapper
 import com.arata.yukarilauncher.utils.file.ZipUtils
 import java.io.File
+import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 class ModrinthModPackInstallHelper {
@@ -45,7 +46,7 @@ class ModrinthModPackInstallHelper {
  * installZipする
  */
         fun installZip(packFile: File, targetPath: File): ModLoaderWrapper? {
-            val result = ZipFile(packFile).use { modpackZipFile ->
+            val result = ZipFile(packFile, ZipFile.OPEN_READ, Charset.forName("CP437")).use { modpackZipFile ->
                 val modrinthIndex = Tools.GLOBAL_GSON.fromJson(
                     Tools.read(ZipUtils.getEntryStream(modpackZipFile, "modrinth.index.json")),
                     ModrinthIndex::class.java
