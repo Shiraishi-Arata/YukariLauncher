@@ -14,6 +14,7 @@ class HotbarUtils {
         fun getCurrentType(): HotbarType {
             val hotbarType = hotbarType.getValue()
             return when (hotbarType) {
+                "none" -> HotbarType.NONE
                 "manually" -> HotbarType.MANUALLY
                 "auto" -> HotbarType.AUTO
                 else -> HotbarType.AUTO
@@ -27,9 +28,10 @@ class HotbarUtils {
         fun getCurrentTypeIndex(): Int {
             val hotbarType = hotbarType.getValue()
             return when (hotbarType) {
-                "manually" -> 1
-                "auto" -> 0
-                else -> 0
+                "none" -> 0
+                "manually" -> 2
+                "auto" -> 1
+                else -> 1
             }
         }
     }

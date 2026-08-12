@@ -71,6 +71,7 @@
     <string name="option_hotbar_type">Режим обнаружения панели быстрого доступа</string>
     <string name="option_hotbar_type_auto">Адаптивный (может быть неточным)</string>
     <string name="option_hotbar_type_manually">Ручная настройка</string>
+    <string name="option_hotbar_type_none">Нет (без обнаружения)</string>
     <string name="option_hotbar_width">Ширина коробки обнаружения</string>
     <string name="option_hotbar_height">Высота коробки обнаружения</string>
     <string name="customctrl_editor_exit_title">Выйти?</string>

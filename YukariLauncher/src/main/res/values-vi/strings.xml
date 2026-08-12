@@ -71,6 +71,7 @@
     <string name="option_hotbar_type">Chế độ kiểm tra thanh công cụ</string>
     <string name="option_hotbar_type_auto">Tự động (có thể không chính xác)</string>
     <string name="option_hotbar_type_manually">Điều chỉnh thủ công</string>
+    <string name="option_hotbar_type_none">Không (không phát hiện)</string>
     <string name="option_hotbar_width">Chiều rộng hộp kiểm tra</string>
     <string name="option_hotbar_height">Chiều cao hộp kiểm tra</string>
     <string name="customctrl_editor_exit_title">Bạn có muốn rời đi?</string>

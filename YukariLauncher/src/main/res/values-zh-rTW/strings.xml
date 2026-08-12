@@ -71,6 +71,7 @@
     <string name="option_hotbar_type">快捷欄判定模式</string>
     <string name="option_hotbar_type_auto">自適應（可能不精確）</string>
     <string name="option_hotbar_type_manually">手動調整</string>
+    <string name="option_hotbar_type_none">無（不偵測）</string>
     <string name="option_hotbar_width">判定框寬度</string>
     <string name="option_hotbar_height">判定框高度</string>
     <string name="customctrl_editor_exit_title">是否離開？</string>

@@ -8,6 +8,8 @@ import com.arata.yukarilauncher.R
  * @param valueName タイプの設定保存値
  */
 enum class HotbarType(val nameId: Int, val valueName: String) {
+    /** 無効: ホットバー判定を行わない */
+    NONE(R.string.option_hotbar_type_none, "none"),
     /** 自動: 画面解像度とGUIスケールに基づいて判定枠の幅と高さを自動計算する（精度が低い可能性あり） */
     AUTO(R.string.option_hotbar_type_auto, "auto"),
     /** 手動: ユーザーが判定枠の幅と高さを手動調整する */

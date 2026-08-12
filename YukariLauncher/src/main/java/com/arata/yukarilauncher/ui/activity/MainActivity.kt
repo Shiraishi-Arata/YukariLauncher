@@ -929,7 +929,7 @@ class MainActivity : BaseActivity(), ControlButtonMenuListener, EditorExitable,
         /** ホットバータイプの選択が変更されたときに呼び出されます */
         override fun onItemSelected(i: Int, t: HotbarType?, i1: Int, t1: HotbarType) {
             when (t1) {
-                HotbarType.AUTO -> {
+                HotbarType.NONE, HotbarType.AUTO -> {
                     binding.hotbarWidthLayout.visibility = View.GONE
                     binding.hotbarHeightLayout.visibility = View.GONE
                 }

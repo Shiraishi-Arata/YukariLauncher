@@ -112,6 +112,7 @@ class HotbarView : View, View.OnLayoutChangeListener, Runnable {
 
     /** 画面サイズに合わせてホットバーの位置とサイズを自動調整します。 */
     private fun adaptiveReset() {
+        if (HotbarUtils.getCurrentType() == HotbarType.NONE) return
         val marginLayoutParams = getMarginLayoutParams()
         val height: Int
         marginLayoutParams.width = mcScale(180).also { mWidth = it }
@@ -138,6 +139,7 @@ class HotbarView : View, View.OnLayoutChangeListener, Runnable {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (HotbarUtils.getCurrentType() == HotbarType.NONE) return false
         if (!CallbackBridge.isGrabbing()) return false
         val hasDoubleTapped = mDoubleTapDetector.onTouchEvent(event)
 
@@ -180,10 +182,16 @@ class HotbarView : View, View.OnLayoutChangeListener, Runnable {
         if (parent == null) return
 
         val hotbarType = HotbarUtils.getCurrentType()
-        if (hotbarType == HotbarType.AUTO) {
-            adaptiveReset()
-        } else {
-            manualReset(AllSettings.hotbarWidth.value.getValue(), AllSettings.hotbarHeight.value.getValue(), false)
+        when (hotbarType) {
+            HotbarType.NONE -> visibility = View.GONE
+            HotbarType.AUTO -> {
+                visibility = View.VISIBLE
+                adaptiveReset()
+            }
+            HotbarType.MANUALLY -> {
+                visibility = View.VISIBLE
+                manualReset(AllSettings.hotbarWidth.value.getValue(), AllSettings.hotbarHeight.value.getValue(), false)
+            }
         }
     }
 

@@ -71,6 +71,7 @@
     <string name="option_hotbar_type">Hotbar Erkennungsmodus</string>
     <string name="option_hotbar_type_auto">Adaptiv (kann ungenau sein)</string>
     <string name="option_hotbar_type_manually">Manuelle Anpassung</string>
+    <string name="option_hotbar_type_none">Keine (keine Erkennung)</string>
     <string name="option_hotbar_width">Erkennungsbox Breite</string>
     <string name="option_hotbar_height">Erkennungsbox Höhe</string>
     <string name="customctrl_editor_exit_title">Soll verlassen werden?</string>
