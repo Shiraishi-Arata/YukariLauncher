@@ -430,11 +430,37 @@ object JREUtils {
     }
 
     /**
+     * Adreno vendor driver on some devices links against libstatssocket.so
+     * which is not exported to the app classloader namespace. Pre-loading
+     * the bundled stub (or system lib) with RTLD_GLOBAL satisfies the
+     * DT_NEEDED before the GLES driver is pulled in through MobileGlues.
+     */
+    private fun preloadStatssocketStub() {
+        val candidates = listOf(
+            "libstatssocket.so",
+            "${PathManager.DIR_NATIVE_LIB}/libstatssocket.so",
+            findInLdLibPath("libstatssocket.so"),
+            "/system/lib64/libstatssocket.so",
+            "/system/lib/libstatssocket.so",
+            "/vendor/lib64/libstatssocket.so",
+            "/vendor/lib/libstatssocket.so"
+        )
+        for (c in candidates) {
+            if (dlopen(c)) {
+                Logging.i("RENDER_LIBRARY", "preloaded statssocket stub: $c")
+                return
+            }
+        }
+        Logging.i("RENDER_LIBRARY", "statssocket stub not preloaded (may be system-provided): ${candidates.first()}")
+    }
+
+    /**
      * グラフィックおよびサウンドエンジンを初期化する。
      * @param renderer レンダラーを使用するかどうか
      */
     private fun initGraphicAndSoundEngine(renderer: Boolean) {
         dlopen("${PathManager.DIR_NATIVE_LIB}/libopenal.so")
+        preloadStatssocketStub()
 
         if (!renderer) return
 
