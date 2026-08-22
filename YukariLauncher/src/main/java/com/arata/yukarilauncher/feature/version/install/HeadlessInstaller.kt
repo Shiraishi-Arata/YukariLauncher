@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import com.arata.yukarilauncher.R
 import com.arata.yukarilauncher.Tools
 import com.arata.yukarilauncher.feature.log.Logging
@@ -204,7 +205,11 @@ object HeadlessInstaller {
             }
         }
 
-        activity.registerReceiver(installDoneReceiver, IntentFilter(ACTION_INSTALL_DONE))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.registerReceiver(installDoneReceiver, IntentFilter(ACTION_INSTALL_DONE), Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            activity.registerReceiver(installDoneReceiver, IntentFilter(ACTION_INSTALL_DONE))
+        }
 
         TaskExecutors.runInUIThread {
             ProgressLayout.setProgress(

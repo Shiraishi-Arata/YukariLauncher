@@ -2,6 +2,7 @@ package com.arata.yukarilauncher.feature.version.install.forge
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.arata.yukarilauncher.feature.customprofilepath.ProfilePathHome
 import com.arata.yukarilauncher.feature.log.Logging
 import com.arata.yukarilauncher.feature.version.install.HeadlessInstaller
@@ -532,7 +533,11 @@ object ForgeInstallTask {
                 doneLatch.countDown()
             }
         }
-        context.registerReceiver(receiver, android.content.IntentFilter(HeadlessInstaller.ACTION_INSTALL_DONE))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(receiver, android.content.IntentFilter(HeadlessInstaller.ACTION_INSTALL_DONE), Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            context.registerReceiver(receiver, android.content.IntentFilter(HeadlessInstaller.ACTION_INSTALL_DONE))
+        }
 
         context.startActivity(
             Intent(context, InstallerActivity::class.java).apply {

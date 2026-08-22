@@ -14,7 +14,7 @@ class AllSettings {
     companion object {
         // ビデオ設定
         @JvmStatic
-        val renderer = StringSettingUnit("renderer", "opengles2")
+        val renderer = StringSettingUnit("renderer", "mobileglues")
 
         @JvmStatic
         val driver = StringSettingUnit("driver", "Turnip")
@@ -48,11 +48,11 @@ class AllSettings {
 
         // MobileGlues 設定
         @JvmStatic
-        val mgAngle = StringSettingUnit("mg_angle", "1")
+        val mgAngle = StringSettingUnit("mg_angle", "3")
         // 0=DisableIfPossible, 1=EnableIfPossible, 2=ForceDisable, 3=ForceEnable
 
         @JvmStatic
-        val mgNoError = StringSettingUnit("mg_no_error", "0")
+        val mgNoError = StringSettingUnit("mg_no_error", "3")
         // 0=Auto, 1=Disable, 2=Level1, 3=Level2
 
         @JvmStatic
@@ -68,11 +68,11 @@ class AllSettings {
         // 実験的なdirect_state_access拡張を有効化
 
         @JvmStatic
-        val mgGlslCacheSize = StringSettingUnit("mg_glsl_cache_size", "32")
+        val mgGlslCacheSize = StringSettingUnit("mg_glsl_cache_size", "512")
         // GLSLキャッシュサイズ（MB）、-1で無効化
 
         @JvmStatic
-        val mgMultidrawMode = StringSettingUnit("mg_multidraw_mode", "0")
+        val mgMultidrawMode = StringSettingUnit("mg_multidraw_mode", "2")
         // 0=Auto, 1=PreferIndirect, 2=PreferBaseVertex, 3=PreferMultidrawIndirect, 4=ForceDrawElements, 5=PreferCompute
 
         @JvmStatic
@@ -97,10 +97,10 @@ class AllSettings {
 
         // コントロール設定
         @JvmStatic
-        val disableGestures = BooleanSettingUnit("disableGestures", false)
+        val disableGestures = BooleanSettingUnit("disableGestures", true)
 
         @JvmStatic
-        val disableDoubleTap = BooleanSettingUnit("disableDoubleTap", false)
+        val disableDoubleTap = BooleanSettingUnit("disableDoubleTap", true)
 
         @JvmStatic
         val forceGuiInput = BooleanSettingUnit("forceGuiInput", false)
@@ -112,7 +112,7 @@ class AllSettings {
         val buttonScale = IntSettingUnit("buttonscale", 100)
 
         @JvmStatic
-        val buttonAllCaps = BooleanSettingUnit("buttonAllCaps", false)
+        val buttonAllCaps = BooleanSettingUnit("buttonAllCaps", true)
 
         @JvmStatic
         val mouseScale = IntSettingUnit("mousescale", 100)
@@ -201,16 +201,16 @@ class AllSettings {
 
         // ランチャー設定
         @JvmStatic
-        val checkLibraries = BooleanSettingUnit("checkLibraries", true)
+        val checkLibraries = BooleanSettingUnit("checkLibraries", false)
 
         @JvmStatic
-        val verifyManifest = BooleanSettingUnit("verifyManifest", true)
+        val verifyManifest = BooleanSettingUnit("verifyManifest", false)
 
         @JvmStatic
         val resourceImageCache = BooleanSettingUnit("resourceImageCache", false)
 
         @JvmStatic
-        val addFullResourceName = BooleanSettingUnit("addFullResourceName", true)
+        val addFullResourceName = BooleanSettingUnit("addFullResourceName", false)
 
         @JvmStatic
         val downloadSource = StringSettingUnit("downloadSource", "default")
@@ -226,13 +226,13 @@ class AllSettings {
         val animation = BooleanSettingUnit("animation", true)
 
         @JvmStatic
-        val animationSpeed = IntSettingUnit("animationSpeed", 600)
+        val animationSpeed = IntSettingUnit("animationSpeed", 300)
 
         @JvmStatic
         val pageOpacity = IntSettingUnit("pageOpacity", 100)
 
         @JvmStatic
-        val enableLogOutput = BooleanSettingUnit("enableLogOutput", false)
+        val enableLogOutput = BooleanSettingUnit("enableLogOutput", true)
 
         @JvmStatic
         val quitLauncher = BooleanSettingUnit("quitLauncher", false)
@@ -245,7 +245,7 @@ class AllSettings {
         val dumpShaders = BooleanSettingUnit("dump_shaders", false)
 
         @JvmStatic
-        val bigCoreAffinity = BooleanSettingUnit("bigCoreAffinity", false)
+        val bigCoreAffinity = BooleanSettingUnit("bigCoreAffinity", true)
 
         @JvmStatic
         val tcVibrateDuration = IntSettingUnit("tcVibrateDuration", 100)
@@ -294,7 +294,7 @@ class AllSettings {
         val buttonSnappingDistance = IntSettingUnit("buttonSnappingDistance", 8)
 
         @JvmStatic
-        val hotbarType = StringSettingUnit("hotbarType", "auto")
+        val hotbarType = StringSettingUnit("hotbarType", "none")
 
         @JvmStatic
         val hotbarWidth = lazy {
